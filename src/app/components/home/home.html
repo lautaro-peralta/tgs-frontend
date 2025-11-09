@@ -1,0 +1,255 @@
+<div class="home">
+  <!-- Efecto de partículas cayendo -->
+  <div class="falling-particles" aria-hidden="true">
+    <div class="particle" *ngFor="let p of [].constructor(30); let i = index" [style.--delay]="i * 0.3 + 's'"></div>
+  </div>
+
+  <div class="layout" [class.logged-in]="isLoggedIn() && !showAuthPanel">
+    <!-- IZQUIERDA: Panel Auth -->
+    <section *ngIf="showAuthPanel" class="auth-panel glass" [class.mode-login]="mode()==='login'"
+      [class.mode-register]="mode()==='register'" [class.hiding]="hiding" [class.enter]="entering"
+      [style.--split]="mode()==='login' ? '64%' : '36%'" aria-label="Authentication">
+      <div class="auth-body">
+        <!-- LOGIN -->
+        <div class="auth-half left" [class.active]="mode()==='login'" (click)="setMode('login')" role="button"
+          tabindex="0">
+
+          <!-- 🔄 Banner de espera de verificación (cuando está esperando que el usuario verifique desde otra pestaña) -->
+          <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='login' && !loadingLogin"
+            (click)="$event.stopPropagation()">
+            <div class="waiting-verification-large" role="status">
+              <div class="spinner-large"></div>
+              <div class="waiting-content-large">
+                <strong>Esperando verificación de email...</strong>
+                <p>Hemos enviado un email a tu dirección. Haz clic en el enlace para verificar tu cuenta y acceder automáticamente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Banner de verificación STANDALONE (reemplaza el formulario cuando está activo) -->
+          <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='login' && !waitingForVerification()"
+            (click)="$event.stopPropagation()">
+            <div class="verification-banner-large" role="alert">
+              <div class="banner-icon-large">⚠️</div>
+              <div class="banner-content-large">
+                <div class="banner-header-large">
+                  <strong>Email no verificado</strong>
+                  <button type="button" class="banner-close" (click)="needsEmailVerification.set(false)"
+                    aria-label="Cerrar" title="Cerrar mensaje">
+                    ✕
+                  </button>
+                </div>
+                <p class="banner-text-large">
+                  Debes verificar tu email antes de poder acceder. Revisa tu bandeja de entrada y haz clic en el enlace
+                  de verificación.
+                </p>
+
+                <div class="banner-success-large" *ngIf="emailSent()">
+                  <span class="success-icon">✓</span>
+                  Email de verificación enviado correctamente
+                </div>
+
+                <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
+                  [disabled]="resendingEmail() || emailSent()">
+                  <span *ngIf="!resendingEmail() && !emailSent()">
+                    Reenviar email de verificación
+                  </span>
+                  <span *ngIf="resendingEmail()" class="loading-text">
+                    Enviando<span class="dots">...</span>
+                  </span>
+                  <span *ngIf="emailSent() && !resendingEmail()">
+                    ✓ Enviado
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario LOGIN (solo visible si NO hay banner de verificación) -->
+          <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='login'" [formGroup]="loginForm"
+            (ngSubmit)="submitLogin()" (click)="$event.stopPropagation()">
+            <h2>{{ 'auth.login.title' | translate }}</h2>
+
+            <label>
+              <span>{{ 'auth.fields.emailOrUsername' | translate : {} : 'Email o Usuario' }}</span>
+              <input type="text" formControlName="email" [attr.placeholder]="emailAnimOn() ? animatedPlaceholder : ''"
+                [attr.data-anim]="emailAnimOn() ? 'on' : 'off'" autocomplete="username" required
+                [class.star-wars-placeholder]="emailAnimOn()" (focus)="mode() === 'login' ? onEmailFocus() : null"
+                (blur)="mode() === 'login' ? onEmailBlur() : null" />
+            </label>
+
+            <label>
+              <span>{{ 'auth.fields.password' | translate }}</span>
+              <div class="input-with-toggle">
+                <input [type]="showLoginPwd ? 'text' : 'password'" formControlName="password"
+                  [attr.placeholder]="passwordAnimOn() ? animatedPasswordPlaceholder : ''"
+                  [attr.data-anim]="passwordAnimOn() ? 'on' : 'off'"
+                  [class.star-wars-placeholder]="passwordAnimOn()"
+                  (focus)="mode() === 'login' ? onPasswordFocus() : null"
+                  (blur)="mode() === 'login' ? onPasswordBlur() : null"
+                  autocomplete="current-password"
+                  required />
+                <button type="button" class="pwd-toggle" (click)="showLoginPwd = !showLoginPwd"
+                  [attr.aria-label]="showLoginPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  [attr.title]="showLoginPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                  <span class="material-symbols-outlined">{{ showLoginPwd ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
+            </label>
+
+            <button type="submit" [disabled]="loadingLogin" class="btn-main" [class.is-loading]="loadingLogin">
+              <span class="btn-label">{{ 'auth.login.submit' | translate }}</span>
+              <span class="spinner" *ngIf="loadingLogin" aria-hidden="true"></span>
+            </button>
+
+            <p class="auth-error" *ngIf="errorLogin && !needsEmailVerification()">
+              {{ errorLogin | translate }}
+            </p>
+          </form>
+        </div>
+
+        <!-- División -->
+        <div class="auth-divider" aria-hidden="true"></div>
+
+        <!-- REGISTRO -->
+        <div class="auth-half right" [class.active]="mode()==='register'" (click)="setMode('register')" role="button"
+          tabindex="0">
+
+          <!-- 🔄 Banner de espera de verificación en REGISTRO (cuando está esperando que el usuario verifique desde otra pestaña) -->
+          <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='register' && !loadingRegister"
+            (click)="$event.stopPropagation()">
+            <div class="waiting-verification-large" role="status">
+              <div class="spinner-large"></div>
+              <div class="waiting-content-large">
+                <strong>Esperando verificación de email...</strong>
+                <p>Hemos enviado un email a tu dirección. Haz clic en el enlace para verificar tu cuenta y acceder automáticamente.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ✅ Banner de verificación STANDALONE en REGISTRO -->
+          <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='register' && !waitingForVerification()"
+            (click)="$event.stopPropagation()">
+            <div class="verification-banner-large" role="alert">
+              <div class="banner-icon-large">✅</div>
+              <div class="banner-content-large">
+                <div class="banner-header-large">
+                  <strong>¡Registro exitoso!</strong>
+                  <button type="button" class="banner-close" (click)="needsEmailVerification.set(false)"
+                    aria-label="Cerrar" title="Cerrar mensaje">
+                    ✕
+                  </button>
+                </div>
+                <p class="banner-text-large">
+                  Te enviamos un correo con el enlace de verificación. Revisá tu bandeja de entrada para activar tu
+                  cuenta.
+                </p>
+
+                <div class="banner-success-large" *ngIf="emailSent()">
+                  <span class="success-icon">✓</span>
+                  Email de verificación enviado correctamente
+                </div>
+
+                <div class="banner-info-large">
+                  <p>Una vez que verifiques tu email, podrás iniciar sesión.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulario REGISTRO (solo visible si NO hay banner de verificación) -->
+          <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='register'" [formGroup]="registerForm"
+            (ngSubmit)="submitRegister()" (click)="$event.stopPropagation()">
+            <h2>{{ 'auth.register.title' | translate }}</h2>
+
+            <label>
+              <span>{{ 'auth.fields.username' | translate }}</span>
+              <input type="text" formControlName="username"
+                [attr.placeholder]="nameAnimOn() ? animatedNamePlaceholder : ''"
+                [attr.data-anim]="nameAnimOn() ? 'on' : 'off'" autocomplete="off" required
+                [class.star-wars-placeholder]="nameAnimOn()" (focus)="mode() === 'register' ? onNameFocus() : null"
+                (blur)="mode() === 'register' ? onNameBlur() : null" />
+            </label>
+
+            <label>
+              <span>{{ 'auth.fields.email' | translate }}</span>
+              <input type="email" formControlName="email" [attr.placeholder]="emailAnimOn() ? animatedPlaceholder : ''"
+                [attr.data-anim]="emailAnimOn() ? 'on' : 'off'" autocomplete="email" required
+                [class.star-wars-placeholder]="emailAnimOn()" (focus)="mode() === 'register' ? onEmailFocus() : null"
+                (blur)="mode() === 'register' ? onEmailBlur() : null" />
+            </label>
+
+            <label>
+              <span>{{ 'auth.fields.password' | translate }}</span>
+              <div class="input-with-toggle">
+                <input [type]="showRegisterPwd ? 'text' : 'password'" formControlName="password"
+                  [attr.placeholder]="passwordAnimOn() ? animatedPasswordPlaceholder : ''"
+                  [attr.data-anim]="passwordAnimOn() ? 'on' : 'off'"
+                  [class.star-wars-placeholder]="passwordAnimOn()"
+                  (focus)="mode() === 'register' ? onPasswordFocus() : null"
+                  (blur)="mode() === 'register' ? onPasswordBlur() : null"
+                  autocomplete="new-password" required />
+                <button type="button" class="pwd-toggle" (click)="showRegisterPwd = !showRegisterPwd"
+                  [attr.aria-label]="showRegisterPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+                  [attr.title]="showRegisterPwd ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                  <span class="material-symbols-outlined">{{ showRegisterPwd ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
+            </label>
+
+            <button type="submit" [disabled]="loadingRegister">{{ 'auth.register.submit' | translate }}</button>
+
+            <p class="auth-error" *ngIf="errorRegister">
+              {{ errorRegister | translate }}
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- DERECHA: Brand / Bienvenida -->
+    <section class="brand-plain" [class.is-logged]="isLoggedIn() && !showAuthPanel" aria-label="Branding">
+      <div class="welcome-badge" *ngIf="isLoggedIn() && !showAuthPanel">
+        <span class="wave" aria-hidden="true">👋</span>
+        <span>{{ 'home.welcome' | translate }} <strong>{{ user()?.username || ('auth.user' | translate)
+            }}</strong></span>
+      </div>
+
+      <div class="brand-head">
+        <h1 class="wordmark">GarrSYS</h1>
+        <img *ngIf="logoOk" class="logo" src="/logo-dark.svg" alt="GarrSYS" (error)="onLogoError()" />
+        <span *ngIf="!logoOk" class="logo-fallback" aria-hidden="true">GS</span>
+      </div>
+
+      <p class="tagline">{{ 'home.tagline' | translate }}</p>
+    </section>
+  </div>
+
+  <!-- ✅ INTRODUCCIÓN con CARDS EXPANDIBLES - DISEÑO ORIGINAL RESTAURADO -->
+  <section class="intro-v2" id="intro-panel" aria-labelledby="intro-title">
+    <div class="intro-shell">
+      <div class="intro-header">
+        <span class="pill">{{ 'home.pill' | translate }}</span>
+        <h3 id="intro-title">{{ 'home.intro.title' | translate }}</h3>
+        <p class="lead">{{ 'home.intro.lead' | translate }}</p>
+      </div>
+
+      <div class="intro-grid">
+        <button class="intro-card" type="button" *ngFor="let it of introItems; let i = index"
+          (click)="toggleFlip(i, $event)" (keydown)="onCardKey(i, $event)" [class.expanded]="flipped.has(i)"
+          [attr.aria-expanded]="flipped.has(i) ? 'true' : 'false'" [attr.aria-label]="it.titleKey | translate">
+          <div class="card-surface">
+            <header class="card-head">
+              <span class="tiny-logo" aria-hidden="true"></span>
+              <h4 class="card-title">{{ it.titleKey | translate }}</h4>
+              <span class="chev" aria-hidden="true"></span>
+            </header>
+            <div class="card-detail">
+              <p class="detail">{{ it.detailKey | translate }}</p>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

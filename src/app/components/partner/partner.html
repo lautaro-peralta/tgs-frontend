@@ -1,0 +1,281 @@
+<section class="stack-lg">
+
+  <div class="glass-dark card stack-md">
+    <header class="header">
+      <h2 class="title">{{ 'partner.title' | translate }}</h2>
+      <div class="right" *ngIf="canCreate()">
+        <button class="btn" type="button" (click)="toggleNew()" [attr.aria-expanded]="isNewOpen()">
+          {{ isNewOpen() ? ('common.close' | translate) : ('partner.new' | translate) }}
+        </button>
+      </div>
+    </header>
+
+    <!-- Success message -->
+    <div *ngIf="success()"
+      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 20px;">✓</span>
+      <strong>{{ success() }}</strong>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error()" class="error">{{ error() }}</div>
+
+    <div *ngIf="!loading() && items().length > 0"
+      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <span class="muted"><strong>{{ 'partner.stats.total' | translate }}</strong> {{ totalPartners() }}</span>
+      <span class="muted"><strong>{{ 'partner.stats.withDecisions' | translate }}</strong> {{ partnersWithDecisions()
+        }}</span>
+      <span class="muted" *ngIf="fTextApplied()"><strong>{{ 'partner.stats.filtered' | translate }}</strong> {{
+        filteredPartners().length }}</span>
+    </div>
+
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span class="label-text">{{ 'partner.filters.search' | translate }}</span>
+        <input class="input" type="text" [value]="fTextInput()" (input)="fTextInput.set($any($event.target).value)"
+          (keyup.enter)="applyFilters()" [placeholder]="'partner.filters.search' | translate" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <div class="error" *ngIf="error() as err">
+      <strong>{{ 'common.error' | translate }}</strong> {{ err }}
+    </div>
+    <div class="muted" *ngIf="loading()">
+      {{ 'partner.loading' | translate : {} : 'Cargando socios...' }}
+    </div>
+
+    <section class="subsection">
+      <h3 class="sub-title">{{ 'partner.list' | translate }}</h3>
+      <div class="table-wrap" *ngIf="filteredPartners().length; else emptyState">
+        <table class="table">
+          <colgroup>
+            <col style="width:120px" />
+            <col />
+            <col style="width:200px" />
+            <col style="width:140px" />
+            <col style="width:200px" />
+            <col style="width:140px" *ngIf="canEdit() || canDelete()" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>DNI</th>
+              <th>{{ 'partner.fields.name' | translate }}</th>
+              <th>{{ 'partner.fields.email' | translate }}</th>
+              <th>{{ 'partner.fields.phone' | translate }}</th>
+              <th>{{ 'partner.fields.address' | translate }}</th>
+              <th *ngIf="canEdit() || canDelete()" class="right">{{ 'common.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of filteredPartners()">
+              <td class="mono">{{ it.dni }}</td>
+              <td>{{ it.name }}</td>
+              <td>{{ it.email || '—' }}</td>
+              <td>{{ it.phone || '—' }}</td>
+              <td>{{ it.address || '—' }}</td>
+              <td *ngIf="canEdit() || canDelete()" class="right">
+                <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
+                  [title]="'common.edit' | translate">
+                  ✏️ <span class="sr-only">{{ 'common.edit' | translate }}</span>
+                </button>
+                <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
+                  [title]="'common.delete' | translate">
+                  🗑️ <span class="sr-only">{{ 'common.delete' | translate }}</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty empty-state">
+          <h3>{{ fTextApplied() ? 'Sin resultados' : ('partner.emptyTitle' | translate : {} : 'No hay socios') }}</h3>
+          <p class="muted">{{ fTextApplied() ? 'Probá ajustar el filtro' : ('partner.emptyHint' | translate : {} : 'Creá
+            un socio con el panel de abajo.') }}</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+  <!-- Overlay formulario socio -->
+  <div class="partner-overlay" [class.is-open]="isNewOpen()" [attr.aria-hidden]="!isNewOpen()">
+    <button type="button" class="partner-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+
+    <div class="partner-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+      <div class="header compact">
+        <h2 class="title">
+          {{ isEdit() ? ('partner.edit' | translate) : ('partner.create' | translate) }}
+        </h2>
+        <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+
+        <!-- Selector de modo -->
+        <fieldset class="group col-2">
+          <legend>{{ 'partner.createMode' | translate : {} : '¿Cómo querés crear el socio?' }}</legend>
+
+          <label class="radio">
+            <input type="radio" name="mode" value="fromUser" [checked]="mode() === 'fromUser'"
+              (change)="onModeChange($event)" />
+            <span>{{ 'partner.mode.fromUser' | translate : {} : 'Desde usuario existente' }}</span>
+          </label>
+
+          <label class="radio">
+            <input type="radio" name="mode" value="manual" [checked]="mode() === 'manual'"
+              (change)="onModeChange($event)" />
+            <span>{{ 'partner.mode.manual' | translate : {} : 'Manual' }}</span>
+          </label>
+        </fieldset>
+
+        <!-- Buscador + listado de usuarios (solo modo fromUser) -->
+        <ng-container *ngIf="mode() === 'fromUser'">
+          <label class="label col-2">
+            <span class="label-text">{{ 'partner.user.search' | translate }}</span>
+            <input class="input" type="text" [value]="userSearch()" (input)="userSearch.set($any($event.target).value)"
+              [placeholder]="'partner.user.searchPh' | translate" />
+          </label>
+
+          <div class="col-2">
+            <!-- Listado de usuarios verificados -->
+            <div *ngIf="filteredUsers().length > 0"
+              style="padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+              <h4 style="margin: 0 0 var(--sp-2) 0; font-size: 0.875rem; color: rgba(195, 164, 98, 0.9);">Usuarios
+                verificados disponibles ({{ filteredUsers().length }})</h4>
+              <div
+                style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 300px; overflow-y: auto;">
+                <div *ngFor="let u of filteredUsers()" (click)="selectUserByDni(getUserPersonDni(u))"
+                  style="padding: var(--sp-2); background: rgba(0, 0, 0, 0.2); border-radius: 6px; cursor: pointer; border: 1px solid rgba(195, 164, 98, 0.3); transition: all 0.2s;"
+                  [style.background]="selectedUserDni() === getUserPersonDni(u) ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
+                  onmouseenter="this.style.background='rgba(195, 164, 98, 0.2)'"
+                  onmouseleave="this.style.background=this.getAttribute('data-selected') === 'true' ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
+                  [attr.data-selected]="selectedUserDni() === getUserPersonDni(u)">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: 600; color: rgba(195, 164, 98, 1);">{{ getUserPerson(u)?.name }}</div>
+                      <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">DNI: {{
+                        getUserPerson(u)?.dni }} • {{ u.email }}</div>
+                      <div style="font-size: 0.75rem; margin-top: 4px;">
+                        <span
+                          style="background: rgba(76, 175, 80, 0.25); padding: 2px 6px; border-radius: 4px; color: #81c784; font-weight: 500;">✓
+                          Verificado</span>
+                        <span
+                          style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500; margin-left: 4px;">Perfil
+                          100%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="filteredUsers().length === 0"
+              style="padding: var(--sp-3); text-align: center; color: var(--clr-text-muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3);">
+              <p style="margin: 0;">No hay usuarios verificados disponibles</p>
+              <small style="display: block; margin-top: var(--sp-1);">Los usuarios deben tener su cuenta verificada por
+                un administrador y perfil completo al 100%</small>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Campos del socio (solo modo manual) -->
+        <ng-container *ngIf="mode() === 'manual'">
+        <label class="label">
+          <span>{{ 'partner.fields.dni' | translate }}</span>
+          <input class="input" formControlName="dni" />
+          <small class="hint" *ngIf="form.controls.dni.invalid && form.controls.dni.touched">
+            {{ 'partner.errors.dni' | translate : {} : 'Ingresá un DNI válido.' }}
+          </small>
+        </label>
+
+        <label class="label">
+          <span>{{ 'partner.fields.name' | translate }}</span>
+          <input class="input" formControlName="name" />
+          <small class="hint" *ngIf="form.controls.name.invalid && form.controls.name.touched">
+            {{ 'partner.errors.name' | translate : {} : 'Ingresá un nombre válido.' }}
+          </small>
+        </label>
+
+        <label class="label">
+          <span>{{ 'partner.fields.email' | translate }}</span>
+          <input class="input" type="email" formControlName="email" />
+          <small class="hint" *ngIf="form.controls.email.invalid && form.controls.email.touched">
+            {{ 'partner.errors.email' | translate : {} : 'Ingresá un email válido.' }}
+          </small>
+        </label>
+
+        <label class="label">
+          <span>{{ 'partner.fields.phone' | translate }}</span>
+          <input class="input" formControlName="phone" />
+        </label>
+
+        <label class="label col-2">
+          <span>{{ 'partner.fields.address' | translate }}</span>
+          <input class="input" formControlName="address" />
+        </label>
+        </ng-container>
+
+        <!-- Credenciales: SOLO modo manual -->
+        <ng-container *ngIf="mode() === 'manual'">
+          <fieldset class="group col-2">
+            <label class="switch">
+              <input type="checkbox" [checked]="form.controls.createCreds.value" (change)="onCredsToggle($event)" />
+              <span>{{ 'partner.creds.toggle' | translate : {} : 'Crear cuenta para el socio' }}</span>
+            </label>
+
+            <div class="grid-2" *ngIf="form.controls.createCreds.value">
+              <label class="label">
+                <span>{{ 'partner.fields.username' | translate }}</span>
+                <input class="input" formControlName="username" (blur)="form.controls.username.markAsTouched()" />
+                <small class="hint" *ngIf="form.controls.username.invalid && form.controls.username.touched">
+                  {{ 'partner.errors.username' | translate : {} : 'Usuario requerido (mín. 3).' }}
+                </small>
+              </label>
+
+              <label class="label">
+                <span>{{ 'partner.fields.password' | translate }}</span>
+                <div style="position: relative;">
+                  <input class="input" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                    (blur)="form.controls.password.markAsTouched()"
+                    style="padding-right: 40px;" />
+                  <button type="button"
+                    (click)="togglePasswordVisibility()"
+                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px 8px; color: var(--color-text-muted, #888); font-size: 1.2rem;"
+                    [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+                  </button>
+                </div>
+                <small class="hint" *ngIf="form.controls.password.invalid && form.controls.password.touched">
+                  {{ 'partner.errors.password' | translate : {} : 'Contraseña requerida (mín. 6).' }}
+                </small>
+              </label>
+            </div>
+            <small class="muted">
+              {{ 'partner.creds.hint' | translate : {} :
+              'Si no marcás esta opción, se crea el socio sin usuario/contraseña.' }}
+            </small>
+          </fieldset>
+        </ng-container>
+
+        <div class="form-actions">
+          <button class="btn success" type="submit" [disabled]="form.invalid || loading()">
+            {{ isEdit() ? ('common.save' | translate) : ('common.create' | translate) }}
+          </button>
+          <button class="btn ghost" type="button" (click)="new()" [disabled]="loading()">
+            {{ 'partner.buttons.clear' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</section>

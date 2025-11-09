@@ -1,0 +1,115 @@
+<!-- src/app/components/my-purchases/my-purchases.html -->
+<div class="my-purchases-container">
+  <div class="page-header">
+    <h1 class="page-title">{{ 'myPurchases.title' | translate }}</h1>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="error-banner" *ngIf="error()">
+    <span class="error-icon">⚠️</span>
+    <span class="error-message">{{ error() }}</span>
+    <button class="btn-close-error" (click)="clearError()">✕</button>
+  </div>
+
+  <!-- Estado de carga -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="spinner"></div>
+    <p>{{ 'myPurchases.loading' | translate }}</p>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="content" *ngIf="!loading()">
+
+    <!-- Estadísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">{{ 'myPurchases.stats.totalPurchases' | translate }}</div>
+        <div class="stat-value">{{ stats().totalPurchases }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">{{ 'myPurchases.stats.totalSpent' | translate }}</div>
+        <div class="stat-value">${{ stats().totalSpent | number:'1.2-2' }}</div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-section">
+      <div class="search-box">
+        <input
+          type="text"
+          class="search-input"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+          [placeholder]="'myPurchases.filters.searchPlaceholder' | translate"
+        />
+        <button
+          class="btn-clear-search"
+          *ngIf="searchTerm()"
+          (click)="clearSearch()"
+          [title]="'common.clear' | translate">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista de compras vacía -->
+    <div class="empty-state" *ngIf="purchases().length === 0 && !loading()">
+      <div class="empty-icon">🛒</div>
+      <h2 class="empty-title">{{ 'myPurchases.empty.title' | translate }}</h2>
+      <p class="empty-desc">{{ 'myPurchases.empty.desc' | translate }}</p>
+    </div>
+
+    <!-- Tabla de compras -->
+    <div class="table-container" *ngIf="filteredPurchases().length > 0">
+      <table class="purchases-table">
+        <thead>
+          <tr>
+            <th>{{ 'myPurchases.table.products' | translate }}</th>
+            <th>{{ 'myPurchases.table.date' | translate }}</th>
+            <th>{{ 'myPurchases.table.distributor' | translate }}</th>
+            <th>{{ 'myPurchases.table.total' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let purchase of filteredPurchases()">
+            <td class="cell-products">
+              <div class="products-list">
+                <div class="product-item" *ngFor="let detail of purchase.details">
+                  <span class="product-name">{{ getProductName(detail) }}</span>
+                  <span class="product-quantity">x{{ detail.quantity }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="cell-date">{{ formatDate(purchase.date || purchase.saleDate || '') }}</td>
+            <td class="cell-distributor">
+              <div class="distributor-info">
+                <span class="distributor-name">{{ purchase.distributor?.name || 'N/A' }}</span>
+                <span class="distributor-zone" *ngIf="purchase.distributor?.zone">
+                  📍 {{ purchase.distributor?.zone?.name }}
+                </span>
+              </div>
+            </td>
+            <td class="cell-total">
+              <span class="total-amount">${{ getTotal(purchase) | number:'1.2-2' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Contador de resultados filtrados -->
+      <div class="filter-info" *ngIf="filteredPurchases().length !== purchases().length">
+        <span>{{ 'myPurchases.showing' | translate }} {{ filteredPurchases().length }} {{ 'myPurchases.of' | translate }} {{ purchases().length }}</span>
+      </div>
+    </div>
+
+    <!-- Sin resultados de búsqueda -->
+    <div class="no-results" *ngIf="filteredPurchases().length === 0 && purchases().length > 0">
+      <div class="no-results-icon">🔍</div>
+      <h3 class="no-results-title">{{ 'myPurchases.noResults.title' | translate }}</h3>
+      <p class="no-results-desc">{{ 'myPurchases.noResults.desc' | translate }}</p>
+      <button class="btn-clear-filters" (click)="clearSearch()">
+        {{ 'common.clear' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

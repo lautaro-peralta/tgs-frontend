@@ -1,0 +1,318 @@
+<section class="stack-lg">
+  <!-- LIST -->
+  <div class="glass-dark card stack-md">
+    <header class="header">
+      <h2 class="title">{{ 'distributors.title' | translate }}</h2>
+      <div class="right" *ngIf="canCreate()">
+        <button class="btn" type="button" (click)="isFormOpen ? cancel() : new()" [attr.aria-expanded]="isFormOpen">
+          {{ isFormOpen ? ('common.close' | translate) : ('distributors.new' | translate) }}
+        </button>
+      </div>
+    </header>
+
+    <!-- ✅ Success message -->
+    <div *ngIf="success()"
+      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 20px;">✓</span>
+      <strong>{{ success() }}</strong>
+    </div>
+
+    <div *ngIf="!loading() && list().length > 0"
+      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <span class="muted">
+        <strong>{{ 'distributors.stats.total' | translate }}</strong> {{ totalDistributors() }}
+      </span>
+      <span class="muted">
+        <strong>{{ 'distributors.stats.withProducts' | translate }}</strong> {{ distributorsWithProducts() }}
+      </span>
+      <span class="muted" *ngIf="fTextApplied()">
+        <strong>{{ 'distributors.stats.filtered' | translate }}</strong> {{ filtered().length }}
+      </span>
+    </div>
+
+    <div class="error" *ngIf="error() as err">
+      <strong>{{ 'common.error' | translate }}:</strong> {{ err }}
+    </div>
+    <div class="muted" *ngIf="loading()">{{ 'distributors.loading' | translate }}</div>
+
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span class="label-text">{{ 'distributors.filters.search' | translate }}</span>
+        <input class="input" type="text" [placeholder]="'distributors.filters.searchPh' | translate"
+          [ngModel]="fTextInput()" (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <section class="subsection">
+      <h3 class="sub-title">{{ 'distributors.list' | translate }}</h3>
+
+      <div class="table-wrap" *ngIf="filtered().length; else empty">
+        <table class="table">
+          <colgroup>
+            <col style="width: 120px;" /> <!-- DNI -->
+            <col style="width: 180px;" /> <!-- Name -->
+            <col style="width: 140px;" /> <!-- Phone -->
+            <col style="width: 220px;" /> <!-- Email -->
+            <col style="width: 150px;" /> <!-- Zone -->
+            <col style="width: 100px;" /> <!-- Products -->
+            <col style="width: 100px;" *ngIf="canEdit() || canDelete()" /> <!-- Actions -->
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>{{ 'distributors.table.dni' | translate }}</th>
+              <th>{{ 'distributors.table.name' | translate }}</th>
+              <th>{{ 'distributors.table.phone' | translate }}</th>
+              <th>{{ 'distributors.table.email' | translate }}</th>
+              <th>{{ 'distributors.table.zone' | translate }}</th>
+              <th class="center">{{ 'distributors.table.products' | translate }}</th>
+              <th *ngIf="canEdit() || canDelete()" style="text-align: right; padding-right: 14px;">{{ 'distributors.table.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of filtered()">
+              <td>{{ d.dni }}</td>
+              <td><span class="truncate" style="max-width: 160px;">{{ d.name }}</span></td>
+              <td>{{ d.phone }}</td>
+              <td><span class="truncate" style="max-width: 200px;">{{ d.email }}</span></td>
+              <td><span class="truncate" style="max-width: 130px;">{{ d.zone?.name || ('#' + (d.zone?.id ?? d.zoneId ??
+                  ''))
+                  }}</span></td>
+              <td class="center"><strong>{{ d.products?.length || 0 }}</strong></td>
+              <td *ngIf="canEdit() || canDelete()" style="text-align: right; padding-right: 6px;">
+                <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                  <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(d)"
+                    [attr.title]="'common.edit' | translate">
+                    ✏️
+                  </button>
+
+                  <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(d.dni)" [disabled]="loading()"
+                    [attr.title]="'common.delete' | translate">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #empty>
+        <div class="empty">
+          <h3>{{ fTextApplied() ? 'Sin resultados' : ('distributors.empty.title' | translate) }}</h3>
+          <p>{{ fTextApplied() ? 'Probá ajustar el filtro' : ('distributors.empty.desc' | translate) }}</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+  <!-- FORM OVERLAY -->
+  <div class="distributor-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
+    <button type="button" class="distributor-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
+
+    <div class="distributor-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+      <div class="header compact">
+        <h2 class="title">
+          {{ isEdit()
+          ? ('distributors.form.editTitle' | translate:{ dni: form.controls.dni.value })
+          : ('distributors.form.newTitle' | translate) }}
+        </h2>
+        <button type="button" class="btn-close" (click)="cancel()" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <div class="error" *ngIf="error()">{{ error() }}</div>
+
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+
+        <!-- Selector de modo -->
+        <fieldset class="group col-2">
+          <legend>{{ 'distributor.createMode' | translate }}</legend>
+
+          <label class="radio">
+            <input type="radio" name="mode" value="fromUser" [checked]="mode() === 'fromUser'"
+              (change)="onModeChange($event)" />
+            <span>{{ 'distributor.mode.fromUser' | translate }}</span>
+          </label>
+
+          <label class="radio">
+            <input type="radio" name="mode" value="manual" [checked]="mode() === 'manual'"
+              (change)="onModeChange($event)" />
+            <span>{{ 'distributor.mode.manual' | translate }}</span>
+          </label>
+        </fieldset>
+
+        <!-- Buscador + listado de usuarios (solo modo fromUser) -->
+        <ng-container *ngIf="mode() === 'fromUser'">
+          <label class="label col-2">
+            <span class="label-text">{{ 'distributor.user.search' | translate }}</span>
+            <input class="input" type="text" [value]="userSearch()" (input)="userSearch.set($any($event.target).value)"
+              [placeholder]="'distributor.user.searchPh' | translate" />
+          </label>
+
+          <div class="col-2">
+            <!-- Listado de usuarios verificados -->
+            <div *ngIf="filteredUsers().length > 0"
+              style="padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+              <h4 style="margin: 0 0 var(--sp-2) 0; font-size: 0.875rem; color: rgba(195, 164, 98, 0.9);">Usuarios
+                verificados disponibles ({{ filteredUsers().length }})</h4>
+              <div
+                style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 300px; overflow-y: auto;">
+                <div *ngFor="let u of filteredUsers()" (click)="selectUserByDni(getUserPersonDni(u))"
+                  style="padding: var(--sp-2); background: rgba(0, 0, 0, 0.2); border-radius: 6px; cursor: pointer; border: 1px solid rgba(195, 164, 98, 0.3); transition: all 0.2s;"
+                  [style.background]="selectedUserDni() === getUserPersonDni(u) ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
+                  onmouseenter="this.style.background='rgba(195, 164, 98, 0.2)'"
+                  onmouseleave="this.style.background=this.getAttribute('data-selected') === 'true' ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
+                  [attr.data-selected]="selectedUserDni() === getUserPersonDni(u)">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                      <div style="font-weight: 600; color: rgba(195, 164, 98, 1);">{{ getUserPerson(u)?.name }}</div>
+                      <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">DNI: {{
+                        getUserPerson(u)?.dni }} • {{ u.email }}</div>
+                      <div style="font-size: 0.75rem; margin-top: 4px;">
+                        <span
+                          style="background: rgba(76, 175, 80, 0.25); padding: 2px 6px; border-radius: 4px; color: #81c784; font-weight: 500;">✓
+                          Verificado</span>
+                        <span
+                          style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500; margin-left: 4px;">Perfil
+                          100%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="filteredUsers().length === 0"
+              style="padding: var(--sp-3); text-align: center; color: var(--clr-text-muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3);">
+              <p style="margin: 0;">No hay usuarios verificados disponibles</p>
+              <small style="display: block; margin-top: var(--sp-1);">Los usuarios deben tener su cuenta verificada por
+                un administrador y perfil completo al 100%</small>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Campos del distribuidor (solo modo manual) -->
+        <ng-container *ngIf="mode() === 'manual'">
+        <!-- DNI -->
+        <label class="label">
+          <span>{{ 'distributors.form.dni' | translate }} *</span>
+          <input class="input" formControlName="dni" [attr.readonly]="isEdit() ? true : null"
+            [placeholder]="'distributors.form.dniPh' | translate" />
+          <small class="hint" *ngIf="submitted() && form.controls.dni.invalid">
+            {{ 'distributors.form.err.dni' | translate }}
+          </small>
+        </label>
+
+        <!-- Nombre -->
+        <label class="label">
+          <span>{{ 'distributors.form.name' | translate }} *</span>
+          <input class="input" formControlName="name" [placeholder]="'distributors.form.namePh' | translate" />
+          <small class="hint" *ngIf="submitted() && form.controls.name.invalid">
+            {{ 'distributors.form.err.name' | translate }}
+          </small>
+        </label>
+
+        <!-- Teléfono -->
+        <label class="label">
+          <span>{{ 'distributors.form.phone' | translate }} *</span>
+          <input class="input" formControlName="phone" [placeholder]="'distributors.form.phonePh' | translate" />
+          <small class="hint" *ngIf="submitted() && form.controls.phone.invalid">
+            {{ 'distributors.form.err.phone' | translate }}
+          </small>
+        </label>
+
+        <!-- Email -->
+        <label class="label">
+          <span>{{ 'distributors.form.email' | translate }} *</span>
+          <input class="input" type="email" formControlName="email"
+            [placeholder]="'distributors.form.emailPh' | translate" />
+          <small class="hint" *ngIf="submitted() && form.controls.email.invalid">
+            {{ 'distributors.form.err.email' | translate }}
+          </small>
+        </label>
+
+        <!-- Dirección -->
+        <label class="label">
+          <span>{{ 'distributors.form.address' | translate }} *</span>
+          <input class="input" formControlName="address" [placeholder]="'distributors.form.addressPh' | translate" />
+          <small class="hint" *ngIf="submitted() && form.controls.address.invalid">
+            {{ 'distributors.form.err.address' | translate }}
+          </small>
+        </label>
+        </ng-container>
+
+        <!-- Zona (visible en ambos modos) -->
+        <label class="label">
+          <span>{{ 'distributors.form.zone' | translate }} *</span>
+          <select class="input" formControlName="zoneId">
+            <option [ngValue]="null">{{ 'distributors.form.chooseZone' | translate }}</option>
+            <option *ngFor="let z of zones()" [ngValue]="z.id">{{ z.name }}</option>
+          </select>
+          <small class="hint" *ngIf="submitted() && form.controls.zoneId.invalid">
+            {{ 'distributors.form.err.zone' | translate }}
+          </small>
+        </label>
+
+        <!-- Credenciales: SOLO modo manual -->
+        <ng-container *ngIf="mode() === 'manual'">
+          <fieldset class="group col-2">
+            <label class="switch">
+              <input type="checkbox" [checked]="form.controls.createCreds.value" (change)="onCredsToggle($event)" />
+              <span>{{ 'distributor.creds.toggle' | translate : {} : 'Crear cuenta para el distribuidor' }}</span>
+            </label>
+
+            <div class="grid-2" *ngIf="form.controls.createCreds.value">
+              <label class="label">
+                <span>{{ 'distributor.fields.username' | translate }}</span>
+                <input class="input" formControlName="username" (blur)="form.controls.username.markAsTouched()" />
+                <small class="hint" *ngIf="form.controls.username.invalid && form.controls.username.touched">
+                  {{ 'distributor.errors.username' | translate : {} : 'Usuario requerido (mín. 3).' }}
+                </small>
+              </label>
+
+              <label class="label">
+                <span>{{ 'distributor.fields.password' | translate }}</span>
+                <div style="position: relative;">
+                  <input class="input" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                    (blur)="form.controls.password.markAsTouched()"
+                    style="padding-right: 40px;" />
+                  <button type="button"
+                    (click)="togglePasswordVisibility()"
+                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px 8px; color: var(--color-text-muted, #888); font-size: 1.2rem;"
+                    [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+                    {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+                  </button>
+                </div>
+                <small class="hint" *ngIf="form.controls.password.invalid && form.controls.password.touched">
+                  {{ 'distributor.errors.password' | translate : {} : 'Contraseña requerida (mín. 6).' }}
+                </small>
+              </label>
+            </div>
+            <small class="muted">
+              {{ 'distributor.creds.hint' | translate : {} :
+              'Si no marcás esta opción, se crea el distribuidor sin usuario/contraseña.' }}
+            </small>
+          </fieldset>
+        </ng-container>
+
+        <!-- Botones -->
+        <div class="form-actions">
+          <button class="btn success" type="submit" [disabled]="form.invalid || loading()">
+            {{ isEdit() ? ('Guardar' | translate) : ('Crear' | translate) }}
+          </button>
+          <button class="btn ghost" type="button" (click)="cancel()" [disabled]="loading()">
+            {{ 'Cancelar' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

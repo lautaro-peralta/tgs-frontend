@@ -1,0 +1,350 @@
+/* ========================================
+   APP FOOTER - Tema Garrison / Peaky Blinders
+   Diseño horizontal full-width con contenido centrado
+   ======================================== */
+
+.app-footer {
+  position: relative;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+  background: linear-gradient(180deg,
+      rgba(11, 14, 17, 0.4) 0%,
+      rgba(15, 20, 25, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.85rem;
+
+  // Efecto de grano sutil
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.03'/></svg>");
+    opacity: 0.5;
+  }
+}
+
+.footer-container {
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: var(--sp-5, 24px) clamp(24px, 5vw, 80px);
+}
+
+/* ========== ✅ DISEÑO CENTRADO VERTICALMENTE ========== */
+.footer-main {
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  gap: clamp(32px, 6vw, 96px);
+  /* ✅ Centrado vertical */
+  align-items: center;
+  margin-bottom: var(--sp-4, 16px);
+
+  @media (min-width: 768px) {
+    grid-template-columns: minmax(220px, 320px) 1fr;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: minmax(240px, 360px) 1fr;
+    gap: clamp(64px, 8vw, 120px);
+  }
+}
+
+/* ========== ✅ Brand con estilo de navbar ========== */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3, 12px);
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
+}
+
+/* ✅ Logo con el mismo estilo del navbar */
+.logo-text {
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: .2px;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: #ffffff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .25);
+}
+
+.brand-tagline {
+  max-width: 280px;
+  line-height: 1.4;
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+/* ========== Social Links compactos ========== */
+.social-links {
+  display: flex;
+  gap: var(--sp-2, 8px);
+  margin-top: var(--sp-2, 8px);
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    background: rgba(195, 164, 98, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(195, 164, 98, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.social-icon {
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+
+  &[data-icon='github']::before {
+    content: '⚙';
+  }
+
+  &[data-icon='email']::before {
+    content: '✉';
+  }
+}
+
+/* ========== ✅ Links centrados verticalmente ========== */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  /* ✅ Centrado vertical */
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2, 8px);
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  margin: 0 0 var(--sp-2, 8px);
+  text-transform: uppercase;
+}
+
+.section-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1, 6px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  width: fit-content;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: var(--accent);
+
+    &::before {
+      width: 100%;
+    }
+  }
+
+  &.active {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  &.external {
+    .external-icon {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+
+    &:hover .external-icon {
+      opacity: 1;
+      transform: translate(2px, -2px);
+    }
+  }
+}
+
+/* ========== Divider más sutil ========== */
+.footer-divider {
+  height: 1px;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      var(--border) 10%,
+      var(--border) 90%,
+      transparent 100%);
+  margin: var(--sp-3, 12px) 0;
+}
+
+/* ========== ✅ Bottom centrado en el medio ========== */
+.footer-bottom {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(400px, 8vw, 300px);
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  width: 100%;
+  text-align: center;
+
+  p {
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.copyright,
+.attribution {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 8px);
+}
+
+.utn-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    border-bottom-color: var(--accent);
+  }
+}
+
+/* ========== Responsive - Stack en móvil ========== */
+@media (max-width: 768px) {
+  .footer-container {
+    padding: var(--sp-5, 24px) var(--sp-4, 16px);
+  }
+
+  .footer-main {
+    grid-template-columns: 1fr;
+    gap: var(--sp-5, 24px);
+    /* ✅ En móvil, alineación inicial */
+    align-items: start;
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-4, 16px);
+    align-items: start;
+  }
+
+  .brand-tagline {
+    font-size: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 0.85rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--sp-2, 8px);
+    align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-links {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4, 16px);
+  }
+}
+
+/* ========== Pantallas grandes - más extensión ========== */
+@media (min-width: 1400px) {
+  .footer-container {
+    padding: var(--sp-5, 24px) clamp(48px, 8vw, 120px);
+  }
+
+  .footer-links {
+    gap: clamp(48px, 6vw, 96px);
+  }
+}
+
+@media (min-width: 1800px) {
+  .footer-container {
+    padding: var(--sp-5, 24px) clamp(64px, 10vw, 160px);
+  }
+}
+
+/* ========== Accesibilidad ========== */
+.footer-link:focus-visible,
+.social-link:focus-visible,
+.utn-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ========== Dark Mode Ready ========== */
+@media (prefers-color-scheme: light) {
+  .app-footer {
+    background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(250, 250, 250, 0.95) 100%);
+    color: #555;
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+}

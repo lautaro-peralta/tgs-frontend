@@ -1,0 +1,236 @@
+<section class="store">
+  <header class="store__header">
+    <h2 class="store__title">{{ 'store.title' | translate }}</h2>
+
+    <div class="store__filters">
+      <label class="field">
+        <span class="label">{{ 'store.search' | translate }}</span>
+        <div class="search-wrapper">
+          <input class="input" type="text" [placeholder]="'store.search' | translate" [value]="searchInput()"
+            (input)="searchInput.set($any($event.target).value)" (keydown)="onSearchKeydown($event)" />
+
+          <div class="search-actions">
+            <button class="btn btn--search" type="button" (click)="onSearch()" [disabled]="!searchInput()">
+              🔍 Buscar
+            </button>
+
+            <button *ngIf="searchQuery()" class="btn btn--clear" type="button" (click)="onClearSearch()">
+              ✕
+            </button>
+          </div>
+        </div>
+      </label>
+    </div>
+  </header>
+
+  <div class="search-indicator" *ngIf="searchQuery()">
+    <span class="search-indicator__text">
+      🔍 Buscando: <strong>{{ searchQuery() }}</strong>
+    </span>
+    <span class="search-indicator__count">
+      {{ list().length }} {{ list().length === 1 ? 'oferta' : 'ofertas' }}
+    </span>
+  </div>
+
+  <div class="error" *ngIf="error() as e">{{ e }}</div>
+  <div class="muted" *ngIf="loading()">{{ 'account.loading' | translate }}</div>
+
+  <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
+  <div class="store__grid" *ngIf="!loading() && list().length > 0">
+    <article class="store-card" *ngFor="let offer of list()" [class.flash]="flashId() === offer.offerId"
+      [class.unavailable]="!isOfferAvailable(offer.offerId)">
+
+      <div class="store-card__media">
+        <ng-container *ngIf="offer.imageUrl as url; else noimg">
+          <img [src]="url" [alt]="offer.description || ('Producto ' + offer.productId)" loading="lazy" />
+        </ng-container>
+        <ng-template #noimg>
+          <div class="noimg">{{ 'store.noImage' | translate }}</div>
+        </ng-template>
+
+        <!-- Badge de "No disponible" -->
+        <div class="unavailable-badge" *ngIf="!isOfferAvailable(offer.offerId)">
+          <span>⚠️ No disponible</span>
+        </div>
+      </div>
+
+      <div class="store-card__body">
+        <h4 class="store-card__title">{{ offer.description || ('Producto ' + offer.productId) }}</h4>
+
+        <!-- ✅ NUEVO: Información del distribuidor -->
+        <div class="store-card__distributor">
+          <span class="distributor-badge">
+            <span class="distributor-icon">🏢</span>
+            <span class="distributor-name">{{ offer.distributorName }}</span>
+          </span>
+
+          <!-- Badge de zona -->
+          <span class="zone-badge" *ngIf="offer.zone">
+            <span class="zone-icon">📍</span>
+            <span class="zone-name">{{ offer.zone.name }}</span>
+            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" title="Sede Central">⭐</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="store-card__footer">
+        <div class="store-card__price">
+          <span class="currency">$</span>
+          <span class="amount">{{ offer.price | number: '1.2-2' }}</span>
+        </div>
+
+        <button class="btn btn--accent" type="button" (click)="onAddClick($event, offer)"
+          [disabled]="!isOfferAvailable(offer.offerId)"
+          [title]="!isOfferAvailable(offer.offerId) ? 'Producto no disponible - Sin stock' : ''">
+          {{ !isOfferAvailable(offer.offerId) ? '🚫 Sin stock' : ('store.add' | translate) }}
+        </button>
+      </div>
+    </article>
+  </div>
+
+  <div class="store__empty" *ngIf="!loading() && list().length === 0">
+    <h3>{{ searchQuery() ? 'Sin resultados' : ('store.noProducts.title' | translate) }}</h3>
+    <p>{{ searchQuery() ? 'No se encontraron ofertas con ese término de búsqueda.' : ('store.noProducts.desc' |
+      translate) }}</p>
+    <button *ngIf="searchQuery()" class="btn btn--accent" type="button" (click)="onClearSearch()">
+      Limpiar búsqueda
+    </button>
+  </div>
+
+  <!-- FAB Carrito -->
+  <button id="cartAnchor" class="cart-fab" type="button" (click)="toggleCartDrawer()" [class.bump]="bumpCart()"
+    [attr.aria-label]="'store.cart.open' | translate">
+    <span class="cart-fab__icon">🛒</span>
+    <span class="cart-fab__count">{{ cart.count() }}</span>
+  </button>
+
+  <!-- Drawer -->
+  <div class="cart-drawer" [class.open]="showCart()">
+    <header class="cart-drawer__header">
+      <h4>{{ 'store.cart.items' | translate:{ count: cart.count() } }}</h4>
+      <button class="btn btn--ghost" type="button" (click)="toggleCartDrawer()">
+        {{ 'store.cart.close' | translate }}
+      </button>
+    </header>
+
+    <footer class="cart-drawer__footer">
+      <!-- Contenido scrolleable -->
+      <div class="cart-drawer__scrollable">
+        <!-- Alertas de compra -->
+        <div class="cart-purchase-alert" *ngIf="!canPurchase()">
+          <div class="alert alert--warning">
+            <span class="alert__icon">⚠️</span>
+            <div class="alert__content">
+              <strong>{{ 'store.cart.cannotPurchase' | translate }}</strong>
+              <p *ngIf="!isVerified()">
+                {{ 'store.cart.needVerification' | translate }}
+                <a routerLink="/inbox/verification" (click)="toggleCartDrawer()">{{ 'store.cart.requestVerification' | translate }}</a>
+              </p>
+              <p *ngIf="isVerified() && profileCompleteness() < 100">
+                {{ 'store.cart.completeProfile100' | translate }}
+                <a routerLink="/mi-cuenta" (click)="toggleCartDrawer()">{{ 'store.cart.completeProfile' | translate }}</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 📍 Información de distribuidores (uno o varios) -->
+        <div class="multiple-distributors-info" *ngIf="cart.count() > 0">
+          <div class="alert-header" *ngIf="selectedDistributors().length > 1">
+            <span class="alert-icon">📦</span>
+            <div class="alert-content">
+              <strong>{{ 'store.cart.orderSplit' | translate:{ count: selectedDistributors().length } }}</strong>
+              <p>{{ 'store.cart.orderSplitDesc' | translate:{ count: selectedDistributors().length } }}</p>
+            </div>
+          </div>
+
+          <div class="distributors-grid">
+            <div class="distributor-card" *ngFor="let dist of selectedDistributors(); let i = index">
+              <div class="card-header">
+                <div class="card-number">{{ i + 1 }}</div>
+                <div class="card-title">
+                  <strong>{{ dist.name }}</strong>
+                  <span class="zone-badge" *ngIf="dist.zone">
+                    <span class="zone-icon">📍</span>
+                    {{ dist.zone.name }}
+                    <span class="hq-star" *ngIf="dist.zone.isHeadquarters">⭐</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="card-products">
+                <div class="products-header">
+                  <span class="products-count">{{ dist.items.length }} {{ dist.items.length === 1 ? ('store.cart.productCount_one' | translate) : ('store.cart.productCount_other' | translate) }}</span>
+                </div>
+                <ul class="compact-products-list">
+                  <li *ngFor="let item of dist.items">
+                    <span class="product-info">
+                      <span class="product-name">{{ item.description }}</span>
+                      <span class="product-detail">${{ item.price | number:'1.2-2' }} {{ 'store.cart.pricePerUnit' | translate }}</span>
+                    </span>
+                    <div class="product-actions">
+                      <div class="qty-controls">
+                        <button type="button" class="qty-btn" (click)="dec(item.offerId)" [title]="'store.cart.decrease' | translate">-</button>
+                        <span class="qty-value">{{ item.qty }}</span>
+                        <button type="button" class="qty-btn" (click)="inc(item.offerId)" [title]="'store.cart.increase' | translate">+</button>
+                      </div>
+                      <button type="button" class="btn-remove-product" (click)="remove(item.offerId)" [title]="'store.cart.remove' | translate">
+                        <span class="remove-icon">×</span>
+                      </button>
+                    </div>
+                  </li>
+                </ul>
+
+                <div class="card-subtotal">
+                  <span>{{ 'store.cart.subtotal' | translate }}</span>
+                  <strong>${{ dist.subtotal | number:'1.2-2' }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ⚠️ Mensaje cuando NO hay distribuidor disponible -->
+        <div class="distributor-warning" *ngIf="selectedDistributors().length === 0 && cart.count() > 0">
+          <div class="alert alert--error">
+            <span class="alert__icon">⚠️</span>
+            <div class="alert__content">
+              <strong>{{ 'store.cart.unavailable' | translate }}</strong>
+              <p>{{ 'store.cart.unavailableDesc' | translate }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección fija (total y botón) -->
+      <div class="cart-drawer__fixed">
+        <div class="cart-drawer__total">
+          <span>{{ 'store.cart.total' | translate }}</span>
+          <strong>$ {{ cart.total() | number:'1.2-2' }}</strong>
+        </div>
+
+        <button class="btn btn--accent" type="button"
+          [disabled]="!canPurchase() || cart.count() === 0 || processing() || selectedDistributors().length === 0"
+          [class.btn--disabled]="!canPurchase() || cart.count() === 0 || selectedDistributors().length === 0"
+          (click)="goToCheckout()">
+          <span class="icon" *ngIf="!processing()">🛒</span>
+          <span *ngIf="processing()">⏳</span>
+          <span *ngIf="!processing()">
+            {{ 'store.cart.checkout' | translate }}
+          </span>
+          <span *ngIf="processing()">
+            {{ 'store.cart.processing' | translate }}
+          </span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <div class="cart-backdrop" *ngIf="showCart()" (click)="toggleCartDrawer()"></div>
+
+  <!-- Modal de éxito -->
+  <app-purchase-success-modal *ngIf="showSuccessModal() && purchaseData()" [data]="purchaseData()!"
+    (close)="onCloseSuccessModal()">
+  </app-purchase-success-modal>
+</section>

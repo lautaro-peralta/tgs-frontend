@@ -1,0 +1,107 @@
+<!-- user-verification-review-modal.component.html -->
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h2>{{ 'userVerification.reviewModal.title' | translate }}</h2>
+      <button class="close-btn" type="button" (click)="onClose()"
+        [attr.aria-label]="'userVerification.reviewModal.closeAria' | translate">×</button>
+    </div>
+
+    <!-- Modal Body -->
+    <form (ngSubmit)="onSubmit()" class="modal-body">
+      <!-- Verification Summary -->
+      <div class="verification-summary">
+        <div class="summary-item">
+          <span class="label">{{ 'userVerification.reviewModal.summary.email' | translate }}</span>
+          <span class="value">{{ verification.email }}</span>
+        </div>
+
+        <div class="summary-item">
+          <span class="label">{{ 'userVerification.reviewModal.summary.requestedAt' | translate }}</span>
+          <span class="value">{{ formatDate(verification.createdAt) }}</span>
+        </div>
+
+
+
+        <div class="summary-item">
+          <span class="label">{{ 'userVerification.reviewModal.summary.attempts' | translate }}</span>
+          <span class="value">{{ verification.attempts }} / {{ verification.maxAttempts }}</span>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="error-message">
+        <span class="icon">⚠️</span>
+        {{ error }}
+      </div>
+
+      <!-- Action Selector -->
+      <div class="form-group">
+        <label>{{ 'userVerification.reviewModal.decision' | translate }}</label>
+        <div class="action-selector">
+          <label [class.selected]="action === 'approve'" class="action-option">
+            <input type="radio" name="action" value="approve" [(ngModel)]="action" [disabled]="isSubmitting" />
+            <span class="icon">✓</span>
+            <span class="text">{{ 'userVerification.reviewModal.approve' | translate }}</span>
+          </label>
+
+          <label [class.selected]="action === 'reject'" class="action-option">
+            <input type="radio" name="action" value="reject" [(ngModel)]="action" [disabled]="isSubmitting" />
+            <span class="icon">✗</span>
+            <span class="text">{{ 'userVerification.reviewModal.reject' | translate }}</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Reject Reason -->
+      <div *ngIf="action === 'reject'" class="form-group">
+        <label for="reason">
+          {{ 'userVerification.reviewModal.rejectReasonLabel' | translate }}
+          <span class="optional">{{ 'userVerification.reviewModal.rejectReasonOptional' | translate }}</span>:
+        </label>
+        <textarea id="reason" [(ngModel)]="reason" name="reason"
+          [placeholder]="'userVerification.reviewModal.rejectReasonPh' | translate" [disabled]="isSubmitting"
+          minlength="3" maxlength="500" rows="4"></textarea>
+        <div class="character-count">
+          {{ reason.length }}/500 {{ 'userVerification.reviewModal.rejectReasonCounter' | translate:{ n: reason.length }
+          }}
+          <span *ngIf="reason.length > 0 && reason.length < 3" class="warning">
+            {{ 'userVerification.reviewModal.rejectReasonMinWarn' | translate }}
+          </span>
+        </div>
+        <p class="help-text">
+          {{ 'userVerification.reviewModal.rejectReasonHelp' | translate }}
+        </p>
+      </div>
+
+      <!-- Info Box (Approve) -->
+      <div *ngIf="action === 'approve'" class="info-box">
+        <span class="icon">ℹ️</span>
+        <div>
+          <strong>{{ 'userVerification.reviewModal.approveInfoTitle' | translate }}</strong>
+          <ul>
+            <li *ngFor="let item of ('userVerification.reviewModal.approveInfoList' | translate)">{{ item }}</li>
+          </ul>
+        </div>
+      </div>
+    </form>
+
+    <!-- Modal Actions -->
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting">
+        {{ 'userVerification.reviewModal.actions.cancel' | translate }}
+      </button>
+      <button type="submit" [class]="action === 'approve' ? 'btn btn-success' : 'btn btn-danger'"
+        [disabled]="isSubmitting || (action === 'reject' && reason.length > 0 && reason.length < 3)"
+        (click)="onSubmit()">
+        <span class="icon">{{ action === 'approve' ? '✓' : '✗' }}</span>
+        {{ isSubmitting
+        ? ('userVerification.reviewModal.actions.processing' | translate)
+        : (action === 'approve'
+        ? ('userVerification.reviewModal.actions.approve' | translate)
+        : ('userVerification.reviewModal.actions.reject' | translate)) }}
+      </button>
+    </div>
+  </div>
+</div>

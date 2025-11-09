@@ -1,0 +1,212 @@
+<!-- role-request-review-modal.component.html (Diseño mejorado) -->
+<div class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal review-modal glass-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header Mejorado -->
+    <div class="modal-header">
+      <div class="header-content">
+        <div>
+          <h2>{{ 'roleRequests.reviewModal.title' | translate }}</h2>
+          <p class="subtitle">{{ 'roleRequests.reviewModal.subtitle' | translate }}</p>
+        </div>
+      </div>
+      <button class="close-btn" type="button" (click)="onClose()" [attr.aria-label]="'roleRequests.reviewModal.closeAria' | translate">×</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="modal-body">
+
+      <!-- Request Summary Card - Mejorado -->
+      <div class="summary-card">
+        <div class="summary-header">
+          <span class="summary-icon">👤</span>
+          <h3>{{ 'roleRequests.reviewModal.requestInfo' | translate }}</h3>
+        </div>
+
+        <div class="summary-grid">
+          <!-- Usuario -->
+          <div class="summary-item">
+            <span class="item-label">{{ 'roleRequests.reviewModal.requestInfoLabels.user' | translate }}</span>
+            <div class="item-value">
+              <strong class="username">{{ request.user.username }}</strong>
+              <span class="email">{{ request.user.email }}</span>
+            </div>
+          </div>
+
+          <!-- Rol Solicitado -->
+          <div class="summary-item">
+            <span class="item-label">{{ 'roleRequests.reviewModal.requestInfoLabels.request' | translate }}</span>
+            <div class="item-value">
+              <div *ngIf="request.isRoleChange" class="role-change-display">
+                <span class="role-badge from-role">{{ getRoleLabel(request.roleToRemove!) }}</span>
+                <span class="arrow-icon">→</span>
+                <span class="role-badge to-role">{{ getRoleLabel(request.requestedRole) }}</span>
+              </div>
+              <span *ngIf="!request.isRoleChange" class="role-badge main-role">
+                {{ getRoleLabel(request.requestedRole) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Fecha -->
+          <div class="summary-item">
+            <span class="item-label">{{ 'roleRequests.reviewModal.requestInfoLabels.requestDate' | translate }}</span>
+            <span class="item-value date-value">{{ formatDate(request.createdAt) }}</span>
+          </div>
+
+          <!-- Justificación -->
+          <div *ngIf="request.justification" class="summary-item full-width">
+            <span class="item-label">{{ 'roleRequests.reviewModal.requestInfoLabels.justification' | translate }}</span>
+            <div class="justification-box">
+              <p>{{ request.justification }}</p>
+            </div>
+          </div>
+
+          <!-- Datos Adicionales -->
+          <div *ngIf="request.additionalData" class="summary-item full-width">
+            <span class="item-label">{{ 'roleRequests.reviewModal.requestInfoLabels.additionalData' | translate }}</span>
+            <div class="additional-data-card">
+
+              <!-- Datos para DISTRIBUTOR -->
+              <ng-container *ngIf="request.requestedRole === 'DISTRIBUTOR'">
+                <div class="data-item">
+                  <span class="data-icon">📍</span>
+                  <div class="data-content">
+                    <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.assignedZone' | translate }}</span>
+                    <span class="data-value">{{ 'roleRequests.reviewModal.requestInfoLabels.zone' | translate }} {{ request.additionalData.zoneId }}</span>
+                  </div>
+                </div>
+                <div class="data-item">
+                  <span class="data-icon">🏠</span>
+                  <div class="data-content">
+                    <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.address' | translate }}</span>
+                    <span class="data-value">{{ request.additionalData.address }}</span>
+                  </div>
+                </div>
+                <div *ngIf="request.additionalData.productsIds && request.additionalData.productsIds.length > 0"
+                  class="data-item">
+                  <span class="data-icon">📦</span>
+                  <div class="data-content">
+                    <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.products' | translate }}</span>
+                    <div class="products-tags">
+                      <span class="product-tag" *ngFor="let id of request.additionalData.productsIds">
+                        {{ 'roleRequests.reviewModal.requestInfoLabels.product' | translate }} #{{ id }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <!-- Datos para AUTHORITY -->
+              <ng-container *ngIf="request.requestedRole === 'AUTHORITY'">
+                <div class="data-item">
+                  <span class="data-icon">⭐</span>
+                  <div class="data-content">
+                    <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.rank' | translate }}</span>
+                    <span class="data-value">{{ getRankLabel(request.additionalData.rank!) }}</span>
+                  </div>
+                </div>
+                <div class="data-item">
+                  <span class="data-icon">📍</span>
+                  <div class="data-content">
+                    <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.assignedZone' | translate }}</span>
+                    <span class="data-value">{{ 'roleRequests.reviewModal.requestInfoLabels.zone' | translate }} {{ request.additionalData.zoneId }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-content">
+          <strong>{{ 'roleRequests.reviewModal.error' | translate }}</strong>
+          <p>{{ error }}</p>
+        </div>
+      </div>
+
+      <!-- Decision Section - Mejorado -->
+      <div class="decision-section">
+        <div class="section-header">
+          <span class="section-icon">⚖️</span>
+          <label class="section-title">{{ 'roleRequests.reviewModal.decision' | translate }}</label>
+        </div>
+
+        <div class="decision-options">
+          <label class="decision-card approve-card" [class.selected]="action === 'approve'">
+            <input type="radio" name="action" value="approve" [(ngModel)]="action" [disabled]="isSubmitting" />
+            <div class="card-content">
+              <span class="decision-icon">✓</span>
+              <span class="decision-label">{{ 'roleRequests.reviewModal.approve' | translate }}</span>
+              <span class="decision-desc">{{ 'roleRequests.reviewModal.approveDesc' | translate }}</span>
+            </div>
+            <div class="check-indicator"></div>
+          </label>
+
+          <label class="decision-card reject-card" [class.selected]="action === 'reject'">
+            <input type="radio" name="action" value="reject" [(ngModel)]="action" [disabled]="isSubmitting" />
+            <div class="card-content">
+              <span class="decision-icon">✗</span>
+              <span class="decision-label">{{ 'roleRequests.reviewModal.reject' | translate }}</span>
+              <span class="decision-desc">{{ 'roleRequests.reviewModal.rejectDesc' | translate }}</span>
+            </div>
+            <div class="check-indicator"></div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Comments Section - Mejorado -->
+      <div class="comments-section">
+        <div class="section-header">
+          <span class="section-icon">💬</span>
+          <label for="comments" class="section-title">
+            {{ 'roleRequests.reviewModal.commentsLabel' | translate }}
+            <span *ngIf="action === 'reject'" class="recommended-tag">{{ 'roleRequests.reviewModal.recommended' | translate }}</span>
+          </label>
+        </div>
+
+        <div class="textarea-wrapper">
+          <textarea
+            id="comments"
+            [(ngModel)]="comments"
+            name="comments"
+            class="textarea-input"
+            [placeholder]="'roleRequests.reviewModal.commentsPh' | translate"
+            [disabled]="isSubmitting"
+            rows="4"
+            maxlength="500"></textarea>
+          <div class="textarea-footer">
+            <span class="character-count">{{ comments.length }}/500 {{ 'roleRequests.reviewModal.characters' | translate }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons - Mejorado -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting">
+          <span class="btn-icon">←</span>
+          {{ 'roleRequests.reviewModal.actions.cancel' | translate }}
+        </button>
+
+        <button
+          type="submit"
+          [class]="action === 'approve' ? 'btn btn-success' : (action === 'reject' ? 'btn btn-danger' : 'btn btn-secondary')"
+          [disabled]="isSubmitting || !action">
+          <span *ngIf="!isSubmitting && action" class="btn-icon">{{ action === 'approve' ? '✓' : '✗' }}</span>
+          <span *ngIf="isSubmitting" class="spinner-small"></span>
+          {{ isSubmitting
+            ? ('roleRequests.reviewModal.actions.processing' | translate)
+            : (action === 'approve'
+              ? ('roleRequests.reviewModal.actions.approve' | translate)
+              : (action === 'reject'
+                ? ('roleRequests.reviewModal.actions.reject' | translate)
+                : ('roleRequests.reviewModal.selectOption' | translate))) }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

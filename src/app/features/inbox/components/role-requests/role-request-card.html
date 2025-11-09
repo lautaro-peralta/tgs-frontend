@@ -1,0 +1,74 @@
+<!-- role-request-card.html (i18n aplicado) -->
+<div class="role-request-card" [class.expanded]="isExpanded">
+  <div class="card-header" (click)="toggleExpanded()">
+    <div class="request-info">
+      <div *ngIf="isAdmin" class="user-info">
+        <span class="username">{{ request.user.username }}</span>
+        <span class="email">{{ request.user.email }}</span>
+      </div>
+
+      <div class="role-info">
+        <div *ngIf="request.isRoleChange" class="role-change">
+          <span class="role-badge from">{{ getRoleLabel(request.roleToRemove!) }}</span>
+          <span class="arrow">→</span>
+          <span class="role-badge to">{{ getRoleLabel(request.requestedRole) }}</span>
+          <span class="change-label">{{ 'roleRequests.card.changeLabel' | translate }}</span>
+        </div>
+
+        <div *ngIf="!request.isRoleChange" class="role-new">
+          <span class="role-badge">{{ getRoleLabel(request.requestedRole) }}</span>
+          <span class="new-label">{{ 'roleRequests.card.newLabel' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-actions">
+      <span [class]="getStatusBadgeClass(request.status)">
+        <span class="icon">{{ getStatusIcon(request.status) }}</span>
+        {{ getStatusText(request.status) }}
+      </span>
+      <button class="expand-btn" type="button">
+        <span class="icon" [class.expanded]="isExpanded">▼</span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isExpanded" class="card-body">
+    <div *ngIf="request.justification" class="detail-section">
+      <h4>{{ 'roleRequests.card.titles.justification' | translate }}</h4>
+      <p class="justification">{{ request.justification }}</p>
+    </div>
+
+    <div class="detail-section">
+      <h4>{{ 'roleRequests.card.titles.info' | translate }}</h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">{{ 'roleRequests.card.labels.createdAt' | translate }}</span>
+          <span class="value">{{ formatDate(request.createdAt) }}</span>
+        </div>
+
+        <div *ngIf="request.reviewedAt" class="detail-item">
+          <span class="label">{{ 'roleRequests.card.labels.reviewedAt' | translate }}</span>
+          <span class="value">{{ formatDate(request.reviewedAt) }}</span>
+        </div>
+
+        <div *ngIf="request.reviewedBy" class="detail-item">
+          <span class="label">{{ 'roleRequests.card.labels.reviewedBy' | translate }}</span>
+          <span class="value">{{ request.reviewedBy.username }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="request.adminComments" class="detail-section admin-comments">
+      <h4>{{ 'roleRequests.card.titles.adminComments' | translate }}</h4>
+      <p>{{ request.adminComments }}</p>
+    </div>
+
+    <div *ngIf="isAdmin && request.status === RequestStatus.PENDING" class="action-buttons">
+      <button class="btn btn-evaluate" (click)="onReview('approve', $event)">
+        <span class="icon">⚖️</span>
+        {{ 'roleRequests.card.actions.evaluate' | translate : {} : 'Evaluar Solicitud' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<section class="stack-lg">
+  <!-- LIST -->
+  <div class="glass-dark card stack-md">
+    <div class="header">
+      <h2>{{ 'zones.title' | translate }}</h2>
+      <div class="right" *ngIf="isAdmin()">
+        <button class="btn" (click)="new(); toggleForm()" [attr.aria-expanded]="isFormOpen">
+          {{ isFormOpen ? ('zones.close' | translate) : ('zones.new' | translate) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Success message -->
+    <div *ngIf="success()"
+      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 20px;">✓</span>
+      <strong>{{ success() }}</strong>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error()" class="error">{{ error() }}</div>
+
+    <!-- Headquarters -->
+    <div *ngIf="headquarters() as sc; else noHeadquarters" class="sede-summary">
+      <strong>{{ 'zones.headquarters' | translate }}:</strong> #{{ sc.id }} — {{ sc.name }}
+    </div>
+    <ng-template #noHeadquarters>
+      <div class="muted">{{ 'zones.noHeadquarters' | translate }}</div>
+    </ng-template>
+    <!-- Estadísticas -->
+    <div *ngIf="!loading() && zones().length > 0"
+      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-top: var(--sp-3);">
+      <span class="muted"><strong>{{ 'zones.stats.totalLabel' | translate }}</strong> {{ totalZones() }}</span>
+      <span class="muted" *ngIf="fTextApplied()"><strong>{{ 'zones.stats.filteredLabel' | translate }}</strong> {{
+        filteredList().length }}</span>
+
+    </div>
+
+    <!-- Filters -->
+    <div class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span>{{ 'zones.filters.search' | translate }}</span>
+        <input class="input" [placeholder]="'zones.filters.searchPh' | translate" [ngModel]="fTextInput()"
+          (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
+      </label>
+
+      <!-- Botones -->
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div *ngIf="loading()" class="muted">{{ 'zones.loading' | translate }}</div>
+
+    <!-- Table -->
+    <div class="table-wrap" *ngIf="!loading()">
+      <table class="table" *ngIf="filteredList().length > 0; else empty">
+        <colgroup>
+          <col style="width:80px" />
+          <col />
+          <col />
+          <col *ngIf="isAdmin()" style="width:150px" />
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th>{{ 'zones.table.id' | translate }}</th>
+            <th>{{ 'zones.table.name' | translate }}</th>
+            <th>{{ 'zones.table.description' | translate }}</th>
+            <th *ngIf="isAdmin()" class="right">{{ 'zones.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let z of filteredList()">
+            <td>#{{ z.id }}</td>
+            <td><span class="truncate">{{ z.name }}</span></td>
+            <td><span class="truncate">{{ z.description || '-' }}</span></td>
+            <td *ngIf="isAdmin()" class="right">
+              <button class="btn btn--icon" (click)="edit(z); isFormOpen = true"
+                [attr.aria-label]="'common.edit' | translate" [attr.title]="'common.edit' | translate">
+                ✏️ <span class="sr-only">{{ 'common.edit' | translate }}</span>
+              </button>
+
+              <button class="btn danger btn--icon" (click)="delete(z)" [attr.aria-label]="'common.delete' | translate"
+                [attr.title]="'common.delete' | translate">
+                🗑️ <span class="sr-only">{{ 'common.delete' | translate }}</span>
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #empty>
+        <div class="center muted">
+          {{ fTextApplied()
+          ? ('zones.noResults' | translate)
+          : ('zones.empty' | translate) }}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+</section>
+
+<!-- Overlay flotante para zonas -->
+<div class="new-zone-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
+  <button type="button" class="new-zone-overlay__backdrop" (click)="toggleForm()" aria-label="Cerrar"></button>
+
+  <div class="new-zone-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="header compact">
+      <h2 class="title">
+        {{ editId() == null
+        ? ('zones.form.createTitle' | translate)
+        : ('zones.form.editTitle' | translate: { id: editId() }) }}
+      </h2>
+      <button type="button" class="btn-close" (click)="toggleForm()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+      <label class="label">
+        <span>{{ 'zones.form.name' | translate }} <span class="req">*</span></span>
+        <input class="input" formControlName="name" [placeholder]="'zones.form.namePh' | translate" />
+        <small class="err" *ngIf="form.controls.name.touched && form.controls.name.hasError('required')">
+          {{ 'zones.form.err.required' | translate }}
+        </small>
+        <small class="err" *ngIf="form.controls.name.touched && form.controls.name.hasError('duplicateName')">
+          {{ 'zones.form.err.duplicate' | translate }}
+        </small>
+      </label>
+
+      <label class="label">
+        <span>{{ 'zones.form.description' | translate }}</span>
+        <input class="input" formControlName="description" [placeholder]="'zones.form.descriptionPh' | translate" />
+      </label>
+
+      <label class="label switch">
+        <input type="checkbox" formControlName="isHeadquarters" />
+        <span>{{ 'zones.form.markHq' | translate }}</span>
+      </label>
+
+      <div class="right form-actions">
+        <button class="btn success" type="submit" [disabled]="loading()">
+          {{ editId() == null ? ('common.create' | translate) : ('common.save' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" (click)="new(); toggleForm()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

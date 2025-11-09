@@ -1,0 +1,279 @@
+
+  <!-- LIST -->
+  <div class="glass-dark card stack-md">
+    <div class="header">
+      <h2>{{ 'bribes.title' | translate }}</h2>
+    </div>
+
+    <!-- Estadísticas -->
+    <div *ngIf="!loading() && bribes().length > 0"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--sp-3); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Total sobornos</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-strong);">{{ totalBribes() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Monto total</div>
+        <div style="font-size: 1.3rem; font-weight: 700; color: var(--accent);">{{ totalAmount() |
+          currency:'ARS':'symbol':'1.0-0' }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Pagados</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #4a8d72;">{{ paidBribes() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Pendientes</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #a94545;">{{ pendingBribes() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Monto pendiente</div>
+        <div style="font-size: 1.3rem; font-weight: 700; color: #a94545;">{{ pendingAmount() |
+          currency:'ARS':'symbol':'1.0-0' }}</div>
+      </div>
+      <div style="text-align: center;"
+        *ngIf="fTextApplied() || fAmountApplied() || fAuthorityApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all'">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">Filtrados</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ filteredBribes().length }}</div>
+      </div>
+    </div>
+
+  <!-- Filters -->
+  <div class="filters" style="align-items: flex-end; flex-wrap: wrap;">
+    <!-- ✅ Filtro por ID - Cambiar a type="text" -->
+    <label class="label" style="min-width: 140px;">
+      <span>{{ 'bribes.filters.id' | translate }}</span>
+      <input class="input" type="text" [placeholder]="'bribes.filters.idPh' | translate" [ngModel]="fTextInput()"
+        (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
+    </label>
+  
+    <!-- ✅ Filtro por Monto - También cambiar a type="text" -->
+    <label class="label" style="min-width: 140px;">
+      <span>{{ 'bribes.filters.amount' | translate }}</span>
+      <input class="input" type="text" [placeholder]="'bribes.filters.amountPh' | translate" [ngModel]="fAmountInput()"
+        (ngModelChange)="fAmountInput.set($event)" (keyup.enter)="applyFilters()" />
+    </label>
+  
+    <!-- Filtro por Autoridad -->
+    <label class="label" style="flex: 1; min-width: 200px;">
+      <span>{{ 'bribes.filters.authority' | translate }}</span>
+      <input class="input" [placeholder]="'bribes.filters.authorityPh' | translate" [ngModel]="fAuthorityInput()"
+        (ngModelChange)="fAuthorityInput.set($event)" (keyup.enter)="applyFilters()" />
+    </label>
+  
+    <!-- Filtro por Estado de Pago -->
+    <label class="label" style="min-width: 160px;">
+      <span>{{ 'bribes.filters.paid' | translate }}</span>
+      <select class="input" [ngModel]="fPaidInput()" (ngModelChange)="fPaidInput.set($event)">
+        <option value="all">{{ 'bribes.filters.paid_all' | translate }}</option>
+        <option value="true">{{ 'bribes.filters.paid_yes' | translate }}</option>
+        <option value="false">{{ 'bribes.filters.paid_no' | translate }}</option>
+      </select>
+    </label>
+  
+    <!-- Filtro por Tipo de Fecha -->
+    <label class="label" style="min-width: 160px;">
+      <span>{{ 'bribes.filters.dateType' | translate }}</span>
+      <select class="input" [ngModel]="fDateTypeInput()" (ngModelChange)="fDateTypeInput.set($event)">
+        <option value="all">{{ 'bribes.filters.dateType_all' | translate }}</option>
+        <option value="exact">{{ 'bribes.filters.dateType_exact' | translate }}</option>
+        <option value="before">{{ 'bribes.filters.dateType_before' | translate }}</option>
+        <option value="after">{{ 'bribes.filters.dateType_after' | translate }}</option>
+        <option value="between">{{ 'bribes.filters.dateType_between' | translate }}</option>
+      </select>
+    </label>
+  
+    <!-- Fecha -->
+    <label class="label" *ngIf="fDateTypeInput() !== 'all'" style="min-width: 160px;">
+      <span>{{ 'bribes.filters.date' | translate }}</span>
+      <input class="input" type="date" [ngModel]="fDateInput()" (ngModelChange)="fDateInput.set($event)" />
+    </label>
+  
+    <!-- Fecha Fin -->
+    <label class="label" *ngIf="fDateTypeInput() === 'between'" style="min-width: 160px;">
+      <span>{{ 'bribes.filters.endDate' | translate }}</span>
+      <input class="input" type="date" [ngModel]="fEndDateInput()" (ngModelChange)="fEndDateInput.set($event)" />
+    </label>
+  
+    <!-- Botones -->
+    <div style="display: flex; gap: var(--sp-2);">
+      <button class="btn btn-primary" type="button" (click)="applyFilters()">
+        🔍 {{ 'common.search' | translate }}
+      </button>
+      <button class="btn ghost" type="button" (click)="clearFilters()"
+        *ngIf="fTextApplied() || fAmountApplied() || fAuthorityApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all'">
+        🗑️ {{ 'common.clear' | translate }}
+      </button>
+    </div>
+  </div>
+
+    <!-- Error message -->
+    <div *ngIf="error()" class="error">{{ error() }}</div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading()" class="loading">{{ 'bribes.loading' | translate }}</div>
+
+  <!-- Table -->
+  <div class="table-wrap" *ngIf="!loading()">
+    <table class="table">
+      <colgroup>
+        <col style="width: 80px;" /> <!-- ID -->
+        <col style="width: 130px;" /> <!-- Amount -->
+        <col style="width: 200px;" /> <!-- Authority -->
+        <col style="width: 100px;" /> <!-- Sale -->
+        <col style="width: 110px;" /> <!-- Status -->
+        <col style="width: 160px;" /> <!-- Date -->
+        <col style="width: 180px;" *ngIf="canPay() || canDelete()" /> <!-- Actions -->
+      </colgroup>
+  
+      <thead>
+        <tr>
+          <th>{{ 'bribes.table.id' | translate }}</th>
+          <th>{{ 'bribes.table.amount' | translate }}</th>
+          <th>{{ 'bribes.table.authority' | translate }}</th>
+          <th>{{ 'bribes.table.sale' | translate }}</th>
+          <th class="center">{{ 'bribes.table.paid' | translate }}</th>
+          <th>{{ 'bribes.table.date' | translate }}</th>
+          <th *ngIf="canPay() || canDelete()" style="text-align: right; padding-right: 14px;">{{ 'bribes.table.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of filteredBribes(); trackBy: trackById">
+          <td>#{{ b.id }}</td>
+          <td><strong>{{ b.amount | currency:'ARS':'symbol':'1.2-2' }}</strong></td>
+          <td>
+            <div class="cell-content">
+              <strong>{{ b.authority.name || '—'}}</strong>
+              <small class="muted">DNI: {{ b.authority.dni || '—' }}</small>
+            </div>
+          </td>
+          <td>#{{ b.sale.id || '—' }}</td>
+          <td class="center">
+            <span class="badge" [class.badge-success]="b.paid" [class.badge-pending]="!b.paid">
+              {{ (b.paid ? 'bribes.status.paid' : 'bribes.status.pending') | translate }}
+            </span>
+          </td>
+          <td>{{ b.creationDate | date:'dd/MM/yyyy HH:mm' }}</td>
+  
+          <!-- ✅ ACCIONES CON PERMISOS -->
+          <td *ngIf="canPay() || canDelete()" style="text-align: right; padding-right: 6px;">
+            <div class="actions-group">
+              <!-- Si NO está pagado: Botón activo (solo Admin y Socio) -->
+              <button *ngIf="!b.paid && canPay()" class="btn success btn--icon" (click)="markAsPaid(b)"
+                [attr.title]="'bribes.actions.pay' | translate">
+                ✅
+              </button>
+
+              <!-- Si YA está pagado: Badge indicador -->
+              <div *ngIf="b.paid && canPay()" class="paid-status" [attr.title]="'bribes.status.alreadyPaid' | translate">
+                <span class="paid-icon">🔒</span>
+                <span class="paid-text">Pagado</span>
+              </div>
+
+              <!-- Botón eliminar (solo Admin) -->
+              <button *ngIf="canDelete()" class="btn danger btn--icon" (click)="delete(b.id)" [attr.title]="'common.delete' | translate">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="filteredBribes().length === 0">
+          <td [attr.colspan]="(canPay() || canDelete()) ? 7 : 6" class="muted center">
+            {{ (fTextApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all')
+            ? ('bribes.noResults' | translate)
+            : ('bribes.empty' | translate) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ ESTILOS ADICIONALES PARA EL BADGE DE PAGADO -->
+  <style>
+    /* Celda de acciones */
+    .actions-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  
+    /* Badge de estado pagado */
+    .paid-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, rgba(63, 125, 99, 0.2) 0%, rgba(63, 125, 99, 0.1) 100%);
+      border: 1px solid rgba(63, 125, 99, 0.4);
+      border-radius: 8px;
+      white-space: nowrap;
+      cursor: default;
+      box-shadow: inset 0 1px rgba(255, 255, 255, 0.1);
+    }
+  
+    .paid-icon {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  
+    .paid-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: #b8e6d3;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: 'Google Sans Code', monospace;
+    }
+  
+    .paid-status:hover {
+      background: linear-gradient(135deg, rgba(63, 125, 99, 0.25) 0%, rgba(63, 125, 99, 0.15) 100%);
+      border-color: rgba(63, 125, 99, 0.5);
+    }
+  
+    /* Animación sutil */
+    .paid-status {
+      animation: fadeInScale 0.3s cubic-bezier(0.25, 0.6, 0.3, 1);
+    }
+  
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+  
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  
+    /* Contenido de celda (para authority) */
+    .cell-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+  
+    .cell-content strong {
+      font-weight: 600;
+      color: var(--text);
+    }
+  
+    .cell-content small {
+      font-size: 11px;
+      color: var(--muted);
+    }
+  
+    /* Responsive */
+    @media (max-width: 900px) {
+      .actions-group {
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+  
+      .paid-status {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>

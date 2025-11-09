@@ -1,0 +1,34 @@
+<!-- faqs.html (i18n aplicado) -->
+<section class="page">
+  <!-- Encabezado con look glass -->
+  <header class="hero glass">
+    <div class="hero__head">
+      <h1>{{ 'faqs.title' | translate }}</h1>
+      <p class="lead">{{ 'faqs.lead' | translate }}</p>
+    </div>
+    <div class="crumb">
+      {{ 'nav.home' | translate }} <span aria-hidden="true">/</span>
+      <strong>{{ 'nav.faqs' | translate }}</strong>
+    </div>
+  </header>
+
+  <!-- Lista de FAQs -->
+  <section class="glass block">
+    <div class="card">
+      <div class="faq-item" *ngFor="let key of faqKeys; let i = index">
+        <button class="faq-btn" type="button" (click)="toggle(key)" (keydown)="keyToggle(key, $event)"
+          [attr.aria-expanded]="openStates[key] ? 'true' : 'false'" [attr.aria-controls]="'faq_' + key">
+          <span class="q">{{ 'faqs.items.' + key + '.q' | translate }}</span>
+          <span class="chev" aria-hidden="true"></span>
+        </button>
+
+        <div class="collapsible" [class.open]="openStates[key]" [id]="'faq_' + key" role="region"
+          [attr.aria-hidden]="openStates[key] ? 'false' : 'true'">
+          <div class="collapsible__content">
+            <p class="a muted">{{ 'faqs.items.' + key + '.a' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

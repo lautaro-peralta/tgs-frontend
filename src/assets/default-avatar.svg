@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <!-- Gradiente de fondo principal -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1f35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f1419;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Gradiente dorado premium -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f4e4c1;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#d4af37;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#c3a462;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9e7e3b;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Gradiente para sombras -->
+    <radialGradient id="shadowGradient" cx="50%" cy="50%">
+      <stop offset="0%" style="stop-color:#000000;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+    </radialGradient>
+
+    <!-- Filtro de suavizado -->
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="200" height="200" fill="url(#bgGradient)"/>
+
+  <!-- Patrón de textura sutil -->
+  <rect width="200" height="200" fill="url(#shadowGradient)" opacity="0.2"/>
+
+  <!-- Marco exterior decorativo -->
+  <rect x="10" y="10" width="180" height="180" rx="12"
+        stroke="rgba(212, 175, 55, 0.2)" stroke-width="1" fill="none"/>
+
+  <!-- Marco interior -->
+  <rect x="20" y="20" width="160" height="160" rx="8"
+        stroke="rgba(212, 175, 55, 0.1)" stroke-width="0.5" fill="none"/>
+
+  <!-- Círculo de fondo para el avatar -->
+  <circle cx="100" cy="90" r="55" fill="rgba(195, 164, 98, 0.08)"/>
+  <circle cx="100" cy="90" r="54" stroke="rgba(195, 164, 98, 0.15)" stroke-width="1" fill="none"/>
+
+  <!-- Silueta de persona con mejor proporción -->
+  <g filter="url(#softGlow)">
+    <!-- Cabeza -->
+    <circle cx="100" cy="75" r="22" fill="url(#goldGradient)"/>
+
+    <!-- Cuello -->
+    <rect x="94" y="95" width="12" height="8" fill="url(#goldGradient)" rx="2"/>
+
+    <!-- Torso/Hombros con forma más realista -->
+    <path d="M 70 115 Q 70 103 85 103 L 115 103 Q 130 103 130 115 L 130 140 Q 130 145 125 145 L 75 145 Q 70 145 70 140 Z"
+          fill="url(#goldGradient)"/>
+
+    <!-- Sombra debajo de la cabeza -->
+    <ellipse cx="100" cy="97" rx="18" ry="3" fill="#000000" opacity="0.3"/>
+  </g>
+
+  <!-- Detalles decorativos dorados -->
+  <circle cx="100" cy="100" r="68" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" fill="none"/>
+  <circle cx="100" cy="100" r="72" stroke="rgba(212, 175, 55, 0.08)" stroke-width="0.5" fill="none"/>
+
+  <!-- Líneas decorativas en la parte inferior -->
+  <line x1="30" y1="165" x2="170" y2="165" stroke="rgba(212, 175, 55, 0.2)" stroke-width="1"/>
+  <line x1="40" y1="170" x2="160" y2="170" stroke="rgba(212, 175, 55, 0.1)" stroke-width="0.5"/>
+
+  <!-- Ornamento superior -->
+  <path d="M 100 25 L 105 30 L 100 35 L 95 30 Z" fill="rgba(212, 175, 55, 0.3)"/>
+
+  <!-- Esquinas decorativas -->
+  <g stroke="rgba(212, 175, 55, 0.25)" stroke-width="1.5" fill="none" stroke-linecap="round">
+    <path d="M 25 25 L 35 25 M 25 25 L 25 35"/>
+    <path d="M 175 25 L 165 25 M 175 25 L 175 35"/>
+    <path d="M 25 175 L 35 175 M 25 175 L 25 165"/>
+    <path d="M 175 175 L 165 175 M 175 175 L 175 165"/>
+  </g>
+
+  <!-- Texto "MEMBER" en la parte inferior -->
+  <text x="100" y="185" font-family="monospace" font-size="8" fill="rgba(212, 175, 55, 0.4)"
+        text-anchor="middle" letter-spacing="2">MEMBER</text>
+</svg>

@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng build:*)",
+      "Read(//c/Users/tomas/Documents/GitHub/**)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(cat:*)",
+      "Bash(git checkout:*)",
+      "Bash(node -e:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(admin.scss.new)",
+      "Bash(admin.ts.new)",
+      "Bash(npx tsc:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,362 @@
+<section class="stack-lg">
+
+  <!-- GRID PRINCIPAL: STATS (FIJO) + LISTA -->
+  <div class="sales-main-grid">
+
+    <!-- COLUMNA IZQUIERDA: PANEL DE ESTADÍSTICAS -->
+    <aside class="stats-panel">
+      <div class="glass-dark card">
+
+        @if (loadingStats()) {
+        <div class="loading">
+          <p>{{ 'sales.stats.loading' | translate : {} : 'Cargando estadísticas...' }}</p>
+        </div>
+
+        } @else if (stats()) {
+
+        <!-- KPIs principales -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-content">
+              <span class="stat-label">{{ 'sales.stats.totalRevenue' | translate : {} : 'Ingresos Totales' }}</span>
+              <span class="stat-value">{{ stats()!.totalRevenue | currency:'ARS' }}</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">🛒</div>
+            <div class="stat-content">
+              <span class="stat-label">{{ 'sales.stats.totalSales' | translate : {} : 'Total de Ventas' }}</span>
+              <span class="stat-value">{{ stats()!.totalSales }}</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <span class="stat-label">{{ 'sales.stats.averageTicket' | translate : {} : 'Importe promedio por venta' }}</span>
+              <span class="stat-value">{{ stats()!.averageTicket | currency:'ARS' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos con ECharts -->
+        <div class="charts-grid">
+          <!-- Ventas por Mes -->
+          <div class="chart-card">
+            <h3 class="chart-title">📈 {{ 'sales.stats.salesByMonth' | translate : {} : 'Ventas por Mes' }}</h3>
+            @if (salesChartOptions()) {
+            <div echarts [options]="salesChartOptions()!" [theme]="'dark'" class="chart-container" style="height: 320px;"></div>
+            }
+          </div>
+
+          <!-- Top Productos -->
+          <div class="chart-card">
+            <h3 class="chart-title">🏆 {{ 'sales.stats.topProducts' | translate : {} : 'Productos Más Vendidos' }}</h3>
+            @if (topProductsChartOptions()) {
+            <div echarts [options]="topProductsChartOptions()!" [theme]="'dark'" class="chart-container" style="height: 320px;"></div>
+            }
+          </div>
+
+          <!-- Ventas por Distribuidor (solo para Admin y Authority) -->
+          <div class="chart-card span-full" *ngIf="isAdmin() || isAuthority()">
+            <h3 class="chart-title">🚚 {{ 'sales.stats.salesByDistributor' | translate : {} : 'Ventas por Distribuidor'
+              }}</h3>
+            @if (distributorsChartOptions()) {
+            <div echarts [options]="distributorsChartOptions()!" [theme]="'dark'" class="chart-container" style="height: 320px;"></div>
+            }
+          </div>
+        </div>
+
+        } @else {
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          <h3>{{ 'sales.stats.noData' | translate : {} : 'No hay estadísticas disponibles' }}</h3>
+          <p>{{ 'sales.stats.noDataDesc' | translate : {} : 'Las estadísticas aparecerán aquí una vez que haya datos
+            disponibles.' }}</p>
+        </div>
+        }
+
+      </div>
+    </aside>
+
+    <!-- COLUMNA DERECHA: LISTA DE VENTAS -->
+    <div class="glass-dark card stack-md">
+      <div class="header">
+        <h2>{{ 'sales.title' | translate }}</h2>
+        <div class="right" *ngIf="canCreate()">
+          <button class="btn" type="button" (click)="new(); toggleNew()" [attr.aria-expanded]="isNewOpen">
+            {{ isNewOpen ? ('sales.toggle.close' | translate) : ('sales.toggle.new' | translate) }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Estadísticas resumen -->
+      <div *ngIf="!loading() && sales().length > 0" class="filters"
+        style="background: rgba(195, 164, 98, 0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+        <span class="muted"><strong>{{ 'sales.stats.totalLabel' | translate }}</strong> {{ totalSales() }}</span>
+        <span class="muted"><strong>{{ 'sales.stats.revenueLabel' | translate }}</strong> {{ totalRevenue() |
+          currency:'ARS' }}</span>
+        <span class="muted" *ngIf="fTextApplied()"><strong>{{ 'sales.stats.filteredLabel' | translate }}</strong> {{
+          filteredSales().length }}</span>
+      </div>
+
+      <!-- Filtros -->
+      <div class="filters" style="align-items: flex-end;">
+        <label class="label" style="flex: 1;">
+          <span>{{ 'sales.filters.search' | translate }}</span>
+          <input class="input" [placeholder]="'sales.filters.searchPh' | translate" [ngModel]="fTextInput()"
+            (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
+        </label>
+
+        <label class="label" style="min-width: 180px;">
+          <span>{{ 'sales.filters.clientDni' | translate }}</span>
+          <input class="input" maxlength="8" [placeholder]="'sales.filters.clientDniPh' | translate"
+            [ngModel]="fClientDniInput()" (ngModelChange)="fClientDniInput.set($event)"
+            (keyup.enter)="applyFilters()" />
+        </label>
+
+        <div style="display: flex; gap: var(--sp-2);">
+          <button class="btn btn-primary" type="button" (click)="applyFilters()">
+            🔍 {{ 'common.search' | translate }}
+          </button>
+          <button class="btn ghost" type="button" (click)="clearFilters()"
+            *ngIf="fTextApplied() || fClientDniApplied()">
+            🗑️ {{ 'common.clear' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 40px;"></th>
+              <th>{{ 'sales.table.id' | translate }}</th>
+              <th>{{ 'sales.table.date' | translate }}</th>
+              <th>{{ 'sales.table.client' | translate }}</th>
+              <th>{{ 'sales.table.distributor' | translate }}</th>
+              <th class="right">{{ 'sales.table.total' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (v of filteredSales(); track v.id) {
+            <!-- Fila principal (clickeable) -->
+            <tr class="clickable-row" [class.expanded]="isSaleExpanded(v.id)">
+              <td (click)="toggleSaleExpanded(v.id)" style="text-align: center; vertical-align: middle;">
+                <div class="expand-arrow" [class.expanded]="isSaleExpanded(v.id)">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </td>
+              <td (click)="toggleSaleExpanded(v.id)">#{{ v.id }}</td>
+              <td (click)="toggleSaleExpanded(v.id)">{{ formatDateTimeDDMMYYYY(v.saleDate || v.date) }}</td>
+              <td (click)="toggleSaleExpanded(v.id)">
+                @if (getClient(v); as cli) {
+                {{ cli.dni }}
+                } @else { — }
+              </td>
+              <td (click)="toggleSaleExpanded(v.id)">
+                @if (v.distributor) {
+                {{ v.distributor.dni }}
+                } @else { — }
+              </td>
+              <td (click)="toggleSaleExpanded(v.id)" class="right" style="font-weight: 600; color: var(--accent);">{{ calculateTotal(v) | currency:'$' }}</td>
+            </tr>
+
+            <!-- Fila expandida con detalles de productos -->
+            @if (isSaleExpanded(v.id) && hasDetails(v)) {
+            <tr class="details-row">
+              <td colspan="6" style="padding: 0;">
+                <div style="padding: var(--sp-4); background: rgba(195, 164, 98, 0.05); border-left: 3px solid var(--accent);">
+                  <h4 style="margin: 0 0 var(--sp-3); color: var(--accent); font-size: 0.95rem;">
+                    📦 Productos de la venta
+                  </h4>
+                  <div style="display: grid; gap: var(--sp-2);">
+                    @for (d of getDetails(v); track d.productId) {
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--sp-3); background: rgba(0, 0, 0, 0.3); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.25);">
+                      <div style="flex: 1;">
+                        <div style="font-weight: 600; color: var(--text); font-size: 1rem;">{{ detailDescription(d) }}</div>
+                        <div class="muted" style="font-size: 0.875rem; margin-top: 4px;">
+                          💰 {{ detailPrice(d) | currency:'$' }} c/u
+                        </div>
+                      </div>
+                      <div style="display: flex; align-items: center; gap: var(--sp-2); background: rgba(195, 164, 98, 0.15); padding: var(--sp-2) var(--sp-3); border-radius: 6px;">
+                        <div class="muted" style="font-size: 0.813rem;">Cantidad:</div>
+                        <div style="font-weight: 700; color: var(--accent); font-size: 1.25rem;">{{ d.quantity }}</div>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </td>
+            </tr>
+            }
+            }
+            @if (filteredSales().length === 0) {
+            <tr>
+              <td colspan="6" class="center muted">
+                {{ (fTextApplied() || fClientDniApplied())
+                ? ('sales.noResults' | translate)
+                : ('sales.empty' | translate) }}
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE FORM (RESTO DEL HTML SIN CAMBIOS) -->
+  <div class="new-sale-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
+    <button type="button" class="new-sale-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+
+    <div class="new-sale-overlay__panel glass-dark card" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
+      <div class="header compact">
+        <h2 class="title">{{ 'sales.newTitle' | translate }}</h2>
+        <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+        @if (error()) {
+        <div class="error">{{ error() }}</div>
+        }
+
+        <!-- Client Selector con diseño de tarjetas -->
+        <div style="grid-column: 1 / -1;">
+          <label class="label">
+            <span style="color: var(--accent); font-weight: 600;">👤 {{ 'sales.form.client' | translate }} *</span>
+            <input
+              class="input"
+              type="text"
+              [value]="clientSearch()"
+              (input)="clientSearch.set($any($event.target).value)"
+              [placeholder]="'sales.form.clientFilterPh' | translate"
+            />
+          </label>
+
+          <div *ngIf="filteredClients().length > 0"
+            style="padding: var(--sp-3); background: rgba(76, 175, 80, 0.08); border-radius: 8px; border: 1px solid rgba(76, 175, 80, 0.2); margin-top: var(--sp-2);">
+            <button type="button" (click)="toggleClientsOpen()" [attr.aria-expanded]="clientsOpen()"
+              style="all: unset; display: flex; align-items: center; gap: .5rem; cursor: pointer; color: rgba(129, 199, 132, 0.9); font-weight: 700; font-size: 0.875rem;">
+              <span>Clientes disponibles ({{ filteredClients().length }})</span>
+              <span aria-hidden="true" style="opacity:.8; transform: translateY(1px);">{{ clientsOpen() ? '▾' : '▸' }}</span>
+            </button>
+            <div *ngIf="clientsOpen()" style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 250px; overflow-y: auto; margin-top: var(--sp-2);">
+              <div *ngFor="let c of filteredClients(); trackBy: trackByClientDni"
+                (click)="selectClient(c)"
+                class="client-card"
+                [class.selected]="selectedClientDni() === c.dni">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-weight: 600; color: rgba(129, 199, 132, 1);">{{ c.name }}</div>
+                  <span *ngIf="selectedClientDni() === c.dni" style="color: rgba(129, 199, 132, 1); font-size: 1.2rem; font-weight: bold;">✓</span>
+                </div>
+                <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">
+                  DNI: {{ c.dni }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="filteredClients().length === 0"
+            style="padding: var(--sp-3); text-align: center; color: var(--muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3); margin-top: var(--sp-2);">
+            <p style="margin: 0;">No hay clientes disponibles</p>
+          </div>
+        </div>
+
+        <div class="subheader">{{ 'sales.form.products' | translate }}</div>
+
+        @for (l of lines(); track $index; let i = $index) {
+        <div class="linea" style="grid-column: 1 / -1; border: 1px solid rgba(195, 164, 98, 0.2); border-radius: 8px; padding: var(--sp-3); background: rgba(0, 0, 0, 0.1);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-2);">
+            <h4 style="margin: 0; color: rgba(195, 164, 98, 0.9);">Producto {{ i + 1 }}</h4>
+            <button class="btn danger btn--icon" type="button" (click)="removeLine(i)"
+              [attr.title]="'sales.form.removeLineTitle' | translate">
+              🗑️
+            </button>
+          </div>
+
+          <!-- Búsqueda de productos -->
+          <label class="label">
+            <span style="color: var(--accent); font-weight: 600;">📦 {{ 'sales.form.product' | translate }}</span>
+            <input
+              class="input"
+              type="text"
+              [value]="productSearch()"
+              (input)="productSearch.set($any($event.target).value)"
+              [placeholder]="'sales.form.searchProductPh' | translate"
+            />
+          </label>
+
+          <!-- Lista de ofertas de productos -->
+          <div *ngIf="filteredProductOffers().length > 0"
+            style="padding: var(--sp-3); background: rgba(59, 130, 246, 0.08); border-radius: 8px; border: 1px solid rgba(59, 130, 246, 0.2); margin-top: var(--sp-2);">
+            <button type="button" (click)="toggleProductOpen(i)" [attr.aria-expanded]="isProductOpen(i)"
+              style="all: unset; display: flex; align-items: center; gap: .5rem; cursor: pointer; color: rgba(147, 197, 253, 0.9); font-weight: 700; font-size: 0.875rem;">
+              <span>Productos disponibles ({{ filteredProductOffers().length }})</span>
+              <span aria-hidden="true" style="opacity:.8; transform: translateY(1px); margin-left: auto;">{{ isProductOpen(i) ? '▾' : '▸' }}</span>
+            </button>
+            <div *ngIf="isProductOpen(i)" style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 300px; overflow-y: auto; margin-top: var(--sp-2);">
+              <div *ngFor="let offer of filteredProductOffers(); trackBy: trackByOfferId"
+                (click)="selectProductOffer(offer, i)"
+                class="product-card"
+                [class.selected]="l.productId === offer.productId && l.distributorDni === offer.distributorDni">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-weight: 600; color: rgba(147, 197, 253, 1);">{{ offer.description }}</div>
+                  <span *ngIf="l.productId === offer.productId && l.distributorDni === offer.distributorDni" style="color: rgba(147, 197, 253, 1); font-size: 1.2rem; font-weight: bold;">✓</span>
+                </div>
+                <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); margin-top: 4px;">
+                  <span style="font-family: monospace;">ID: {{ offer.productId }}</span> •
+                  <span style="color: #81c784;">{{ offer.price | currency:'ARS' }}</span> •
+                  <span>Stock: {{ offer.stock }}</span>
+                </div>
+                <div style="font-size: 0.75rem; margin-top: 6px;">
+                  <span style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500;">
+                    🚚 {{ offer.distributorName }}
+                  </span>
+                  <span *ngIf="offer.zoneName"
+                    style="background: rgba(156, 39, 176, 0.25); padding: 2px 6px; border-radius: 4px; color: #ba68c8; font-weight: 500; margin-left: 4px;">
+                    📍 {{ offer.zoneName }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="filteredProductOffers().length === 0"
+            style="padding: var(--sp-3); text-align: center; color: var(--muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3); margin-top: var(--sp-2);">
+            <p style="margin: 0;">No hay productos disponibles</p>
+          </div>
+
+          <!-- Cantidad -->
+          <label class="label" style="margin-top: var(--sp-3); max-width: 200px;">
+            <span>{{ 'sales.form.quantity' | translate }}</span>
+            <input class="input" type="number" min="1" step="1" [attr.max]="getStock(l.productId) || null"
+              [title]="'sales.form.stockTitle' | translate:{stock: getStock(l.productId) || 0}"
+              [(ngModel)]="l.quantity" (blur)="clampQuantity(i)" [ngModelOptions]="{standalone: true}"
+              [name]="'cant' + i" />
+          </label>
+        </div>
+        }
+
+        <div class="right" style="grid-column: 1 / -1; margin-top: .5rem;">
+          <button class="btn" type="button" (click)="addLine()">
+            {{ 'sales.form.addProduct' | translate }}
+          </button>
+        </div>
+
+        <div class="right" style="grid-column: 1 / -1;">
+          <button class="btn success" type="submit" [disabled]="loading() || form.invalid">
+            {{ 'sales.form.create' | translate }}
+          </button>
+          <button class="btn ghost" type="button" (click)="new()" [disabled]="loading()">
+            {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</section>

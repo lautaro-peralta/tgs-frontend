@@ -1,0 +1,209 @@
+<!-- user-verification-status.component.html -->
+<div class="user-verification-status">
+  <!-- Header -->
+  <div class="verification-header">
+    <div>
+      <h2>{{ 'userVerification.status.title' | translate }}</h2>
+      <p class="subtitle">{{ 'userVerification.status.subtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>{{ 'userVerification.status.loading' | translate }}</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !loading" class="error-message">
+    <span class="icon">⚠️</span>
+    <div class="error-content">
+      <strong>{{ 'userVerification.status.error.title' | translate }}</strong>
+      <p>{{ error }}</p>
+    </div>
+    <button class="btn-link" (click)="error = null">{{ 'userVerification.status.error.close' | translate }}</button>
+  </div>
+
+  <!-- Verified -->
+  <div *ngIf="isVerified && !loading" class="verified-card">
+    <div class="verified-icon">✅</div>
+    <h3>{{ 'userVerification.status.verified.title' | translate }}</h3>
+    <p>{{ 'userVerification.status.verified.desc' | translate }}</p>
+
+    <div class="verified-benefits">
+      <h4>{{ 'userVerification.status.verified.benefitsTitle' | translate }}</h4>
+      <ul>
+        <li *ngFor="let b of ('userVerification.status.verified.benefits' | translate)">{{ b }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Not Verified - No Request -->
+  <div *ngIf="!isVerified && !verificationStatus && !loading" class="no-verification-card">
+    <div class="info-icon">📋</div>
+    <h3>{{ 'userVerification.status.request.title' | translate }}</h3>
+    <p>{{ 'userVerification.status.request.desc' | translate }}</p>
+
+    <!-- Warning si NO tiene perfil completo -->
+    <div *ngIf="!hasCompleteProfile" class="alert alert-warning">
+      <span class="icon">⚠️</span>
+      <div>
+        <strong>{{ 'userVerification.status.profileIncomplete.title' | translate }}</strong>
+        <p>{{ 'userVerification.status.profileIncomplete.desc' | translate }}</p>
+        <a routerLink="/mi-cuenta" class="btn btn-secondary btn-sm">
+          <span class="icon">📝</span>
+          {{ 'userVerification.status.profileIncomplete.completeNow' | translate }}
+        </a>
+      </div>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div *ngIf="!hasCompleteProfile" class="profile-progress">
+      <h4>{{ 'userVerification.status.progress.title' | translate }}</h4>
+      <div class="progress-items">
+        <div class="progress-item completed">
+          <span class="icon">✅</span>
+          <span class="text">{{ 'userVerification.status.progress.created' | translate }}</span>
+        </div>
+        <div class="progress-item completed">
+          <span class="icon">✅</span>
+          <span class="text">{{ 'userVerification.status.progress.emailVerified' | translate }}</span>
+        </div>
+        <div class="progress-item" [class.completed]="hasCompleteProfile">
+          <span class="icon">{{ hasCompleteProfile ? '✅' : '⏳' }}</span>
+          <span class="text">
+            {{ 'userVerification.status.progress.profileCompleted' | translate:{ percent: hasCompleteProfile ? 100 : '<
+              100' } }} </span>
+        </div>
+        <div class="progress-item" [class.completed]="isVerified">
+          <span class="icon">{{ isVerified ? '✅' : '⏳' }}</span>
+          <span class="text">{{ 'userVerification.status.progress.adminVerification' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requirements -->
+    <div class="verification-requirements">
+      <h4>{{ 'userVerification.status.requirements.title' | translate }}</h4>
+      <ul>
+        <li [class.completed]="hasCompleteProfile">
+          <span class="icon">{{ hasCompleteProfile ? '✅' : '⭕' }}</span>
+          {{ 'userVerification.status.requirements.profile100' | translate }}
+        </li>
+        <li class="completed">
+          <span class="icon">✅</span>
+          {{ 'userVerification.status.requirements.emailVerified' | translate }}
+        </li>
+        <li [class.completed]="hasCompleteProfile">
+          <span class="icon">{{ hasCompleteProfile ? '✅' : '⭕' }}</span>
+          {{ 'userVerification.status.requirements.personalData' | translate }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Button - Solo si tiene perfil completo -->
+    <button *ngIf="hasCompleteProfile" class="btn btn-primary btn-large" (click)="requestVerification()"
+      [disabled]="requesting">
+      <span class="icon">📨</span>
+      {{ requesting ? ('userVerification.status.buttons.sending' | translate)
+      : ('userVerification.status.buttons.request' | translate) }}
+    </button>
+
+    <!-- Help text si no tiene perfil completo -->
+    <div *ngIf="!hasCompleteProfile" class="help-box">
+      <span class="icon">ℹ️</span>
+      <p>{{ 'userVerification.status.help.completeProfile' | translate }}</p>
+    </div>
+  </div>
+
+  <!-- Pending -->
+  <div
+    *ngIf="!isVerified && verificationStatus && verificationStatus.status === UserVerificationStatus.PENDING && !loading"
+    class="pending-card">
+    <div class="pending-header">
+      <span [class]="getStatusBadgeClass(verificationStatus.status)">
+        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        {{ getStatusText(verificationStatus.status) }}
+      </span>
+    </div>
+
+    <div class="pending-content">
+      <h3>{{ 'userVerification.status.pending.title' | translate }}</h3>
+      <p>{{ 'userVerification.status.pending.desc' | translate }}</p>
+
+      <div class="verification-details">
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.status.pending.details.requestedAt' | translate }}</span>
+          <span class="value">{{ formatDate(verificationStatus.createdAt) }}</span>
+        </div>
+        
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.status.pending.details.email' | translate }}</span>
+          <span class="value">{{ verificationStatus.email }}</span>
+        </div>
+      </div>
+
+      <div class="pending-actions">
+        <button class="btn btn-secondary" (click)="resendVerification()" [disabled]="resending">
+          <span class="icon">🔄</span>
+          {{ resending ? ('userVerification.status.buttons.resending' | translate)
+          : ('userVerification.status.buttons.resend' | translate) }}
+        </button>
+      </div>
+
+      <div class="info-box">
+        <span class="icon">ℹ️</span>
+        <p>
+          <strong>{{ 'userVerification.status.pending.infoBox.waitTitle' | translate }}</strong>
+          {{ 'userVerification.status.pending.infoBox.waitDesc' | translate }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancelled/Rejected -->
+  <div
+    *ngIf="!isVerified && verificationStatus && verificationStatus.status === UserVerificationStatus.CANCELLED && !loading"
+    class="cancelled-card">
+    <div class="cancelled-header">
+      <span [class]="getStatusBadgeClass(verificationStatus.status)">
+        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        {{ getStatusText(verificationStatus.status) }}
+      </span>
+    </div>
+
+    <div class="cancelled-content">
+      <h3>{{ 'userVerification.status.rejected.title' | translate }}</h3>
+      <p>{{ 'userVerification.status.rejected.desc' | translate }}</p>
+
+      <button class="btn btn-primary" (click)="requestVerification()" [disabled]="requesting || !hasCompleteProfile">
+        <span class="icon">🔄</span>
+        {{ requesting ? ('userVerification.status.buttons.sending' | translate)
+        : ('userVerification.status.buttons.requestAgain' | translate) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Expired -->
+  <div
+    *ngIf="!isVerified && verificationStatus && verificationStatus.status === UserVerificationStatus.EXPIRED && !loading"
+    class="expired-card">
+    <div class="expired-header">
+      <span [class]="getStatusBadgeClass(verificationStatus.status)">
+        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        {{ getStatusText(verificationStatus.status) }}
+      </span>
+    </div>
+
+    <div class="expired-content">
+      <h3>{{ 'userVerification.status.expired.title' | translate }}</h3>
+      <p>{{ 'userVerification.status.expired.desc' | translate }}</p>
+
+      <button class="btn btn-primary" (click)="requestVerification()" [disabled]="requesting || !hasCompleteProfile">
+        <span class="icon">📨</span>
+        {{ requesting ? ('userVerification.status.buttons.sending' | translate)
+        : ('userVerification.status.buttons.requestAgain' | translate) }}
+      </button>
+    </div>
+  </div>
+</div>

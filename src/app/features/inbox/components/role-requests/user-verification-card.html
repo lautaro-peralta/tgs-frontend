@@ -1,0 +1,67 @@
+<!-- user-verification-card.component.html -->
+<div class="user-verification-card" [class.expanded]="isExpanded">
+  <!-- Card Header -->
+  <div class="card-header" (click)="toggleExpanded()">
+    <div class="verification-info">
+      <div class="user-info">
+        <span class="email">{{ verification.email }}</span>
+      </div>
+    </div>
+
+    <div class="card-actions">
+      <!-- Status Badge -->
+      <span [class]="getStatusBadgeClass(verification.status)">
+        <span class="icon">{{ getStatusIcon(verification.status) }}</span>
+        {{ getStatusText(verification.status) }}
+      </span>
+
+      <!-- Expand Button -->
+      <button class="expand-btn" type="button" [attr.aria-label]="'userVerification.card.expandAria' | translate">
+        <span class="icon" [class.expanded]="isExpanded">▼</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Card Body (Expandible) -->
+  <div *ngIf="isExpanded" class="card-body">
+    <!-- Details Section -->
+    <div class="detail-section">
+      <h4>{{ 'userVerification.card.infoTitle' | translate }}</h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.card.labels.email' | translate }}</span>
+          <span class="value">{{ verification.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.card.labels.requestedAt' | translate }}</span>
+          <span class="value">{{ formatDate(verification.createdAt) }}</span>
+        </div>
+
+
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.card.labels.attempts' | translate }}</span>
+          <span class="value">{{ verification.attempts }} / {{ verification.maxAttempts }}</span>
+        </div>
+
+        <div *ngIf="verification.verifiedAt" class="detail-item">
+          <span class="label">{{ 'userVerification.card.labels.verifiedAt' | translate }}</span>
+          <span class="value">{{ formatDate(verification.verifiedAt) }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">{{ 'userVerification.card.labels.updatedAt' | translate }}</span>
+          <span class="value">{{ formatDate(verification.updatedAt) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons (Admin, Pending) -->
+    <div *ngIf="isAdmin && verification.status === UserVerificationStatus.PENDING" class="action-buttons">
+      <button class="btn btn-success" (click)="onReview($event)" type="button">
+        <span class="icon">✓</span>
+        {{ 'userVerification.card.reviewBtn' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

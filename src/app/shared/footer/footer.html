@@ -1,0 +1,66 @@
+<footer class="app-footer" role="contentinfo">
+  <div class="footer-container">
+    <!-- Sección Superior: Brand + Links -->
+    <div class="footer-main">
+      <!-- Brand & Tagline -->
+      <div class="footer-brand">
+        <div class="brand-mark">
+          <span class="logo-text">{{ brand }}</span>
+        </div>
+        <p class="brand-tagline">{{ 'footer.tagline' | translate }}</p>
+
+        <!-- Redes Sociales -->
+        <div class="social-links" role="navigation" aria-label="Social media links">
+          <a *ngFor="let social of socialLinks; trackBy: trackBySocial" [href]="social.url" target="_blank"
+            rel="noopener noreferrer" class="social-link" [attr.aria-label]="social.ariaLabel | translate"
+            [title]="social.name">
+            <span class="social-icon" [attr.data-icon]="social.icon"></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links Grid -->
+      <div class="footer-links">
+        <div *ngFor="let section of sections; trackBy: trackBySection" class="footer-section">
+          <h3 class="section-title">{{ section.title | translate }}</h3>
+          <ul class="section-list">
+            <li *ngFor="let link of section.links; trackBy: trackByLabel">
+              <!-- Link Interno -->
+              <a *ngIf="link.path" [routerLink]="link.path" class="footer-link" routerLinkActive="active">
+                {{ link.label | translate }}
+              </a>
+              <!-- Link Externo -->
+              <a *ngIf="link.external" [href]="link.external" target="_blank" rel="noopener noreferrer"
+                class="footer-link external">
+                {{ link.label | translate }}
+                <span class="external-icon" aria-hidden="true">↗</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divisor -->
+    <div class="footer-divider"></div>
+
+    <!-- Sección Inferior: Copyright + UTN -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        <p>
+          © {{ currentYear }} {{ brand }}.
+          {{ 'footer.rights' | translate }}
+        </p>
+      </div>
+
+      <div class="attribution">
+        <p>
+          {{ 'footer.university.prefix' | translate }}
+          <a href="https://frro.utn.edu.ar" target="_blank" rel="noopener noreferrer" class="utn-link">
+            {{ 'footer.university.name' | translate }}
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

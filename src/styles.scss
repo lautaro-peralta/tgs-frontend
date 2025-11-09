@@ -1,0 +1,418 @@
+/* ========== Reset suave ========== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Google Sans Code', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--app-bg);
+  color: #fefefe;
+  /*color: var(--text);*/
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+
+/* ========== Tema Peaky Blinders (Garrison) ========== */
+:root {
+  /* Colores inspirados en el logo */
+  --bg: #0b0e11;
+  /* carbón profundo */
+  --bg-elev: #11161b;
+  /* elevaciones */
+  --bg-panel: #0f1419;
+  /* inputs/paneles */
+  --text: #efe9dd;
+  /* marfil tibio */
+  --muted: #b7ad99;
+  /* pergamino */
+  --accent: #c3a462;
+  /* latón/dorado */
+  --accent-700: #a4884f;
+  --accent-900: #6e5a32;
+  --danger: #8b2e2e;
+  /* oxblood */
+  --success: #3f7d63;
+  /* verde botella */
+  --border: rgba(255, 245, 225, .12);
+  --shadow: 0 18px 40px rgba(0, 0, 0, .45);
+  --radius: 14px;
+
+  --h1: clamp(28px, 3.2vw, 40px);
+  --h2: clamp(22px, 2.4vw, 28px);
+  --h3: clamp(18px, 2vw, 22px);
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  --container-max: 1200px;
+  --footer-gap: 280px;
+
+  --app-bg:
+    radial-gradient(1200px 600px at 20% 80%,
+      rgba(160, 170, 209, 0.8) 0%,
+      rgba(160, 170, 209, 0.4) 40%,
+      transparent 80%),
+    radial-gradient(900px 500px at 90% 50%,
+      rgba(254, 202, 202, 0.8) 0%,
+      rgba(254, 202, 202, 0.4) 40%,
+      transparent 80%),
+    linear-gradient(120deg, #0f172a 0%, #111827 60%, #0b1220 100%);
+}
+
+/* Grano + viñeta cinematográfica */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 60% at 50% 50%, transparent 30%, rgba(0, 0, 0, .35) 100%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feComponentTransfer><feFuncA type='table' tableValues='0 0 0 .03 .06 .08 .1 .12'/></feComponentTransfer></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: soft-light;
+  opacity: .8;
+}
+
+
+/* Tipografía */
+h1,
+h2,
+h3,
+.display {
+  font-family: 'Cormorant Garamond', serif;
+  letter-spacing: .5px;
+  color: var(--text);
+  margin: 0 0 .5em;
+}
+
+h1 {
+  font-size: var(--h1);
+}
+
+h2 {
+  font-size: var(--h2);
+}
+
+h3 {
+  font-size: var(--h3);
+}
+
+/* Utilidades */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--sp-5);
+}
+
+.grid {
+  display: grid;
+  gap: var(--sp-5);
+}
+
+.flex {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+}
+
+.right {
+  justify-content: flex-end;
+}
+
+.space {
+  justify-content: space-between;
+}
+
+/* Cards con marco "art déco" */
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, 0)), var(--bg-elev);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: var(--sp-5);
+  position: relative;
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(195, 164, 98, .22);
+  pointer-events: none;
+  border-radius: calc(var(--radius) - 8px);
+}
+
+/* Controles */
+.label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  background: var(--bg-panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(195, 164, 98, .12);
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(0, 0, 0, .18)),
+    linear-gradient(180deg, var(--accent), var(--accent-700));
+  color: #1a1308;
+  box-shadow: 0 6px 16px rgba(195, 164, 98, .22);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(195, 164, 98, .28);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn.danger {
+  background: linear-gradient(180deg, #a94545, #8b2e2e);
+  color: #fff;
+  border: none;
+}
+
+.btn.success {
+  background: linear-gradient(180deg, #4a8d72, #3f7d63);
+  color: #fff;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(195, 164, 98, .4);
+  background: radial-gradient(60% 80% at 30% 30%, rgba(195, 164, 98, .15), transparent 60%), rgba(195, 164, 98, .08);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.badge-ok {
+  border-color: rgba(63, 125, 99, .5);
+  background: rgba(63, 125, 99, .15);
+}
+
+/* Tablas */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th,
+.table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.table tr:hover td {
+  background: rgba(255, 255, 255, .03);
+}
+
+/* Separador ornamental */
+.ornament {
+  margin: 8px 0 20px;
+  height: 10px;
+  border: none;
+  background:
+    linear-gradient(90deg, transparent, rgba(195, 164, 98, .6), transparent) center/60% 1px no-repeat,
+    radial-gradient(circle at center, rgba(195, 164, 98, .6) 0 2px, transparent 3px) center/14px 10px no-repeat;
+  opacity: .9;
+}
+
+/* ========== ✅ LAYOUT FLEXBOX PARA FOOTER FIJO ========== */
+app-root,
+app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  flex: 1;
+}
+
+.app-main {
+  flex: 1 0 auto;
+  /* ✅ Esto hace que el contenido empuje el footer hacia abajo */
+  padding: 1rem;
+  padding-bottom: var(--footer-gap);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ✅ El footer se quedará siempre al fondo */
+.app-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* Sección fullscreen */
+.section--fullscreen {
+  inline-size: 100vw;
+  block-size: 100svh;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Edge-to-edge (rompe container) */
+.edge-to-edge {
+  margin-inline: calc(50% - 50vw);
+  inline-size: 100vw;
+}
+
+.container--bleed {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 0;
+}
+
+/* Evita barras laterales */
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* Medios fluidos */
+img,
+svg,
+video,
+canvas {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* Padding lateral */
+.pad-edge {
+  padding-inline: clamp(12px, 3vw, 32px);
+}
+
+
+/* bloquea el scroll cuando estés en Home */
+.no-scroll {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+/* altura de navbar configurable */
+:root {
+  --nav-h: 72px;
+}
+
+// ============================================
+// SCROLLBAR PERSONALIZADA
+// ============================================
+
+// Variables para scrollbar (puedes ajustarlas)
+$scrollbar-width: 10px;
+$scrollbar-bg: #0a0e27;
+$scrollbar-thumb: rgba(100, 200, 255, 0.25);
+$scrollbar-thumb-hover: rgba(100, 200, 255, 0.4);
+
+// Para Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb $scrollbar-bg;
+}
+
+// Para Chrome, Safari, Edge
+::-webkit-scrollbar {
+  width: $scrollbar-width;
+  height: $scrollbar-width;
+}
+
+::-webkit-scrollbar-track {
+  background: $scrollbar-bg;
+  border-radius: calc($scrollbar-width / 2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: $scrollbar-thumb;
+  border-radius: calc($scrollbar-width / 2);
+  border: 2px solid $scrollbar-bg;
+
+  &:hover {
+    background: $scrollbar-thumb-hover;
+  }
+
+  &:active {
+    background: lighten($scrollbar-thumb-hover, 10%);
+  }
+}
+
+// Para contenedores específicos con scroll
+.scrollable-container {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+}

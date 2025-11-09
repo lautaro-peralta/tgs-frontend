@@ -1,0 +1,365 @@
+<!-- role-request-modal.component.html - Versión mejorada -->
+<div *ngIf="isOpen" class="modal-overlay" (click)="onOverlayClick($event)">
+  <div class="modal role-request-modal glass-modal" (click)="$event.stopPropagation()">
+
+    <!-- Header mejorado -->
+    <div class="modal-header">
+      <div class="header-content">
+        <div class="step-indicator">
+          <span class="step" [class.active]="currentStep === 1">1</span>
+          <div class="step-divider" [class.completed]="currentStep === 2"></div>
+          <span class="step" [class.active]="currentStep === 2" [class.completed]="currentStep === 2">2</span>
+        </div>
+        <div>
+          <h2>
+            {{ currentStep === 1
+            ? ('roleRequests.modal.title' | translate)
+            : 'Información Adicional Requerida'
+            }}
+          </h2>
+          <p class="subtitle" *ngIf="currentStep === 1">
+            Selecciona el rol que deseas solicitar
+          </p>
+          <p class="subtitle" *ngIf="currentStep === 2">
+            Completa los datos específicos para {{ getRoleInfo(requestedRole)?.label || 'el rol' }}
+          </p>
+        </div>
+      </div>
+      <button class="close-btn" type="button" (click)="onClose()" [disabled]="isSubmitting">×</button>
+    </div>
+
+    <!-- ========== PASO 1: Selección de Rol ========== -->
+    <form *ngIf="currentStep === 1" (ngSubmit)="goToStep2()" class="modal-body">
+
+      <!-- Error message con diseño mejorado -->
+      <div *ngIf="error" class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-content">
+          <strong>Error</strong>
+          <p>{{ error }}</p>
+        </div>
+      </div>
+
+    
+
+      <!-- Roles Grid - Diseño de tarjetas mejorado -->
+      <div class="form-section">
+        <label class="section-label">
+          <span class="icon">🎯</span>
+          {{ 'roleRequests.modal.requestedRole' | translate }}
+          <span class="required">*</span>
+        </label>
+
+        <div class="roles-grid">
+          <label
+            *ngFor="let role of availableRoles"
+            class="role-card"
+            [class.selected]="requestedRole === role.value"
+            [class.disabled]="isSubmitting"
+          >
+            <input
+              type="radio"
+              name="requestedRole"
+              [value]="role.value"
+              [(ngModel)]="requestedRole"
+              (change)="onRequestedRoleChange()"
+              [disabled]="isSubmitting"
+              class="sr-only"
+            />
+            <div class="role-card-content">
+              <div class="role-icon">{{ role.icon }}</div>
+              <div class="role-info">
+                <h3 class="role-title">{{ role.label }}</h3>
+                <p class="role-description">{{ role.description }}</p>
+              </div>
+              <div class="role-check">
+                <span class="checkmark">✓</span>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Empty state cuando no hay roles disponibles -->
+        <div *ngIf="availableRoles.length === 0" class="empty-state-small">
+          <span class="icon">ℹ️</span>
+          <p>
+            {{ isRoleChange
+              ? 'Selecciona un rol para remover primero'
+              : 'No hay roles disponibles para solicitar. Ya tienes todos los roles compatibles.'
+            }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Role to Remove - Solo si se detectó incompatibilidad o el usuario activó el toggle -->
+      <!-- ✅ NO mostrar para AUTHORITY ya que remueve TODOS los roles automáticamente -->
+      <div *ngIf="isRoleChange && removableRoles.length > 0 && requestedRole !== 'AUTHORITY'" class="form-section">
+        <label class="section-label">
+          <span class="icon">🔻</span>
+          {{ 'roleRequests.modal.roleToRemoveRequired' | translate }}
+          <span class="required">*</span>
+        </label>
+
+        <div class="roles-grid">
+          <label
+            *ngFor="let role of removableRoles"
+            class="role-card role-card-small"
+            [class.selected]="roleToRemove === role"
+            [class.disabled]="isSubmitting"
+          >
+            <input
+              type="radio"
+              name="roleToRemove"
+              [value]="role"
+              [(ngModel)]="roleToRemove"
+              [disabled]="isSubmitting"
+              class="sr-only"
+            />
+            <div class="role-card-content">
+              <div class="role-icon-small">{{ getRoleInfo(role)?.icon }}</div>
+              <div class="role-info">
+                <h4 class="role-title-small">{{ getRoleInfo(role)?.label || role }}</h4>
+              </div>
+              <div class="role-check">
+                <span class="checkmark">✓</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Toggle manual de cambio de rol (solo si no hay auto-detección) -->
+      <div *ngIf="!autoDetectedIncompatibility && removableRoles.length > 0" class="form-section">
+        <label class="toggle-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="isRoleChange"
+            name="isRoleChange"
+            (change)="onRoleChangeToggle(isRoleChange)"
+            class="toggle-input"
+          />
+          <span class="toggle-slider"></span>
+          <div class="toggle-text">
+            <strong>{{ 'roleRequests.modal.changeToggle' | translate }}</strong>
+            <p class="help-text">{{ 'roleRequests.modal.changeHelp' | translate }}</p>
+          </div>
+        </label>
+      </div>
+
+      <!-- Justificación -->
+      <div class="form-section">
+        <label class="section-label">
+          <span class="icon">💭</span>
+          {{ 'roleRequests.modal.justification' | translate }}
+          <span class="optional">{{ 'roleRequests.modal.justificationOptional' | translate }}</span>
+        </label>
+
+        <div class="textarea-wrapper">
+          <textarea
+            id="justification"
+            [(ngModel)]="justification"
+            name="justification"
+            [placeholder]="'roleRequests.modal.justificationPh' | translate"
+            [disabled]="isSubmitting"
+            minlength="20"
+            maxlength="500"
+            rows="4"
+            class="textarea-input"
+          ></textarea>
+          <div class="textarea-footer">
+            <span class="character-count">
+              {{ justification.length }} / 500
+            </span>
+            <span *ngIf="justification.length > 0 && justification.length < 20" class="validation-hint error">
+              Mínimo 20 caracteres
+            </span>
+            <span *ngIf="justification.length >= 20" class="validation-hint success">
+              ✓ Válido
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info box - Incompatibilidades 
+      <div *ngIf="incompatibleRolesText && requestedRole" class="info-box warning">
+        <span class="info-icon">⚠️</span>
+        <div class="info-content">
+          <strong>Roles Incompatibles</strong>
+          <p>
+            El rol <strong>{{ getRoleInfo(requestedRole)?.label }}</strong> no puede combinarse con:
+            <strong>{{ incompatibleRolesText }}</strong>
+          </p>
+        </div>
+      </div>-->
+
+      <!-- Acciones Paso 1 -->
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-cancel"
+          (click)="onClose()"
+          [disabled]="isSubmitting"
+        >
+          <span class="btn-icon">✕</span>
+          {{ 'roleRequests.modal.actions.cancel' | translate }}
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-submit"
+          [disabled]="isSubmitting || !requestedRole || (isRoleChange && !roleToRemove) ||
+                      (justification.length > 0 && justification.length < 20)"
+        >
+          <span class="btn-icon" *ngIf="!isSubmitting">
+            {{ requiresAdditionalData ? '→' : '✓' }}
+          </span>
+          <span class="spinner-small" *ngIf="isSubmitting"></span>
+          {{ requiresAdditionalData
+            ? 'Continuar'
+            : (isSubmitting
+              ? ('roleRequests.modal.actions.sending' | translate)
+              : ('roleRequests.modal.actions.submit' | translate))
+          }}
+        </button>
+      </div>
+    </form>
+
+    <!-- ========== PASO 2: Datos Adicionales ========== -->
+    <form *ngIf="currentStep === 2" (ngSubmit)="onSubmit()" class="modal-body">
+
+      <!-- Error message -->
+      <div *ngIf="error" class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        <div class="alert-content">
+          <strong>Error</strong>
+          <p>{{ error }}</p>
+        </div>
+      </div>
+
+      
+
+      <!-- ========== Datos para DISTRIBUTOR ========== -->
+      <ng-container *ngIf="requestedRole === 'DISTRIBUTOR'">
+        <div class="form-section">
+          <label class="section-label">
+            <span class="icon">📍</span>
+            Zona asignada
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="distZone"
+            [(ngModel)]="roleSpecificData.distributorZoneId"
+            name="distZone"
+            [disabled]="isSubmitting || loadingCatalogs"
+            required
+            class="select-input"
+          >
+            <option [ngValue]="null">Selecciona una zona...</option>
+            <option *ngFor="let zone of zones" [ngValue]="zone.id">
+              <span class="zone-id">#{{ zone.id }}</span> {{ zone.name }}
+            </option>
+          </select>
+          <p class="help-text">La zona donde operarás como distribuidor</p>
+        </div>
+
+        <div class="form-section">
+          <label class="section-label">
+            <span class="icon">🏠</span>
+            Dirección
+            <span class="required">*</span>
+          </label>
+
+          <input
+            type="text"
+            id="distAddress"
+            [(ngModel)]="roleSpecificData.distributorAddress"
+            name="distAddress"
+            [disabled]="isSubmitting"
+            placeholder="Ingresa tu dirección completa..."
+            required
+            class="text-input"
+          />
+          <p class="help-text">Dirección donde se realizarán entregas</p>
+        </div>
+
+        
+      </ng-container>
+
+      <!-- ========== Datos para AUTHORITY ========== -->
+      <ng-container *ngIf="requestedRole === 'AUTHORITY'">
+        <div class="form-section">
+          <label class="section-label">
+            <span class="icon">⭐</span>
+            Rango
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="authRank"
+            [(ngModel)]="roleSpecificData.authorityRank"
+            name="authRank"
+            [disabled]="isSubmitting"
+            required
+            class="select-input"
+          >
+            <option [ngValue]="null">Selecciona tu rango...</option>
+            <option *ngFor="let rank of AUTHORITY_RANKS" [value]="rank.value">
+              {{ rank.label }}
+            </option>
+          </select>
+          <p class="help-text">Tu nivel de autoridad en la organización</p>
+        </div>
+
+        <div class="form-section">
+          <label class="section-label">
+            <span class="icon">📍</span>
+            Zona asignada
+            <span class="required">*</span>
+          </label>
+
+          <select
+            id="authZone"
+            [(ngModel)]="roleSpecificData.authorityZoneId"
+            name="authZone"
+            [disabled]="isSubmitting || loadingCatalogs"
+            required
+            class="select-input"
+          >
+            <option [ngValue]="null">Selecciona una zona...</option>
+            <option *ngFor="let zone of zones" [ngValue]="zone.id">
+              #{{ zone.id }} - {{ zone.name }}
+            </option>
+          </select>
+          <p class="help-text">La zona bajo tu jurisdicción</p>
+        </div>
+      </ng-container>
+
+      <!-- Acciones Paso 2 -->
+      <div class="modal-actions">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="backToStep1()"
+          [disabled]="isSubmitting"
+        >
+          <span class="btn-icon">←</span>
+          Volver
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-submit"
+          [disabled]="isSubmitting || !additionalDataValid"
+        >
+          <span class="btn-icon" *ngIf="!isSubmitting">✓</span>
+          <span class="spinner-small" *ngIf="isSubmitting"></span>
+          {{ isSubmitting
+            ? ('roleRequests.modal.actions.sending' | translate)
+            : ('roleRequests.modal.actions.submit' | translate)
+          }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

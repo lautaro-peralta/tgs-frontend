@@ -1,0 +1,334 @@
+<!-- account.html - Carnet/Credencial -->
+<section class="account stack-lg">
+  <!-- Estado de carga -->
+  <div class="muted" *ngIf="loading()" role="status" aria-live="polite">
+    {{ 'account.loadingProfile' | translate }}
+  </div>
+
+  <!-- Errores -->
+  <div class="error" *ngIf="error() as e" role="alert" aria-live="assertive">
+    {{ e }}
+  </div>
+
+  <!-- Mensajes de éxito -->
+  <div class="ok" *ngIf="ok() as m" role="status" aria-live="polite">
+    {{ m }}
+  </div>
+
+  <!-- Banner de verificación de email -->
+  <div class="verification-banner" *ngIf="!loading() && me() && !me()?.emailVerified" role="alert">
+    <div class="banner-content">
+      <div class="banner-icon">⚠️</div>
+      <div class="banner-text">
+        <strong>{{ 'account.verificationBanner.title' | translate }}</strong>
+        <p>{{ 'account.verificationBanner.desc' | translate }}</p>
+      </div>
+      <button class="btn-resend" (click)="resendVerificationEmail()" [disabled]="resendingEmail()" type="button">
+        {{ resendingEmail() ? ('account.verificationBanner.sending' | translate) : ('account.verificationBanner.resend'
+        | translate) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- CARNET / CREDENCIAL -->
+  <div class="credential-card" *ngIf="!loading() && me() && me()?.hasPersonalInfo">
+    <!-- Header del carnet -->
+    <div class="card-header">
+      <div class="org-logo">THE GARRISON SYSTEM</div>
+      <div class="card-type">MEMBER CREDENTIAL</div>
+    </div>
+
+    <!-- Contenido principal del carnet -->
+    <div class="card-body">
+      <!-- Foto de perfil -->
+      <div class="photo-section">
+        <div class="photo-frame">
+          <img
+            [src]="photoUrl() || 'assets/default-avatar.svg'"
+            [alt]="'Foto de perfil de ' + (person()?.name || me()?.username)"
+            (error)="photoUrl.set('assets/default-avatar.svg')"
+          />
+          <!-- Badge de verificado -->
+          <div class="verification-stamp" *ngIf="me()?.isVerified">
+            <span class="material-symbols-outlined">verified</span>
+          </div>
+          <!-- Botón para cambiar foto -->
+          <button
+            type="button"
+            class="photo-edit-btn"
+            (click)="photoInput.click()"
+            [disabled]="photoUploading()"
+            [attr.title]="'Cambiar foto de perfil'"
+          >
+            <span class="material-symbols-outlined">photo_camera</span>
+          </button>
+          <input
+            #photoInput
+            type="file"
+            accept="image/*"
+            (change)="uploadPhoto($event)"
+            style="display: none;"
+          />
+        </div>
+      </div>
+
+      <!-- Información principal -->
+      <div class="info-section">
+        <!-- Nombre y DNI -->
+        <div class="primary-info">
+          <div class="full-name">{{ person()?.name || me()?.username || 'Sin nombre' }}</div>
+          <div class="dni-field">
+            <span class="label">DNI:</span>
+            <span class="value">{{ person()?.dni || 'No registrado' }}</span>
+          </div>
+        </div>
+
+        <!-- Datos de contacto -->
+        <div class="contact-info">
+          <div class="info-row">
+            <span class="material-symbols-outlined icon">mail</span>
+            <div class="info-content">
+              <span class="label">{{ 'account.infoSection.email' | translate }}</span>
+              <span class="value">{{ me()?.email }}</span>
+            </div>
+            <span class="status-badge" [class.verified]="me()?.emailVerified">
+              {{ me()?.emailVerified ? '✓' : '⚠' }}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="material-symbols-outlined icon">phone</span>
+            <div class="info-content">
+              <span class="label">{{ 'account.infoSection.phone' | translate }}</span>
+              <span class="value">{{ person()?.phone || 'No registrado' }}</span>
+            </div>
+            <button
+              type="button"
+              class="info-edit-btn"
+              (click)="editingPhone.set(true)"
+              *ngIf="person()?.phone"
+              [attr.title]="'Editar teléfono'"
+            >
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+          </div>
+
+          <div class="info-row">
+            <span class="material-symbols-outlined icon">home</span>
+            <div class="info-content">
+              <span class="label">{{ 'account.infoSection.address' | translate }}</span>
+              <span class="value">{{ person()?.address || 'No registrado' }}</span>
+            </div>
+            <button
+              type="button"
+              class="info-edit-btn"
+              (click)="editingAddress.set(true)"
+              *ngIf="person()?.address"
+              [attr.title]="'Editar dirección'"
+            >
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="meta-info">
+          <div class="meta-row">
+            <span class="label">{{ 'account.infoSection.status' | translate }}</span>
+            <span class="value status" [class.active]="me()?.isActive">
+              {{ me()?.isActive ? '✓ Activa' : '⊗ Inactiva' }}
+            </span>
+          </div>
+          <div class="meta-row">
+            <span class="label">{{ 'account.infoSection.roles' | translate }}</span>
+            <span class="value roles">{{ me()?.roles?.join(', ') || 'Usuario' }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="label">{{ 'account.infoSection.memberSince' | translate }}</span>
+            <span class="value">{{ me()?.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer del carnet -->
+    <div class="card-footer">
+      <div class="barcode">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA PARA CUENTA NUEVA - Formulario de completar datos -->
+  <div class="incomplete-profile-container" *ngIf="!loading() && me() && !me()?.hasPersonalInfo">
+    <!-- Formulario profesional -->
+    <form #formEl (submit)="save(formEl); $event.preventDefault()" novalidate class="complete-profile-form">
+      <div class="form-grid">
+        <!-- DNI -->
+        <div class="form-field">
+          <label for="f-dni">
+            <span class="field-icon">
+              <span class="material-symbols-outlined">fingerprint</span>
+            </span>
+            <div class="field-content">
+              <span class="field-label">DNI</span>
+              <input
+                id="f-dni"
+                name="dni"
+                type="text"
+                required
+                autocomplete="off"
+                maxlength="10"
+                minlength="7"
+                placeholder="12345678"
+                class="field-input"
+              />
+            </div>
+          </label>
+        </div>
+
+        <!-- Nombre completo -->
+        <div class="form-field">
+          <label for="f-name">
+            <span class="field-icon">
+              <span class="material-symbols-outlined">person</span>
+            </span>
+            <div class="field-content">
+              <span class="field-label">{{ 'account.fields.firstName' | translate }}</span>
+              <input
+                id="f-name"
+                name="name"
+                type="text"
+                required
+                autocomplete="name"
+                maxlength="100"
+                placeholder="Juan Pérez"
+                class="field-input"
+              />
+            </div>
+          </label>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="form-field">
+          <label for="f-phone">
+            <span class="field-icon">
+              <span class="material-symbols-outlined">phone</span>
+            </span>
+            <div class="field-content">
+              <span class="field-label">{{ 'account.fields.phone' | translate }}</span>
+              <input
+                id="f-phone"
+                name="phone"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel"
+                required
+                maxlength="24"
+                placeholder="+54 9 11 1234-5678"
+                class="field-input"
+              />
+            </div>
+          </label>
+        </div>
+
+        <!-- Dirección -->
+        <div class="form-field form-field-wide">
+          <label for="f-address">
+            <span class="field-icon">
+              <span class="material-symbols-outlined">home</span>
+            </span>
+            <div class="field-content">
+              <span class="field-label">{{ 'account.fields.address' | translate }}</span>
+              <input
+                id="f-address"
+                name="address"
+                type="text"
+                autocomplete="street-address"
+                required
+                maxlength="200"
+                placeholder="Av. Siempre Viva 123"
+                class="field-input"
+              />
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Botón de acción -->
+      <div class="form-actions">
+        <button type="submit" class="btn-complete" [disabled]="saving()">
+          <span class="material-symbols-outlined" *ngIf="!saving()">check_circle</span>
+          <span class="material-symbols-outlined rotating" *ngIf="saving()">progress_activity</span>
+          <span>{{ saving() ? ('account.actions.saving' | translate) : ('account.actions.completeProfile' | translate) }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Modales de edición -->
+<!-- Modal de edición de teléfono -->
+<div class="edit-modal-overlay" *ngIf="editingPhone()" (click)="cancelEdit('phone')">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
+    <div class="edit-modal-header">
+      <h3>Editar Teléfono</h3>
+      <button type="button" class="close-btn" (click)="cancelEdit('phone')">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="edit-modal-body">
+      <label>
+        <span>{{ 'account.infoSection.phone' | translate }}</span>
+        <input
+          type="tel"
+          [(ngModel)]="editPhone"
+          [placeholder]="person()?.phone || '+54 9 11 1234-5678'"
+          maxlength="24"
+        />
+      </label>
+    </div>
+    <div class="edit-modal-footer">
+      <button type="button" class="btn-cancel" (click)="cancelEdit('phone')">Cancelar</button>
+      <button type="button" class="btn-save" (click)="savePhone()" [disabled]="savingEdit()">
+        {{ savingEdit() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de edición de dirección -->
+<div class="edit-modal-overlay" *ngIf="editingAddress()" (click)="cancelEdit('address')">
+  <div class="edit-modal" (click)="$event.stopPropagation()">
+    <div class="edit-modal-header">
+      <h3>Editar Dirección</h3>
+      <button type="button" class="close-btn" (click)="cancelEdit('address')">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="edit-modal-body">
+      <label>
+        <span>{{ 'account.infoSection.address' | translate }}</span>
+        <input
+          type="text"
+          [(ngModel)]="editAddress"
+          [placeholder]="person()?.address || 'Av. Siempre Viva 123'"
+          maxlength="200"
+        />
+      </label>
+    </div>
+    <div class="edit-modal-footer">
+      <button type="button" class="btn-cancel" (click)="cancelEdit('address')">Cancelar</button>
+      <button type="button" class="btn-save" (click)="saveAddress()" [disabled]="savingEdit()">
+        {{ savingEdit() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<!-- contact.html (i18n aplicado) -->
+<div class="page">
+  <!-- Encabezado -->
+  <header class="hero glass">
+    <div class="hero__head">
+      <h1>{{ 'contact.title' | translate }}</h1>
+      <p class="lead">{{ 'contact.lead' | translate }}</p>
+    </div>
+    <div class="crumb">
+      {{ 'nav.home' | translate }} <span aria-hidden="true">/</span>
+      <strong>{{ 'contact.title' | translate }}</strong>
+    </div>
+  </header>
+
+  <!-- Canales principales -->
+  <section class="block">
+    <div class="grid">
+      <article class="info-card">
+        <header class="card-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h2>{{ 'contact.sections.channels' | translate }}</h2>
+        </header>
+
+        <ul class="list">
+          <li *ngFor="let key of channelKeys">
+            <div class="item-line">
+              <span class="label">{{ 'contact.channels.' + key + '.label' | translate }}</span>
+              <span class="value">
+                <a class="link with-icon" [href]="getChannelHref(key)" target="_self" rel="noopener">
+                  <img [src]="channelIcons[key]" [alt]="('contact.channels.' + key + '.label' | translate) + ' icon'"
+                    class="channel-icon">
+                  {{ 'contact.channels.' + key + '.value' | translate }}
+                </a>
+              </span>
+            </div>
+            <div class="hint muted">{{ 'contact.channels.' + key + '.hint' | translate }}</div>
+          </li>
+        </ul>
+      </article>
+
+      <article class="info-card">
+        <header class="card-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h2>{{ 'contact.sections.hours' | translate }}</h2>
+        </header>
+
+        <ul class="list compact">
+          <li *ngFor="let key of hourKeys">
+            <div class="item-line">
+              <span class="label">{{ 'contact.hours.' + key + '.label' | translate }}</span>
+              <span class="value">{{ 'contact.hours.' + key + '.value' | translate }}</span>
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <article class="info-card">
+        <header class="card-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h2>{{ 'contact.sections.location' | translate }}</h2>
+        </header>
+
+        <p class="address">{{ 'contact.location.address' | translate }}</p>
+        <a class="link pill-link" [href]="mapHref" target="_blank" rel="noopener">
+          <img [src]="mapIcon" alt="Google Maps icon" class="pill-icon">
+          {{ 'contact.actions.viewOnMaps' | translate }}
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Enlaces útiles -->
+  <section class="glass block">
+    <header class="sub-head">
+      <h3>{{ 'contact.sections.usefulLinksTitle' | translate }}</h3>
+      <p class="muted">{{ 'contact.sections.usefulLinksLead' | translate }}</p>
+    </header>
+
+    <div class="links-grid">
+      <a class="quick" *ngFor="let key of linkKeys" [href]="linkHrefs[key]" target="_blank" rel="noopener">
+        <img [src]="linkIcons[key]" [alt]="('contact.links.' + key + '.label' | translate) + ' icon'"
+          class="quick-icon">
+        <span class="quick__title">{{ 'contact.links.' + key + '.label' | translate }}</span>
+        <span class="quick__value">{{ 'contact.links.' + key + '.value' | translate }}</span>
+        <span class="chev" aria-hidden="true"></span>
+        <span class="quick__hint muted">{{ 'contact.links.' + key + '.hint' | translate }}</span>
+      </a>
+    </div>
+  </section>
+</div>

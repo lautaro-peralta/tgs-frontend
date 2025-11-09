@@ -1,0 +1,270 @@
+<section class="stack-lg">
+
+  <div class="glass-dark card stack-md">
+    <header class="header">
+      <h2 class="title">{{ 'clandestineAgreement.title' | translate }}</h2>
+      <div class="right" *ngIf="canCreate()">
+        <button class="btn" type="button" (click)="toggleNew()" [attr.aria-expanded]="isNewOpen()">
+          {{ isNewOpen() ? ('shelbyCouncil.buttons.close' | translate) : ('clandestineAgreement.buttons.new' |
+          translate) }}
+        </button>
+      </div>
+    </header>
+
+    <div *ngIf="!loading() && items().length > 0"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: var(--sp-3); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.total' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-strong);">{{ totalAgreements() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.active' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #4a8d72;">{{ agreementsByStatus()['ACTIVE'] }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.completed' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">{{ agreementsByStatus()['COMPLETED'] }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.cancelled' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: #a94545;">{{ agreementsByStatus()['CANCELLED'] }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.uniqueAdmins' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ uniqueAdmins() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.uniqueAuthorities' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ uniqueAuthorities() }}</div>
+      </div>
+      <div style="text-align: center;" *ngIf="fTextApplied()">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'clandestineAgreement.stats.filtered' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ filtered().length }}</div>
+      </div>
+    </div>
+
+    <!-- FILTROS -->
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span>{{ 'clandestineAgreement.filters.search' | translate }}</span>
+        <input class="input" type="text" [ngModel]="fTextInput()" (ngModelChange)="fTextInput.set($event)"
+          (keyup.enter)="applyFilters()" [placeholder]="'clandestineAgreement.filters.searchPlaceholder' | translate" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <!-- MENSAJES -->
+    <div class="error" *ngIf="error() as err"><strong>Error:</strong> {{ err }}</div>
+    <div class="muted" *ngIf="loading()">{{ 'common.loading' | translate }}</div>
+
+    <!-- LISTADO -->
+    <section class="subsection">
+      <h3 class="sub-title">{{ 'clandestineAgreement.list' | translate }}</h3>
+
+      <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+        <table class="table">
+          <colgroup>
+            <col style="width: 80px;" /> <!-- ID -->
+            <col style="width: 100px;" /> <!-- Shelby Council -->
+            <col style="width: 180px;" /> <!-- Admin -->
+            <col style="width: 180px;" /> <!-- Authority -->
+            <col style="width: 120px;" /> <!-- Date -->
+            <col style="width: 110px;" /> <!-- Status -->
+            <col /> <!-- Description (flexible) -->
+            <col style="width: 100px;" *ngIf="canEdit() || canDelete()" /> <!-- Actions -->
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>{{ 'clandestineAgreement.table.shelbyCouncil' | translate }}</th>
+              <th>{{ 'clandestineAgreement.table.admin' | translate }}</th>
+              <th>{{ 'clandestineAgreement.table.authority' | translate }}</th>
+              <th>{{ 'clandestineAgreement.table.date' | translate }}</th>
+              <th>{{ 'clandestineAgreement.table.status' | translate }}</th>
+              <th>{{ 'clandestineAgreement.table.description' | translate }}</th>
+              <th *ngIf="canEdit() || canDelete()" class="right">{{ 'common.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of filtered(); trackBy: trackById">
+              <td>#{{ it.id }}</td>
+              <td>{{ it.shelbyCouncil?.id || '—' }}</td>
+              <td>
+                <span class="truncate" style="max-width: 160px;">
+                  {{ it.admin?.dni }} 
+                </span>
+              </td>
+              <td>
+                <span class="truncate" style="max-width: 160px;">
+                  {{ it.authority?.dni }}
+                </span>
+              </td>
+              <td>{{ it.agreementDate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge {{ it.status }}">
+                  {{ ('status.' + it.status) | translate }}
+                </span>
+              </td>
+              <td>
+                <span class="truncate" style="max-width: 200px;">
+                  {{ it.description || '—' }}
+                </span>
+              </td>
+              <td *ngIf="canEdit() || canDelete()" class="right">
+                <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
+                  [attr.title]="'common.edit' | translate">
+                  ✏️
+                </button>
+                <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
+                  [attr.title]="'common.delete' | translate">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state -->
+      <ng-template #emptyState>
+        <div class="empty empty-state">
+          <h3>{{ fTextApplied() ? 'Sin resultados' : ('clandestineAgreement.emptyTitle' | translate) }}</h3>
+          <p class="muted">{{ fTextApplied() ? 'Probá ajustar el filtro' : ('clandestineAgreement.emptyHint' |
+            translate) }}
+          </p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+</section>
+
+<!-- FORM OVERLAY -->
+  <div class="clandestine-overlay" [class.is-open]="isNewOpen()" [attr.aria-hidden]="!isNewOpen()">
+    <button type="button" class="clandestine-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
+
+    <div class="clandestine-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+      <div class="header compact">
+        <h2 class="title">
+          {{ isEdit()
+          ? ('clandestineAgreement.form.titleEdit' | translate:{ id: form.value.id })
+          : ('clandestineAgreement.form.titleCreate' | translate) }}
+        </h2>
+        <button type="button" class="btn-close" (click)="cancel()" aria-label="Cerrar">&times;</button>
+      </div>
+
+      <div class="error" *ngIf="error()">{{ error() }}</div>
+
+      <form [formGroup]="form" class="form-grid" (ngSubmit)="save()">
+        <!-- SHELBY COUNCIL -->
+        <label class="label">
+          <span>{{ 'clandestineAgreement.form.fields.shelbyCouncilId' | translate }} *</span>
+          <select class="input" formControlName="shelbyCouncilId" [disabled]="isEdit()">
+            <option [ngValue]="null" disabled>— Seleccioná un consejo —</option>
+            <option *ngFor="let c of councils()" [ngValue]="c.id">
+              Consejo #{{ c.id }}
+            </option>
+          </select>
+          <small class="muted" *ngIf="!councils().length && !loading()">
+            No hay consejos disponibles. Creá uno primero.
+          </small>
+          <small class="muted" *ngIf="isEdit()">
+            {{ 'clandestineAgreement.form.hints.cannotChangeRelations' | translate }}
+          </small>
+          <small class="hint error"
+            *ngIf="form.controls.shelbyCouncilId.invalid && form.controls.shelbyCouncilId.touched">
+            Campo requerido
+          </small>
+        </label>
+
+        <!-- ADMIN -->
+        <label class="label">
+          <span>{{ 'clandestineAgreement.form.fields.adminDni' | translate }} *</span>
+          <select class="input" formControlName="adminDni" [disabled]="isEdit()">
+            <option value="" disabled>— Seleccioná un administrador —</option>
+            <option *ngFor="let a of admins()" [value]="a.dni">
+              {{ a.dni }} — {{ a.name }}
+            </option>
+          </select>
+          <small class="muted" *ngIf="!admins().length && !loading()">
+            No hay administradores disponibles. Creá uno primero.
+          </small>
+          <small class="muted" *ngIf="isEdit()">
+            {{ 'clandestineAgreement.form.hints.cannotChangeRelations' | translate }}
+          </small>
+          <small class="hint error" *ngIf="form.controls.adminDni.invalid && form.controls.adminDni.touched">
+            Campo requerido
+          </small>
+        </label>
+
+        <!-- AUTHORITY -->
+        <label class="label">
+          <span>{{ 'clandestineAgreement.form.fields.authorityDni' | translate }} *</span>
+          <select class="input" formControlName="authorityDni" [disabled]="isEdit()">
+            <option value="" disabled>— Seleccioná una autoridad —</option>
+            <option *ngFor="let a of authorities()" [value]="a.dni">
+              {{ a.dni }} — {{ a.name }}
+            </option>
+          </select>
+          <small class="muted" *ngIf="!authorities().length && !loading()">
+            No hay autoridades disponibles. Creá una primero.
+          </small>
+          <small class="muted" *ngIf="isEdit()">
+            {{ 'clandestineAgreement.form.hints.cannotChangeRelations' | translate }}
+          </small>
+          <small class="hint error" *ngIf="form.controls.authorityDni.invalid && form.controls.authorityDni.touched">
+            Campo requerido
+          </small>
+        </label>
+
+        <!-- AGREEMENT DATE -->
+        <label class="label">
+          <span>{{ 'clandestineAgreement.form.fields.agreementDate' | translate }}</span>
+          <input class="input" type="date" formControlName="agreementDate" />
+        </label>
+
+        <!-- STATUS -->
+        <label class="label">
+          <span>{{ 'clandestineAgreement.form.fields.status' | translate }}</span>
+          <select class="input" formControlName="status">
+            <option value="ACTIVE">{{ 'status.ACTIVE' | translate }}</option>
+            <option value="COMPLETED">{{ 'status.COMPLETED' | translate }}</option>
+            <option value="CANCELLED">{{ 'status.CANCELLED' | translate }}</option>
+          </select>
+        </label>
+
+        <!-- DESCRIPTION -->
+        <label class="label col-2">
+          <span>{{ 'clandestineAgreement.form.fields.description' | translate }}</span>
+          <textarea class="input" rows="3" formControlName="description"></textarea>
+        </label>
+
+        <!-- ACTIONS -->
+        <div class="form-actions">
+          <button class="btn success" type="submit" [disabled]="form.invalid || loading()">
+            {{ isEdit() ? ('common.save' | translate) : ('common.create' | translate) }}
+          </button>
+          <button class="btn ghost" type="button" (click)="cancel()" [disabled]="loading()">
+            {{ 'common.cancel' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+

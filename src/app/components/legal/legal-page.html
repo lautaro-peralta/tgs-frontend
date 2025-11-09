@@ -1,0 +1,39 @@
+<div class="legal-page">
+  <div class="legal-container">
+    <!-- Header -->
+    <header class="legal-header">
+      <a routerLink="/" class="back-link">
+        ← {{ 'legal.backHome' | translate }}
+      </a>
+      <h1 class="legal-title">{{ title }}</h1>
+      <p class="legal-updated" *ngIf="lastUpdated">
+        {{ 'legal.lastUpdated' | translate }}: {{ lastUpdated }}
+      </p>
+    </header>
+
+    <!-- Content -->
+    <div class="legal-content">
+      <section *ngFor="let section of sections; trackBy: trackByTitle" class="legal-section">
+        <h2 class="section-title">{{ section.title }}</h2>
+
+        <p *ngFor="let paragraph of section.content; trackBy: trackByIndex" class="section-paragraph">
+          {{ paragraph }}
+        </p>
+
+        <ul *ngIf="section.list" class="section-list">
+          <li *ngFor="let item of section.list; trackBy: trackByIndex">{{ item }}</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Footer CTA -->
+    <footer class="legal-footer">
+      <div class="cta-box">
+        <p>{{ 'legal.questions' | translate }}</p>
+        <a routerLink="/contactanos" class="btn btn-primary">
+          {{ 'legal.contactUs' | translate }}
+        </a>
+      </div>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<!-- admin-user-verification-inbox.html (i18n aplicado) -->
+<div class="admin-user-verification-inbox">
+  <div class="inbox-header">
+    <div>
+      <h2>{{ 'userVerification.adminInbox.title' | translate }}</h2>
+      <p class="subtitle">{{ 'userVerification.adminInbox.subtitle' | translate }}</p>
+    </div>
+
+    <div *ngIf="pendingCount > 0" class="pending-badge">
+      <span class="count">{{ pendingCount }}</span>
+      <span class="label">{{ 'userVerification.adminInbox.pendingLabel' | translate }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="successKey" class="inline-notification success" role="status">
+    {{ successKey | translate }}
+  </div>
+
+  <div *ngIf="loading" class="loading">{{ 'userVerification.adminInbox.loading' | translate }}</div>
+
+  <div *ngIf="error && !loading" class="error-message">
+    <span class="icon">❌</span>
+    {{ error }}
+    <button class="btn-link" (click)="loadVerifications()">{{ 'userVerification.adminInbox.errorRetry' | translate
+      }}</button>
+  </div>
+
+  <div *ngIf="!loading" class="filters-bar">
+    <div class="filter-group">
+      <label for="statusFilter">{{ 'userVerification.adminInbox.filters.status.label' | translate }}</label>
+      <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onFilterChange()" class="filter-select">
+        <option value="ALL">{{ 'userVerification.adminInbox.filters.status.all' | translate }}</option>
+        <option [value]="UserVerificationStatus.PENDING">{{ 'userVerification.adminInbox.filters.status.pending' |
+          translate }}</option>
+        <option [value]="UserVerificationStatus.VERIFIED">{{ 'userVerification.adminInbox.filters.status.verified' |
+          translate }}</option>
+        <option [value]="UserVerificationStatus.CANCELLED">{{ 'userVerification.adminInbox.filters.status.rejected' |
+          translate }}</option>
+        <option [value]="UserVerificationStatus.EXPIRED">{{ 'userVerification.adminInbox.filters.status.expired' |
+          translate }}</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary btn-sm" (click)="loadVerifications()">
+      <span class="icon">🔄</span>
+      {{ 'userVerification.adminInbox.refresh' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredVerifications.length === 0" class="empty-state">
+    <div class="empty-icon">🔍</div>
+    <h3>{{ 'userVerification.adminInbox.empty.title' | translate }}</h3>
+    <p>{{ 'userVerification.adminInbox.empty.desc' | translate }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredVerifications.length > 0" class="verifications-list">
+    <app-user-verification-card *ngFor="let verification of filteredVerifications" [verification]="verification"
+      [isAdmin]="true" (review)="openReviewModal(verification)">
+    </app-user-verification-card>
+  </div>
+
+  <app-user-verification-review-modal *ngIf="reviewingVerification" [verification]="reviewingVerification"
+    (close)="closeReviewModal()" (reviewComplete)="handleReviewComplete($event)">
+  </app-user-verification-review-modal>
+</div>

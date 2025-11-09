@@ -1,0 +1,66 @@
+<section class="login-page">
+  <div class="login-card">
+    <header class="login-header">
+      <h1>Iniciar Sesión</h1>
+      <p>Ingresa tus credenciales para acceder</p>
+    </header>
+
+    <!-- ⚠️ Banner de verificación de email requerida -->
+    <div class="verification-alert" *ngIf="needsEmailVerification()" role="alert">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <strong>Email no verificado</strong>
+        <p>Debes verificar tu email antes de iniciar sesión. Revisa tu bandeja de entrada.</p>
+
+        <!-- Mensaje de email enviado -->
+        <div class="email-sent-message" *ngIf="emailSent()">
+          <span class="success-icon">✓</span>
+          Email de verificación enviado. Revisa tu bandeja de entrada.
+        </div>
+
+        <!-- Botón de reenvío -->
+        <button type="button" class="btn-resend-small" (click)="resendVerificationEmail()"
+          [disabled]="resendingEmail() || emailSent()">
+          {{ resendingEmail() ? 'Enviando...' : emailSent() ? 'Email enviado ✓' : 'Reenviar email de verificación' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- 🔄 Banner de espera de verificación (cuando está esperando que el usuario verifique desde el link) -->
+    <div class="waiting-verification" *ngIf="waitingForVerification() && !loading()" role="status">
+      <div class="spinner-small"></div>
+      <div class="waiting-content">
+        <strong>Esperando verificación...</strong>
+        <p>Haz clic en el enlace que enviamos a tu email. Esta página se actualizará automáticamente cuando verifiques tu cuenta.</p>
+      </div>
+    </div>
+
+    <!-- Mensaje de error general -->
+    <div class="error-message" *ngIf="error() && !needsEmailVerification()" role="alert">
+      {{ error() }}
+    </div>
+
+    <!-- Formulario de login -->
+    <form (submit)="onSubmit(); $event.preventDefault()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email o Usuario</label>
+        <input id="email" type="text" [value]="email()" (input)="email.set($any($event.target).value)"
+          placeholder="tu@email.com o tu_usuario" required autocomplete="username" />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input id="password" type="password" [value]="password()" (input)="password.set($any($event.target).value)"
+          placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="loading()">
+        {{ loading() ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+      </button>
+    </form>
+
+    <footer class="login-footer">
+      <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+    </footer>
+  </div>
+</section>

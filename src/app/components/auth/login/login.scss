@@ -1,0 +1,61 @@
+.auth-card { max-width: 420px; margin: 2rem auto; padding: 1rem; border: 1px solid #333; border-radius: 12px; }
+.form { display: grid; gap: .75rem; }
+.actions { margin-top: .5rem; }
+
+/* Waiting verification alert */
+.waiting-verification {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: rgba(195, 164, 98, 0.08);
+  border: 1px solid rgba(195, 164, 98, 0.3);
+  border-radius: 10px;
+  color: #c3a462;
+  animation: fadeIn 0.3s ease-out;
+
+  .spinner-small {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(195, 164, 98, 0.2);
+    border-top-color: #c3a462;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  .waiting-content {
+    flex: 1;
+
+    strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #e5e7eb;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #9aa0a6;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,190 @@
+<section class="stack-lg">
+
+  <div class="glass-dark card stack-md">
+    <!-- HEADER + TOOLBAR -->
+    <header class="header">
+      <h2 class="title">{{ 'admin.title' | translate }}</h2>
+      <div class="right">
+        <button class="btn" type="button" (click)="toggleNew()" [attr.aria-expanded]="isNewOpen">
+          {{ isNewOpen ? ('common.close' | translate) : ('admin.buttons.new' | translate) }}
+        </button>
+      </div>
+    </header>
+
+    <div *ngIf="!loading() && items().length > 0"
+      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <span class="muted"><strong>{{ 'admin.stats.totalLabel' | translate }}</strong> {{ totalAdmins() }}</span>
+      <span class="muted" *ngIf="fTextApplied()"><strong>{{ 'admin.stats.filteredLabel' | translate }}</strong> {{
+        filtered().length }}</span>
+    </div>
+
+    <!-- FILTROS -->
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span>{{ 'admin.filters.search' | translate }}</span>
+        <input class="input" type="text" [ngModel]="fTextInput()" (ngModelChange)="fTextInput.set($event)"
+          (keyup.enter)="applyFilters()" [placeholder]="'admin.filters.searchPlaceholder' | translate" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <!-- MENSAJES -->
+    <div class="error" *ngIf="error() as err"><strong>{{ 'common.error' | translate }}</strong>: {{ err }}</div>
+    <div class="muted" *ngIf="loading()">{{ 'admin.messages.loading' | translate }}</div>
+
+    <!-- LISTADO -->
+    <section class="subsection">
+      <h3 class="sub-title">{{ 'admin.list' | translate }}</h3>
+
+      <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 120px; min-width: 120px;">{{ 'admin.fields.dni' | translate }}</th>
+              <th style="width: 25%; min-width: 150px;">{{ 'admin.fields.name' | translate }}</th>
+              <th style="width: 30%; min-width: 180px;">{{ 'admin.fields.email' | translate }}</th>
+              <th style="width: 15%; min-width: 140px;">{{ 'admin.fields.phone' | translate }}</th>
+              <th class="right" style="width: 120px; min-width: 120px;">{{ 'common.edit' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of filtered(); trackBy: trackByDni">
+              <td class="mono" style="white-space: nowrap;">{{ it.dni }}</td>
+              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ it.name }}</td>
+              <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ it.email }}</td>
+              <td style="max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ it.phone || '—' }}</td>
+              <td class="right" style="white-space: nowrap;">
+                <button class="btn ghost btn--icon" type="button" (click)="edit(it)"
+                  [title]="'common.edit' | translate" style="margin-right: 8px;">
+                  ✏️
+                </button>
+                <button class="btn danger btn--icon" type="button" (click)="delete(it)"
+                  [title]="'common.delete' | translate">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state -->
+      <ng-template #emptyState>
+        <div class="empty empty-state">
+          <h3>{{ fTextApplied() ? ('distributors.noResults.title' | translate) : ('admin.emptyTitle' | translate) }}
+          </h3>
+          <p class="muted">{{ fTextApplied() ? ('distributors.noResults.desc' | translate) : ('admin.emptyHint' |
+            translate) }}</p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+</section>
+
+<!-- Overlay flotante para nuevo/editar admin -->
+<div class="new-admin-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
+  <button type="button" class="new-admin-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+
+  <div class="new-admin-overlay__panel glass-dark card" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
+    <div class="header compact">
+      <h2 class="title">
+        {{ isEdit()
+        ? ('admin.form.titleEdit' | translate:{ dni: form.value.dni })
+        : ('admin.form.titleCreate' | translate) }}
+      </h2>
+      <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <form [formGroup]="form" class="form-grid" (ngSubmit)="save()">
+      <!-- Selector de usuario verificado (solo al crear) -->
+      <ng-container *ngIf="!isEdit() && users().length > 0">
+        <label class="label col-2" style="grid-column: 1 / -1;">
+          <span style="color: var(--accent); font-weight: 600;">👤 {{ 'admin.form.selectUser' | translate }}</span>
+          <input
+            class="input"
+            type="text"
+            [value]="userSearch()"
+            (input)="userSearch.set($any($event.target).value)"
+            [placeholder]="'admin.form.searchUser' | translate"
+          />
+        </label>
+
+        <div class="col-2" style="grid-column: 1 / -1;">
+          <div *ngIf="filteredUsers().length > 0"
+            style="padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+            <h4 style="margin: 0 0 var(--sp-2) 0; font-size: 0.875rem; color: rgba(195, 164, 98, 0.9);">
+              {{ 'admin.form.availableUsers' | translate:{ count: filteredUsers().length } }}
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 250px; overflow-y: auto;">
+              <div *ngFor="let u of filteredUsers(); trackBy: trackByUserId" 
+                (click)="selectUser(u.id)"
+                style="padding: var(--sp-2); background: rgba(0, 0, 0, 0.2); border-radius: 6px; cursor: pointer; border: 1px solid rgba(195, 164, 98, 0.3); transition: all 0.2s;"
+                [style.background]="fromUser() ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
+                onmouseenter="this.style.background='rgba(195, 164, 98, 0.2)'"
+                onmouseleave="this.style.background='rgba(0, 0, 0, 0.2)'">
+                <div style="font-weight: 600; color: rgba(195, 164, 98, 1);">{{ u.person?.name }}</div>
+                <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">
+                  DNI: {{ u.person?.dni }} • {{ u.email }}
+                </div>
+                <div style="font-size: 0.75rem; margin-top: 4px;">
+                  <span style="background: rgba(76, 175, 80, 0.25); padding: 2px 6px; border-radius: 4px; color: #81c784; font-weight: 500;">
+                    ✓ {{ 'admin.form.verified' | translate }}
+                  </span>
+                  <span style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500; margin-left: 4px;">
+                    {{ 'admin.form.profileComplete' | translate }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="filteredUsers().length === 0"
+            style="padding: var(--sp-3); text-align: center; color: var(--muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3);">
+            <p style="margin: 0;">{{ 'admin.form.noUsersAvailable' | translate }}</p>
+            <small style="display: block; margin-top: var(--sp-1);">
+              {{ 'admin.form.noUsersHint' | translate }}
+            </small>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <label class="label">
+        <span>{{ 'admin.fields.dni' | translate }}</span>
+        <input class="input" type="text" formControlName="dni" [readonly]="isEdit() || fromUser()" />
+      </label>
+
+      <label class="label">
+        <span>{{ 'admin.fields.name' | translate }}</span>
+        <input class="input" type="text" formControlName="name" />
+      </label>
+
+      <label class="label">
+        <span>{{ 'admin.fields.email' | translate }}</span>
+        <input class="input" type="email" formControlName="email" />
+      </label>
+
+      <label class="label">
+        <span>{{ 'admin.fields.phone' | translate }}</span>
+        <input class="input" type="text" formControlName="phone" />
+      </label>
+
+      <div class="form-actions">
+        <button class="btn success" type="submit" [disabled]="form.invalid || loading()">
+          {{ isEdit() ? ('admin.buttons.save' | translate) : ('admin.buttons.create' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" (click)="toggleNew()" [disabled]="loading()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

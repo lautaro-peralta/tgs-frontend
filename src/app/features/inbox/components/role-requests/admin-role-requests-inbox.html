@@ -1,0 +1,87 @@
+<!-- admin-role-requests-inbox.html (i18n aplicado) -->
+<div class="admin-role-requests-inbox">
+  <div class="inbox-header">
+    <div>
+      <h2>{{ 'roleRequests.adminInbox.title' | translate }}</h2>
+      <p class="subtitle">{{ 'roleRequests.adminInbox.subtitle' | translate }}</p>
+    </div>
+
+    <div *ngIf="pendingCount > 0" class="pending-badge">
+      <span class="count">{{ pendingCount }}</span>
+      <span class="label">{{ 'roleRequests.adminInbox.pendingLabel' | translate }}</span>
+    </div>
+  </div>
+
+  <!-- Notification Toast - Mejorado -->
+  <div *ngIf="successKey" class="notification-toast"
+       [class.success]="successKey === 'notifications.roleRequestApproved'"
+       [class.info]="successKey === 'notifications.roleRequestRejected'"
+       role="status"
+       aria-live="polite">
+    <div class="toast-icon">
+      <span *ngIf="successKey === 'notifications.roleRequestApproved'">✓</span>
+      <span *ngIf="successKey === 'notifications.roleRequestRejected'">ℹ</span>
+    </div>
+    <div class="toast-content">
+      <strong class="toast-title">
+        {{ successKey === 'notifications.roleRequestApproved' ? 'Solicitud Aprobada' : 'Solicitud Rechazada' }}
+      </strong>
+      <p class="toast-message">{{ successKey | translate }}</p>
+    </div>
+    <button class="toast-close" (click)="successKey = null" aria-label="Cerrar notificación">×</button>
+  </div>
+
+  <div *ngIf="loading" class="loading">{{ 'roleRequests.adminInbox.loading' | translate }}</div>
+
+  <div *ngIf="error && !loading" class="error-message">
+    <span class="icon">❌</span>
+    {{ error }}
+    <button class="btn-link" (click)="loadRequests()">{{ 'roleRequests.adminInbox.errorRetry' | translate }}</button>
+  </div>
+
+  <div *ngIf="!loading" class="filters-bar">
+    <div class="filter-group">
+      <label for="statusFilter">{{ 'roleRequests.adminInbox.filters.status.label' | translate }}</label>
+      <select id="statusFilter" [(ngModel)]="statusFilter" (change)="onFilterChange()" class="filter-select">
+        <option value="ALL">{{ 'roleRequests.adminInbox.filters.status.all' | translate }}</option>
+        <option [value]="RequestStatus.PENDING">{{ 'roleRequests.adminInbox.filters.status.pending' | translate }}
+        </option>
+        <option [value]="RequestStatus.APPROVED">{{ 'roleRequests.adminInbox.filters.status.approved' | translate }}
+        </option>
+        <option [value]="RequestStatus.REJECTED">{{ 'roleRequests.adminInbox.filters.status.rejected' | translate }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="roleFilter">{{ 'roleRequests.adminInbox.filters.role.label' | translate }}</label>
+      <select id="roleFilter" [(ngModel)]="roleFilter" (change)="onFilterChange()" class="filter-select">
+        <option value="ALL">{{ 'roleRequests.adminInbox.filters.role.all' | translate }}</option>
+        <option [value]="Role.PARTNER">{{ 'roleRequests.adminInbox.filters.role.partner' | translate }}</option>
+        <option [value]="Role.DISTRIBUTOR">{{ 'roleRequests.adminInbox.filters.role.distributor' | translate }}</option>
+        <option [value]="Role.AUTHORITY">{{ 'roleRequests.adminInbox.filters.role.authority' | translate }}</option>
+      </select>
+    </div>
+
+    <button class="btn btn-secondary btn-sm" (click)="loadRequests()">
+      <span class="icon">🔄</span>
+      {{ 'roleRequests.adminInbox.refresh' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredRequests.length === 0" class="empty-state">
+    <div class="empty-icon">🔭</div>
+    <h3>{{ 'roleRequests.adminInbox.empty.title' | translate }}</h3>
+    <p>{{ 'roleRequests.adminInbox.empty.desc' | translate }}</p>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredRequests.length > 0" class="requests-list">
+    <app-role-request-card *ngFor="let request of filteredRequests" [request]="request" [isAdmin]="true"
+      (review)="openReviewModal(request)">
+    </app-role-request-card>
+  </div>
+
+  <app-role-request-review-modal *ngIf="reviewingRequest" [request]="reviewingRequest" (close)="closeReviewModal()"
+    (reviewComplete)="handleReviewComplete($event)">
+  </app-role-request-review-modal>
+</div>

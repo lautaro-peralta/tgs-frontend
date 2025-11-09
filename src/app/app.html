@@ -1,0 +1,46 @@
+<app-navbar></app-navbar>
+
+<!-- Global login veil (covers entire viewport) -->
+<div class="auth-veil" *ngIf="transition.transitioning()"
+     [class.success]="transition.phase()==='success'"
+     [class.mode-logout]="transition.mode()==='logout'"
+     [class.mode-login]="transition.mode()==='login'"
+     aria-live="polite" aria-atomic="true">
+  <div class="veil-card">
+    <div class="loader-wrap" aria-hidden="true">
+      <div class="loader-glow"></div>
+      <div class="loader-ring"></div>
+      <div class="loader-ring2"></div>
+      <div class="loader-core"></div>
+      <!-- Orbital loading dots while validating (login only) -->
+      <div class="loader-orbit" *ngIf="transition.mode()==='login' && transition.phase()!=='success'">
+        <span class="dot"></span>
+        <span class="dot dot-2"></span>
+      </div>
+      <!-- Logout-specific: segmented rotating ring (clean, no dots/arrow) -->
+      <div class="loader-logout" *ngIf="transition.mode()==='logout'">
+        <div class="logout-segments"></div>
+      </div>
+      <div class="loader-check" *ngIf="transition.mode()==='login' && transition.phase()==='success'">✓</div>
+    </div>
+    <div class="veil-text">
+      <span class="brand">GarrSYS</span>
+      <!-- Login copy -->
+      <ng-container *ngIf="transition.mode()==='login'; else logoutCopy">
+        <span class="sub" *ngIf="transition.phase()!=='success'">Validando sesión…</span>
+        <span class="sub" *ngIf="transition.phase()==='success'">Bienvenido, {{ auth.user()?.username || 'Usuario' }}</span>
+      </ng-container>
+      <!-- Logout copy -->
+      <ng-template #logoutCopy>
+        <span class="sub">Cerrando sesión…</span>
+      </ng-template>
+    </div>
+  </div>
+  </div>
+
+<main class="app-main">
+  <router-outlet></router-outlet>
+  
+</main>
+
+<app-footer></app-footer>

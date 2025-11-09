@@ -1,0 +1,48 @@
+<!-- about.html (i18n aplicado) -->
+<div class="page">
+  <!-- Encabezado / breadcrumb -->
+  <header class="hero glass">
+    <div class="hero__head">
+      <h1>{{ 'about.title' | translate }}</h1>
+      <p class="lead">{{ 'about.lead' | translate }}</p>
+    </div>
+    <div class="crumb">
+      {{ 'nav.home' | translate }} <span aria-hidden="true">/</span>
+      <strong>{{ 'about.title' | translate }}</strong>
+    </div>
+  </header>
+
+  <!-- Misión -->
+  <section class="glass block">
+    <h2 class="section-title">{{ 'about.sections.missionTitle' | translate }}</h2>
+    <p class="section-text">{{ 'about.mission' | translate }}</p>
+  </section>
+
+  <!-- Valores -->
+  <section class="block">
+    <h2 class="section-title">{{ 'about.sections.valuesTitle' | translate }}</h2>
+    <div class="grid">
+      <article class="card" *ngFor="let key of valueKeys">
+        <header class="card-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h3>{{ 'about.values.' + key + '.title' | translate }}</h3>
+        </header>
+        <p class="muted">{{ 'about.values.' + key + '.desc' | translate }}</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Equipo -->
+  <section class="block">
+    <h2 class="section-title">{{ 'about.sections.teamTitle' | translate }}</h2>
+    <div class="team-grid">
+      <article class="team-card" *ngFor="let t of team">
+        <div class="avatar" aria-hidden="true">{{ initials(t.name) }}</div>
+        <div class="who">
+          <strong class="name">{{ t.name }}</strong>
+          <span class="role muted">{{ 'about.team.roles.' + t.roleKey | translate }}</span>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>

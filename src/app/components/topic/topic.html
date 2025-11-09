@@ -1,0 +1,123 @@
+<section class="stack-lg">
+
+  <!-- LIST -->
+  <div class="glass-dark card stack-md topic-shell">
+    <div class="header">
+      <h2>{{ 'topics.title' | translate }}</h2>
+      <div class="right">
+        <button class="btn" type="button" (click)="toggleForm()">
+          {{ isFormOpen ? ('Cerrar' | translate) : ('topics.new' | translate) }}
+        </button>
+      </div>
+    </div>
+
+
+    <div *ngIf="!loading() && topics().length > 0"
+      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <span class="muted"><strong>{{ 'topics.stats.total' | translate }}</strong> {{ totalTopics() }}</span>
+      <span class="muted" *ngIf="filterTextApplied()"><strong>{{ 'topics.stats.filtered' | translate }}</strong> {{
+        filtered().length }}</span>
+    </div>
+
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span>{{ 'topics.filters.search' | translate }}</span>
+        <input class="input" [placeholder]="'topics.filters.searchPh' | translate" [ngModel]="filterTextInput()"
+          (ngModelChange)="filterTextInput.set($event)" (keyup.enter)="applyFilters()"
+          [attr.aria-label]="'topics.a11y.searchLabel' | translate" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="filterTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <div class="table-wrap">
+      <table class="table" *ngIf="filtered().length; else emptyTopics">
+        <colgroup>
+          <col style="width:100px" />
+          <col />
+          <col style="width:180px" />
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th>{{ 'topics.table.id' | translate }}</th>
+            <th>{{ 'topics.table.description' | translate }}</th>
+            <th class="right">{{ 'topics.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let t of filtered()">
+            <td>#{{ t.id }}</td>
+            <td><span class="truncate">{{ t.description }}</span></td>
+            <td class="right">
+              <button class="btn ghost btn--icon" type="button" (click)="edit(t)"
+                [attr.title]="'common.edit' | translate">
+                ✏️
+              </button>
+
+              <button class="btn danger btn--icon" type="button" (click)="delete(t.id)"
+                [attr.title]="'common.delete' | translate">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #emptyTopics>
+        <div class="center muted">
+          {{ filterTextApplied()
+          ? ('topics.noResults' | translate)
+          : ('topics.empty' | translate) }}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+</section>
+
+<!-- Overlay flotante nuevo/editar tematica -->
+<div class="topic-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
+  <button type="button" class="topic-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
+
+  <div class="topic-overlay__panel glass-dark card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    <div class="header compact">
+      <h2>
+        {{ isEdit()
+        ? ('topics.form.editTitle' | translate:{ id: (form.controls.id.value ?? '') })
+        : ('topics.form.newTitle' | translate) }}
+      </h2>
+      <button type="button" class="btn-close" (click)="cancel()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <div class="error" *ngIf="error()">{{ error() }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-grid" novalidate>
+      <label class="label col-2">
+        <span>{{ 'topics.form.description' | translate }}</span>
+        <input class="input" formControlName="description" [placeholder]="'topics.form.descriptionPh' | translate"
+          [attr.aria-invalid]="form.controls.description.invalid && form.controls.description.touched" />
+        <small class="hint" *ngIf="form.controls.description.invalid && form.controls.description.touched">
+          {{ 'topics.form.err.required' | translate }}
+        </small>
+      </label>
+
+      <div class="form-actions">
+        <button class="btn success" type="submit" [disabled]="form.invalid || loading()" [attr.aria-busy]="loading()">
+          {{ isEdit() ? ('Guardar' | translate) : ('Crear' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" (click)="cancel()" [disabled]="loading()">
+          {{ 'common.cancel' | translate : {} : 'Cancelar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

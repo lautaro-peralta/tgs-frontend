@@ -1,0 +1,147 @@
+<!-- inbox-page.html (i18n aplicado) -->
+<div class="inbox-container">
+  <!-- Header -->
+  <header class="inbox-header">
+    <h1>{{ 'inbox.title' | translate }}</h1>
+    <div class="user-info" *ngIf="user() as currentUser">
+      <span class="username">{{ currentUser.username }}</span>
+      <span class="profile-badge" [class.complete]="hasCompleteProfile()">
+        {{ profileCompleteness() }}{{ 'inbox.profileCompletenessSuffix' | translate }}
+      </span>
+      <!-- ✅ Badge de verificación -->
+      <span class="verification-badge" [class.verified]="isVerified()">
+        {{ isVerified() ? ('inbox.verified' | translate) : ('inbox.notVerified' | translate) }}
+      </span>
+      <span class="role-badge" *ngFor="let role of visibleHeaderRoles()">
+        {{ role }}
+      </span>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading()">
+    <div class="spinner"></div>
+    <p>{{ 'inbox.loading' | translate }}</p>
+  </div>
+
+  <!-- Content (when loaded) -->
+  <div class="inbox-content" *ngIf="!loading()">
+
+    <!-- ========================================
+         VISTA ADMIN
+         ======================================== -->
+    <ng-container *ngIf="shouldShowAdminView()">
+      <!-- Tabs de navegación -->
+      <nav class="inbox-tabs" role="tablist">
+        <button role="tab" [attr.aria-selected]="activeSection() === 'user-verification'"
+          [class.active]="activeSection() === 'user-verification'" (click)="setActiveSection('user-verification')">
+          {{ 'inbox.tabs.userVerificationPlural' | translate }}
+        </button>
+        <button role="tab" [attr.aria-selected]="activeSection() === 'role-requests'"
+          [class.active]="activeSection() === 'role-requests'" (click)="setActiveSection('role-requests')">
+          {{ 'inbox.tabs.roleRequestsPlural' | translate }}
+        </button>
+      </nav>
+
+      <!-- Contenido según tab activo -->
+      <div class="tab-content" role="tabpanel">
+        <!-- Tab: Verificación de Usuarios -->
+        <div *ngIf="activeSection() === 'user-verification'" class="tab-panel">
+          <app-admin-user-verification-inbox></app-admin-user-verification-inbox>
+        </div>
+
+        <!-- Tab: Solicitudes de Rol -->
+        <div *ngIf="activeSection() === 'role-requests'" class="tab-panel">
+          <app-admin-role-requests-inbox></app-admin-role-requests-inbox>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ========================================
+         VISTA USUARIO (cualquier usuario no-admin)
+         ======================================== -->
+    <ng-container *ngIf="shouldShowUserView()">
+      <!-- Tabs de navegación para usuario -->
+      <nav class="inbox-tabs" role="tablist">
+        <button role="tab" [attr.aria-selected]="activeSection() === 'user-verification'"
+          [class.active]="activeSection() === 'user-verification'" (click)="setActiveSection('user-verification')">
+          {{ 'inbox.tabs.userVerification' | translate }}
+        </button>
+        <button role="tab" [attr.aria-selected]="activeSection() === 'role-requests'"
+          [class.active]="activeSection() === 'role-requests'" (click)="setActiveSection('role-requests')"
+          [disabled]="!isVerified()" [title]="!isVerified() ? ('inbox.blocked.goVerify' | translate) : ''">
+          {{ 'inbox.tabs.roleRequest' | translate }}
+          <span *ngIf="!isVerified()" class="locked-icon">🔒</span>
+        </button>
+      </nav>
+
+      <!-- Contenido según tab activo -->
+      <div class="tab-content" role="tabpanel">
+        <!-- Tab: Verificación de Usuario -->
+        <div *ngIf="activeSection() === 'user-verification'" class="tab-panel">
+          <app-user-verification-status [userEmail]="getUserEmail()" [isVerified]="isVerified()"
+            [hasCompleteProfile]="hasCompleteProfile()">
+          </app-user-verification-status>
+        </div>
+
+        <!-- Tab: Solicitud de Rol -->
+        <div *ngIf="activeSection() === 'role-requests'" class="tab-panel">
+          <!-- ✅ Mensaje si no está verificado -->
+          <div *ngIf="!isVerified()" class="blocked-section">
+            <div class="blocked-icon">🔒</div>
+            <h2>{{ 'inbox.blocked.title' | translate }}</h2>
+            <p>{{ 'inbox.blocked.desc' | translate }}</p>
+            <button class="btn btn-primary" (click)="setActiveSection('user-verification')">
+              <span class="icon">✅</span>
+              {{ 'inbox.blocked.goVerify' | translate }}
+            </button>
+          </div>
+
+          <!-- ✅ Contenido si está verificado -->
+          <div *ngIf="isVerified()">
+          <!-- Se elimina el encabezado duplicado; el componente interno ya muestra su propio título/subtítulo -->
+
+            <!-- ✅ Alerta si el perfil no está completo -->
+            <div class="alert alert-warning" *ngIf="!hasCompleteProfile()">
+              <strong>⚠️ {{ 'account.completeProfileBanner.title' | translate }}</strong>
+              <p>
+                {{ 'account.completeProfileBanner.desc' | translate }}
+                <a routerLink="/mi-cuenta">{{ 'nav.myAccount' | translate }}</a>
+              </p>
+              <div class="suggestions" *ngIf="getProfileSuggestions().length > 0">
+                <p><strong>{{ 'clients.stats.filteredLabel' | translate }}</strong></p>
+                <ul>
+                  <li *ngFor="let suggestion of getProfileSuggestions()">
+                    {{ suggestion }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- ✅ Componente de solicitud -->
+            <app-user-role-requests-inbox
+              [currentRoles]="currentRoles()"
+              [hasCompleteProfile]="hasCompleteProfile()"
+              [isVerified]="isVerified()"
+              [userName]="getUserDisplayName()"
+              [userEmail]="getUserEmail()">
+            </app-user-role-requests-inbox>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ========================================
+         NO AUTENTICADO (no debería llegar aquí)
+         ======================================== -->
+    <ng-container *ngIf="!user()">
+      <div class="not-authenticated">
+        <div class="icon">🔒</div>
+        <h2>{{ 'inbox.notAuth.title' | translate }}</h2>
+        <p>{{ 'inbox.notAuth.desc' | translate }}</p>
+        <a routerLink="/login" class="btn btn-primary">{{ 'inbox.notAuth.login' | translate }}</a>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

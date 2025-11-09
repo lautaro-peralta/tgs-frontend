@@ -1,0 +1,266 @@
+<section class="stack-lg">
+
+  <!-- CARD PRINCIPAL -->
+  <div class="glass-dark card stack-md">
+    <!-- HEADER + TOOLBAR -->
+    <header class="header">
+      <h2 class="title">{{ 'shelbyCouncil.title' | translate : {} : 'Consejo Shelby' }}</h2>
+      <div class="right" *ngIf="canCreate()">
+        <button class="btn" type="button" (click)="toggleNew()" [attr.aria-expanded]="isNewOpen()">
+          {{ isNewOpen()
+          ? ('shelbyCouncil.buttons.close' | translate : {} : 'Cerrar')
+          : ('shelbyCouncil.buttons.new' | translate : {} : 'Nuevo') }}
+        </button>
+      </div>
+    </header>
+
+    <div *ngIf="!loading() && items().length > 0"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--sp-3); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'shelbyCouncil.stats.total' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-strong);">{{ totalRecords() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'shelbyCouncil.stats.uniquePartners' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ uniquePartners() }}</div>
+      </div>
+      <div style="text-align: center;">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'shelbyCouncil.stats.uniqueDecisions' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--info);">{{ uniqueDecisions() }}</div>
+      </div>
+      <div style="text-align: center;" *ngIf="fTextApplied()">
+        <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          'shelbyCouncil.stats.filtered' | translate }}</div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">{{ filtered().length }}</div>
+      </div>
+    </div>
+
+    <!-- MENSAJES DE ESTADO -->
+    <div class="success-banner" *ngIf="success() as msg">
+      <strong>✓ {{ 'common.success' | translate : {} : 'Éxito' }}</strong> {{ msg }}
+    </div>
+    <div class="error" *ngIf="error() as err">
+      <strong>✗ {{ 'common.error' | translate : {} : 'Error' }}</strong> {{ err }}
+    </div>
+    <div class="muted" *ngIf="loading()">
+      🔄 {{ 'shelbyCouncil.loading' | translate : {} : 'Cargando...' }}
+    </div>
+
+    <!-- FILTROS -->
+    <section class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span class="label-text">🔍 {{ 'shelbyCouncil.filters.search' | translate : {} : 'Buscar' }}</span>
+        <input class="input" type="text" [value]="fTextInput()" (input)="fTextInput.set($any($event.target).value)"
+          (keyup.enter)="applyFilters()"
+          [placeholder]="'shelbyCouncil.filters.searchPlaceholder' | translate : {} : 'Socio, decisión, rol, notas...'"
+          [attr.aria-label]="'shelbyCouncil.filters.search' | translate : {} : 'Buscar'" />
+      </label>
+
+      <div style="display: flex; gap: var(--sp-2); align-items: center;">
+        <div class="filter-info" *ngIf="!fTextApplied()">
+          <span class="badge badge-info">
+            {{ filtered().length }} {{ filtered().length === 1 ? 'registro' : 'registros' }}
+          </span>
+        </div>
+
+        <button class="btn btn-primary" type="button" (click)="applyFilters()">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+        <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </section>
+
+    <!-- LISTADO -->
+    <section class="subsection">
+      <h3 class="sub-title">📋 {{ 'shelbyCouncil.list' | translate : {} : 'Listado' }}</h3>
+
+      <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width:80px;">ID</th>
+              <th>{{ 'shelbyCouncil.fields.partner' | translate : {} : '👤 Socio' }}</th>
+              <th>{{ 'shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión' }}</th>
+              <th style="width:130px;">{{ 'shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso' }}</th>
+              <th>{{ 'shelbyCouncil.fields.role' | translate : {} : '🎯 Rol' }}</th>
+              <th *ngIf="canEdit() || canDelete()" class="right" style="width:160px;">
+                {{ 'common.actions' | translate : {} : 'Acciones' }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let it of filtered(); trackBy: trackById">
+              <td><span class="badge badge-neutral">#{{ it.id }}</span></td>
+              <td>
+                <div class="cell-content">
+                  <strong>{{ it.partner?.name || '—' }}</strong>
+                  <small class="muted">DNI: {{ it.partner?.dni }}</small>
+                </div>
+              </td>
+              <td>
+                <div class="cell-content">
+                  <strong>#{{ it.decision?.id }}</strong>
+                  <small class="muted">{{ it.decision?.description || '—' }}</small>
+                </div>
+              </td>
+              <td>{{ it.joinDate | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge badge-role" *ngIf="it.role">{{ it.role }}</span>
+                <span class="muted" *ngIf="!it.role">—</span>
+              </td>
+              <td *ngIf="canEdit() || canDelete()" class="right">
+                <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
+                  [attr.title]="'common.edit' | translate : {} : 'Editar'">
+                  ✏️
+                </button>
+                <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
+                  [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty state -->
+      <ng-template #emptyState>
+        <div class="empty">
+          <div class="empty-icon">🔭</div>
+          <h3>{{ fTextApplied() ? 'Sin resultados' : ('shelbyCouncil.emptyTitle' | translate : {} : 'No hay registros')
+            }}
+          </h3>
+          <p class="muted">
+            {{ fTextApplied()
+            ? 'Probá ajustar el filtro o hacer clic en "Limpiar"'
+            : ('shelbyCouncil.emptyHint' | translate : {} : 'Probá ajustar la búsqueda o creá un nuevo registro.') }}
+          </p>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+
+</section>
+
+<!-- Overlay flotante para crear/editar -->
+<div class="shelby-council-overlay" [class.is-open]="isNewOpen()" [attr.aria-hidden]="!isNewOpen()">
+  <button type="button" class="shelby-council-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+
+  <div class="shelby-council-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="header compact">
+      <h2 class="title">
+        {{
+        isEdit()
+        ? ('shelbyCouncil.form.titleEdit' | translate : { id: form.value.id } : ('Editar #'+form.value.id))
+        : ('shelbyCouncil.form.titleCreate' | translate : {} : 'Crear registro')
+        }}
+      </h2>
+      <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <form [formGroup]="form" class="form-grid" (ngSubmit)="save()">
+      <!-- PARTNER -->
+      <label class="label" [class.error]="partnerDniInvalid">
+        <span class="label-text">
+          👤 {{ 'shelbyCouncil.fields.partner' | translate : {} : 'Socio' }}
+          <span class="required">*</span>
+        </span>
+        <select class="input" formControlName="partnerDni" [disabled]="isEdit()">
+          <option value="" disabled>— Seleccioná un socio —</option>
+          <option *ngFor="let p of partners()" [value]="p.dni">
+            {{ p.dni }} — {{ p.name }}
+          </option>
+        </select>
+        <small class="muted" *ngIf="!partners().length && !loading()">
+          No hay socios disponibles. Creá uno primero.
+        </small>
+        <small class="muted" *ngIf="isEdit()">
+          No se puede cambiar el socio al editar
+        </small>
+        <small class="error-text" *ngIf="partnerDniInvalid">
+          {{ 'shelbyCouncil.errors.partnerDniRequired' | translate : {} : 'Socio requerido' }}
+        </small>
+      </label>
+
+      <!-- DECISION -->
+      <label class="label" [class.error]="decisionIdInvalid">
+        <span class="label-text">
+          📊 {{ 'shelbyCouncil.fields.decision' | translate : {} : 'Decisión' }}
+          <span class="required">*</span>
+        </span>
+        <select class="input" formControlName="decisionId" [disabled]="isEdit()">
+          <option [ngValue]="null" disabled>— Seleccioná una decisión —</option>
+          <option *ngFor="let d of decisions()" [ngValue]="d.id">
+            #{{ d.id }} — {{ d.description }}
+          </option>
+        </select>
+        <small class="muted" *ngIf="!decisions().length && !loading()">
+          No hay decisiones disponibles. Creá una primero.
+        </small>
+        <small class="muted" *ngIf="isEdit()">
+          No se puede cambiar la decisión al editar
+        </small>
+        <small class="error-text" *ngIf="decisionIdInvalid">
+          {{ 'shelbyCouncil.errors.decisionIdRequired' | translate : {} : 'Decisión requerida' }}
+        </small>
+      </label>
+
+      <!-- Fecha de Ingreso -->
+      <label class="label" [class.error]="joinDateInvalid">
+        <span class="label-text">
+          📅 {{ 'shelbyCouncil.fields.joinDate' | translate : {} : 'Fecha de ingreso' }}
+          <span class="required">*</span>
+        </span>
+        <input class="input" type="date" formControlName="joinDate" [attr.aria-invalid]="joinDateInvalid" />
+        <small class="error-text" *ngIf="joinDateInvalid">
+          {{ 'shelbyCouncil.errors.joinDateRequired' | translate : {} : 'Fecha requerida' }}
+        </small>
+      </label>
+
+      <!-- Rol -->
+      <label class="label">
+        <span class="label-text">
+          🎯 {{ 'shelbyCouncil.fields.role' | translate : {} : 'Rol / Responsabilidad' }}
+        </span>
+        <input class="input" type="text" formControlName="role"
+          placeholder="Financial Advisor, Strategic Lead, etc." />
+        <small class="helper-text">
+          Opcional: describe el rol o responsabilidad en este consejo
+        </small>
+      </label>
+
+      <!-- Notas -->
+      <label class="label col-2">
+        <span class="label-text">
+          📝 {{ 'shelbyCouncil.fields.notes' | translate : {} : 'Notas adicionales' }}
+        </span>
+        <textarea class="input" rows="3" formControlName="notes"
+          placeholder="Información adicional sobre la participación en este consejo..."></textarea>
+        <small class="helper-text">
+          Opcional: agregá cualquier nota o comentario relevante
+        </small>
+      </label>
+
+      <!-- Acciones -->
+      <div class="form-actions right">
+        <button class="btn success" type="submit" [disabled]="form.invalid || loading()">
+          {{ isEdit()
+          ? ('shelbyCouncil.buttons.save' | translate : {} : 'Guardar cambios')
+          : ('shelbyCouncil.buttons.create' | translate : {} : 'Crear registro') }}
+        </button>
+        <button class="btn ghost" type="button" (click)="new()" [disabled]="loading()">
+          {{ 'shelbyCouncil.buttons.clear' | translate : {} : 'Limpiar' }}
+        </button>
+        <button class="btn ghost" type="button" (click)="toggleNew()" [disabled]="loading()">
+          {{ 'shelbyCouncil.buttons.cancel' | translate : {} : 'Cancelar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,207 @@
+/* ===== Variables ===== */
+:root {
+  --text: #e5e7eb;
+  --muted: #cbd5e1;
+  --text-strong: #ffffff;
+  --border: rgba(255, 255, 255, .16);
+  --glass-bg: rgba(10, 14, 22, .58);
+  --focus: rgba(148, 163, 184, .22);
+}
+
+.page {
+  padding: 1rem;
+  color: var(--text);
+}
+
+/* Glass base (mismo look que Home) */
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  border-radius: 1.1rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .06);
+  overflow: hidden;
+}
+
+.glass::before {
+  /* línea superior suave como en intro del Home */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(56, 189, 248, .35), rgba(255, 255, 255, 0), rgba(56, 189, 248, .35));
+  -webkit-mask: linear-gradient(#000 0 0) top/100% 2px no-repeat;
+  mask: linear-gradient(#000 0 0) top/100% 2px no-repeat;
+}
+
+/* Hero */
+.hero {
+  padding: clamp(1rem, 2vw, 1.4rem);
+  display: flex;
+  align-items: end;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.hero__head h1 {
+  margin: 0 0 .35rem;
+  color: var(--text-strong);
+  font: 900 clamp(1.6rem, 3vw, 2.2rem)/1.05 'Google Sans Code', system-ui, sans-serif;
+  letter-spacing: .2px;
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+  max-width: 65ch;
+  line-height: 1.55;
+}
+
+.crumb {
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Secciones */
+.block {
+  margin-top: clamp(1rem, 2.2vw, 1.6rem);
+}
+
+.block.glass {
+  padding: clamp(1rem, 2vw, 1.4rem);
+}
+
+.section-title {
+  margin: 0 0 .6rem;
+  color: var(--text-strong);
+  font: 900 1.1rem/1.2 'Google Sans Code', system-ui, sans-serif;
+  letter-spacing: .2px;
+}
+
+.section-text {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Valores */
+.grid {
+  display: grid;
+  gap: .9rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card {
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: .9rem;
+  background: rgba(255, 255, 255, .05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .18), inset 0 1px rgba(255, 255, 255, .05);
+  padding: 1rem;
+  transition: transform .18s ease, background .2s ease, border-color .2s ease;
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, .08);
+  border-color: rgba(255, 255, 255, .22);
+}
+
+.card-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .4rem;
+  position: relative;
+  padding-bottom: .4rem;
+}
+
+.card-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7dd3fc, #38bdf8);
+  opacity: .75;
+}
+
+.card-head h3 {
+  margin: 0;
+  color: var(--text-strong);
+  font: 800 1.05rem/1.2 'Google Sans Code', system-ui, sans-serif;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  background: radial-gradient(circle at 30% 30%, #7dd3fc, #38bdf8);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, .18);
+}
+
+/* Equipo */
+.team-grid {
+  display: grid;
+  gap: .9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.team-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .75rem;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: .9rem;
+  background: rgba(255, 255, 255, .05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .18), inset 0 1px rgba(255, 255, 255, .05);
+  padding: .85rem 1rem;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: .7rem;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .16);
+  color: var(--text-strong);
+  font-weight: 900;
+}
+
+.who .name {
+  display: block;
+  color: var(--text-strong);
+}
+
+.role {
+  font-weight: 700;
+}
+
+/* Utilidades */
+.muted {
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

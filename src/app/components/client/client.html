@@ -1,0 +1,207 @@
+<section class="stack-lg">
+
+  <!-- LIST -->
+  <div class="glass-dark card stack-md client-shell">
+    <div class="header">
+      <h2>{{ 'clients.title' | translate }}</h2>
+      <div class="right" *ngIf="canCreate()">
+        <button class="btn" (click)="toggleNew()" [attr.aria-expanded]="isNewOpen">
+          {{ isNewOpen ? ('clients.toggle.close' | translate) : ('clients.toggle.new' | translate) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Success message -->
+    <div *ngIf="success()"
+      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+      <span style="font-size: 20px;">✓</span>
+      <strong>{{ success() }}</strong>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error()" class="error">{{ error() }}</div>
+
+    <!-- Resumen de estadísticas -->
+    <div *ngIf="!loading() && clients().length > 0" class="filters"
+      style="background: rgba(195, 164, 98, 0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+      <span class="muted">
+        <strong>{{ 'clients.stats.totalLabel' | translate }}</strong>
+        {{ totalClients() }} {{ 'clients.stats.clientsNoun' | translate }}
+      </span>
+      <span class="muted">
+        <strong>{{ 'clients.stats.withPurchasesLabel' | translate }}</strong>
+        {{ clientsWithPurchases() }}
+      </span>
+      <span class="muted">
+        <strong>{{ 'clients.stats.withoutPurchasesLabel' | translate }}</strong>
+        {{ clientsWithoutPurchases() }}
+      </span>
+      <span class="muted" *ngIf="fTextApplied()">
+        <strong>{{ 'clients.stats.filteredLabel' | translate }}</strong>
+        {{ filteredClients().length }}
+      </span>
+    </div>
+
+    <!-- Filters (CON BOTÓN BUSCAR) -->
+    <div class="filters" style="align-items: flex-end;">
+      <label class="label" style="flex: 1;">
+        <span>{{ 'clients.filters.search' | translate }}</span>
+        <input class="input" [placeholder]="'clients.filters.searchPh' | translate" [ngModel]="fTextInput()"
+          (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
+      </label>
+
+      <label class="label" style="min-width: 200px;">
+        <span>{{ 'clients.filters.purchaseFilterLabel' | translate }}</span>
+        <select class="input" [ngModel]="fPurchasesInput()" (ngModelChange)="fPurchasesInput.set($event)">
+          <option value="all">{{ 'clients.filters.purchases.all' | translate }}</option>
+          <option value="yes">{{ 'clients.filters.purchases.yes' | translate }}</option>
+          <option value="no">{{ 'clients.filters.purchases.no' | translate }}</option>
+        </select>
+      </label>
+
+      <!-- BOTONES DE FILTRO -->
+      <div style="display: flex; gap: var(--sp-2);">
+        <button class="btn btn-primary" (click)="applyFilters()" [attr.title]="'common.applyFiltersTitle' | translate">
+          🔍 {{ 'common.search' | translate }}
+        </button>
+
+        <button class="btn ghost" (click)="clearFilters()" [attr.title]="'common.clearFiltersTitle' | translate"
+          *ngIf="fTextApplied() || fPurchasesApplied() !== 'all'">
+          🗑️ {{ 'common.clear' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div *ngIf="loading()" class="loading">{{ 'clients.loading' | translate }}</div>
+
+    <!-- Table -->
+    <div class="table-wrap" *ngIf="!loading()">
+      <table class="table" *ngIf="filteredClients().length > 0; else empty">
+        <colgroup>
+          <col style="width:100px" />
+          <col />
+          <col />
+          <col />
+          <col style="width:120px" />
+          <col style="width:100px" />
+          <col style="width:100px" *ngIf="isAdmin()" />
+        </colgroup>
+
+        <thead>
+          <tr>
+            <th>{{ 'clients.table.dni' | translate }}</th>
+            <th>{{ 'clients.table.name' | translate }}</th>
+            <th>{{ 'clients.table.email' | translate }}</th>
+            <th>{{ 'clients.table.address' | translate }}</th>
+            <th>{{ 'clients.table.phone' | translate }}</th>
+            <th class="center">{{ 'clients.table.purchases' | translate }}</th>
+            <th class="right" *ngIf="isAdmin()">{{ 'clients.table.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filteredClients()">
+            <td><span class="mono">{{ c.dni }}</span></td>
+            <td><span class="truncate">{{ c.name }}</span></td>
+            <td><span class="truncate">{{ c.email || '—' }}</span></td>
+            <td><span class="truncate">{{ c.address || '—' }}</span></td>
+            <td>{{ c.phone || '—' }}</td>
+            <td class="center">
+              <span class="badge" [class.badge-success]="hasPurchases(c)" [class.badge-neutral]="!hasPurchases(c)">
+                {{ getPurchaseCount(c) }}
+              </span>
+            </td>
+            <td class="right" *ngIf="isAdmin()">
+              <button class="btn ghost btn--icon" (click)="edit(c)" [attr.title]="'common.edit' | translate"
+                [attr.aria-label]="'common.edit' | translate">
+                ✏️
+                <span class="sr-only">{{ 'common.edit' | translate }}</span>
+              </button>
+              <button class="btn danger btn--icon" (click)="delete(c.dni)" [attr.title]="'common.delete' | translate"
+                [attr.aria-label]="'common.delete' | translate">
+                🗑️
+                <span class="sr-only">{{ 'common.delete' | translate }}</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ng-template #empty>
+        <div class="center muted">
+          {{ fTextApplied() || fPurchasesApplied() !== 'all'
+          ? ('clients.noResults' | translate)
+          : ('clients.empty' | translate) }}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- FORMULARIO FLOTANTE (MOVIDO ARRIBA) -->
+</section>
+
+<!-- Overlay flotante para nuevo/editar cliente -->
+<div class="new-client-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
+  <button type="button" class="new-client-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+
+  <div class="new-client-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="header compact">
+      <h2 class="title">
+        {{ (editDni() == null ? 'clients.newTitle' : 'clients.editTitle') | translate }}
+      </h2>
+      <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+      <label class="label">
+        <span>{{ 'clients.form.dni' | translate }} <span class="required">*</span></span>
+        <input class="input" type="text" formControlName="dni" maxlength="8" pattern="[0-9]*"
+          [placeholder]="'clients.form.dniPh' | translate" [class.error-input]="hasError('dni')" />
+        <small class="error-text" *ngIf="hasError('dni')">
+          {{ getErrorMessage('dni') }}
+        </small>
+      </label>
+
+      <label class="label">
+        <span>{{ 'clients.form.name' | translate }} <span class="required">*</span></span>
+        <input class="input" formControlName="name" [placeholder]="'clients.form.namePh' | translate"
+          [class.error-input]="hasError('name')" />
+        <small class="error-text" *ngIf="hasError('name')">
+          {{ getErrorMessage('name') }}
+        </small>
+      </label>
+
+      <label class="label">
+        <span>{{ 'clients.form.email' | translate }} <span class="required">*</span></span>
+        <input class="input" formControlName="email" type="email" [placeholder]="'clients.form.emailPh' | translate"
+          [class.error-input]="hasError('email')" />
+        <small class="error-text" *ngIf="hasError('email')">
+          {{ getErrorMessage('email') }}
+        </small>
+      </label>
+
+      <label class="label">
+        <span>{{ 'clients.form.phone' | translate }}</span>
+        <input class="input" formControlName="phone" [placeholder]="'clients.form.phonePh' | translate"
+          [class.error-input]="hasError('phone')" />
+        <small class="error-text" *ngIf="hasError('phone')">
+          {{ getErrorMessage('phone') }}
+        </small>
+      </label>
+
+      <label class="label col-2">
+        <span>{{ 'clients.form.address' | translate }}</span>
+        <input class="input" formControlName="address" [placeholder]="'clients.form.addressPh' | translate" />
+      </label>
+
+      <div class="form-actions">
+        <button class="btn success" type="submit" [disabled]="loading() || form.invalid">
+          {{ editDni() == null ? ('common.create' | translate) : ('common.save' | translate) }}
+        </button>
+        <button class="btn ghost" type="button" (click)="toggleNew()">
+          {{ 'common.cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

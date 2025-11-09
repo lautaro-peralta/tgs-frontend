@@ -1,0 +1,1992 @@
+﻿{
+  "brand": {
+    "name": "GarrSYS"
+  },
+  "nav": {
+    "store": "Tienda",
+    "myAccount": "Mi cuenta",
+    "myPurchases": "Mis compras",
+    "logout": "Salir",
+    "management": "Gestión",
+    "society": "Sociedad",
+    "inbox": "Bandeja",
+    "unread": "sin leer",
+    "roleRequests": "Solicitudes de rol",
+    "mailVerification": "Verificación de mail",
+    "myRoleRequest": "Mi solicitud de rol",
+    "about": "Sobre nosotros",
+    "faqs": "FAQs",
+    "contact": "Contáctanos",
+    "language": "Idioma",
+    "home": "Inicio"
+  },
+  "mgmt": {
+    "product": "Productos",
+    "client": "Clientes",
+    "partner": "Socios",
+    "sale": "Ventas",
+    "zone": "Zonas",
+    "authority": "Autoridades",
+    "bribe": "Sobornos",
+    "myBribes": "Mis Sobornos",
+    "decision": "Decisiones",
+    "topic": "Temáticas",
+    "distributor": "Distribuidores",
+    "shelbyCouncil": "Consejo Shelby",
+    "monthlyReview": "Revisiones mensuales",
+    "clandestineAgreement": "Acuerdos clandestinos",
+    "admin": "Administradores",
+    "roleRequests": "Solicitudes de rol"
+  },
+  "store": {
+    "title": "Tienda",
+    "search": "Buscar",
+    "noImage": "Sin imagen",
+    "noProducts": {
+      "title": "No hay productos",
+      "desc": "Cuando se carguen productos, los vas a ver acá."
+    },
+    "add": "Agregar",
+    "cart": {
+      "open": "Abrir carrito",
+      "items": "Carrito ({{count}})",
+      "empty": "Tu carrito está vacío",
+      "close": "Cerrar",
+      "clear": "Vaciar",
+      "goToCheckout": "Realizar compra",
+      "total": "Total",
+      "orderSplit": "Pedido dividido en {{count}} ubicaciones",
+      "orderSplitDesc": "Crearemos {{count}} órdenes de compra, una por cada ubicación.",
+      "productCount_one": "producto",
+      "productCount_other": "productos",
+      "subtotal": "Subtotal",
+      "multiplePurchaseNote": "Se crearán {{count}} compras separadas. Recibirás una confirmación por cada una.",
+      "unavailable": "Productos no disponibles",
+      "unavailableDesc": "Los productos de tu carrito no están disponibles. Por favor, elimina algunos items.",
+      "pricePerUnit": "c/u",
+      "decrease": "Disminuir",
+      "increase": "Aumentar",
+      "remove": "Quitar",
+      "checkout": "Realizar Compra",
+      "processing": "Procesando...",
+      "cannotPurchase": "No puedes comprar aún",
+      "needVerification": "Debes verificar tu cuenta con un administrador.",
+      "requestVerification": "Solicitar verificación",
+      "completeProfile100": "Completa tu perfil al 100% para comprar.",
+      "completeProfile": "Completar perfil"
+    }
+  },
+  "myPurchases": {
+    "title": "Mis Compras",
+    "loading": "Cargando compras...",
+    "stats": {
+      "totalPurchases": "Total de compras",
+      "totalSpent": "Total gastado",
+      "avgSpent": "Promedio por compra"
+    },
+    "filters": {
+      "searchPlaceholder": "Buscar por producto, fecha, distribuidor o monto..."
+    },
+    "empty": {
+      "title": "No tenés compras registradas",
+      "desc": "Cuando realices tu primera compra en la tienda, aparecerá aquí."
+    },
+    "table": {
+      "id": "ID",
+      "date": "Fecha",
+      "distributor": "Distribuidor",
+      "products": "Productos",
+      "total": "Total"
+    },
+    "showing": "Mostrando",
+    "of": "de",
+    "noResults": {
+      "title": "No se encontraron compras",
+      "desc": "Intentá ajustar tu búsqueda para encontrar lo que buscás."
+    }
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "loading": "Cargando...",
+    "save": "Guardar cambios",
+    "saved": "¡Guardado!",
+    "couldNotSave": "No se pudo guardar.",
+    "fields": {
+      "username": "Usuario",
+      "email": "Email",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "phone": "Teléfono",
+      "address": "Dirección"
+    },
+    "verificationBanner": {
+      "title": "Email no verificado",
+      "desc": "Revisá tu bandeja de entrada y hacé clic en el enlace de verificación que te enviamos.",
+      "resend": "Reenviar email",
+      "sending": "Enviando..."
+    },
+    "loadingProfile": "Cargando perfil...",
+    "completeProfileBanner": {
+      "title": "Completa tu perfil",
+      "desc": "Necesitás completar tu información personal para acceder a esta función."
+    },
+    "improveProfile": "Mejorá tu perfil",
+    "purchaseRequirements": {
+      "title": "Para realizar compras necesitás:"
+    },
+    "actions": {
+      "completeProfile": "Completar perfil",
+      "saving": "Guardando..."
+    },
+    "infoSection": {
+      "title": "Información de la cuenta",
+      "status": "Estado de la cuenta:",
+      "active": "✓ Activa",
+      "inactive": "✗ Inactiva",
+      "emailVerified": "Email verificado:",
+      "adminVerified": "Verificada por admin",
+      "emailVerifiedYes": "✓ Sí",
+      "emailVerifiedNo": "✗ No",
+      "roles": "Roles:",
+      "memberSince": "Miembro desde:"
+    },
+    "readonlyNote": "ℹ️ Los datos personales no pueden modificarse una vez completados."
+  },
+  "product": {
+    "title": "Productos",
+    "new": "Nuevo producto",
+    "close": "Cerrar",
+    "create": "Crear",
+    "available": "Productos disponibles",
+    "none": "No hay productos disponibles",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "list": "Listado",
+    "loading": "Cargando productos...",
+    "filters": {
+      "search": "Buscar producto",
+      "stock": {
+        "all": "Todos los productos",
+        "with": "Con stock",
+        "without": "Sin stock"
+      },
+      "stock_all": "Todos",
+      "stock_with": "Con stock",
+      "stock_without": "Sin stock",
+      "searchPh": "Buscar por ID, descripción o detalle...",
+      "stockLabel": "Filtrar por stock"
+    },
+    "fields": {
+      "description": "Descripción",
+      "price": "Precio (ARS)",
+      "stock": "Stock",
+      "illegal": "¿Ilegal?",
+      "imageUrl": "Imagen (URL)",
+      "imageFile": "Imagen (archivo)",
+      "detail": "Detalle",
+      "detailPlaceholder": "Ingresá una descripción detallada del producto"
+    },
+    "preview": "Vista previa",
+    "emptyTitle": "No hay productos",
+    "emptyHint": "Probá ajustar los filtros o creá un producto nuevo.",
+    "editTitle": "Editar producto #{{id}}",
+    "required": "Campo requerido.",
+    "priceInvalid": "Ingresá un precio válido.",
+    "stockInvalid": "Ingresá un stock válido.",
+    "imageUrlHint": "Pegá un link a una imagen (JPG/PNG/WebP). Si preferís subir archivo, usá el campo de abajo.",
+    "imageFileHint": "Opcional: subí una imagen desde tu dispositivo",
+    "errorLoad": "No se pudo cargar el listado.",
+    "errorSave": "No se pudo guardar",
+    "errorDelete": "No se pudo eliminar.",
+    "descriptionRequired": "Descripción requerida (3-50 caracteres)",
+    "detailRequired": "Detalle requerido (3-200 caracteres)",
+    "toggle": {
+      "close": "Cerrar",
+      "new": "Nuevo Producto"
+    },
+    "stats": {
+      "totalLabel": "Total:",
+      "withStockLabel": "Con stock:",
+      "withoutStockLabel": "Sin stock:",
+      "filteredLabel": "Filtrados:"
+    },
+    "table": {
+      "id": "ID",
+      "actions": "Acciones"
+    },
+    "empty": {
+      "title": "No hay productos",
+      "desc": "Creá un producto nuevo para comenzar."
+    },
+    "noResults": {
+      "title": "No hay resultados",
+      "desc": "Probá ajustar los filtros o hacer clic en \"Limpiar\"."
+    },
+    "badges": {
+      "yes": "Sí",
+      "no": "No"
+    },
+    "imageFile": "Imagen (archivo)"
+  },
+  "auth": {
+    "user": "usuario",
+    "login": {
+      "title": "Iniciar sesión",
+      "submit": "Entrar"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "submit": "Crear cuenta"
+    },
+    "fields": {
+      "username": "Usuario",
+      "email": "Email",
+      "emailOrUsername": "Email o Usuario",
+      "password": "Contraseña"
+    },
+    "placeholders": {
+      "username": "Tu nombre",
+      "email": "tu@email.com",
+      "emailOrUsername": "tu@email.com o tu_usuario",
+      "password": "••••••••"
+    },
+    "errors": {
+      "missingFields": "Completá todos los campos.",
+      "loginFailed": "No se pudo iniciar sesión.",
+      "registerFailed": "No se pudo registrar."
+    }
+  },
+  "home": {
+    "welcome": "Bienvenido/a,",
+    "tagline": "La plataforma que lleva tu negocio al siguiente nivel",
+    "pill": "GarrSYS en pocas palabras",
+    "intro": {
+      "title": "Todo en un mismo lugar",
+      "lead": "Centralizá productos, clientes, ventas y zonas con una interfaz clara. Menos pasos, menos fricción y más foco en lo importante: tu negocio.",
+      "cards": {
+        "1": {
+          "title": "Gestión simplificada",
+          "detail": "Unificá productos, clientes y ventas en una sola interfaz, con flujos claros y métricas accionables."
+        },
+        "2": {
+          "title": "Rendimiento y claridad",
+          "detail": "Pantallas ágiles, estados bien definidos y filtros que ayudan a decidir más rápido y mejor."
+        },
+        "3": {
+          "title": "Listo para escalar",
+          "detail": "Organizá zonas, autoridades y decisiones con controles que crecen con tu operación."
+        },
+        "4": {
+          "title": "Reportes en tiempo real",
+          "detail": "Visualizá KPIs y tendencias al instante para detectar oportunidades y anticipar desvíos."
+        },
+        "5": {
+          "title": "Seguridad y roles",
+          "detail": "Definí permisos por área o función para cuidar la información y ordenar el trabajo."
+        },
+        "6": {
+          "title": "Integraciones y API",
+          "detail": "Conectá tus sistemas, importá datos y automatizá procesos sin fricción."
+        }
+      },
+      "cta": "Ver resumen completo"
+    },
+    "steps": {
+      "title": "Cómo empezar",
+      "one": "Creá tu cuenta o iniciá sesión.",
+      "two": "Cargá productos y clientes.",
+      "three": "Activá tus flujos de venta y gestión."
+    }
+  },
+  "common": {
+    "close": "Cerrar",
+    "create": "Crear",
+    "save": "Guardar",
+    "rank": "Rango",
+    "record": "registro",
+    "records": "registros",
+    "quantity": "Cantidad",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "error": "Error",
+    "all": "Todos",
+    "actions": "Acciones",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "applyFiltersTitle": "Aplicar filtros",
+    "clearFiltersTitle": "Limpiar filtros",
+    "refresh": "Actualizar"
+  },
+  "clients": {
+    "toggle": {
+      "close": "Cerrar",
+      "new": "Nuevo Cliente"
+    },
+    "title": "Clientes",
+    "new": "Nuevo",
+    "available": "Clientes disponibles",
+    "newTitle": "Nuevo cliente",
+    "none": "No hay clientes disponibles",
+    "editTitle": "Editar cliente",
+    "loading": "Cargando clientes...",
+    "noResults": "Sin resultados",
+    "confirmDelete": "¿Eliminar este cliente?",
+    "errorLoad": "No se pudieron cargar los clientes.",
+    "errorSave": "No se pudo guardar.",
+    "errorCreate": "No se pudo crear.",
+    "errorDelete": "No se pudo eliminar.",
+    "filters": {
+      "search": "Buscar",
+      "purchaseFilterLabel": "Filtrar por compras",
+      "searchPh": "DNI, nombre, email...",
+      "purchases": {
+        "all": "Todos los clientes",
+        "yes": "Con compras",
+        "no": "Sin compras"
+      }
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Nombre",
+      "email": "Email",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "purchases": "Compras",
+      "actions": "Acciones"
+    },
+    "form": {
+      "dni": "DNI",
+      "dniPh": "Ingresá DNI",
+      "name": "Nombre",
+      "namePh": "Juan Pérez",
+      "email": "Email",
+      "emailPh": "juan@mail.com",
+      "phone": "Teléfono",
+      "phonePh": "+54 9 341 ...",
+      "address": "Dirección",
+      "addressPh": "Calle 123, Ciudad"
+    },
+    "stats": {
+      "totalLabel": "Total:",
+      "clientsNoun": "clientes",
+      "withPurchasesLabel": "Con compras:",
+      "withoutPurchasesLabel": "Sin compras:",
+      "filteredLabel": "Filtrados:"
+    },
+    "empty": "No hay clientes disponibles."
+  },
+  "partner": {
+    "title": "Socios",
+    "new": "Nuevo socio",
+    "loading": "Cargando socios...",
+    "list": "Listado",
+    "emptyTitle": "No hay socios",
+    "emptyHint": "Creá un socio con el panel de abajo.",
+    "create": "Crear socio",
+    "edit": "Editar socio",
+    "buttons": {
+      "clear": "Limpiar formulario"
+    },
+    "filters": {
+      "search": "Buscar por DNI, nombre, email, teléfono o dirección"
+    },
+    "createMode": "¿Cómo querés crear el socio?",
+    "mode": {
+      "fromUser": "Desde usuario existente",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Buscar usuario",
+      "searchPh": "DNI, nombre o email...",
+      "select": "Seleccionar usuario",
+      "selectPh": "Elegí un usuario",
+      "hint": "Al seleccionar se completa el formulario; luego podés ajustar."
+    },
+    "fields": {
+      "dni": "DNI",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "username": "Usuario",
+      "password": "Contraseña"
+    },
+    "creds": {
+      "toggle": "Crear cuenta para el socio",
+      "hint": "Si no marcás esta opción, se crea el socio sin usuario/contraseña."
+    },
+    "errors": {
+      "dni": "Ingresá un DNI válido.",
+      "name": "Ingresá un nombre válido.",
+      "email": "Ingresá un email válido.",
+      "username": "Usuario requerido (mín. 3).",
+      "password": "Contraseña requerida (mín. 6).",
+      "load": "No se pudieron cargar los socios.",
+      "create": "No se pudo crear el socio.",
+      "update": "No se pudo actualizar el socio.",
+      "delete": "No se pudo eliminar el socio."
+    },
+    "errorLoad": "No se pudieron cargar los socios.",
+    "errorCreate": "No se pudo crear el socio.",
+    "errorUpdate": "No se pudo actualizar el socio.",
+    "errorDelete": "No se pudo eliminar el socio.",
+    "stats": {
+      "total": "Total socios:",
+      "withDecisions": "Con decisiones:",
+      "filtered": "Filtrados:"
+    }
+  },
+  "sales": {
+    "title": "Ventas",
+    "new": "Nueva",
+    "newTitle": "Nueva venta",
+    "noResults": "Sin ventas",
+    "productsTitle": "Productos de la venta",
+    "loading": "Cargando estadísticas...",
+    "totalRevenue": "Ingresos Totales",
+    "totalSales": "Total de Ventas",
+    "averageTicket": "Importe promedio por venta",
+    "salesByMonth": "Ventas por Mes",
+    "topProducts": "Productos Más Vendidos",
+    "salesByDistributor": "Ventas por Distribuidor",
+    "noData": "No hay estadísticas disponibles",
+    "noDataDesc": "Las estadísticas aparecerán aquí una vez que haya datos disponibles.",
+    "errorLoad": "No se pudieron cargar las ventas.",
+    "client": "Cliente",
+    "itemsCount": "{{count}} ítem(s)",
+    "filters": {
+      "search": "Buscar",
+      "searchPh": "id, producto o cliente",
+      "clientDni": "DNI del cliente",
+      "clientDniPh": "DNI del cliente"
+    },
+    "table": {
+      "id": "ID",
+      "date": "Fecha",
+      "client": "Cliente",
+      "products": "Productos",
+      "quantity": "Cantidad",
+      "total": "Total (ARS)",
+      "distributor": "Distribuidor"
+    },
+    "form": {
+      "client": "Cliente",
+      "clientFilterPh": "filtrar (dni o nombre)",
+      "chooseClient": "Elegí un cliente",
+      "clientHint": "¿No aparece? Crealo desde Clientes.",
+      "products": "Productos",
+      "searchProduct": "Buscar producto",
+      "searchProductPh": "Buscar por ID o descripción",
+      "product": "Producto",
+      "chooseProduct": "Elegí un producto",
+      "units": "unidades",
+      "quantity": "Cantidad",
+      "stockTitle": "Stock disponible: {{stock}}",
+      "remove": "Quitar",
+      "addProduct": "Agregar producto",
+      "create": "Crear venta",
+      "distributor": "Distribuidor",
+      "distributorFilterPh": "Buscar por DNI o nombre",
+      "chooseDistributor": "Elegí un distribuidor",
+      "distributorHint": "Seleccioná el distribuidor que gestiona esta venta",
+      "distributorRequired": "Distribuidor requerido",
+      "clientRequired": "Cliente requerido",
+      "noProductsAvailable": "No hay productos disponibles",
+      "noProductsLoaded": "⚠️ No se cargaron productos. Total: {{count}}",
+      "availableProductsCount": "✅ {{count}} productos disponibles",
+      "removeLineTitle": "Eliminar línea"
+    },
+    "err": {
+      "clientMissing": "El cliente no existe. Crealo primero desde la sección \"Clientes\".",
+      "addOne": "Agregá al menos un producto.",
+      "chooseProductLine": "Elegí un producto en la línea {{n}}.",
+      "validQtyLine": "Ingresá una cantidad válida en la línea {{n}}.",
+      "noStock": "No hay stock suficiente. Disponible: {{stock}} unidades.",
+      "create": "No se pudo crear la venta."
+    },
+    "noProductsAvailable": "No hay productos disponibles",
+    "toggle": {
+      "close": "Cerrar",
+      "new": "Nueva Venta"
+    },
+    "stats": {
+      "loading": "Cargando estadísticas...",
+      "totalRevenue": "Ingresos Totales",
+      "totalSales": "Total de Ventas",
+      "averageTicket": "Importe promedio por venta",
+      "salesByMonth": "Ventas por Mes",
+      "topProducts": "Productos Más Vendidos",
+      "salesByDistributor": "Ventas por Distribuidor",
+      "noData": "No hay estadísticas disponibles",
+      "noDataDesc": "Las estadísticas aparecerán aquí una vez que haya datos disponibles.",
+      "totalLabel": "Total ventas:",
+      "revenueLabel": "Ingresos totales:",
+      "filteredLabel": "Filtradas:"
+    },
+    "empty": "No hay ventas registradas"
+  },
+  "zones": {
+    "title": "Zonas",
+    "new": "Nueva Zona",
+    "close": "Cerrar",
+    "loading": "Cargando zonas…",
+    "headquarters": "Sede central",
+    "noHeadquarters": "No hay sede central definida.",
+    "filters": {
+      "search": "Buscar zona",
+      "searchPh": "Buscar por nombre o descripción…"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "empty": "No hay zonas registradas",
+    "form": {
+      "createTitle": "Crear zona",
+      "editTitle": "Editar zona #{{id}}",
+      "name": "Nombre",
+      "namePh": "Ej.: Distrito Norte",
+      "description": "Descripción",
+      "descriptionPh": "Breve descripción de la zona",
+      "markHq": "Marcar como sede central",
+      "err": {
+        "required": "Este campo es obligatorio",
+        "duplicate": "Ya existe una zona con ese nombre"
+      }
+    },
+    "confirmDelete": "¿Eliminar la zona \"{{name}}\"?",
+    "err": {
+      "cannotDeleteHq": "No se puede eliminar la zona \"{{name}}\" porque es la sede actual. Para eliminarla, primero asigná otra como sede."
+    },
+    "errorLoad": "No se pudieron cargar las zonas.",
+    "errorSave": "No se pudo guardar la zona.",
+    "errorDelete": "No se pudo eliminar.",
+    "stats": {
+      "totalLabel": "Total zonas:",
+      "filteredLabel": "Filtradas:"
+    },
+    "noResults": "No hay resultados"
+  },
+  "authorities": {
+    "title": "Autoridades",
+    "new": "Nueva",
+    "empty": "Sin autoridades",
+    "noResults": "No se encontraron autoridades con el filtro aplicado",
+    "errorLoad": "No se pudieron cargar las autoridades.",
+    "errorCreate": "No se pudo crear.",
+    "errorSavePatch": "No se pudo guardar (PATCH).",
+    "errorSavePut": "No se pudo guardar (PUT).",
+    "errorDelete": "No se pudo eliminar.",
+    "createMode": "¿Cómo querés crear la autoridad?",
+    "mode": {
+      "fromUser": "Desde usuario existente",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Buscar usuario",
+      "searchPh": "DNI, nombre o email...",
+      "verifiedAvailableTitle": "Usuarios verificados disponibles ({{count}})",
+      "dniLabel": "DNI",
+      "verified": "Verificado",
+      "profileComplete": "Perfil 100%",
+      "none": "No hay usuarios verificados disponibles",
+      "requirements": "Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100%"
+    },
+    "filters": {
+      "search": "Buscar",
+      "searchPh": "nombre / rango",
+      "dni": "DNI",
+      "dniPh": "Ej: 12345678",
+      "zoneId": "Zona",
+      "zoneIdPh": "ID de zona",
+      "allZones": "Todas las zonas"
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Nombre",
+      "rank": "Rango",
+      "zone": "Zona",
+      "actions": "Acciones"
+    },
+    "zone": "Zona",
+    "form": {
+      "newTitle": "Nueva autoridad",
+      "editTitle": "Editar autoridad: {{dni}}",
+      "dni": "DNI",
+      "dniPh": "Ingresá DNI",
+      "name": "Nombre",
+      "namePh": "Juan Pérez",
+      "email": "Email",
+      "emailPh": "juan@mail.com",
+      "phone": "Teléfono",
+      "phonePh": "+54...",
+      "address": "Dirección",
+      "addressPh": "Calle 123",
+      "rank": "Rango",
+      "rank0": "Rango 0",
+      "rank1": "Rango 1",
+      "rank2": "Rango 2",
+      "rank3": "Rango 3",
+      "zoneId": "Zona",
+      "zoneIdPh": "1",
+      "chooseZone": "Seleccionar zona",
+      "err": {
+        "create": "Completá DNI, Nombre, Email, Rango y Zona.",
+        "edit": "Completá Nombre, Rango y Zona (el email no es obligatorio al editar).",
+        "zone": "Zona requerida"
+      }
+    },
+    "err": {
+      "zoneIdInvalid": "El ID de la zona debe ser un número válido mayor a 0."
+    },
+    "toggle": {
+      "close": "Cerrar",
+      "new": "Nueva Autoridad"
+    },
+    "stats": {
+      "totalLabel": "Total",
+      "rank0Label": "Rango 0",
+      "rank1Label": "Rango 1",
+      "rank2Label": "Rango 2",
+      "rank3Label": "Rango 3",
+      "distributionTitle": "Autoridades por rango",
+      "distributionLegend": "Distribución por rango",
+      "distributionEmpty": "Sin datos para graficar",
+      "distributionToggle": "Ver distribución por rango",
+      "hoverHint": "Pasá el mouse sobre un rango para ver detalles",
+      "filteredLabel": "Filtradas",
+      "chartDistributionTitle": "Distribución por Rango",
+      "chartSummaryTitle": "Resumen por Rango",
+      "authoritySingular": "autoridad",
+      "authorityPlural": "autoridades",
+      "totalAuthorities": "Total de autoridades",
+      "mostCommon": "Más común",
+      "percentage": "Porcentaje",
+      "quantity": "Cantidad",
+      "chartRank0": "Rango Básico",
+      "chartRank1": "Rango Intermedio",
+      "chartRank2": "Rango Avanzado",
+      "chartRank3": "Rango Superior",
+      "authoritiesLabel": "Autoridades"
+    }
+  },
+  "authority": {
+    "fields": {
+      "username": "Usuario",
+      "password": "Contraseña"
+    },
+    "creds": {
+      "toggle": "Crear cuenta para la autoridad",
+      "hint": "Si no marcás esta opción, se crea la autoridad sin usuario/contraseña."
+    },
+    "errors": {
+      "username": "Usuario requerido (mín. 3).",
+      "password": "Contraseña requerida (mín. 6)."
+    }
+  },
+  "bribes": {
+    "title": "Gestión de Sobornos",
+    "new": "+ Nuevo Soborno",
+    "newTitle": "Crear Nuevo Soborno",
+    "editTitle": "Editar Soborno",
+    "loading": "Cargando sobornos...",
+    "noResults": "Sin resultados para el filtro aplicado",
+    "confirmPay": "¿Confirmar el pago de este soborno?",
+    "confirmDelete": "¿Eliminar este soborno? Esta acción no se puede deshacer.",
+    "filters": {
+      "id": "ID Soborno",
+      "idPh": "Ej: 123",
+      "amount": "Monto",
+      "amountPh": "Ej: 600",
+      "authority": "Autoridad",
+      "authorityPh": "DNI o nombre...",
+      "search": "Buscar",
+      "searchPh": "Buscar por ID, monto, autoridad...",
+      "paid": "Pagados",
+      "paid_all": "Todos",
+      "paid_yes": "Sí",
+      "paid_no": "No",
+      "dateType": "Fecha",
+      "dateType_all": "Todas",
+      "dateType_exact": "Exacta",
+      "dateType_before": "Antes de",
+      "dateType_after": "Después de",
+      "dateType_between": "Entre",
+      "date": "Fecha",
+      "endDate": "Hasta"
+    },
+    "table": {
+      "id": "ID",
+      "amount": "Monto",
+      "authority": "Autoridad",
+      "sale": "Venta",
+      "paid": "Estado",
+      "date": "Fecha de Creación",
+      "actions": "Acciones"
+    },
+    "status": {
+      "paid": "Pagado",
+      "pending": "Pendiente"
+    },
+    "actions": {
+      "pay": "Marcar como pagado"
+    },
+    "form": {
+      "amount": "Monto",
+      "amountPh": "Ej.: 15000.00",
+      "authority": "ID de Autoridad",
+      "authorityPh": "Ingrese el ID de la autoridad",
+      "sale": "ID de Venta",
+      "salePh": "Ingrese el ID de la venta",
+      "editNote": "Solo podés editar el monto y el estado de pago.",
+      "authority_placeholder": "— Seleccioná una autoridad —",
+      "sale_placeholder": "— Seleccioná una venta —"
+    },
+    "errors": {
+      "amountRequired": "El monto es requerido",
+      "authorityIdRequired": "El ID de autoridad es requerido",
+      "saleIdRequired": "El ID de venta es requerido",
+      "minValue": "El valor mínimo es {{min}}",
+      "invalid": "Valor inválido"
+    },
+    "errorLoad": "Error al cargar los sobornos",
+    "errorSearch": "Error al buscar sobornos",
+    "errorCreate": "Error al crear el soborno",
+    "errorSave": "Error al guardar el soborno",
+    "errorPay": "Error al procesar el pago",
+    "errorDelete": "Error al eliminar el soborno",
+    "stats": {
+      "total": "Total sobornos",
+      "amount": "Monto total",
+      "paid": "Pagados",
+      "pending": "Pendientes",
+      "pendingAmount": "Monto pendiente",
+      "filtered": "Filtrados"
+    },
+    "empty": "No hay sobornos registrados"
+  },
+  "decisions": {
+    "title": "Decisiones estratégicas",
+    "new": "Nueva decisión",
+    "empty": "Sin decisiones",
+    "filters": {
+      "search": "Buscar",
+      "searchPh": "texto o id",
+      "topic": "Temática (ID)",
+      "topicPh": "filtrar por id de temática"
+    },
+    "table": {
+      "id": "ID",
+      "topic": "Temática",
+      "description": "Descripción",
+      "start": "Inicio",
+      "end": "Fin",
+      "actions": "Acciones"
+    },
+    "topic": "Temática",
+    "form": {
+      "newTitle": "Nueva decisión",
+      "editTitle": "Editar decisión: {{id}}",
+      "topic": "Temática",
+      "topicFilterPh": "filtrar (id o descripción)",
+      "chooseTopic": "Elegí una temática",
+      "description": "Descripción",
+      "descriptionPh": "Descripción de la decisión estratégica",
+      "start": "Fecha de inicio",
+      "end": "Fecha de fin"
+    },
+    "toggle": {
+      "close": "Cerrar",
+      "new": "Nueva Decisión"
+    },
+    "stats": {
+      "total": "Total:",
+      "active": "Activas:",
+      "filtered": "Filtradas:"
+    },
+    "noResults": "Sin resultados para el filtro aplicado"
+  },
+  "topics": {
+    "title": "Temáticas",
+    "new": "Nueva",
+    "availableTitle": "Temáticas disponibles",
+    "empty": "Sin temáticas",
+    "filters": {
+      "search": "Buscar",
+      "searchPh": "texto o id"
+    },
+    "a11y": {
+      "searchLabel": "Buscar temáticas por texto o id"
+    },
+    "table": {
+      "id": "ID",
+      "description": "Descripción",
+      "actions": "Acciones"
+    },
+    "form": {
+      "newTitle": "Nueva temática",
+      "editTitle": "Editar temática: {{id}}",
+      "description": "Descripción",
+      "descriptionPh": "p. ej. Corrupción, Contrabando...",
+      "err": {
+        "required": "La descripción es obligatoria.",
+        "fill": "Completá la descripción."
+      }
+    },
+    "errorLoad": "No se pudieron cargar las temáticas.",
+    "errorCreate": "No se pudo crear.",
+    "errorSave": "No se pudo guardar.",
+    "errorDelete": "No se pudo eliminar.",
+    "stats": {
+      "total": "Total temáticas:",
+      "filtered": "Filtradas:"
+    },
+    "noResults": "Sin resultados para el filtro aplicado"
+  },
+  "distributors": {
+    "title": "Distribuidores",
+    "new": "Nuevo distribuidor",
+    "list": "Listado",
+    "loading": "Cargando distribuidores...",
+    "filters": {
+      "search": "Buscar",
+      "searchPh": "DNI, nombre, email, zona"
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "email": "Email",
+      "zone": "Zona",
+      "products": "Productos",
+      "actions": "Acciones"
+    },
+    "empty": {
+      "title": "No hay distribuidores",
+      "desc": "Creá el primero con “+ Nuevo distribuidor”."
+    },
+    "form": {
+      "newTitle": "Nuevo distribuidor",
+      "editTitle": "Editar distribuidor {{dni}}",
+      "dni": "DNI",
+      "dniPh": "Documento",
+      "name": "Nombre",
+      "namePh": "Nombre y apellido",
+      "phone": "Teléfono",
+      "phonePh": "Ej. +54 9 ...",
+      "email": "Email",
+      "emailPh": "correo@dominio.com",
+      "address": "Dirección",
+      "addressPh": "Calle y número",
+      "zone": "Zona",
+      "chooseZone": "Elegí una zona",
+      "products": "Productos",
+      "multiHint": "Podés seleccionar múltiples productos",
+      "err": {
+        "dni": "DNI requerido.",
+        "name": "Nombre requerido.",
+        "phone": "Teléfono requerido.",
+        "email": "Email válido requerido.",
+        "zone": "Zona requerida.",
+        "fill": "Completá los campos requeridos."
+      },
+      "noProducts": "No hay productos disponibles"
+    },
+    "errorLoad": "No se pudo cargar.",
+    "errorCreate": "No se pudo crear (verificá datos requeridos).",
+    "errorSave": "No se pudo guardar.",
+    "errorDelete": "No se pudo eliminar.",
+    "toggle": {
+      "new": "Nuevo Distribuidor"
+    },
+    "stats": {
+      "total": "Total:",
+      "withProducts": "Con productos:",
+      "filtered": "Filtrados:"
+    },
+    "noResults": {
+      "title": "Sin resultados",
+      "desc": "Probá ajustar el filtro"
+    },
+    "successCreate": "Distribuidor creado correctamente",
+    "successUpdate": "Distribuidor actualizado correctamente",
+    "successDelete": "Distribuidor eliminado correctamente",
+    "confirmDelete": "¿Estás seguro de eliminar este distribuidor?"
+  },
+  "distributor": {
+    "createMode": "¿Cómo querés crear el distribuidor?",
+    "mode": {
+      "fromUser": "Desde usuario existente",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Buscar usuario",
+      "searchPh": "DNI, nombre o email..."
+    },
+    "fields": {
+      "username": "Usuario",
+      "password": "Contraseña"
+    },
+    "creds": {
+      "toggle": "Crear cuenta para el distribuidor",
+      "hint": "Si no marcás esta opción, se crea el distribuidor sin usuario/contraseña."
+    },
+    "errors": {
+      "username": "Usuario requerido (mín. 3).",
+      "password": "Contraseña requerida (mín. 6)."
+    }
+  },
+  "status": {
+    "PENDIENTE": "PENDIENTE",
+    "PENDING": "PENDIENTE",
+    "IN_REVIEW": "EN REVISIÓN",
+    "COMPLETED": "COMPLETADA",
+    "APPROVED": "APROBADA",
+    "REJECTED": "RECHAZADA",
+    "ACTIVE": "ACTIVO",
+    "EXPIRED": "VENCIDO",
+    "CANCELLED": "CANCELADO"
+  },
+  "roles": {
+    "CLIENT": "CLIENTE",
+    "DISTRIBUTOR": "DISTRIBUIDOR",
+    "PARTNER": "SOCIO",
+    "ADMIN": "ADMIN",
+    "AUTHORITY": "AUTORIDAD"
+  },
+  "admin": {
+    "title": "Administradores",
+    "filters": {
+      "search": "Buscar",
+      "searchPlaceholder": "DNI, nombre, email, teléfono"
+    },
+    "list": "Listado",
+    "emptyTitle": "No hay administradores",
+    "emptyHint": "Ajustá el filtro o creá un nuevo administrador.",
+    "form": {
+      "titleCreate": "Crear administrador",
+      "titleEdit": "Editar {{dni}}",
+      "selectUser": "Seleccionar usuario verificado",
+      "searchUser": "Buscar por DNI, nombre o email...",
+      "availableUsers": "Usuarios verificados disponibles ({{count}})",
+      "verified": "Verificado",
+      "profileComplete": "Perfil 100%",
+      "noUsersAvailable": "No hay usuarios verificados disponibles",
+      "noUsersHint": "Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100%"
+    },
+    "fields": {
+      "dni": "DNI",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono"
+    },
+    "buttons": {
+      "new": "+ Nuevo",
+      "create": "Crear",
+      "save": "Guardar",
+      "clear": "Limpiar",
+      "cancel": "Cancelar"
+    },
+    "messages": {
+      "loading": "Cargando...",
+      "errorCreating": "Error creando",
+      "errorSaving": "Error guardando",
+      "errorLoading": "Error cargando"
+    },
+    "stats": {
+      "totalLabel": "Total administradores:",
+      "filteredLabel": "Filtrados:"
+    }
+  },
+  "roleRequest": {
+    "title": "Solicitudes de rol",
+    "my": {
+      "title": "Mis solicitudes",
+      "emptyTitle": "No tenés solicitudes",
+      "emptyHint": "Creá una nueva con el botón “+ Nueva”."
+    },
+    "info": {
+      "title": "Cómo funcionan las solicitudes de rol",
+      "intro": "Revisá qué combinaciones están permitidas antes de enviar tu solicitud.",
+      "rule1": {
+        "title": "Si sos Distribuidor:",
+        "desc": "Podés sumar el rol Socio pero no Autoridad."
+      },
+      "rule2": {
+        "title": "Si sos Socio:",
+        "desc": "Podés sumar el rol Distribuidor pero no Autoridad."
+      },
+      "rule3": {
+        "title": "Si sos Autoridad:",
+        "desc": "No podés combinarlo con Socio ni Distribuidor."
+      },
+      "rule4": {
+        "title": "Reemplazo de roles incompatibles:",
+        "desc": "Si necesitás reemplazar un rol incompatible, activá la opción de cambio en el formulario."
+      },
+      "footer": "Si necesitás reemplazar un rol incompatible, activá la opción de cambio en el formulario."
+    },
+    "pending": {
+      "title": "Pendientes (admin)",
+      "emptyTitle": "No hay solicitudes pendientes",
+      "emptyHint": "Cuando existan solicitudes, aparecerán acá."
+    },
+    "create": {
+      "title": "Crear solicitud"
+    },
+    "table": {
+      "user": "Usuario",
+      "role": "Rol",
+      "reason": "Motivo",
+      "status": "Estado",
+      "createdAt": "Creada"
+    },
+    "form": {
+      "requestedRole": "Rol solicitado",
+      "roleToRemove": "Quitar rol (opcional)",
+      "reason": "Motivo"
+    },
+    "buttons": {
+      "new": "+ Nueva",
+      "close": "Cerrar",
+      "send": "Enviar",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "cancel": "Cancelar"
+    },
+    "messages": {
+      "errorSubmit": "No se pudo enviar la solicitud"
+    }
+  },
+  "shelbyCouncil": {
+    "title": "Consejo Shelby",
+    "loading": "Cargando...",
+    "filters": {
+      "search": "Buscar",
+      "searchPlaceholder": "Socio, decisión, id"
+    },
+    "list": "Listado",
+    "emptyTitle": "No hay miembros",
+    "emptyHint": "Ajustá los filtros o creá un ingreso.",
+    "form": {
+      "titleCreate": "Crear ingreso",
+      "titleEdit": "Editar miembro #{{id}}"
+    },
+    "fields": {
+      "partner": "Socio",
+      "decision": "ID de decisión",
+      "joinDate": "Fecha de ingreso",
+      "role": "Rol",
+      "notes": "Notas"
+    },
+    "buttons": {
+      "new": "Nuevo",
+      "create": "Crear",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "clear": "Limpiar",
+      "close": "Cerrar"
+    },
+    "errorCreate": "No se pudo crear",
+    "errorSave": "No se pudo guardar",
+    "errorLoad": "No se pudo cargar",
+    "errorDelete": "No se pudo eliminar",
+    "confirmDelete": "¿Eliminar este registro?",
+    "stats": {
+      "total": "Total registros",
+      "uniquePartners": "Socios únicos",
+      "uniqueDecisions": "Decisiones únicas",
+      "filtered": "Filtrados"
+    }
+  },
+  "monthlyReview": {
+    "title": "Revisiones Mensuales",
+    "loading": "Cargando...",
+    "filters": {
+      "year": "Año",
+      "month": "Mes (1-12)",
+      "monthPlaceholder": "Todos",
+      "status": "Estado"
+    },
+    "stats": {
+      "title": "Estadísticas del Período",
+      "empty": "Sin datos para el período seleccionado.",
+      "period": "Período",
+      "totalLabel": "Total:",
+      "clientsNoun": "clientes",
+      "withPurchasesLabel": "Con compras:",
+      "withoutPurchasesLabel": "Sin compras:",
+      "filteredLabel": "Filtrados:",
+      "totalSales": "Total Ventas",
+      "totalAmount": "Monto Total",
+      "averageAmount": "Promedio",
+      "byProduct": "Por Producto",
+      "productName": "Producto",
+      "quantity": "Cantidad",
+      "amount": "Monto",
+      "total": "Total",
+      "pending": "Pendientes",
+      "inReview": "En revisión",
+      "completed": "Completados",
+      "approved": "Aprobados",
+      "rejected": "Rechazados",
+      "filtered": "Filtrados"
+    },
+    "charts": {
+      "statusDistribution": "Distribución por Estado",
+      "trend": "Tendencia de Revisiones por Mes",
+      "topProducts": "Top Productos por Ventas",
+      "decisionsImpact": "Impacto de Decisiones en Ventas",
+      "decisionsImpactDesc": "Evolución de ventas y decisiones estratégicas a lo largo del tiempo",
+      "salesPrediction": "Predicción de Ventas Futuras",
+      "salesPredictionDesc": "Proyección de ventas para los próximos 6 meses usando regresión lineal",
+      "prediction": {
+        "title": "Predicción Científica Multi-Método",
+        "subtitle": "Regresión Lineal ({{linear}}%) + Crecimiento Exponencial ({{exponential}}%) | R² = {{r2}}% | Confianza: {{confidence}}%",
+        "series": {
+          "historical": "Datos Históricos",
+          "prediction": "Predicción",
+          "trend": "Línea de Tendencia"
+        },
+        "tooltip": {
+          "prediction": "PREDICCIÓN",
+          "real": "Real",
+          "projected": "Proyectado",
+          "trend": "Tendencia",
+          "confidence": "Intervalo 95%",
+          "max": "Máx",
+          "min": "Mín",
+          "variation": "Variación"
+        },
+        "markers": {
+          "maximum": "Máximo",
+          "minimum": "Mínimo",
+          "predictionStart": "Inicio Predicción"
+        },
+        "sales": "Ventas ($)"
+      }
+    },
+    "list": "Listado de Revisiones",
+    "emptyTitle": "No hay revisiones",
+    "emptyHint": "Ajustá los filtros o creá una nueva revisión.",
+    "table": {
+      "id": "ID",
+      "period": "Período",
+      "status": "Estado",
+      "reviewer": "Revisor",
+      "date": "Fecha",
+      "totalAmount": "Monto",
+      "totalCount": "Ventas"
+    },
+    "form": {
+      "titleCreate": "Crear Revisión Mensual",
+      "titleEdit": "Editar Revisión #{{id}}",
+      "fields": {
+        "partnerDni": "DNI del Socio",
+        "year": "Año",
+        "month": "Mes",
+        "reviewDate": "Fecha de Revisión",
+        "status": "Estado",
+        "observations": "Observaciones",
+        "recommendations": "Recomendaciones"
+      },
+      "placeholders": {
+        "observations": "Observaciones sobre las ventas del período...",
+        "recommendations": "Recomendaciones o acciones a tomar..."
+      },
+      "errors": {
+        "partnerDni": "DNI del socio requerido (mín. 6 caracteres)"
+      }
+    }
+  },
+  "clandestineAgreement": {
+    "title": "Acuerdos Clandestinos",
+    "list": "Listado de Acuerdos",
+    "emptyTitle": "No hay acuerdos clandestinos",
+    "emptyHint": "Utiliza el botón 'Nuevo' para crear el primer acuerdo clandestino",
+    "confirmDelete": "¿Eliminar este acuerdo clandestino?",
+    "buttons": {
+      "new": "Nuevo",
+      "clear": "Limpiar"
+    },
+    "filters": {
+      "search": "Buscar",
+      "searchPlaceholder": "Buscar por ID, DNI, nombre o descripción..."
+    },
+    "table": {
+      "shelbyCouncil": "Consejo Shelby",
+      "admin": "Administrador",
+      "authority": "Autoridad",
+      "date": "Fecha del Acuerdo",
+      "status": "Estado",
+      "description": "Descripción"
+    },
+    "form": {
+      "titleCreate": "Crear Nuevo Acuerdo Clandestino",
+      "titleEdit": "Editar Acuerdo #{{id}}",
+      "fields": {
+        "shelbyCouncilId": "ID Consejo Shelby",
+        "adminDni": "DNI Administrador",
+        "authorityDni": "DNI Autoridad",
+        "agreementDate": "Fecha del Acuerdo",
+        "status": "Estado",
+        "description": "Descripción"
+      },
+      "hints": {
+        "cannotChangeRelations": "No se pueden modificar las relaciones en modo edición"
+      }
+    },
+    "stats": {
+      "total": "Total",
+      "active": "Activos",
+      "completed": "Completados",
+      "cancelled": "Cancelados",
+      "uniqueAdmins": "Admins únicos",
+      "uniqueAuthorities": "Autoridades únicas",
+      "filtered": "Filtrados"
+    }
+  },
+  "inbox": {
+    "title": "Bandeja de entrada",
+    "loading": "Cargando bandeja...",
+    "profileCompletenessSuffix": "% completo",
+    "verified": "✅ Verificado",
+    "notVerified": "⏳ No verificado",
+    "tabs": {
+      "userVerificationPlural": "✅ Verificación de usuarios",
+      "roleRequestsPlural": "📋 Solicitudes de rol",
+      "userVerification": "✅ Verificación de usuario",
+      "roleRequest": "📋 Solicitud de rol"
+    },
+    "blocked": {
+      "title": "Sección bloqueada",
+      "desc": "Necesitás verificar tu cuenta antes de solicitar roles especiales. Completá la verificación en la pestaña anterior.",
+      "goVerify": "Ir a verificación"
+    },
+    "userView": {
+      "myRoleRequestTitle": "Mi solicitud de rol",
+      "myRoleRequestDesc": "Acá podés solicitar roles especiales como Socio o Distribuidor."
+    },
+    "notAuth": {
+      "title": "Sesión requerida",
+      "desc": "Necesitás iniciar sesión para acceder a esta página.",
+      "login": "Iniciar sesión"
+    }
+  },
+  "userVerification": {
+    "status": {
+      "title": "Verificación de Usuario",
+      "subtitle": "La verificación de tu cuenta habilita funciones avanzadas",
+      "loading": "Cargando estado de verificación...",
+      "error": {
+        "title": "Error",
+        "close": "Cerrar"
+      },
+      "verified": {
+        "title": "Cuenta Verificada",
+        "desc": "Tu cuenta ha sido verificada exitosamente por un administrador.",
+        "benefitsTitle": "Beneficios de la verificación:",
+        "benefits": [
+          "✓ Acceso completo a funciones avanzadas",
+          "✓ Capacidad para realizar compras",
+          "✓ Capacidad para solicitar roles especiales",
+          "✓ Prioridad en soporte técnico"
+        ]
+      },
+      "request": {
+        "title": "Verificación de Cuenta",
+        "desc": "Para acceder a todas las funcionalidades, necesitás verificar tu cuenta. Esta verificación es revisada manualmente por un administrador."
+      },
+      "profileIncomplete": {
+        "title": "Perfil Incompleto",
+        "desc": "Debés completar tu perfil al 100% antes de solicitar la verificación. Asegurate de tener todos tus datos personales (DNI, nombre, email, teléfono y dirección).",
+        "completeNow": "Completar Perfil Ahora"
+      },
+      "progress": {
+        "title": "Tu Progreso",
+        "created": "Cuenta creada",
+        "emailVerified": "Email verificado",
+        "profileCompleted": "Perfil completado ({{percent}}%)",
+        "adminVerification": "Verificación por admin"
+      },
+      "requirements": {
+        "title": "Requisitos para la verificación:",
+        "profile100": "Perfil completo al 100%",
+        "emailVerified": "Email verificado",
+        "personalData": "Datos personales completos (DNI, nombre, teléfono, dirección)"
+      },
+      "buttons": {
+        "request": "Solicitar Verificación",
+        "requestAgain": "Solicitar Nuevamente",
+        "sending": "Enviando...",
+        "resend": "Reenviar Notificación",
+        "resending": "Reenviando..."
+      },
+      "help": {
+        "completeProfile": "Completá tu perfil para poder solicitar la verificación de tu cuenta."
+      },
+      "pending": {
+        "title": "Solicitud en Revisión",
+        "desc": "Tu solicitud de verificación está siendo revisada por un administrador. Recibirás una notificación cuando sea aprobada o rechazada.",
+        "details": {
+          "requestedAt": "Fecha de solicitud:",
+          "expiresAt": "Expira:",
+          "email": "Email:"
+        },
+        "infoBox": {
+          "waitTitle": "Tiempo estimado:",
+          "waitDesc": "Las verificaciones suelen procesarse en un plazo de 24–48 horas hábiles."
+        }
+      },
+      "rejected": {
+        "title": "Solicitud Rechazada",
+        "desc": "Tu solicitud de verificación fue rechazada por un administrador. Revisá tus datos y volvé a intentarlo."
+      },
+      "expired": {
+        "title": "Solicitud Expirada",
+        "desc": "Tu solicitud de verificación ha expirado. Podés solicitar una nueva verificación."
+      }
+    },
+    "card": {
+      "infoTitle": "Información de la Solicitud",
+      "labels": {
+        "email": "Email:",
+        "requestedAt": "Fecha de solicitud:",
+        "expiresAt": "Expira:",
+        "attempts": "Intentos:",
+        "verifiedAt": "Verificado el:",
+        "updatedAt": "Última actualización:"
+      },
+      "reviewBtn": "Revisar Verificación",
+      "expandAria": "Expandir detalles"
+    },
+    "reviewModal": {
+      "title": "Revisar Verificación de Usuario",
+      "closeAria": "Cerrar",
+      "summary": {
+        "email": "Email:",
+        "requestedAt": "Fecha de solicitud:",
+        "expiresAt": "Expira:",
+        "attempts": "Intentos:"
+      },
+      "errorPrefix": "Error",
+      "decision": "Decisión:",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "rejectReasonLabel": "Motivo del rechazo",
+      "rejectReasonOptional": "(opcional)",
+      "rejectReasonPh": "Explicá por qué se rechaza la verificación (opcional, mínimo 3 caracteres si lo proporcionás)",
+      "rejectReasonCounter": "{{n}}/500 caracteres",
+      "rejectReasonMinWarn": "(mínimo 3 si proporcionás un motivo)",
+      "rejectReasonHelp": "Este motivo será visible para el usuario en caso de rechazo.",
+      "approveInfoTitle": "Al aprobar esta verificación:",
+      "approveInfoList": [
+        "El usuario será marcado como verificado",
+        "Se actualizará su completitud de perfil al 100%",
+        "Recibirá un email de confirmación",
+        "Podrá realizar compras",
+        "Podrá solicitar roles especiales"
+      ],
+      "actions": {
+        "cancel": "Cancelar",
+        "processing": "Procesando...",
+        "approve": "Aprobar Verificación",
+        "reject": "Rechazar Verificación"
+      }
+    },
+    "adminInbox": {
+      "title": "Verificaciones de Usuario",
+      "subtitle": "Revisá y gestioná las solicitudes de verificación de usuarios",
+      "pendingLabel": "Pendientes",
+      "loading": "Cargando verificaciones...",
+      "errorRetry": "Reintentar",
+      "filters": {
+        "status": {
+          "label": "Estado:",
+          "all": "Todos",
+          "pending": "Pendientes",
+          "verified": "Verificadas",
+          "rejected": "Rechazadas",
+          "expired": "Expiradas"
+        }
+      },
+      "refresh": "Actualizar",
+      "empty": {
+        "title": "No hay verificaciones",
+        "desc": "No se encontraron verificaciones con los filtros seleccionados"
+      }
+    }
+  },
+  "roleRequests": {
+    "inbox": {
+      "title": "Mis Solicitudes de Rol",
+      "subtitle": "Gestioná tus solicitudes de roles especiales",
+      "roleSummary": {
+        "connectedAs": "Conectado como",
+        "fallbackName": "Usuario sin nombre",
+        "noRoles": "Todavía no tenés roles asignados.",
+        "readyHint": "Podés solicitar nuevos roles o cambiar los actuales desde esta bandeja.",
+        "incompleteHint": "Completá tu perfil para habilitar nuevas solicitudes."
+      },
+      "guidelines": {
+        "title": "Cómo funcionan las solicitudes de rol",
+        "description": "Revisá qué combinaciones están permitidas antes de enviar tu solicitud.",
+        "rules": {
+          "distributor": "Si sos Distribuidor, podés sumar el rol Socio pero no Autoridad.",
+          "partner": "Si sos Socio, podés sumar el rol Distribuidor pero no Autoridad.",
+          "authority": "Si sos Autoridad, no podés combinarlo con Socio ni Distribuidor."
+        },
+        "footer": "Si necesitás reemplazar un rol incompatible, activá la opción de cambio en el formulario."
+      },
+      "roleLabels": {
+        "admin": "Administrador",
+        "partner": "Socio",
+        "distributor": "Distribuidor",
+        "client": "Cliente",
+        "user": "Usuario",
+        "authority": "Autoridad"
+      },
+      "newBtn": "Nueva Solicitud",
+      "verifyRequiredBadge": "Verificá tu cuenta para solicitar roles",
+      "completeProfileRequired": "Completá tu perfil para solicitar roles",
+      "verifyRequiredTitle": "Verificación Requerida",
+      "verifyRequiredDesc": "Necesitás que un administrador verifique tu cuenta antes de poder solicitar roles especiales. Completá el proceso de verificación en la pestaña \"Verificación de Usuario\".",
+      "loading": "Cargando solicitudes...",
+      "errorRetry": "Reintentar",
+      "emptyTitle": "No tenés solicitudes",
+      "emptyDescVerified": "Cuando solicites un rol especial, aparecerá acá",
+      "emptyDescIncomplete": "Completá tu perfil para poder solicitar roles especiales",
+      "createFirstBtn": "Crear Primera Solicitud"
+    },
+    "reviewModal": {
+      "title": "Revisar Solicitud de Rol",
+      "subtitle": "Evalúa y toma una decisión sobre esta solicitud",
+      "close": "Cerrar",
+      "closeAria": "Cerrar",
+      "requestInfo": "Información de la Solicitud",
+      "requestInfoLabels": {
+        "user": "Usuario",
+        "request": "Solicitud",
+        "requestDate": "Fecha de Solicitud",
+        "justification": "Justificación",
+        "additionalData": "Datos Adicionales del Rol",
+        "assignedZone": "Zona Asignada",
+        "zone": "Zona",
+        "address": "Dirección",
+        "products": "Productos",
+        "product": "Producto",
+        "rank": "Rango"
+      },
+      "summary": {
+        "user": "Usuario:",
+        "request": "Solicitud:",
+        "date": "Fecha:",
+        "justification": "Justificación:"
+      },
+      "error": "Error",
+      "decision": "Decisión:",
+      "approve": "Aprobar",
+      "approveDesc": "Aprobar y otorgar el rol",
+      "reject": "Rechazar",
+      "rejectDesc": "Denegar la solicitud",
+      "recommended": "(recomendado)",
+      "commentsLabel": "Comentarios",
+      "commentsPh": "Añadí comentarios sobre tu decisión...",
+      "commentsCounter": "{{n}}/500 caracteres",
+      "characters": "caracteres",
+      "selectOption": "Selecciona una opción",
+      "actions": {
+        "cancel": "Cancelar",
+        "processing": "Procesando...",
+        "approve": "Aprobar Solicitud",
+        "reject": "Rechazar Solicitud"
+      },
+      "changeLabel": "Cambio de rol"
+    },
+    "modal": {
+      "title": "Solicitar Rol Especial",
+      "changeToggle": "Cambiar un rol existente por otro",
+      "changeHelp": "Si querés intercambiar uno de tus roles actuales por otro, activá esta opción",
+      "roleToRemove": "Rol a remover",
+      "roleToRemoveRequired": "Rol a remover *",
+      "roleToRemovePh": "Seleccioná el rol a remover",
+      "requestedRole": "Rol solicitado *",
+      "requestedRolePh": "Seleccioná un rol",
+      "roleDescription": "Descripción",
+      "justification": "Justificación",
+      "justificationOptional": "(opcional)",
+      "justificationPh": "Explicá por qué solicitás este rol (opcional, mínimo 20 caracteres si lo proporcionás)",
+      "justCounter": "{{n}}/500 caracteres",
+      "justMinWarn": "(mínimo 20 si proporcionás justificación)",
+      "incompatibleNote": "Nota: el rol {{role}} es incompatible con: {{list}}",
+      "actions": {
+        "cancel": "Cancelar",
+        "submit": "Enviar Solicitud",
+        "sending": "Enviando..."
+      }
+    },
+    "card": {
+      "changeLabel": "Cambio de rol",
+      "newLabel": "Nueva solicitud",
+      "titles": {
+        "justification": "Justificación",
+        "info": "Información",
+        "adminComments": "Comentarios del Administrador"
+      },
+      "labels": {
+        "createdAt": "Fecha de solicitud:",
+        "reviewedAt": "Fecha de revisión:",
+        "reviewedBy": "Revisado por:"
+      },
+      "actions": {
+        "evaluate": "Evaluar Solicitud",
+        "approve": "Aprobar",
+        "reject": "Rechazar"
+      }
+    },
+    "adminInbox": {
+      "title": "Solicitudes de Rol",
+      "subtitle": "Revisá y gestioná las solicitudes de roles especiales",
+      "pendingLabel": "Pendientes",
+      "loading": "Cargando solicitudes...",
+      "errorRetry": "Reintentar",
+      "filters": {
+        "status": {
+          "label": "Estado:",
+          "all": "Todos",
+          "pending": "Pendientes",
+          "approved": "Aprobadas",
+          "rejected": "Rechazadas"
+        },
+        "role": {
+          "label": "Rol:",
+          "all": "Todos",
+          "partner": "Socio",
+          "distributor": "Distribuidor",
+          "authority": "Autoridad"
+        }
+      },
+      "refresh": "Actualizar",
+      "empty": {
+        "title": "No hay solicitudes",
+        "desc": "No se encontraron solicitudes con los filtros seleccionados"
+      }
+    }
+  },
+  "about": {
+    "title": "Sobre nosotros",
+    "lead": "Somos un equipo apasionado por crear soluciones eficientes y escalables.",
+    "mission": "Impulsamos a equipos a trabajar con claridad, foco y simplicidad.",
+    "sections": {
+      "missionTitle": "Nuestra Misión",
+      "valuesTitle": "Nuestros Valores",
+      "teamTitle": "Nuestro Equipo"
+    },
+    "values": {
+      "transparency": {
+        "title": "Transparencia",
+        "desc": "Comunicación clara y decisiones a la vista."
+      },
+      "quality": {
+        "title": "Calidad",
+        "desc": "Cuidamos el detalle en cada entrega."
+      },
+      "velocity": {
+        "title": "Velocidad",
+        "desc": "Iteramos rápido sin perder solidez."
+      },
+      "proximity": {
+        "title": "Cercanía",
+        "desc": "Escuchamos y acompañamos al cliente."
+      },
+      "learning": {
+        "title": "Aprendizaje",
+        "desc": "Mejora continua como cultura."
+      },
+      "purpose": {
+        "title": "Propósito",
+        "desc": "Construimos productos que importan."
+      }
+    },
+    "team": {
+      "roles": {
+        "backend": "Backend",
+        "frontend": "Frontend",
+        "testing": "Testing"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "lead": "Estamos aquí para ayudarte. Comunicate por cualquiera de nuestros canales.",
+    "sections": {
+      "channels": "Canales Principales",
+      "hours": "Horarios de Atención",
+      "location": "Ubicación",
+      "usefulLinksTitle": "Enlaces Útiles",
+      "usefulLinksLead": "Acceso rápido a documentación y recursos"
+    },
+    "channels": {
+      "email": {
+        "label": "Email",
+        "value": "thegarrisonsystem@gmail.com",
+        "hint": "Respondemos en ~24 hs hábiles"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "value": "+54 341 555-1234",
+        "hint": "Lun a Vie · 09-18 h"
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "value": "+54 9 341 555-1234",
+        "hint": "Respuesta rápida"
+      }
+    },
+    "hours": {
+      "support": {
+        "label": "Soporte",
+        "value": "Lun a Vie · 09:00-18:00"
+      },
+      "commercial": {
+        "label": "Comercial",
+        "value": "Lun a Vie · 10:00-17:00"
+      }
+    },
+    "location": {
+      "address": "Zeballos 1341, S2000 Rosario, Santa Fe, Argentina"
+    },
+    "links": {
+      "github": {
+        "label": "GitHub del Proyecto",
+        "value": "github.com/lautaro-peralta",
+        "hint": "Código fuente y documentación"
+      },
+      "utn": {
+        "label": "UTN Rosario",
+        "value": "frro.utn.edu.ar",
+        "hint": "Facultad Regional Rosario"
+      },
+      "techSupport": {
+        "label": "Soporte Técnico",
+        "value": "thegarrisonsystem@gmail.com",
+        "hint": "Contacto directo por email"
+      }
+    }
+  },
+  "faqs": {
+    "title": "Preguntas Frecuentes",
+    "lead": "Respuestas rápidas a las dudas más comunes sobre nuestra plataforma.",
+    "items": {
+      "howToStart": {
+        "q": "¿Cómo comienzo?",
+        "a": "Creá tu cuenta o iniciá sesión. Luego cargá productos y clientes desde Gestión."
+      },
+      "exportData": {
+        "q": "¿Puedo exportar datos?",
+        "a": "Sí, las vistas principales permiten exportar listados para informes y auditorías."
+      },
+      "managePermissions": {
+        "q": "¿Cómo manejo permisos?",
+        "a": "Definí roles por áreas (ventas, administración, etc.) y asigná accesos selectivos."
+      },
+      "systemIntegration": {
+        "q": "¿Se integra con otros sistemas?",
+        "a": "Ofrecemos API e importadores para conectar tu stack actual."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "Sistema de gestión y control de distribución",
+    "rights": "Todos los derechos reservados.",
+    "university": {
+      "prefix": "Desarrollado en",
+      "name": "Universidad Tecnológica Nacional - Facultad Regional Rosario"
+    },
+    "sections": {
+      "company": "Empresa",
+      "legal": "Legal",
+      "resources": "Recursos"
+    },
+    "links": {
+      "about": "Sobre nosotros",
+      "contact": "Contáctanos",
+      "faqs": "Preguntas frecuentes",
+      "terms": "Términos de servicio",
+      "privacy": "Política de privacidad",
+      "cookies": "Política de cookies",
+      "docs": "Documentación",
+      "api": "API",
+      "support": "Soporte"
+    },
+    "social": {
+      "github": "Síguenos en GitHub",
+      "email": "Envíanos un email"
+    }
+  },
+  "notifications": {
+    "roleRequestApproved": "Solicitud de rol aprobada correctamente.",
+    "roleRequestRejected": "Solicitud de rol rechazada correctamente.",
+    "userVerificationApproved": "Verificación de usuario aprobada correctamente.",
+    "userVerificationRejected": "Verificación de usuario rechazada correctamente."
+  },
+  "legal": {
+    "backHome": "Volver al inicio",
+    "lastUpdated": "Última actualización",
+    "lastUpdatedDate": "Noviembre 2025",
+    "questions": "¿Tenés dudas sobre estos términos?",
+    "contactUs": "Contactanos",
+    "terms": {
+      "title": "Términos y Condiciones",
+      "sections": {
+        "acceptance": {
+          "title": "1. Aceptación de los Términos",
+          "content": [
+            "Al acceder y utilizar GarrSYS, usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar nuestro sistema.",
+            "GarrSYS es una plataforma de gestión empresarial diseñada para facilitar la administración de productos, ventas, socios comerciales y operaciones relacionadas."
+          ]
+        },
+        "usage": {
+          "title": "2. Uso del Sistema",
+          "content": [
+            "El sistema GarrSYS está destinado exclusivamente para uso interno de la organización y sus miembros autorizados. Usted se compromete a:"
+          ],
+          "list": [
+            "Utilizar el sistema de manera responsable y conforme a la ley",
+            "Mantener la confidencialidad de sus credenciales de acceso",
+            "No intentar acceder a áreas del sistema para las que no tiene autorización",
+            "No compartir información sensible fuera de la plataforma",
+            "Reportar cualquier actividad sospechosa o vulnerabilidad de seguridad"
+          ]
+        },
+        "roles": {
+          "title": "3. Roles y Permisos",
+          "content": [
+            "GarrSYS implementa un sistema de roles con diferentes niveles de acceso:"
+          ],
+          "list": [
+            "ADMIN: Acceso completo al sistema, gestión de usuarios y configuración",
+            "DISTRIBUTOR: Gestión de productos, inventario y operaciones comerciales",
+            "PARTNER: Acceso a información relevante y funcionalidades específicas",
+            "CLANDESTINE: Operaciones especiales con permisos limitados",
+            "SHELBY: Supervisión y aprobación de decisiones estratégicas"
+          ]
+        },
+        "responsibilities": {
+          "title": "4. Responsabilidades del Usuario",
+          "content": [
+            "Como usuario de GarrSYS, usted es responsable de todas las actividades realizadas bajo su cuenta. Debe notificar inmediatamente cualquier uso no autorizado de su cuenta.",
+            "La información ingresada al sistema debe ser precisa y actualizada. Los datos incorrectos pueden afectar la operación del negocio."
+          ]
+        },
+        "intellectual": {
+          "title": "5. Propiedad Intelectual",
+          "content": [
+            "Todo el contenido, diseño, código fuente y funcionalidades de GarrSYS son propiedad de la organización y están protegidos por las leyes de propiedad intelectual aplicables.",
+            "No está permitido copiar, modificar, distribuir o vender ninguna parte del sistema sin autorización expresa."
+          ]
+        },
+        "liability": {
+          "title": "6. Limitación de Responsabilidad",
+          "content": [
+            "GarrSYS se proporciona \"tal cual\" sin garantías de ningún tipo. No nos hacemos responsables por pérdidas de datos, interrupciones del servicio o daños derivados del uso del sistema.",
+            "Es responsabilidad del usuario mantener copias de seguridad de información crítica."
+          ]
+        },
+        "modifications": {
+          "title": "7. Modificaciones",
+          "content": [
+            "Nos reservamos el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en el sistema.",
+            "Es responsabilidad del usuario revisar periódicamente estos términos."
+          ]
+        }
+      }
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "sections": {
+        "information": {
+          "title": "1. Información que Recopilamos",
+          "content": [
+            "GarrSYS recopila y almacena información necesaria para el funcionamiento del sistema de gestión empresarial. Esta información incluye:"
+          ],
+          "list": [
+            "Datos de perfil: nombre, email, nombre de usuario",
+            "Información de roles y permisos dentro del sistema",
+            "Datos de productos, inventario y transacciones comerciales",
+            "Registros de actividad y auditoría del sistema",
+            "Información de socios comerciales y distribuidores"
+          ]
+        },
+        "usage": {
+          "title": "2. Cómo Utilizamos su Información",
+          "content": [
+            "La información recopilada se utiliza exclusivamente para los siguientes propósitos:"
+          ],
+          "list": [
+            "Gestión de cuentas de usuario y autenticación",
+            "Administración de inventario y operaciones comerciales",
+            "Generación de reportes y estadísticas empresariales",
+            "Auditoría y seguimiento de transacciones",
+            "Comunicaciones relacionadas con el negocio",
+            "Mejora y optimización del sistema"
+          ]
+        },
+        "protection": {
+          "title": "3. Protección de Datos",
+          "content": [
+            "Implementamos medidas de seguridad técnicas y organizativas para proteger su información:"
+          ],
+          "list": [
+            "Encriptación de contraseñas mediante Argon2",
+            "Autenticación basada en JWT (JSON Web Tokens)",
+            "Control de acceso basado en roles (RBAC)",
+            "Registros de auditoría de acciones críticas",
+            "Protección contra accesos no autorizados"
+          ]
+        },
+        "sharing": {
+          "title": "4. Compartir Información",
+          "content": [
+            "No vendemos, alquilamos ni compartimos su información personal con terceros, excepto en los siguientes casos:"
+          ],
+          "list": [
+            "Cuando sea necesario para cumplir con obligaciones legales",
+            "Con socios comerciales autorizados dentro del sistema",
+            "Para proteger los derechos y seguridad de la organización",
+            "En caso de fusión, adquisición o venta de activos"
+          ]
+        },
+        "retention": {
+          "title": "5. Retención de Datos",
+          "content": [
+            "Conservamos su información personal durante el tiempo necesario para cumplir con los propósitos descritos en esta política, incluyendo requisitos legales, contables o de auditoría.",
+            "Los datos de transacciones comerciales se mantienen de acuerdo con las regulaciones fiscales y contables aplicables."
+          ]
+        },
+        "rights": {
+          "title": "6. Sus Derechos",
+          "content": [
+            "Como usuario de GarrSYS, usted tiene los siguientes derechos sobre sus datos personales:"
+          ],
+          "list": [
+            "Acceder a la información que tenemos sobre usted",
+            "Solicitar la corrección de datos inexactos",
+            "Solicitar la eliminación de su cuenta y datos asociados",
+            "Exportar sus datos en un formato estructurado",
+            "Retirar el consentimiento para el procesamiento de datos"
+          ]
+        },
+        "cookies": {
+          "title": "7. Cookies y Tecnologías Similares",
+          "content": [
+            "GarrSYS utiliza localStorage y sessionStorage para mantener su sesión activa y mejorar la experiencia de usuario. Para más detalles, consulte nuestra Política de Cookies."
+          ]
+        },
+        "changes": {
+          "title": "8. Cambios a esta Política",
+          "content": [
+            "Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos sobre cambios significativos a través del sistema.",
+            "La fecha de última actualización se muestra en la parte superior de este documento."
+          ]
+        }
+      }
+    },
+    "cookies": {
+      "title": "Política de Cookies",
+      "sections": {
+        "what": {
+          "title": "1. ¿Qué son las Cookies y Tecnologías de Almacenamiento?",
+          "content": [
+            "Las cookies son pequeños archivos de texto que se almacenan en su navegador cuando visita un sitio web. GarrSYS utiliza tecnologías de almacenamiento web modernas para mejorar su experiencia.",
+            "Utilizamos principalmente localStorage y sessionStorage en lugar de cookies tradicionales para gestionar la sesión y preferencias del usuario."
+          ]
+        },
+        "technologies": {
+          "title": "2. Tecnologías que Utilizamos",
+          "content": [
+            "GarrSYS emplea las siguientes tecnologías de almacenamiento:"
+          ],
+          "list": [
+            "localStorage: Para almacenar tokens de autenticación y preferencias persistentes",
+            "sessionStorage: Para datos temporales durante su sesión",
+            "IndexedDB: Para almacenamiento local de datos de la aplicación (si aplica)"
+          ]
+        },
+        "purpose": {
+          "title": "3. Propósito del Almacenamiento Local",
+          "content": [
+            "Utilizamos estas tecnologías para los siguientes propósitos esenciales:"
+          ],
+          "list": [
+            "Mantener su sesión activa mientras navega por el sistema",
+            "Recordar sus preferencias de idioma (español/inglés)",
+            "Almacenar tokens JWT para autenticación segura",
+            "Guardar configuraciones de interfaz de usuario",
+            "Mejorar el rendimiento mediante caché de datos"
+          ]
+        },
+        "types": {
+          "title": "4. Tipos de Almacenamiento que Usamos",
+          "list": [
+            "Estrictamente Necesario: Tokens de autenticación (accessToken, refreshToken) - Estos son esenciales para el funcionamiento del sistema",
+            "Funcional: Preferencias de idioma y configuración de usuario - Mejoran su experiencia en el sistema",
+            "De Rendimiento: Caché de datos para reducir llamadas al servidor - Optimizan la velocidad del sistema"
+          ]
+        },
+        "management": {
+          "title": "5. Gestión de Datos Almacenados",
+          "content": [
+            "Usted tiene control total sobre los datos almacenados en su navegador:"
+          ],
+          "list": [
+            "Puede cerrar sesión en cualquier momento para eliminar tokens de autenticación",
+            "Puede limpiar el localStorage manualmente desde las herramientas de desarrollo del navegador",
+            "Los tokens de sesión expiran automáticamente después de un período de inactividad",
+            "Al cerrar el navegador, los datos en sessionStorage se eliminan automáticamente"
+          ]
+        },
+        "security": {
+          "title": "6. Seguridad",
+          "content": [
+            "Los tokens almacenados están protegidos mediante las siguientes medidas:"
+          ],
+          "list": [
+            "Los tokens JWT están firmados criptográficamente",
+            "Los refresh tokens tienen una vida útil limitada",
+            "No almacenamos contraseñas en el navegador",
+            "Los datos sensibles están encriptados antes de almacenarse"
+          ]
+        },
+        "thirdParty": {
+          "title": "7. Cookies de Terceros",
+          "content": [
+            "GarrSYS no utiliza cookies de terceros para publicidad o seguimiento. Sin embargo, si integramos servicios externos en el futuro (como análisis o mapas), estos podrían establecer sus propias cookies.",
+            "Le notificaremos cualquier cambio en el uso de cookies de terceros."
+          ]
+        },
+        "disable": {
+          "title": "8. Cómo Deshabilitar el Almacenamiento",
+          "content": [
+            "Si desea deshabilitar el almacenamiento local, puede hacerlo desde la configuración de su navegador. Sin embargo, tenga en cuenta que esto afectará significativamente la funcionalidad del sistema:"
+          ],
+          "list": [
+            "No podrá iniciar sesión ni mantener su sesión activa",
+            "Sus preferencias de idioma no se guardarán",
+            "La experiencia de usuario será degradada"
+          ]
+        },
+        "updates": {
+          "title": "9. Actualizaciones de esta Política",
+          "content": [
+            "Podemos actualizar esta Política de Cookies cuando implementemos nuevas funcionalidades o tecnologías de almacenamiento.",
+            "La fecha de última actualización se muestra en la parte superior de este documento."
+          ]
+        }
+      }
+    }
+  }
+}

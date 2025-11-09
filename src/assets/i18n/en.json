@@ -1,0 +1,2039 @@
+﻿{
+  "brand": {
+    "name": "GarrSYS"
+  },
+  "nav": {
+    "store": "Store",
+    "myAccount": "My account",
+    "myPurchases": "My purchases",
+    "logout": "Log out",
+    "management": "Management",
+    "society": "Society",
+    "inbox": "Inbox",
+    "unread": "unread",
+    "roleRequests": "Role requests",
+    "mailVerification": "Mail verification",
+    "myRoleRequest": "My role request",
+    "about": "About us",
+    "faqs": "FAQs",
+    "contact": "Contact us",
+    "language": "Language",
+    "home": "Home"
+  },
+  "store": {
+    "title": "Store",
+    "search": "Search",
+    "noImage": "No image",
+    "noProducts": {
+      "title": "No products",
+      "desc": "When products are loaded, you'll see them here."
+    },
+    "add": "Add",
+    "cart": {
+      "open": "Open cart",
+      "items": "Cart ({{count}})",
+      "empty": "Your cart is empty",
+      "close": "Close",
+      "clear": "Clear",
+      "goToCheckout": "Checkout",
+      "total": "Total",
+      "orderSplit": "Order split into {{count}} locations",
+      "orderSplitDesc": "We will create {{count}} purchase orders, one for each location.",
+      "productCount_one": "product",
+      "productCount_other": "products",
+      "subtotal": "Subtotal",
+      "multiplePurchaseNote": "{{count}} separate purchases will be created. You will receive a confirmation for each one.",
+      "unavailable": "Products unavailable",
+      "unavailableDesc": "The products in your cart are not available. Please remove some items.",
+      "pricePerUnit": "each",
+      "decrease": "Decrease",
+      "increase": "Increase",
+      "remove": "Remove",
+      "checkout": "Checkout",
+      "processing": "Processing...",
+      "cannotPurchase": "You cannot purchase yet",
+      "needVerification": "You must verify your account with an administrator.",
+      "requestVerification": "Request verification",
+      "completeProfile100": "Complete your profile to 100% to purchase.",
+      "completeProfile": "Complete profile"
+    }
+  },
+  "myPurchases": {
+    "title": "My Purchases",
+    "loading": "Loading purchases...",
+    "stats": {
+      "totalPurchases": "Total purchases",
+      "totalSpent": "Total spent",
+      "avgSpent": "Average per purchase"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by product, date, distributor or amount..."
+    },
+    "empty": {
+      "title": "No purchases yet",
+      "desc": "When you make your first purchase in the store, it will appear here."
+    },
+    "table": {
+      "id": "ID",
+      "date": "Date",
+      "distributor": "Distributor",
+      "products": "Products",
+      "total": "Total"
+    },
+    "showing": "Showing",
+    "of": "of",
+    "noResults": {
+      "title": "No purchases found",
+      "desc": "Try adjusting your search to find what you're looking for."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "loading": "Loading...",
+    "save": "Save changes",
+    "saved": "Saved!",
+    "couldNotSave": "Could not save.",
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "verificationBanner": {
+      "title": "Email not verified",
+      "desc": "Check your inbox and click the verification link we sent you.",
+      "resend": "Resend email",
+      "sending": "Sending..."
+    },
+    "loadingProfile": "Loading profile...",
+    "completeProfileBanner": {
+      "title": "Complete your profile",
+      "desc": "You need to complete your personal information to access this feature."
+    },
+    "improveProfile": "Improve your profile",
+    "purchaseRequirements": {
+      "title": "To make purchases you need:"
+    },
+    "actions": {
+      "completeProfile": "Complete profile",
+      "saving": "Saving..."
+    },
+    "infoSection": {
+      "title": "Account information",
+      "status": "Account status:",
+      "active": "âœ“ Active",
+      "inactive": "Inactive",
+      "emailVerified": "Email verified:",
+      "adminVerified": "Admin verified",
+      "emailVerifiedYes": "Yes",
+      "emailVerifiedNo": "No",
+      "roles": "Roles:",
+      "memberSince": "Member since:"
+    },
+    "readonlyNote": "ℹ️ Personal data cannot be modified once completed."
+  },
+  "product": {
+    "title": "Products",
+    "new": "New product",
+    "close": "Close",
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel",
+    "available": "Available products",
+    "none": "No products available",
+    "list": "List",
+    "loading": "Loading products...",
+    "filters": {
+      "search": "Search product",
+      "stock": {
+        "all": "All products",
+        "with": "In stock",
+        "without": "Out of stock"
+      },
+      "stock_all": "All",
+      "stock_with": "With stock",
+      "stock_without": "Out of stock",
+      "searchPh": "Search by ID, description or detail...",
+      "stockLabel": "Filter by stock"
+    },
+    "fields": {
+      "description": "Description",
+      "price": "Price (ARS)",
+      "stock": "Stock",
+      "illegal": "Illegal?",
+      "imageUrl": "Image (URL)",
+      "imageFile": "Image (file)",
+      "detail": "Detail",
+      "detailPlaceholder": "Enter a detailed description of the product"
+    },
+    "preview": "Preview",
+    "emptyTitle": "No products",
+    "emptyHint": "Try adjusting the filters or create a new product.",
+    "editTitle": "Edit product #{{id}}",
+    "required": "Field is required.",
+    "priceInvalid": "Enter a valid price.",
+    "stockInvalid": "Enter a valid stock.",
+    "imageUrlHint": "Paste a link to an image (JPG/PNG/WebP). If you prefer uploading a file, use the field below.",
+    "imageFileHint": "Optional: upload an image from your device",
+    "errorLoad": "Could not load the list.",
+    "errorSave": "Could not save",
+    "errorDelete": "Could not delete.",
+    "descriptionRequired": "Description required (3-50 characters)",
+    "detailRequired": "Detail required (3-200 characters)",
+    "toggle": {
+      "close": "Close",
+      "new": "New Product"
+    },
+    "stats": {
+      "totalLabel": "Total:",
+      "withStockLabel": "In stock:",
+      "withoutStockLabel": "Out of stock:",
+      "filteredLabel": "Filtered:"
+    },
+    "table": {
+      "id": "ID",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "No products",
+      "desc": "Create a new product to get started."
+    },
+    "noResults": {
+      "title": "No results",
+      "desc": "Try adjusting the filters or click \"Clear\"."
+    },
+    "badges": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "imageFile": "Image (file)"
+  },
+  "auth": {
+    "user": "user",
+    "login": {
+      "title": "Sign in",
+      "submit": "Sign in"
+    },
+    "register": {
+      "title": "Create account",
+      "submit": "Create account"
+    },
+    "fields": {
+      "username": "Username",
+      "email": "Email",
+      "emailOrUsername": "Email or Username",
+      "password": "Password"
+    },
+    "placeholders": {
+      "username": "Your name",
+      "email": "you@email.com",
+      "emailOrUsername": "you@email.com or your_username",
+      "password": "••••••••"
+    },
+    "errors": {
+      "missingFields": "Please complete all fields.",
+      "loginFailed": "Could not sign in.",
+      "registerFailed": "Could not register."
+    }
+  },
+  "home": {
+    "welcome": "Welcome,",
+    "tagline": "The platform that takes your business to the next level",
+    "pill": "GarrSYS in a nutshell",
+    "intro": {
+      "title": "Everything in one place",
+      "lead": "Centralize products, customers, sales and zones with a clear interface. Fewer steps, less friction and more focus on what matters: your business.",
+      "cards": {
+        "1": {
+          "title": "Simplified management",
+          "detail": "Unify products, customers and sales in a single interface, with clear flows and actionable metrics."
+        },
+        "2": {
+          "title": "Performance and clarity",
+          "detail": "Agile screens, well-defined states and filters that help you decide faster and better."
+        },
+        "3": {
+          "title": "Ready to scale",
+          "detail": "Organize zones, authorities and decisions with controls that grow with your operation."
+        },
+        "4": {
+          "title": "Real-time reports",
+          "detail": "View KPIs and trends instantly to detect opportunities and anticipate deviations."
+        },
+        "5": {
+          "title": "Security and roles",
+          "detail": "Define permissions by area or function to protect information and organize work."
+        },
+        "6": {
+          "title": "Integrations and API",
+          "detail": "Connect your systems, import data and automate processes without friction."
+        }
+      },
+      "cta": "See full overview"
+    },
+    "steps": {
+      "title": "How to start",
+      "one": "Create your account or log in.",
+      "two": "Load products and customers.",
+      "three": "Activate your sales and management flows."
+    }
+  },
+  "common": {
+    "close": "Close",
+    "create": "Create",
+    "save": "Save",
+    "record": "record",
+    "records": "records",
+    "rank": "Rank",
+    "cancel": "Cancel",
+    "quantity": "Quantity",
+    "edit": "Edit",
+    "delete": "Delete",
+    "error": "Error",
+    "all": "All",
+    "actions": "Actions",
+    "search": "Search",
+    "clear": "Clear",
+    "applyFiltersTitle": "Apply filters",
+    "clearFiltersTitle": "Clear filters",
+    "refresh": "Refresh"
+  },
+  "clients": {
+    "title": "Clients",
+    "new": "New",
+    "newTitle": "New client",
+    "editTitle": "Edit client",
+    "loading": "Loading clients...",
+    "noResults": "No results",
+    "available": "Available clients",
+    "confirmDelete": "Delete this client?",
+    "errorLoad": "Could not load clients.",
+    "errorSave": "Could not save.",
+    "errorCreate": "Could not create.",
+    "errorDelete": "Could not delete.",
+    "filters": {
+      "search": "Search",
+      "searchPh": "DNI, name, email...",
+      "purchases": {
+        "all": "All clients",
+        "yes": "With purchases",
+        "no": "Without purchases"
+      },
+      "purchases_all": "All",
+      "purchases_yes": "With purchases",
+      "purchases_no": "No purchases",
+      "purchaseFilterLabel": "Filter by purchases"
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Name",
+      "email": "Email",
+      "address": "Address",
+      "phone": "Phone",
+      "purchases": "Purchases",
+      "actions": "Actions"
+    },
+    "form": {
+      "dni": "DNI",
+      "dniPh": "Enter DNI",
+      "name": "Name",
+      "namePh": "John Doe",
+      "email": "Email",
+      "emailPh": "john@mail.com",
+      "phone": "Phone",
+      "phonePh": "+54 9 341 ...",
+      "address": "Address",
+      "addressPh": "Street 123, City"
+    },
+    "toggle": {
+      "close": "Close",
+      "new": "New Client"
+    },
+    "stats": {
+      "totalLabel": "Total:",
+      "clientsNoun": "clients",
+      "withPurchasesLabel": "With purchases:",
+      "withoutPurchasesLabel": "Without purchases:",
+      "filteredLabel": "Filtered:"
+    },
+    "empty": "No clients available."
+  },
+  "partner": {
+    "title": "Partners",
+    "new": "New partner",
+    "loading": "Loading partners...",
+    "list": "List",
+    "emptyTitle": "No partners",
+    "emptyHint": "Create a partner with the panel below.",
+    "create": "Create partner",
+    "edit": "Edit partner",
+    "buttons": {
+      "clear": "Clear form"
+    },
+    "filters": {
+      "search": "Search by ID, name, email, phone or address"
+    },
+    "createMode": "How do you want to create the partner?",
+    "mode": {
+      "fromUser": "From existing user",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Search user",
+      "searchPh": "DNI, name or email...",
+      "select": "Select user",
+      "selectPh": "Choose a user",
+      "hint": "Selecting a user fills the form; you can adjust afterwards."
+    },
+    "fields": {
+      "dni": "DNI",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "username": "Username",
+      "password": "Password"
+    },
+    "creds": {
+      "toggle": "Create an account for the partner",
+      "hint": "If disabled, the partner is created without user/password."
+    },
+    "errors": {
+      "dni": "Enter a valid DNI.",
+      "name": "Enter a valid name.",
+      "email": "Enter a valid email.",
+      "username": "Username required (min. 3).",
+      "password": "Password required (min. 6).",
+      "load": "Partners could not be loaded.",
+      "create": "Partner could not be created.",
+      "update": "Partner could not be updated.",
+      "delete": "Partner could not be deleted."
+    },
+    "errorLoad": "Partners could not be loaded.",
+    "errorCreate": "Partner could not be created.",
+    "errorUpdate": "Partner could not be updated.",
+    "errorDelete": "Partner could not be deleted.",
+    "stats": {
+      "total": "Total partners:",
+      "withDecisions": "With decisions:",
+      "filtered": "Filtered:"
+    }
+  },
+  "sales": {
+    "title": "Sales",
+    "new": "New",
+    "newTitle": "New sale",
+    "noResults": "No sales",
+    "loading": "Loading statistics...",
+    "totalRevenue": "Total revenue",
+    "totalSales": "Total sales",
+    "productsTitle": "Products in the sale",
+    "averageTicket": "Average ticket",
+    "salesByMonth": "Sales by month",
+    "topProducts": "Top products",
+    "salesByDistributor": "Sales by distributor",
+    "noData": "No statistics available",
+    "noDataDesc": "Statistics will appear here once there is data.",
+    "errorLoad": "Could not load sales.",
+    "client": "Client",
+    "itemsCount": "{{count}} item(s)",
+    "filters": {
+      "search": "Search",
+      "searchPh": "id, product or client description",
+      "clientDni": "Client DNI",
+      "clientDniPh": "Client DNI"
+    },
+    "table": {
+      "id": "ID",
+      "date": "Date",
+      "client": "Client",
+      "products": "Products",
+      "quantity": "Quantity",
+      "total": "Total (ARS)",
+      "distributor": "Distributor"
+    },
+    "form": {
+      "client": "Client",
+      "clientFilterPh": "filter (dni or name)",
+      "chooseClient": "Choose a client",
+      "clientHint": "Not listed? Create it from Clients.",
+      "products": "Products",
+      "searchProduct": "Search product",
+      "searchProductPh": "Search by ID or description",
+      "product": "Product",
+      "chooseProduct": "Choose a product",
+      "units": "units",
+      "quantity": "Quantity",
+      "stockTitle": "Available stock: {{stock}}",
+      "remove": "Remove",
+      "addProduct": "Add product",
+      "create": "Create sale",
+      "distributor": "Distributor",
+      "distributorFilterPh": "Search by ID or name",
+      "chooseDistributor": "Choose a distributor",
+      "distributorHint": "Select the distributor handling this sale",
+      "distributorRequired": "Distributor is required",
+      "clientRequired": "Client required",
+      "noProductsAvailable": "No products available",
+      "noProductsLoaded": "⚠️No products loaded. Total: {{count}}",
+      "availableProductsCount": "✅ {{count}} products available",
+      "removeLineTitle": "Remove line"
+    },
+    "err": {
+      "clientMissing": "The client does not exist. Create it first from the \"Clients\" section.",
+      "addOne": "Add at least one product.",
+      "chooseProductLine": "Choose a product in line {{n}}.",
+      "validQtyLine": "Enter a valid quantity in line {{n}}.",
+      "noStock": "Not enough stock. Available: {{stock}} units.",
+      "create": "Could not create the sale."
+    },
+    "noProductsAvailable": "No products available",
+    "toggle": {
+      "close": "Close",
+      "new": "New Sale"
+    },
+    "stats": {
+      "loading": "Loading statistics...",
+      "totalRevenue": "Total revenue",
+      "totalSales": "Total sales",
+      "averageTicket": "Average ticket",
+      "salesByMonth": "Sales by month",
+      "topProducts": "Top products",
+      "salesByDistributor": "Sales by distributor",
+      "noData": "No statistics available",
+      "noDataDesc": "Statistics will appear here once data is available.",
+      "totalLabel": "Total sales:",
+      "revenueLabel": "Total revenue:",
+      "filteredLabel": "Filtered:"
+    },
+    "empty": "No sales recorded"
+  },
+  "zones": {
+    "title": "Zones",
+    "new": "New Zone",
+    "close": "Close",
+    "loading": "Loading zonesâ€¦",
+    "headquarters": "Headquarters",
+    "noHeadquarters": "No headquarters set.",
+    "filters": {
+      "search": "Search zone",
+      "searchPh": "Search by name or description"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "empty": "No zones recorded",
+    "form": {
+      "createTitle": "Create zone",
+      "editTitle": "Edit zone #{{id}}",
+      "name": "Name",
+      "namePh": "e.g., North District",
+      "description": "Description",
+      "descriptionPh": "Short description of the zone",
+      "markHq": "Mark as headquarters",
+      "err": {
+        "required": "This field is required",
+        "duplicate": "A zone with that name already exists"
+      }
+    },
+    "confirmDelete": "Delete zone \"{{name}}\"?",
+    "err": {
+      "cannotDeleteHq": "Cannot delete zone \"{{name}}\" because it is the current headquarters. To delete it, first assign another zone as headquarters."
+    },
+    "errorLoad": "Could not load zones.",
+    "errorSave": "Could not save the zone.",
+    "errorDelete": "Could not delete.",
+    "stats": {
+      "totalLabel": "Total zones:",
+      "filteredLabel": "Filtered:"
+    },
+    "noResults": "No results"
+  },
+  "authorities": {
+    "title": "Authorities",
+    "new": "New",
+    "empty": "No authorities",
+    "noResults": "No authorities found with the applied filter",
+    "errorLoad": "Could not load authorities.",
+    "errorCreate": "Could not create.",
+    "errorSavePatch": "Could not save (PATCH).",
+    "errorSavePut": "Could not save (PUT).",
+    "errorDelete": "Could not delete.",
+    "createMode": "How do you want to create the authority?",
+    "mode": {
+      "fromUser": "From existing user",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Search user",
+      "searchPh": "DNI, name or email...",
+      "verifiedAvailableTitle": "Verified users available ({{count}})",
+      "dniLabel": "DNI",
+      "verified": "Verified",
+      "profileComplete": "100% Profile",
+      "none": "No verified users available",
+      "requirements": "Users must have their account verified by an administrator and 100% complete profile"
+    },
+    "filters": {
+      "search": "Search",
+      "searchPh": "name / rank",
+      "dni": "ID Number",
+      "dniPh": "e.g: 12345678",
+      "zoneId": "Zone",
+      "zoneIdPh": "Zone ID",
+      "allZones": "All zones"
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Name",
+      "rank": "Rank",
+      "zone": "Zone",
+      "actions": "Actions"
+    },
+    "zone": "Zone",
+    "form": {
+      "newTitle": "New authority",
+      "editTitle": "Edit authority: {{dni}}",
+      "dni": "DNI",
+      "dniPh": "Enter DNI",
+      "name": "Name",
+      "namePh": "John Doe",
+      "email": "Email",
+      "emailPh": "john@mail.com",
+      "phone": "Phone",
+      "phonePh": "+54...",
+      "address": "Address",
+      "addressPh": "Street 123",
+      "rank": "Rank",
+      "rank0": "Rank 0",
+      "rank1": "Rank 1",
+      "rank2": "Rank 2",
+      "rank3": "Rank 3",
+      "zoneId": "Zone",
+      "zoneIdPh": "1",
+      "chooseZone": "Select zone",
+      "err": {
+        "create": "Complete DNI, Name, Email, Rank and Zone.",
+        "edit": "Complete Name, Rank and Zone (email is not required when editing).",
+        "zone": "Zone required"
+      }
+    },
+    "err": {
+      "zoneIdInvalid": "Zone ID must be a valid number greater than 0."
+    },
+    "toggle": {
+      "close": "Close",
+      "new": "New Authority"
+    },
+    "stats": {
+      "totalLabel": "Total",
+      "rank0Label": "Rank 0",
+      "rank1Label": "Rank 1",
+      "rank2Label": "Rank 2",
+      "rank3Label": "Rank 3",
+      "distributionTitle": "Authorities by rank",
+      "distributionLegend": "Rank distribution",
+      "distributionEmpty": "No authorities to chart",
+      "distributionToggle": "View rank distribution",
+      "hoverHint": "Hover a slice to see details",
+      "filteredLabel": "Filtered",
+      "chartDistributionTitle": "Distribution by Rank",
+      "chartSummaryTitle": "Summary by Rank",
+      "authoritySingular": "authority",
+      "authorityPlural": "authorities",
+      "totalAuthorities": "Total authorities",
+      "mostCommon": "Most common",
+      "percentage": "Percentage",
+      "quantity": "Quantity",
+      "chartRank0": "Basic Rank",
+      "chartRank1": "Intermediate Rank",
+      "chartRank2": "Advanced Rank",
+      "chartRank3": "Superior Rank",
+      "authoritiesLabel": "Authorities"
+    }
+  },
+  "authority": {
+    "fields": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "creds": {
+      "toggle": "Create account for the authority",
+      "hint": "If you don't check this option, the authority is created without username/password."
+    },
+    "errors": {
+      "username": "Username required (min. 3).",
+      "password": "Password required (min. 6)."
+    }
+  },
+  "bribes": {
+    "title": "Bribe Management",
+    "new": "+ New Bribe",
+    "newTitle": "Create New Bribe",
+    "editTitle": "Edit Bribe",
+    "loading": "Loading bribes...",
+    "noResults": "No results for the applied filter",
+    "confirmPay": "Confirm payment of this bribe?",
+    "confirmDelete": "Delete this bribe? This action cannot be undone.",
+    "filters": {
+      "search": "Search",
+      "searchPh": "Search by ID, amount, authority...",
+      "paid": "Paid",
+      "id": "Bribe ID",
+      "idPh": "e.g: 123",
+      "amount": "Amount",
+      "amountPh": "e.g: 600",
+      "authority": "Authority",
+      "authorityPh": "ID or name...",
+      "paid_all": "All",
+      "paid_yes": "Yes",
+      "paid_no": "No",
+      "dateType": "Date",
+      "dateType_all": "All",
+      "dateType_exact": "Exact",
+      "dateType_before": "Before",
+      "dateType_after": "After",
+      "dateType_between": "Between",
+      "date": "Date",
+      "endDate": "Until"
+    },
+    "table": {
+      "id": "ID",
+      "amount": "Amount",
+      "authority": "Authority",
+      "sale": "Sale",
+      "paid": "Status",
+      "date": "Creation Date",
+      "actions": "Actions"
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending"
+    },
+    "actions": {
+      "pay": "Mark as paid"
+    },
+    "form": {
+      "amount": "Amount",
+      "amountPh": "e.g., 15000.00",
+      "authority": "Authority ID",
+      "authorityPh": "Enter authority ID",
+      "sale": "Sale ID",
+      "salePh": "Enter sale ID",
+      "editNote": "You can only edit the amount and payment status.",
+      "authority_placeholder": "â€” Select an authority â€”",
+      "sale_placeholder": "â€” Select a sale â€”"
+    },
+    "errors": {
+      "amountRequired": "Amount is required",
+      "authorityIdRequired": "Authority ID is required",
+      "saleIdRequired": "Sale ID is required",
+      "minValue": "Minimum value is {{min}}",
+      "invalid": "Invalid value"
+    },
+    "errorLoad": "Error loading bribes",
+    "errorSearch": "Error searching bribes",
+    "errorCreate": "Error creating bribe",
+    "errorSave": "Error saving bribe",
+    "errorPay": "Error processing payment",
+    "errorDelete": "Error deleting bribe",
+    "stats": {
+      "total": "Total bribes",
+      "amount": "Total amount",
+      "paid": "Paid",
+      "pending": "Pending",
+      "pendingAmount": "Pending amount",
+      "filtered": "Filtered"
+    },
+    "empty": "No bribes recorded"
+  },
+  "decisions": {
+    "title": "Strategic decisions",
+    "new": "New decision",
+    "empty": "No decisions",
+    "filters": {
+      "search": "Search",
+      "searchPh": "text or id",
+      "topic": "Topic (ID)",
+      "topicPh": "filter by topic id"
+    },
+    "table": {
+      "id": "ID",
+      "topic": "Topic",
+      "description": "Description",
+      "start": "Start",
+      "end": "End",
+      "actions": "Actions"
+    },
+    "topic": "Topic",
+    "form": {
+      "newTitle": "New decision",
+      "editTitle": "Edit decision: {{id}}",
+      "topic": "Topic",
+      "topicFilterPh": "filter (id or description)",
+      "chooseTopic": "Choose a topic",
+      "description": "Description",
+      "descriptionPh": "Description of the strategic decision",
+      "start": "Start date",
+      "end": "End date"
+    },
+    "toggle": {
+      "close": "Close",
+      "new": "New Decision"
+    },
+    "stats": {
+      "total": "Total:",
+      "active": "Active:",
+      "filtered": "Filtered:"
+    },
+    "noResults": "No results for the applied filter"
+  },
+  "topics": {
+    "title": "Topics",
+    "availableTitle": "Available topics",
+    "new": "New",
+    "empty": "No topics",
+    "filters": {
+      "search": "Search",
+      "searchPh": "text or id"
+    },
+    "a11y": {
+      "searchLabel": "Search topics by text or id"
+    },
+    "table": {
+      "id": "ID",
+      "description": "Description",
+      "actions": "Actions"
+    },
+    "form": {
+      "newTitle": "New topic",
+      "editTitle": "Edit topic: {{id}}",
+      "description": "Description",
+      "descriptionPh": "e.g. Corruption, Smuggling...",
+      "err": {
+        "required": "Description is required.",
+        "fill": "Please complete the description."
+      }
+    },
+    "errorLoad": "Could not load topics.",
+    "errorCreate": "Could not create.",
+    "errorSave": "Could not save.",
+    "errorDelete": "Could not delete.",
+    "stats": {
+      "total": "Total topics:",
+      "filtered": "Filtered:"
+    },
+    "noResults": "No results for the applied filter"
+  },
+  "distributors": {
+    "title": "Distributors",
+    "new": "New distributor",
+    "list": "List",
+    "loading": "Loading distributors...",
+    "filters": {
+      "search": "Search",
+      "searchPh": "DNI, name, email, zone"
+    },
+    "table": {
+      "dni": "DNI",
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "zone": "Zone",
+      "products": "Products",
+      "actions": "Actions"
+    },
+    "empty": {
+      "title": "No distributors",
+      "desc": "Create the first one with new button"
+    },
+    "form": {
+      "newTitle": "New distributor",
+      "editTitle": "Edit distributor {{dni}}",
+      "dni": "DNI",
+      "dniPh": "Document",
+      "name": "Name",
+      "namePh": "Full name",
+      "phone": "Phone",
+      "phonePh": "e.g. +54 9 ...",
+      "email": "Email",
+      "emailPh": "mail@domain.com",
+      "address": "Address",
+      "addressPh": "Street and number",
+      "zone": "Zone",
+      "chooseZone": "Choose a zone",
+      "products": "Products",
+      "multiHint": "You can select multiple products",
+      "err": {
+        "dni": "DNI required.",
+        "name": "Name required.",
+        "phone": "Phone required.",
+        "email": "Valid email required.",
+        "zone": "Zone required.",
+        "fill": "Please complete the required fields."
+      },
+      "noProducts": "No products available"
+    },
+    "errorLoad": "Could not load.",
+    "errorCreate": "Could not create (check required data).",
+    "errorSave": "Could not save.",
+    "errorDelete": "Could not delete.",
+    "toggle": {
+      "new": "New Distributor"
+    },
+    "stats": {
+      "total": "Total:",
+      "withProducts": "With products:",
+      "filtered": "Filtered:"
+    },
+    "noResults": {
+      "title": "No results",
+      "desc": "Try adjusting the filter"
+    },
+    "successCreate": "Distributor created successfully",
+    "successUpdate": "Distributor updated successfully",
+    "successDelete": "Distributor deleted successfully",
+    "confirmDelete": "Are you sure you want to delete this distributor?"
+  },
+  "distributor": {
+    "createMode": "How do you want to create the distributor?",
+    "mode": {
+      "fromUser": "From existing user",
+      "manual": "Manual"
+    },
+    "user": {
+      "search": "Search user",
+      "searchPh": "DNI, name or email..."
+    },
+    "fields": {
+      "username": "Username",
+      "password": "Password"
+    },
+    "creds": {
+      "toggle": "Create account for the distributor",
+      "hint": "If you don't check this option, the distributor is created without username/password."
+    },
+    "errors": {
+      "username": "Username required (min. 3).",
+      "password": "Password required (min. 6)."
+    }
+  },
+  "mgmt": {
+    "product": "Products",
+    "client": "Clients",
+    "partner": "Partners",
+    "sale": "Sales",
+    "zone": "Zones",
+    "authority": "Authorities",
+    "bribe": "Bribes",
+    "myBribes": "My Bribes",
+    "decision": "Decisions",
+    "topic": "Topics",
+    "distributor": "Distributors",
+    "shelbyCouncil": "Shelby Council",
+    "monthlyReview": "Monthly reviews",
+    "clandestineAgreement": "Clandestine agreements",
+    "admin": "Administrators",
+    "roleRequests": "Role requests"
+  },
+  "status": {
+    "PENDING": "PENDING",
+    "IN_REVIEW": "IN REVIEW",
+    "COMPLETED": "COMPLETED",
+    "APPROVED": "APPROVED",
+    "REJECTED": "REJECTED",
+    "ACTIVE": "ACTIVE",
+    "EXPIRED": "EXPIRED",
+    "CANCELLED": "CANCELLED"
+  },
+  "roles": {
+    "CLIENT": "CLIENT",
+    "DISTRIBUTOR": "DISTRIBUTOR",
+    "PARTNER": "PARTNER",
+    "ADMIN": "ADMIN",
+    "AUTHORITY": "AUTHORITY"
+  },
+  "admin": {
+    "title": "Administrators",
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "ID, name, email, phone"
+    },
+    "list": "List",
+    "emptyTitle": "No administrators",
+    "emptyHint": "Adjust the filter or create a new administrator.",
+    "form": {
+      "titleCreate": "Create administrator",
+      "titleEdit": "Edit {{dni}}",
+      "selectUser": "Select verified user",
+      "searchUser": "Search by ID, name or email...",
+      "availableUsers": "Verified users available ({{count}})",
+      "verified": "Verified",
+      "profileComplete": "100% Profile",
+      "noUsersAvailable": "No verified users available",
+      "noUsersHint": "Users must have their account verified by an administrator and complete profile"
+    },
+    "fields": {
+      "dni": "ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone"
+    },
+    "buttons": {
+      "new": "+ New",
+      "create": "Create",
+      "save": "Save",
+      "clear": "Clear",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "loading": "Loading...",
+      "errorCreating": "Error creating",
+      "errorSaving": "Error saving",
+      "errorLoading": "Error loading"
+    },
+    "stats": {
+      "totalLabel": "Total admins:",
+      "filteredLabel": "Filtered:"
+    }
+  },
+  "roleRequest": {
+    "title": "Role requests",
+    "my": {
+      "title": "My requests",
+      "emptyTitle": "You have no requests",
+      "emptyHint": "Create a new one with the new button."
+    },
+    "info": {
+      "title": "How role requests work",
+      "intro": "Review which combinations are allowed before submitting your request.",
+      "rule1": {
+        "title": "If you're a Distributor:",
+        "desc": "You can add the Partner role but not Authority."
+      },
+      "rule2": {
+        "title": "If you're a Partner:",
+        "desc": "You can add the Distributor role but not Authority."
+      },
+      "rule3": {
+        "title": "If you're an Authority:",
+        "desc": "You cannot combine it with Partner or Distributor."
+      },
+      "rule4": {
+        "title": "Replacing incompatible roles:",
+        "desc": "If you need to replace an incompatible role, activate the change option in the form."
+      },
+      "footer": "If you need to replace an incompatible role, activate the change option in the form."
+    },
+    "pending": {
+      "title": "Pending (admin)",
+      "emptyTitle": "No pending requests",
+      "emptyHint": "When there are requests, they will appear here."
+    },
+    "create": {
+      "title": "Create request"
+    },
+    "table": {
+      "user": "User",
+      "role": "Role",
+      "reason": "Reason",
+      "status": "Status",
+      "createdAt": "Created at"
+    },
+    "form": {
+      "requestedRole": "Requested role",
+      "roleToRemove": "Role to remove (optional)",
+      "reason": "Reason"
+    },
+    "buttons": {
+      "new": "+ New",
+      "close": "Close",
+      "send": "Send",
+      "approve": "Approve",
+      "reject": "Reject",
+      "cancel": "Cancel"
+    },
+    "messages": {
+      "errorSubmit": "Could not submit request"
+    }
+  },
+  "shelbyCouncil": {
+    "title": "Shelby Council",
+    "loading": "Loading...",
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Partner, decision, id"
+    },
+    "list": "List",
+    "emptyTitle": "No members",
+    "emptyHint": "Adjust filters or create an entry.",
+    "form": {
+      "titleCreate": "Create entry",
+      "titleEdit": "Edit member #{{id}}"
+    },
+    "fields": {
+      "partner": "Partner",
+      "decision": "Decision ID",
+      "joinDate": "Join date",
+      "role": "Role",
+      "notes": "Notes"
+    },
+    "buttons": {
+      "new": "New",
+      "create": "Create",
+      "save": "Save",
+      "cancel": "Cancel",
+      "clear": "Clear",
+      "close": "Close"
+    },
+    "errorCreate": "Could not create",
+    "errorSave": "Could not save",
+    "errorLoad": "Could not load",
+    "errorDelete": "Could not delete",
+    "confirmDelete": "Delete this entry?",
+    "stats": {
+      "total": "Total records",
+      "uniquePartners": "Unique partners",
+      "uniqueDecisions": "Unique decisions",
+      "filtered": "Filtered"
+    }
+  },
+  "monthlyReview": {
+    "title": "Monthly Reviews",
+    "loading": "Loading...",
+    "filters": {
+      "year": "Year",
+      "month": "Month (1-12)",
+      "monthPlaceholder": "All",
+      "status": "Status"
+    },
+    "stats": {
+      "title": "Period Statistics",
+      "empty": "No data for the selected period.",
+      "period": "Period",
+      "totalSales": "Total Sales",
+      "totalAmount": "Total Amount",
+      "averageAmount": "Average",
+      "byProduct": "By Product",
+      "productName": "Product",
+      "quantity": "Quantity",
+      "amount": "Amount",
+      "total": "Total",
+      "pending": "Pending",
+      "inReview": "In review",
+      "completed": "Completed",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "filtered": "Filtered"
+    },
+    "charts": {
+      "statusDistribution": "Status distribution",
+      "trend": "Review trend by month",
+      "topProducts": "Top products by sales",
+      "decisionsImpact": "Impact of Decisions on Sales",
+      "decisionsImpactDesc": "Sales evolution and strategic decisions over time",
+      "salesPrediction": "Future Sales Prediction",
+      "salesPredictionDesc": "Sales projection for the next 6 months using linear regression",
+      "prediction": {
+        "title": "Multi-Method Scientific Prediction",
+        "subtitle": "Linear Regression ({{linear}}%) + Exponential Growth ({{exponential}}%) | R² = {{r2}}% | Confidence: {{confidence}}%",
+        "series": {
+          "historical": "Historical Data",
+          "prediction": "Prediction",
+          "trend": "Trend Line"
+        },
+        "tooltip": {
+          "prediction": "PREDICTION",
+          "real": "Actual",
+          "projected": "Projected",
+          "trend": "Trend",
+          "confidence": "95% Interval",
+          "max": "Max",
+          "min": "Min",
+          "variation": "Variation"
+        },
+        "markers": {
+          "maximum": "Maximum",
+          "minimum": "Minimum",
+          "predictionStart": "Prediction Start"
+        },
+        "sales": "Sales ($)"
+      }
+    },
+    "list": "List of Reviews",
+    "emptyTitle": "No reviews",
+    "emptyHint": "Adjust filters or create a new review.",
+    "table": {
+      "id": "ID",
+      "period": "Period",
+      "status": "Status",
+      "reviewer": "Reviewer",
+      "date": "Date",
+      "totalAmount": "Amount",
+      "totalCount": "Sales"
+    },
+    "form": {
+      "titleCreate": "Create Monthly Review",
+      "titleEdit": "Edit Review #{{id}}",
+      "fields": {
+        "partnerDni": "Partner DNI",
+        "year": "Year",
+        "month": "Month",
+        "reviewDate": "Review Date",
+        "status": "Status",
+        "observations": "Observations",
+        "recommendations": "Recommendations"
+      },
+      "placeholders": {
+        "observations": "Observations about the period's sales...",
+        "recommendations": "Recommendations or action items..."
+      },
+      "errors": {
+        "partnerDni": "Partner DNI required (min. 6 characters)"
+      }
+    },
+    "buttons": {
+      "new": "+ New",
+      "close": "Close",
+      "create": "Create",
+      "save": "Save",
+      "clear": "Clear",
+      "cancel": "Cancel"
+    },
+    "errorCreate": "Could not create review",
+    "errorSave": "Could not save review",
+    "errorLoad": "Could not load reviews",
+    "errorDelete": "Could not delete review",
+    "confirmDelete": "Delete this review?"
+  },
+  "clandestineAgreement": {
+    "title": "Clandestine Agreements",
+    "list": "Agreements List",
+    "emptyTitle": "No clandestine agreements",
+    "emptyHint": "Create a new agreement to get started",
+    "confirmDelete": "Are you sure you want to delete this clandestine agreement?",
+    "buttons": {
+      "new": "New Agreement",
+      "clear": "Clear Form"
+    },
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search by ID, description, admin, authority..."
+    },
+    "table": {
+      "shelbyCouncil": "Shelby Council",
+      "admin": "Administrator",
+      "authority": "Authority",
+      "date": "Agreement Date",
+      "status": "Status",
+      "description": "Description"
+    },
+    "form": {
+      "titleCreate": "Create New Clandestine Agreement",
+      "titleEdit": "Edit Agreement #{{id}}",
+      "fields": {
+        "shelbyCouncilId": "Shelby Council ID",
+        "adminDni": "Administrator DNI",
+        "authorityDni": "Authority DNI",
+        "agreementDate": "Agreement Date",
+        "description": "Agreement Description",
+        "status": "Status"
+      },
+      "hints": {
+        "cannotChangeRelations": "Relationships cannot be changed after creating the agreement"
+      }
+    },
+    "stats": {
+      "total": "Total",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "uniqueAdmins": "Unique admins",
+      "uniqueAuthorities": "Unique authorities",
+      "filtered": "Filtered"
+    }
+  },
+  "buttons": {
+    "new": "+ New",
+    "create": "Create",
+    "save": "Save",
+    "clear": "Clear",
+    "cancel": "Cancel"
+  },
+  "inbox": {
+    "title": "Inbox",
+    "loading": "Loading inbox...",
+    "profileCompletenessSuffix": "% complete",
+    "verified": "✅ Verified",
+    "notVerified": "⏳ Not Verified",
+    "tabs": {
+      "userVerificationPlural": "✅ User verification",
+      "roleRequestsPlural": "📋 Role requests",
+      "userVerification": "✅ User verification",
+      "roleRequest": "📋 Role request"
+    },
+    "blocked": {
+      "title": "Blocked section",
+      "desc": "You need to verify your account before requesting special roles. Please complete verification in the previous tab.",
+      "goVerify": "Go to verification"
+    },
+    "userView": {
+      "myRoleRequestTitle": "My role request",
+      "myRoleRequestDesc": "Here you can request special roles like Partner or Distributor."
+    },
+    "notAuth": {
+      "title": "Session required",
+      "desc": "You need to sign in to access this page.",
+      "login": "Sign in"
+    }
+  },
+  "userVerification": {
+    "status": {
+      "title": "User Verification",
+      "subtitle": "Verifying your account unlocks advanced features",
+      "loading": "Loading verification status...",
+      "error": {
+        "title": "Error",
+        "close": "Close"
+      },
+      "verified": {
+        "title": "Account Verified",
+        "desc": "Your account has been verified successfully by an administrator.",
+        "benefitsTitle": "Benefits of verification:",
+        "benefits": [
+          "✓ Full access to advanced features",
+          "✓ Ability to make purchases",
+          "✓ Ability to request special roles",
+          "✓ Priority technical support"
+        ]
+      },
+      "request": {
+        "title": "Account Verification",
+        "desc": "To access all features, you need to verify your account. This verification is reviewed manually by an administrator."
+      },
+      "profileIncomplete": {
+        "title": "Incomplete Profile",
+        "desc": "You must complete your profile to 100% before requesting verification. Make sure you have all personal data (ID, name, email, phone and address).",
+        "completeNow": "Complete Profile Now"
+      },
+      "progress": {
+        "title": "Your Progress",
+        "created": "Account created",
+        "emailVerified": "Email verified",
+        "profileCompleted": "Profile completed ({{percent}}%)",
+        "adminVerification": "Admin verification"
+      },
+      "requirements": {
+        "title": "Requirements for verification:",
+        "profile100": "100% complete profile",
+        "emailVerified": "Email verified",
+        "personalData": "Personal data completed (ID, name, phone, address)"
+      },
+      "buttons": {
+        "request": "Request Verification",
+        "requestAgain": "Request Again",
+        "sending": "Sending...",
+        "resend": "Resend Notification",
+        "resending": "Resending..."
+      },
+      "help": {
+        "completeProfile": "Complete your profile to request verification of your account."
+      },
+      "pending": {
+        "title": "Request Under Review",
+        "desc": "Your verification request is being reviewed by an administrator. You will receive a notification when it is approved or rejected.",
+        "details": {
+          "requestedAt": "Request date:",
+          "expiresAt": "Expires:",
+          "email": "Email:"
+        },
+        "infoBox": {
+          "waitTitle": "Estimated time:",
+          "waitDesc": "Verifications are usually processed within 24â€“48 business hours."
+        }
+      },
+      "rejected": {
+        "title": "Request Rejected",
+        "desc": "Your verification request was rejected by an administrator. Please review your data and try again."
+      },
+      "expired": {
+        "title": "Request Expired",
+        "desc": "Your verification request has expired. You can request a new verification."
+      }
+    },
+    "card": {
+      "infoTitle": "Request Information",
+      "labels": {
+        "email": "Email:",
+        "requestedAt": "Request date:",
+        "expiresAt": "Expires:",
+        "attempts": "Attempts:",
+        "verifiedAt": "Verified at:",
+        "updatedAt": "Last update:"
+      },
+      "reviewBtn": "Review Verification",
+      "expandAria": "Expand details"
+    },
+    "reviewModal": {
+      "title": "Review User Verification",
+      "closeAria": "Close",
+      "summary": {
+        "email": "Email:",
+        "requestedAt": "Request date:",
+        "expiresAt": "Expires:",
+        "attempts": "Attempts:"
+      },
+      "errorPrefix": "Error",
+      "decision": "Decision:",
+      "approve": "Approve",
+      "reject": "Reject",
+      "rejectReasonLabel": "Rejection reason",
+      "rejectReasonOptional": "(optional)",
+      "rejectReasonPh": "Explain why the verification is rejected (optional, minimum 3 characters if provided)",
+      "rejectReasonCounter": "{{n}}/500 characters",
+      "rejectReasonMinWarn": "(minimum 3 if you provide a reason)",
+      "rejectReasonHelp": "This reason will be visible to the user in case of rejection.",
+      "approveInfoTitle": "When approving this verification:",
+      "approveInfoList": [
+        "The user will be marked as verified",
+        "Their profile completeness will be updated to 100%",
+        "They will receive a confirmation email",
+        "They will be able to make purchases",
+        "They will be able to request special roles"
+      ],
+      "actions": {
+        "cancel": "Cancel",
+        "processing": "Processing...",
+        "approve": "Approve Verification",
+        "reject": "Reject Verification"
+      }
+    },
+    "adminInbox": {
+      "title": "User Verifications",
+      "subtitle": "Review and manage user verification requests",
+      "pendingLabel": "Pending",
+      "loading": "Loading verifications...",
+      "errorRetry": "Retry",
+      "filters": {
+        "status": {
+          "label": "Status:",
+          "all": "All",
+          "pending": "Pending",
+          "verified": "Verified",
+          "rejected": "Rejected",
+          "expired": "Expired"
+        }
+      },
+      "refresh": "Refresh",
+      "empty": {
+        "title": "No verifications",
+        "desc": "No verifications were found with the selected filters"
+      }
+    }
+  },
+  "roleRequests": {
+    "inbox": {
+      "title": "My Role Requests",
+      "subtitle": "Manage your special role requests",
+      "roleSummary": {
+        "connectedAs": "Signed in as",
+        "fallbackName": "Guest user",
+        "noRoles": "You do not have any roles yet.",
+        "readyHint": "You can request a new role or swap the ones you already have here.",
+        "incompleteHint": "Complete your profile to unlock new role requests."
+      },
+      "guidelines": {
+        "title": "How role requests work",
+        "description": "Check the allowed combinations before submitting your request.",
+        "rules": {
+          "distributor": "If you are a Distributor you may request the Partner role, but not the Authority role.",
+          "partner": "If you are a Partner you may request the Distributor role, but not the Authority role.",
+          "authority": "If you are an Authority you cannot combine that role with Partner or Distributor."
+        },
+        "footer": "Need to replace an incompatible role? Enable the change option in the form."
+      },
+      "roleLabels": {
+        "admin": "Administrator",
+        "partner": "Partner",
+        "distributor": "Distributor",
+        "client": "Client",
+        "user": "User",
+        "authority": "Authority"
+      },
+      "newBtn": "New Request",
+      "verifyRequiredBadge": "Verify your account to request roles",
+      "completeProfileRequired": "Complete your profile to request roles",
+      "verifyRequiredTitle": "Verification Required",
+      "verifyRequiredDesc": "An administrator must verify your account before you can request special roles. Please complete the verification process in the \"User Verification\" tab.",
+      "loading": "Loading requests...",
+      "errorRetry": "Retry",
+      "emptyTitle": "You have no requests",
+      "emptyDescVerified": "When you submit a special role request, it will appear here",
+      "emptyDescIncomplete": "Complete your profile to be able to request special roles",
+      "createFirstBtn": "Create First Request"
+    },
+    "reviewModal": {
+      "title": "Review Role Request",
+      "subtitle": "Evaluate and make a decision on this request",
+      "close": "Close",
+      "closeAria": "Close",
+      "requestInfo": "Request Information",
+      "requestInfoLabels": {
+        "user": "User",
+        "request": "Request",
+        "requestDate": "Request Date",
+        "justification": "Justification",
+        "additionalData": "Additional Role Data",
+        "assignedZone": "Assigned Zone",
+        "zone": "Zone",
+        "address": "Address",
+        "products": "Products",
+        "product": "Product",
+        "rank": "Rank"
+      },
+      "summary": {
+        "user": "User:",
+        "request": "Request:",
+        "date": "Date:",
+        "justification": "Justification:"
+      },
+      "error": "Error",
+      "decision": "Decision:",
+      "approve": "Approve",
+      "approveDesc": "Approve and grant the role",
+      "reject": "Reject",
+      "rejectDesc": "Deny the request",
+      "recommended": "(recommended)",
+      "commentsLabel": "Comments",
+      "commentsPh": "Add comments about your decision...",
+      "commentsCounter": "{{n}}/500 characters",
+      "characters": "characters",
+      "selectOption": "Select an option",
+      "actions": {
+        "cancel": "Cancel",
+        "processing": "Processing...",
+        "approve": "Approve Request",
+        "reject": "Reject Request"
+      },
+      "changeLabel": "Role change"
+    },
+    "modal": {
+      "title": "Request Special Role",
+      "changeToggle": "Exchange one of your current roles for another",
+      "changeHelp": "If you want to swap one of your current roles for another, enable this option",
+      "roleToRemove": "Role to remove",
+      "roleToRemoveRequired": "Role to remove *",
+      "roleToRemovePh": "Select the role to remove",
+      "requestedRole": "Requested role *",
+      "requestedRolePh": "Select a role",
+      "roleDescription": "Description",
+      "justification": "Justification",
+      "justificationOptional": "(optional)",
+      "justificationPh": "Explain why you request this role (optional, minimum 20 characters if provided)",
+      "justCounter": "{{n}}/500 characters",
+      "justMinWarn": "(minimum 20 if you provide justification)",
+      "incompatibleNote": "Note: the role {{role}} is incompatible with: {{list}}",
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Submit Request",
+        "sending": "Sending..."
+      }
+    },
+    "card": {
+      "changeLabel": "Role change",
+      "newLabel": "New request",
+      "titles": {
+        "justification": "Justification",
+        "info": "Information",
+        "adminComments": "Administrator Comments"
+      },
+      "labels": {
+        "createdAt": "Request date:",
+        "reviewedAt": "Reviewed at:",
+        "reviewedBy": "Reviewed by:"
+      },
+      "actions": {
+        "evaluate": "Evaluate Request",
+        "approve": "Approve",
+        "reject": "Reject"
+      }
+    },
+    "adminInbox": {
+      "title": "Role Requests",
+      "subtitle": "Review and manage special role requests",
+      "pendingLabel": "Pending",
+      "loading": "Loading requests...",
+      "errorRetry": "Retry",
+      "filters": {
+        "status": {
+          "label": "Status:",
+          "all": "All",
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "role": {
+          "label": "Role:",
+          "all": "All",
+          "partner": "Partner",
+          "distributor": "Distributor",
+          "authority": "Authority"
+        }
+      },
+      "refresh": "Refresh",
+      "empty": {
+        "title": "No requests",
+        "desc": "No requests were found with the selected filters"
+      }
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "lead": "We are a team passionate about creating efficient and scalable solutions.",
+    "mission": "We empower teams to work with clarity, focus, and simplicity.",
+    "sections": {
+      "missionTitle": "Our Mission",
+      "valuesTitle": "Our Values",
+      "teamTitle": "Our Team"
+    },
+    "values": {
+      "transparency": {
+        "title": "Transparency",
+        "desc": "Clear communication and visible decisions."
+      },
+      "quality": {
+        "title": "Quality",
+        "desc": "We care about every detail in each delivery."
+      },
+      "velocity": {
+        "title": "Speed",
+        "desc": "We iterate fast without losing stability."
+      },
+      "proximity": {
+        "title": "Closeness",
+        "desc": "We listen and support our clients."
+      },
+      "learning": {
+        "title": "Learning",
+        "desc": "Continuous improvement as culture."
+      },
+      "purpose": {
+        "title": "Purpose",
+        "desc": "We build products that matter."
+      }
+    },
+    "team": {
+      "roles": {
+        "backend": "Backend",
+        "frontend": "Frontend",
+        "testing": "Testing"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "lead": "We're here to help. Reach out through any of our channels.",
+    "sections": {
+      "channels": "Main Channels",
+      "hours": "Business Hours",
+      "location": "Location",
+      "usefulLinksTitle": "Useful Links",
+      "usefulLinksLead": "Quick access to documentation and resources"
+    },
+    "channels": {
+      "email": {
+        "label": "Email",
+        "value": "thegarrisonsystem@gmail.com",
+        "hint": "We respond within ~24 business hours"
+      },
+      "phone": {
+        "label": "Phone",
+        "value": "+54 341 555-1234",
+        "hint": "Mon to Fri Â· 09â€“18 h"
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "value": "+54 9 341 555-1234",
+        "hint": "Quick response"
+      }
+    },
+    "hours": {
+      "support": {
+        "label": "Support",
+        "value": "Mon to Fri · 09:00-18:00"
+      },
+      "commercial": {
+        "label": "Sales",
+        "value": "Mon to Fri · 10:00-17:00"
+      }
+    },
+    "location": {
+      "address": "Zeballos 1341, S2000 Rosario, Santa Fe, Argentina"
+    },
+    "actions": {
+      "viewOnMaps": "View on Google Maps"
+    },
+    "links": {
+      "github": {
+        "label": "Project GitHub",
+        "value": "github.com/lautaro-peralta",
+        "hint": "Source code and documentation"
+      },
+      "utn": {
+        "label": "UTN Rosario",
+        "value": "frro.utn.edu.ar",
+        "hint": "Rosario Regional Faculty"
+      },
+      "techSupport": {
+        "label": "Technical Support",
+        "value": "thegarrisonsystem@gmail.com",
+        "hint": "Direct email contact"
+      }
+    }
+  },
+  "faqs": {
+    "title": "Frequently Asked Questions",
+    "lead": "Quick answers to common questions about our platform.",
+    "items": {
+      "howToStart": {
+        "q": "How do I get started?",
+        "a": "Create your account or sign in. Then load products and customers from Management."
+      },
+      "exportData": {
+        "q": "Can I export data?",
+        "a": "Yes, main views allow exporting lists for reports and audits."
+      },
+      "managePermissions": {
+        "q": "How do I manage permissions?",
+        "a": "Define roles by areas (sales, administration, etc.) and assign selective access."
+      },
+      "systemIntegration": {
+        "q": "Does it integrate with other systems?",
+        "a": "We offer API and importers to connect your current stack."
+      }
+    },
+    "footer": {
+      "tagline": "The platform that takes your business to the next level",
+      "rights": "All rights reserved",
+      "sections": {
+        "company": "Company",
+        "legal": "Legal",
+        "resources": "Resources"
+      },
+      "links": {
+        "about": "About us",
+        "contact": "Contact",
+        "faqs": "FAQs",
+        "terms": "Terms and conditions",
+        "privacy": "Privacy policy",
+        "cookies": "Cookie policy",
+        "docs": "Documentation",
+        "api": "API",
+        "support": "Support"
+      },
+      "social": {
+        "github": "Visit GitHub",
+        "email": "Send email"
+      },
+      "university": {
+        "prefix": "Academic project by",
+        "name": "UTN Rosario"
+      }
+    }
+  },
+  "notifications": {
+    "roleRequestApproved": "Role request approved successfully.",
+    "roleRequestRejected": "Role request rejected successfully.",
+    "userVerificationApproved": "User verification approved successfully.",
+    "userVerificationRejected": "User verification rejected successfully."
+  },
+  "legal": {
+    "backHome": "Back to home",
+    "lastUpdated": "Last updated",
+    "questions": "Have questions about these terms?",
+    "contactUs": "Contact us",
+    "terms": {
+      "title": "Terms and Conditions",
+      "sections": {
+        "acceptance": {
+          "title": "1. Acceptance of Terms",
+          "content": [
+            "By accessing and using GarrSYS, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you should not use our system.",
+            "GarrSYS is a business management platform designed to facilitate the administration of products, sales, business partners and related operations."
+          ]
+        },
+        "usage": {
+          "title": "2. System Usage",
+          "content": [
+            "The GarrSYS system is intended exclusively for internal use by the organization and its authorized members. You agree to:"
+          ],
+          "list": [
+            "Use the system responsibly and in accordance with the law",
+            "Maintain the confidentiality of your access credentials",
+            "Not attempt to access areas of the system for which you are not authorized",
+            "Not share sensitive information outside the platform",
+            "Report any suspicious activity or security vulnerabilities"
+          ]
+        },
+        "roles": {
+          "title": "3. Roles and Permissions",
+          "content": [
+            "GarrSYS implements a role-based system with different access levels:"
+          ],
+          "list": [
+            "ADMIN: Full system access, user management and configuration",
+            "DISTRIBUTOR: Product, inventory and business operations management",
+            "PARTNER: Access to relevant information and specific functionalities",
+            "CLANDESTINE: Special operations with limited permissions",
+            "SHELBY: Supervision and approval of strategic decisions"
+          ]
+        },
+        "responsibilities": {
+          "title": "4. User Responsibilities",
+          "content": [
+            "As a GarrSYS user, you are responsible for all activities performed under your account. You must immediately notify any unauthorized use of your account.",
+            "Information entered into the system must be accurate and up-to-date. Incorrect data can affect business operations."
+          ]
+        },
+        "intellectual": {
+          "title": "5. Intellectual Property",
+          "content": [
+            "All content, design, source code and functionalities of GarrSYS are property of the organization and are protected by applicable intellectual property laws.",
+            "Copying, modifying, distributing or selling any part of the system without express authorization is not permitted."
+          ]
+        },
+        "liability": {
+          "title": "6. Limitation of Liability",
+          "content": [
+            "GarrSYS is provided \"as is\" without warranties of any kind. We are not responsible for data loss, service interruptions or damages arising from the use of the system.",
+            "It is the user's responsibility to maintain backups of critical information."
+          ]
+        },
+        "modifications": {
+          "title": "7. Modifications",
+          "content": [
+            "We reserve the right to modify these terms at any time. Changes will take effect immediately after publication in the system.",
+            "It is the user's responsibility to periodically review these terms."
+          ]
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": {
+        "information": {
+          "title": "1. Information We Collect",
+          "content": [
+            "GarrSYS collects and stores information necessary for the operation of the business management system. This information includes:"
+          ],
+          "list": [
+            "Profile data: name, email, username",
+            "Role and permission information within the system",
+            "Product, inventory and business transaction data",
+            "Activity logs and system audits",
+            "Business partner and distributor information"
+          ]
+        },
+        "usage": {
+          "title": "2. How We Use Your Information",
+          "content": [
+            "The information collected is used exclusively for the following purposes:"
+          ],
+          "list": [
+            "User account management and authentication",
+            "Inventory and business operations administration",
+            "Report and business statistics generation",
+            "Transaction auditing and tracking",
+            "Business-related communications",
+            "System improvement and optimization"
+          ]
+        },
+        "protection": {
+          "title": "3. Data Protection",
+          "content": [
+            "We implement technical and organizational security measures to protect your information:"
+          ],
+          "list": [
+            "Password encryption using Argon2",
+            "JWT (JSON Web Tokens) based authentication",
+            "Role-based access control (RBAC)",
+            "Audit logs of critical actions",
+            "Protection against unauthorized access"
+          ]
+        },
+        "sharing": {
+          "title": "4. Sharing Information",
+          "content": [
+            "We do not sell, rent or share your personal information with third parties, except in the following cases:"
+          ],
+          "list": [
+            "When necessary to comply with legal obligations",
+            "With authorized business partners within the system",
+            "To protect the organization's rights and security",
+            "In case of merger, acquisition or asset sale"
+          ]
+        },
+        "retention": {
+          "title": "5. Data Retention",
+          "content": [
+            "We retain your personal information for as long as necessary to fulfill the purposes described in this policy, including legal, accounting or audit requirements.",
+            "Business transaction data is maintained in accordance with applicable tax and accounting regulations."
+          ]
+        },
+        "rights": {
+          "title": "6. Your Rights",
+          "content": [
+            "As a GarrSYS user, you have the following rights regarding your personal data:"
+          ],
+          "list": [
+            "Access the information we have about you",
+            "Request correction of inaccurate data",
+            "Request deletion of your account and associated data",
+            "Export your data in a structured format",
+            "Withdraw consent for data processing"
+          ]
+        },
+        "cookies": {
+          "title": "7. Cookies and Similar Technologies",
+          "content": [
+            "GarrSYS uses localStorage and sessionStorage to maintain your active session and improve user experience. For more details, see our Cookie Policy."
+          ]
+        },
+        "changes": {
+          "title": "8. Changes to this Policy",
+          "content": [
+            "We may update this Privacy Policy periodically. We will notify you of significant changes through the system.",
+            "The last updated date is shown at the top of this document."
+          ]
+        }
+      }
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "sections": {
+        "what": {
+          "title": "1. What are Cookies and Storage Technologies?",
+          "content": [
+            "Cookies are small text files that are stored in your browser when you visit a website. GarrSYS uses modern web storage technologies to enhance your experience.",
+            "We primarily use localStorage and sessionStorage instead of traditional cookies to manage sessions and user preferences."
+          ]
+        },
+        "technologies": {
+          "title": "2. Technologies We Use",
+          "content": [
+            "GarrSYS employs the following storage technologies:"
+          ],
+          "list": [
+            "localStorage: To store authentication tokens and persistent preferences",
+            "sessionStorage: For temporary data during your session",
+            "IndexedDB: For local storage of application data (if applicable)"
+          ]
+        },
+        "purpose": {
+          "title": "3. Purpose of Local Storage",
+          "content": [
+            "We use these technologies for the following essential purposes:"
+          ],
+          "list": [
+            "Maintain your active session while navigating the system",
+            "Remember your language preferences (English/Spanish)",
+            "Store JWT tokens for secure authentication",
+            "Save user interface settings",
+            "Improve performance through data caching"
+          ]
+        },
+        "types": {
+          "title": "4. Types of Storage We Use",
+          "list": [
+            "Strictly Necessary: Authentication tokens (accessToken, refreshToken) - These are essential for system operation",
+            "Functional: Language preferences and user configuration - Improve your system experience",
+            "Performance: Data cache to reduce server calls - Optimize system speed"
+          ]
+        },
+        "management": {
+          "title": "5. Stored Data Management",
+          "content": [
+            "You have full control over the data stored in your browser:"
+          ],
+          "list": [
+            "You can log out at any time to delete authentication tokens",
+            "You can manually clear localStorage from browser developer tools",
+            "Session tokens automatically expire after a period of inactivity",
+            "When closing the browser, sessionStorage data is automatically deleted"
+          ]
+        },
+        "security": {
+          "title": "6. Security",
+          "content": [
+            "Stored tokens are protected by the following measures:"
+          ],
+          "list": [
+            "JWT tokens are cryptographically signed",
+            "Refresh tokens have a limited lifespan",
+            "We do not store passwords in the browser",
+            "Sensitive data is encrypted before being stored"
+          ]
+        },
+        "thirdParty": {
+          "title": "7. Third-Party Cookies",
+          "content": [
+            "GarrSYS does not use third-party cookies for advertising or tracking. However, if we integrate external services in the future (such as analytics or maps), they may set their own cookies.",
+            "We will notify you of any changes in the use of third-party cookies."
+          ]
+        },
+        "disable": {
+          "title": "8. How to Disable Storage",
+          "content": [
+            "If you wish to disable local storage, you can do so from your browser settings. However, please note that this will significantly affect system functionality:"
+          ],
+          "list": [
+            "You will not be able to log in or maintain your active session",
+            "Your language preferences will not be saved",
+            "The user experience will be degraded"
+          ]
+        },
+        "updates": {
+          "title": "9. Updates to this Policy",
+          "content": [
+            "We may update this Cookie Policy when we implement new functionalities or storage technologies.",
+            "The last updated date is shown at the top of this document."
+          ]
+        }
+      }
+    },
+    "lastUpdatedDate": "November 2025"
+  },
+  "footer": {
+    "tagline": "Distribution management and control system",
+    "rights": "All rights reserved.",
+    "university": {
+      "prefix": "Developed at",
+      "name": "National Technological University - Rosario Regional Faculty"
+    },
+    "sections": {
+      "company": "Company",
+      "legal": "Legal",
+      "resources": "Resources"
+    },
+    "links": {
+      "about": "About us",
+      "contact": "Contact us",
+      "faqs": "FAQs",
+      "terms": "Terms of service",
+      "privacy": "Privacy policy",
+      "cookies": "Cookie policy",
+      "docs": "Documentation",
+      "api": "API",
+      "support": "Support"
+    },
+    "social": {
+      "github": "Follow us on GitHub",
+      "email": "Send us an email"
+    }
+  }
+}
