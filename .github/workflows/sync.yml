@@ -1,0 +1,29 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # Se ejecuta cada 10 minutos
+  workflow_dispatch:         # Permite ejecutarlo manualmente desde la pestaña Actions
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/Tsplivalo/TGS-Frontend.git
+          git fetch upstream
+
+      - name: Merge upstream changes
+        run: |
+          git merge upstream/main --no-edit || true
+
+      - name: Push to fork
+        run: |
+          git push origin main
