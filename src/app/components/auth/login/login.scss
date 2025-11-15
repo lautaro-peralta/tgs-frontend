@@ -2,6 +2,30 @@
 .form { display: grid; gap: .75rem; }
 .actions { margin-top: .5rem; }
 
+/* Error message - Mejorado para mayor visibilidad */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
+  border: 2px solid rgba(239, 68, 68, 0.7);
+  border-radius: 10px;
+  color: #fee2e2;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
+              0 0 0 1px rgba(239, 68, 68, 0.2);
+  animation: fadeIn 0.3s ease-out;
+
+  &::before {
+    content: '⚠️';
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+  }
+}
+
 /* Waiting verification alert */
 .waiting-verification {
   display: flex;
