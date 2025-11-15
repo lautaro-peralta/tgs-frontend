@@ -1,0 +1,1018 @@
+From 59c2775be43f50ff7fc9cc7f331776da44f254dc Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 20:18:49 +0000
+Subject: [PATCH 1/7] Make error messages more prominent and visible
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Increased background opacity from 0.15→0.08 to 0.35→0.25 for better visibility
+- Changed border from 1px to 2px and increased opacity from 0.3 to 0.7
+- Updated text color from #fca5a5 to #fee2e2 (brighter/more readable)
+- Added box-shadow for more emphasis and depth
+- Added drop-shadow filter to error icons for better visual prominence
+- Applied changes to both .alert-error and .error-message classes
+- Updated styles in role-requests.scss and user-verification.scss
+
+These changes ensure error messages are clearly noticeable with:
+- Red background with higher contrast
+- Warning icons with visual effects
+- Clear, readable error text
+---
+ .../role-requests/role-requests.scss          | 32 +++++++++++++----
+ .../role-requests/user-verification.scss      | 35 ++++++++++++++-----
+ 2 files changed, 52 insertions(+), 15 deletions(-)
+
+diff --git a/src/app/features/inbox/components/role-requests/role-requests.scss b/src/app/features/inbox/components/role-requests/role-requests.scss
+index f387cc6..22bb299 100644
+--- a/src/app/features/inbox/components/role-requests/role-requests.scss
++++ b/src/app/features/inbox/components/role-requests/role-requests.scss
+@@ -130,14 +130,21 @@ select {
+     display: flex;
+     align-items: center;
+     gap: $spacing-sm;
+-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08));
+-    border: 1px solid rgba(239, 68, 68, 0.3);
+-    color: #fca5a5;
++    background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++    border: 2px solid rgba(239, 68, 68, 0.7);
++    color: #fee2e2;
+     padding: $spacing-md;
+     border-radius: $border-radius;
+     margin-bottom: $spacing-md;
+     backdrop-filter: blur(12px);
+     font-weight: 600;
++    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++                0 0 0 1px rgba(239, 68, 68, 0.2);
++
++    .icon {
++      font-size: 1.5rem;
++      filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++    }
+ 
+     .btn-link {
+       margin-left: auto;
+@@ -1903,9 +1910,22 @@ select {
+   }
+ 
+   &-error {
+-    background: linear-gradient(135deg, rgba($danger-color, 0.15), rgba($danger-color, 0.08));
+-    border-color: rgba($danger-color, 0.3);
+-    color: #fca5a5;
++    background: linear-gradient(135deg, rgba($danger-color, 0.35), rgba($danger-color, 0.25));
++    border-color: rgba($danger-color, 0.7);
++    border-width: 2px;
++    color: #fee2e2;
++    box-shadow: 0 4px 16px rgba($danger-color, 0.4),
++                0 0 0 1px rgba($danger-color, 0.2);
++
++    strong {
++      color: #fef2f2;
++      font-size: 1rem;
++    }
++
++    .alert-icon {
++      font-size: 1.75rem;
++      filter: drop-shadow(0 2px 4px rgba($danger-color, 0.5));
++    }
+   }
+ 
+   &-warning {
+diff --git a/src/app/features/inbox/components/role-requests/user-verification.scss b/src/app/features/inbox/components/role-requests/user-verification.scss
+index c2b969a..c79541e 100644
+--- a/src/app/features/inbox/components/role-requests/user-verification.scss
++++ b/src/app/features/inbox/components/role-requests/user-verification.scss
+@@ -80,13 +80,20 @@ $spacing-xl: 32px;
+     display: flex;
+     align-items: center;
+     gap: $spacing-sm;
+-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08));
+-    border: 1px solid rgba(239, 68, 68, 0.3);
+-    color: #fca5a5;
++    background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++    border: 2px solid rgba(239, 68, 68, 0.7);
++    color: #fee2e2;
+     padding: $spacing-md;
+     border-radius: $border-radius;
+     margin-bottom: $spacing-md;
+     backdrop-filter: blur(12px);
++    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++                0 0 0 1px rgba(239, 68, 68, 0.2);
++
++    .icon {
++      font-size: 1.5rem;
++      filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++    }
+     font-weight: 600;
+ 
+     .icon {
+@@ -547,13 +554,20 @@ $spacing-xl: 32px;
+     display: flex;
+     align-items: center;
+     gap: $spacing-sm;
+-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08));
+-    border: 1px solid rgba(239, 68, 68, 0.3);
+-    color: #fca5a5;
++    background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++    border: 2px solid rgba(239, 68, 68, 0.7);
++    color: #fee2e2;
+     padding: $spacing-md;
+     border-radius: $border-radius;
+     margin-bottom: $spacing-md;
+     backdrop-filter: blur(12px);
++    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++                0 0 0 1px rgba(239, 68, 68, 0.2);
++
++    .icon {
++      font-size: 1.5rem;
++      filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++    }
+     font-weight: 600;
+ 
+     .btn-link {
+@@ -1632,18 +1646,21 @@ $spacing-xl: 32px;
+   display: flex;
+   align-items: center;
+   gap: $spacing-sm;
+-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.08));
+-  border: 1px solid rgba(239, 68, 68, 0.3);
+-  color: #fca5a5;
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++  border: 2px solid rgba(239, 68, 68, 0.7);
++  color: #fee2e2;
+   padding: $spacing-md;
+   border-radius: $border-radius;
+   margin-bottom: $spacing-lg;
+   backdrop-filter: blur(12px);
+   font-weight: 600;
++  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++              0 0 0 1px rgba(239, 68, 68, 0.2);
+ 
+   .icon {
+     flex-shrink: 0;
+     font-size: 1.5rem;
++    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+   }
+ }
+ 
+-- 
+2.43.0
+
+
+From c62197b10a99238acb77b8ed5f05e489a6c203c8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 20:58:55 +0000
+Subject: [PATCH 2/7] Make error messages more prominent in authentication
+ pages
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Added prominent error styling to login page (.error-message)
+- Added prominent error styling to register page (.error)
+- Increased background opacity from subtle to 0.35→0.25 for better visibility
+- Changed border from 1px to 2px solid with 0.7 opacity (more prominent)
+- Updated text color to #fee2e2 (brighter/more readable)
+- Added box-shadow with red glow for emphasis
+- Added warning icon (⚠️) with drop-shadow effect automatically via ::before
+- Added fadeIn animation for smooth appearance
+- Applied same visual treatment as inbox/role-requests components
+
+These changes ensure authentication errors are clearly visible with:
+- Red background with strong contrast
+- Automatic warning icon with visual effects
+- Clear, readable error text
+- Smooth animation when errors appear
+---
+ src/app/components/auth/login/login.scss      | 24 +++++++++++++++++++
+ .../components/auth/register/register.scss    | 24 +++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/src/app/components/auth/login/login.scss b/src/app/components/auth/login/login.scss
+index 42c1642..5d5661c 100644
+--- a/src/app/components/auth/login/login.scss
++++ b/src/app/components/auth/login/login.scss
+@@ -2,6 +2,30 @@
+ .form { display: grid; gap: .75rem; }
+ .actions { margin-top: .5rem; }
+ 
++/* Error message - Mejorado para mayor visibilidad */
++.error-message {
++  display: flex;
++  align-items: center;
++  gap: 0.75rem;
++  padding: 1rem 1.25rem;
++  margin-bottom: 1.5rem;
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++  border: 2px solid rgba(239, 68, 68, 0.7);
++  border-radius: 10px;
++  color: #fee2e2;
++  font-weight: 600;
++  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++              0 0 0 1px rgba(239, 68, 68, 0.2);
++  animation: fadeIn 0.3s ease-out;
++
++  &::before {
++    content: '⚠️';
++    font-size: 1.5rem;
++    flex-shrink: 0;
++    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++  }
++}
++
+ /* Waiting verification alert */
+ .waiting-verification {
+   display: flex;
+diff --git a/src/app/components/auth/register/register.scss b/src/app/components/auth/register/register.scss
+index 40fb440..8f966cb 100644
+--- a/src/app/components/auth/register/register.scss
++++ b/src/app/components/auth/register/register.scss
+@@ -15,6 +15,30 @@
+   margin-top: .5rem;
+ }
+ 
++/* Error message - Mejorado para mayor visibilidad */
++.error {
++  display: flex;
++  align-items: center;
++  gap: 0.75rem;
++  padding: 1rem 1.25rem;
++  margin-top: 1rem;
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
++  border: 2px solid rgba(239, 68, 68, 0.7);
++  border-radius: 10px;
++  color: #fee2e2;
++  font-weight: 600;
++  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
++              0 0 0 1px rgba(239, 68, 68, 0.2);
++  animation: fadeIn 0.3s ease-out;
++
++  &::before {
++    content: '⚠️';
++    font-size: 1.5rem;
++    flex-shrink: 0;
++    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++  }
++}
++
+ /* Waiting verification alert */
+ .waiting-verification {
+   display: flex;
+-- 
+2.43.0
+
+
+From 63dd48fdf87c53c9c099eff55183594a14706b56 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 21:49:15 +0000
+Subject: [PATCH 3/7] Fix error message display - change from flex to block
+ layout
+
+- Changed display from 'flex' to 'block' for better inline rendering
+- Adjusted ::before emoji to display inline with text using margin-right
+- Added line-height for better text spacing
+- Emoji now appears inline before error text instead of as flex item
+
+This fixes the layout issue where the error icon and text weren't displaying correctly.
+---
+ src/app/components/auth/login/login.scss       | 11 +++++------
+ src/app/components/auth/register/register.scss | 11 +++++------
+ 2 files changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/src/app/components/auth/login/login.scss b/src/app/components/auth/login/login.scss
+index 5d5661c..aac4de6 100644
+--- a/src/app/components/auth/login/login.scss
++++ b/src/app/components/auth/login/login.scss
+@@ -4,9 +4,7 @@
+ 
+ /* Error message - Mejorado para mayor visibilidad */
+ .error-message {
+-  display: flex;
+-  align-items: center;
+-  gap: 0.75rem;
++  display: block;
+   padding: 1rem 1.25rem;
+   margin-bottom: 1.5rem;
+   background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
+@@ -17,11 +15,12 @@
+   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
+               0 0 0 1px rgba(239, 68, 68, 0.2);
+   animation: fadeIn 0.3s ease-out;
++  line-height: 1.5;
+ 
+   &::before {
+-    content: '⚠️';
+-    font-size: 1.5rem;
+-    flex-shrink: 0;
++    content: '⚠️  ';
++    font-size: 1.25rem;
++    margin-right: 0.5rem;
+     filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+   }
+ }
+diff --git a/src/app/components/auth/register/register.scss b/src/app/components/auth/register/register.scss
+index 8f966cb..25e644e 100644
+--- a/src/app/components/auth/register/register.scss
++++ b/src/app/components/auth/register/register.scss
+@@ -17,9 +17,7 @@
+ 
+ /* Error message - Mejorado para mayor visibilidad */
+ .error {
+-  display: flex;
+-  align-items: center;
+-  gap: 0.75rem;
++  display: block;
+   padding: 1rem 1.25rem;
+   margin-top: 1rem;
+   background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
+@@ -30,11 +28,12 @@
+   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
+               0 0 0 1px rgba(239, 68, 68, 0.2);
+   animation: fadeIn 0.3s ease-out;
++  line-height: 1.5;
+ 
+   &::before {
+-    content: '⚠️';
+-    font-size: 1.5rem;
+-    flex-shrink: 0;
++    content: '⚠️  ';
++    font-size: 1.25rem;
++    margin-right: 0.5rem;
+     filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
+   }
+ }
+-- 
+2.43.0
+
+
+From 96f261816ec9b946d392e784e96f929edd43a4d4 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 21:53:12 +0000
+Subject: [PATCH 4/7] Make error messages MUCH more prominent with animations
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Increased background opacity to 0.6→0.5 (much brighter red)
+- Changed border to 3px solid #ff3b3b (very visible)
+- Text now pure white (#ffffff) with 700 font-weight
+- Increased font size to 1.05rem
+- Added intense box-shadow glow effect (25px blur)
+- Added 'shake' animation on appearance (grabs attention)
+- Added 'errorPulse' continuous animation (pulsing glow)
+- Icon size increased to 1.75rem with 'iconPulse' animation
+- Added text-shadow for better readability
+- Added inset shadow for depth
+
+Error messages are now IMPOSSIBLE to miss with:
+- Bright red glowing box that shakes when it appears
+- Continuously pulsing glow effect
+- Animated warning icon that pulses
+- Clear white text on red background
+---
+ src/app/components/auth/login/login.scss      | 56 ++++++++++++++-----
+ .../components/auth/register/register.scss    | 56 ++++++++++++++-----
+ 2 files changed, 84 insertions(+), 28 deletions(-)
+
+diff --git a/src/app/components/auth/login/login.scss b/src/app/components/auth/login/login.scss
+index aac4de6..b06d113 100644
+--- a/src/app/components/auth/login/login.scss
++++ b/src/app/components/auth/login/login.scss
+@@ -2,27 +2,55 @@
+ .form { display: grid; gap: .75rem; }
+ .actions { margin-top: .5rem; }
+ 
+-/* Error message - Mejorado para mayor visibilidad */
++/* Error message - SÚPER LLAMATIVO */
+ .error-message {
+   display: block;
+-  padding: 1rem 1.25rem;
++  padding: 1.25rem 1.5rem;
+   margin-bottom: 1.5rem;
+-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
+-  border: 2px solid rgba(239, 68, 68, 0.7);
+-  border-radius: 10px;
+-  color: #fee2e2;
+-  font-weight: 600;
+-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
+-              0 0 0 1px rgba(239, 68, 68, 0.2);
+-  animation: fadeIn 0.3s ease-out;
+-  line-height: 1.5;
++  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
++  border: 3px solid #ff3b3b;
++  border-radius: 12px;
++  color: #ffffff;
++  font-weight: 700;
++  font-size: 1.05rem;
++  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++              0 8px 20px rgba(255, 59, 59, 0.4),
++              inset 0 1px 0 rgba(255, 255, 255, 0.1);
++  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
++  line-height: 1.6;
++  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+ 
+   &::before {
+     content: '⚠️  ';
+-    font-size: 1.25rem;
+-    margin-right: 0.5rem;
+-    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++    font-size: 1.75rem;
++    margin-right: 0.75rem;
++    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
++    animation: iconPulse 1s ease-in-out infinite;
++  }
++}
++
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
++}
++
++@keyframes errorPulse {
++  0%, 100% {
++    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++                0 8px 20px rgba(255, 59, 59, 0.4),
++                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+   }
++  50% {
++    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
++                0 8px 25px rgba(255, 59, 59, 0.6),
++                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  }
++}
++
++@keyframes iconPulse {
++  0%, 100% { transform: scale(1); }
++  50% { transform: scale(1.1); }
+ }
+ 
+ /* Waiting verification alert */
+diff --git a/src/app/components/auth/register/register.scss b/src/app/components/auth/register/register.scss
+index 25e644e..8addc25 100644
+--- a/src/app/components/auth/register/register.scss
++++ b/src/app/components/auth/register/register.scss
+@@ -15,29 +15,57 @@
+   margin-top: .5rem;
+ }
+ 
+-/* Error message - Mejorado para mayor visibilidad */
++/* Error message - SÚPER LLAMATIVO */
+ .error {
+   display: block;
+-  padding: 1rem 1.25rem;
++  padding: 1.25rem 1.5rem;
+   margin-top: 1rem;
+-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
+-  border: 2px solid rgba(239, 68, 68, 0.7);
+-  border-radius: 10px;
+-  color: #fee2e2;
+-  font-weight: 600;
+-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
+-              0 0 0 1px rgba(239, 68, 68, 0.2);
+-  animation: fadeIn 0.3s ease-out;
+-  line-height: 1.5;
++  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
++  border: 3px solid #ff3b3b;
++  border-radius: 12px;
++  color: #ffffff;
++  font-weight: 700;
++  font-size: 1.05rem;
++  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++              0 8px 20px rgba(255, 59, 59, 0.4),
++              inset 0 1px 0 rgba(255, 255, 255, 0.1);
++  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
++  line-height: 1.6;
++  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+ 
+   &::before {
+     content: '⚠️  ';
+-    font-size: 1.25rem;
+-    margin-right: 0.5rem;
+-    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
++    font-size: 1.75rem;
++    margin-right: 0.75rem;
++    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
++    animation: iconPulse 1s ease-in-out infinite;
+   }
+ }
+ 
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
++}
++
++@keyframes errorPulse {
++  0%, 100% {
++    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++                0 8px 20px rgba(255, 59, 59, 0.4),
++                inset 0 1px 0 rgba(255, 255, 255, 0.1);
++  }
++  50% {
++    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
++                0 8px 25px rgba(255, 59, 59, 0.6),
++                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  }
++}
++
++@keyframes iconPulse {
++  0%, 100% { transform: scale(1); }
++  50% { transform: scale(1.1); }
++}
++
+ /* Waiting verification alert */
+ .waiting-verification {
+   display: flex;
+-- 
+2.43.0
+
+
+From 3225f4b43951d8d0e8dcb7313ec3b43bef3a1c8e Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 22:04:08 +0000
+Subject: [PATCH 5/7] Apply super prominent error styles to home.scss
+ .auth-error class
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Added SAME super prominent styling to .auth-error in home component
+- Bright red glowing background (0.6→0.5 opacity)
+- 3px solid #ff3b3b border
+- White text with text-shadow for readability
+- Shake animation on appearance
+- Continuous errorPulse glow effect
+- Animated warning icon (⚠️) with iconPulse
+- Large icon (1.75rem) with drop-shadow
+
+This fixes the issue where errors in home page were still using old subtle pink text.
+Now all error messages across the app are consistently SUPER visible.
+---
+ src/app/components/home/home.scss | 48 +++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/src/app/components/home/home.scss b/src/app/components/home/home.scss
+index 472387a..238deb1 100644
+--- a/src/app/components/home/home.scss
++++ b/src/app/components/home/home.scss
+@@ -405,9 +405,53 @@
+ }
+ 
+ .auth-error {
+-  margin-top: .5rem;
+-  color: #fecaca;
++  display: block;
++  margin-top: 1rem;
++  padding: 1.25rem 1.5rem;
++  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
++  border: 3px solid #ff3b3b;
++  border-radius: 12px;
++  color: #ffffff;
+   font-weight: 700;
++  font-size: 1.05rem;
++  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++              0 8px 20px rgba(255, 59, 59, 0.4),
++              inset 0 1px 0 rgba(255, 255, 255, 0.1);
++  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
++  line-height: 1.6;
++  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
++
++  &::before {
++    content: '⚠️  ';
++    font-size: 1.75rem;
++    margin-right: 0.75rem;
++    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
++    animation: iconPulse 1s ease-in-out infinite;
++  }
++}
++
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
++}
++
++@keyframes errorPulse {
++  0%, 100% {
++    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
++                0 8px 20px rgba(255, 59, 59, 0.4),
++                inset 0 1px 0 rgba(255, 255, 255, 0.1);
++  }
++  50% {
++    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
++                0 8px 25px rgba(255, 59, 59, 0.6),
++                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  }
++}
++
++@keyframes iconPulse {
++  0%, 100% { transform: scale(1); }
++  50% { transform: scale(1.1); }
+ }
+ 
+ /* Mensaje de requisitos de contraseña */
+-- 
+2.43.0
+
+
+From 8a4634683730e306dfaad1443d14650f028ef723 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 22:11:23 +0000
+Subject: [PATCH 6/7] Make error messages less aggressive and more balanced
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- Reduced background opacity from 0.6→0.5 to 0.15→0.1 (much more subtle)
+- Changed border from 3px to 2px with 0.6 opacity (still bright but not overwhelming)
+- Reduced padding from 1.25rem→1.5rem to 0.875rem→1rem (smaller box)
+- Removed shake animation on appearance
+- Removed continuous errorPulse animation
+- Removed iconPulse animation on warning icon
+- Kept simple fadeIn animation (smooth entrance only)
+- Reduced icon size from 1.75rem to 1.1rem
+- Reduced font size from 1.05rem to 0.95rem
+- Changed text color to #fee2e2 (softer than pure white)
+- Reduced box-shadow intensity
+
+Error messages are now:
+- Clearly visible with bright border (as requested)
+- Subtle background that doesn't overwhelm
+- No distracting pulsing or shaking
+- Appropriately sized (not too big)
+- Professional and balanced appearance
+---
+ src/app/components/auth/login/login.scss      | 61 +++++++------------
+ .../components/auth/register/register.scss    | 59 +++++++-----------
+ src/app/components/home/home.scss             | 57 ++++++-----------
+ 3 files changed, 63 insertions(+), 114 deletions(-)
+
+diff --git a/src/app/components/auth/login/login.scss b/src/app/components/auth/login/login.scss
+index b06d113..a2737c1 100644
+--- a/src/app/components/auth/login/login.scss
++++ b/src/app/components/auth/login/login.scss
+@@ -2,57 +2,40 @@
+ .form { display: grid; gap: .75rem; }
+ .actions { margin-top: .5rem; }
+ 
+-/* Error message - SÚPER LLAMATIVO */
++/* Error message - Visible pero no agresivo */
+ .error-message {
+   display: block;
+-  padding: 1.25rem 1.5rem;
+-  margin-bottom: 1.5rem;
+-  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
+-  border: 3px solid #ff3b3b;
+-  border-radius: 12px;
+-  color: #ffffff;
+-  font-weight: 700;
+-  font-size: 1.05rem;
+-  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-              0 8px 20px rgba(255, 59, 59, 0.4),
+-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+-  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
+-  line-height: 1.6;
+-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
++  padding: 0.875rem 1rem;
++  margin-bottom: 1rem;
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
++  border: 2px solid rgba(255, 59, 59, 0.6);
++  border-radius: 8px;
++  color: #fee2e2;
++  font-weight: 600;
++  font-size: 0.95rem;
++  box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
++              0 4px 12px rgba(255, 59, 59, 0.15);
++  animation: fadeIn 0.3s ease-out;
++  line-height: 1.5;
+ 
+   &::before {
+     content: '⚠️  ';
+-    font-size: 1.75rem;
+-    margin-right: 0.75rem;
+-    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
+-    animation: iconPulse 1s ease-in-out infinite;
++    font-size: 1.1rem;
++    margin-right: 0.5rem;
+   }
+ }
+ 
+-@keyframes shake {
+-  0%, 100% { transform: translateX(0); }
+-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+-}
+-
+-@keyframes errorPulse {
+-  0%, 100% {
+-    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-                0 8px 20px rgba(255, 59, 59, 0.4),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
++@keyframes fadeIn {
++  from {
++    opacity: 0;
++    transform: translateY(-5px);
+   }
+-  50% {
+-    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
+-                0 8px 25px rgba(255, 59, 59, 0.6),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  to {
++    opacity: 1;
++    transform: translateY(0);
+   }
+ }
+ 
+-@keyframes iconPulse {
+-  0%, 100% { transform: scale(1); }
+-  50% { transform: scale(1.1); }
+-}
+-
+ /* Waiting verification alert */
+ .waiting-verification {
+   display: flex;
+diff --git a/src/app/components/auth/register/register.scss b/src/app/components/auth/register/register.scss
+index 8addc25..b03f989 100644
+--- a/src/app/components/auth/register/register.scss
++++ b/src/app/components/auth/register/register.scss
+@@ -15,57 +15,40 @@
+   margin-top: .5rem;
+ }
+ 
+-/* Error message - SÚPER LLAMATIVO */
++/* Error message - Visible pero no agresivo */
+ .error {
+   display: block;
+-  padding: 1.25rem 1.5rem;
++  padding: 0.875rem 1rem;
+   margin-top: 1rem;
+-  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
+-  border: 3px solid #ff3b3b;
+-  border-radius: 12px;
+-  color: #ffffff;
+-  font-weight: 700;
+-  font-size: 1.05rem;
+-  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-              0 8px 20px rgba(255, 59, 59, 0.4),
+-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+-  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
+-  line-height: 1.6;
+-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
++  border: 2px solid rgba(255, 59, 59, 0.6);
++  border-radius: 8px;
++  color: #fee2e2;
++  font-weight: 600;
++  font-size: 0.95rem;
++  box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
++              0 4px 12px rgba(255, 59, 59, 0.15);
++  animation: fadeIn 0.3s ease-out;
++  line-height: 1.5;
+ 
+   &::before {
+     content: '⚠️  ';
+-    font-size: 1.75rem;
+-    margin-right: 0.75rem;
+-    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
+-    animation: iconPulse 1s ease-in-out infinite;
++    font-size: 1.1rem;
++    margin-right: 0.5rem;
+   }
+ }
+ 
+-@keyframes shake {
+-  0%, 100% { transform: translateX(0); }
+-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+-}
+-
+-@keyframes errorPulse {
+-  0%, 100% {
+-    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-                0 8px 20px rgba(255, 59, 59, 0.4),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
++@keyframes fadeIn {
++  from {
++    opacity: 0;
++    transform: translateY(-5px);
+   }
+-  50% {
+-    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
+-                0 8px 25px rgba(255, 59, 59, 0.6),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  to {
++    opacity: 1;
++    transform: translateY(0);
+   }
+ }
+ 
+-@keyframes iconPulse {
+-  0%, 100% { transform: scale(1); }
+-  50% { transform: scale(1.1); }
+-}
+-
+ /* Waiting verification alert */
+ .waiting-verification {
+   display: flex;
+diff --git a/src/app/components/home/home.scss b/src/app/components/home/home.scss
+index 238deb1..16d92ca 100644
+--- a/src/app/components/home/home.scss
++++ b/src/app/components/home/home.scss
+@@ -406,54 +406,37 @@
+ 
+ .auth-error {
+   display: block;
++  padding: 0.875rem 1rem;
+   margin-top: 1rem;
+-  padding: 1.25rem 1.5rem;
+-  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
+-  border: 3px solid #ff3b3b;
+-  border-radius: 12px;
+-  color: #ffffff;
+-  font-weight: 700;
+-  font-size: 1.05rem;
+-  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-              0 8px 20px rgba(255, 59, 59, 0.4),
+-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+-  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
+-  line-height: 1.6;
+-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
++  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.1));
++  border: 2px solid rgba(255, 59, 59, 0.6);
++  border-radius: 8px;
++  color: #fee2e2;
++  font-weight: 600;
++  font-size: 0.95rem;
++  box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
++              0 4px 12px rgba(255, 59, 59, 0.15);
++  animation: fadeIn 0.3s ease-out;
++  line-height: 1.5;
+ 
+   &::before {
+     content: '⚠️  ';
+-    font-size: 1.75rem;
+-    margin-right: 0.75rem;
+-    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
+-    animation: iconPulse 1s ease-in-out infinite;
++    font-size: 1.1rem;
++    margin-right: 0.5rem;
+   }
+ }
+ 
+-@keyframes shake {
+-  0%, 100% { transform: translateX(0); }
+-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+-}
+-
+-@keyframes errorPulse {
+-  0%, 100% {
+-    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+-                0 8px 20px rgba(255, 59, 59, 0.4),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
++@keyframes fadeIn {
++  from {
++    opacity: 0;
++    transform: translateY(-5px);
+   }
+-  50% {
+-    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
+-                0 8px 25px rgba(255, 59, 59, 0.6),
+-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
++  to {
++    opacity: 1;
++    transform: translateY(0);
+   }
+ }
+ 
+-@keyframes iconPulse {
+-  0%, 100% { transform: scale(1); }
+-  50% { transform: scale(1.1); }
+-}
+-
+ /* Mensaje de requisitos de contraseña */
+ .password-requirements {
+   margin-top: .6rem;
+-- 
+2.43.0
+
+
+From adcc9fc3de65889f6919b38ed45c16b22ee2987a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sat, 15 Nov 2025 22:13:20 +0000
+Subject: [PATCH 7/7] Restore shake animation on error messages
+
+- Re-added shake animation (0.5s on appearance)
+- Kept subtle styling: light background, bright border
+- Removed continuous pulse animations
+- Error now shakes once when it appears to grab attention
+- Then stays static (no distracting continuous animations)
+---
+ src/app/components/auth/login/login.scss       | 15 +++++----------
+ src/app/components/auth/register/register.scss | 15 +++++----------
+ src/app/components/home/home.scss              | 15 +++++----------
+ 3 files changed, 15 insertions(+), 30 deletions(-)
+
+diff --git a/src/app/components/auth/login/login.scss b/src/app/components/auth/login/login.scss
+index a2737c1..46b9638 100644
+--- a/src/app/components/auth/login/login.scss
++++ b/src/app/components/auth/login/login.scss
+@@ -15,7 +15,7 @@
+   font-size: 0.95rem;
+   box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
+               0 4px 12px rgba(255, 59, 59, 0.15);
+-  animation: fadeIn 0.3s ease-out;
++  animation: shake 0.5s ease-out;
+   line-height: 1.5;
+ 
+   &::before {
+@@ -25,15 +25,10 @@
+   }
+ }
+ 
+-@keyframes fadeIn {
+-  from {
+-    opacity: 0;
+-    transform: translateY(-5px);
+-  }
+-  to {
+-    opacity: 1;
+-    transform: translateY(0);
+-  }
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
+ }
+ 
+ /* Waiting verification alert */
+diff --git a/src/app/components/auth/register/register.scss b/src/app/components/auth/register/register.scss
+index b03f989..8319bfc 100644
+--- a/src/app/components/auth/register/register.scss
++++ b/src/app/components/auth/register/register.scss
+@@ -28,7 +28,7 @@
+   font-size: 0.95rem;
+   box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
+               0 4px 12px rgba(255, 59, 59, 0.15);
+-  animation: fadeIn 0.3s ease-out;
++  animation: shake 0.5s ease-out;
+   line-height: 1.5;
+ 
+   &::before {
+@@ -38,15 +38,10 @@
+   }
+ }
+ 
+-@keyframes fadeIn {
+-  from {
+-    opacity: 0;
+-    transform: translateY(-5px);
+-  }
+-  to {
+-    opacity: 1;
+-    transform: translateY(0);
+-  }
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
+ }
+ 
+ /* Waiting verification alert */
+diff --git a/src/app/components/home/home.scss b/src/app/components/home/home.scss
+index 16d92ca..8a80cd2 100644
+--- a/src/app/components/home/home.scss
++++ b/src/app/components/home/home.scss
+@@ -416,7 +416,7 @@
+   font-size: 0.95rem;
+   box-shadow: 0 0 15px rgba(255, 59, 59, 0.25),
+               0 4px 12px rgba(255, 59, 59, 0.15);
+-  animation: fadeIn 0.3s ease-out;
++  animation: shake 0.5s ease-out;
+   line-height: 1.5;
+ 
+   &::before {
+@@ -426,15 +426,10 @@
+   }
+ }
+ 
+-@keyframes fadeIn {
+-  from {
+-    opacity: 0;
+-    transform: translateY(-5px);
+-  }
+-  to {
+-    opacity: 1;
+-    transform: translateY(0);
+-  }
++@keyframes shake {
++  0%, 100% { transform: translateX(0); }
++  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
++  20%, 40%, 60%, 80% { transform: translateX(5px); }
+ }
+ 
+ /* Mensaje de requisitos de contraseña */
+-- 
+2.43.0
+
