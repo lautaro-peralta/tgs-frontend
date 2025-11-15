@@ -17,9 +17,7 @@
 
 /* Error message - Mejorado para mayor visibilidad */
 .error {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  display: block;
   padding: 1rem 1.25rem;
   margin-top: 1rem;
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.35), rgba(220, 38, 38, 0.25));
@@ -30,11 +28,12 @@
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4),
               0 0 0 1px rgba(239, 68, 68, 0.2);
   animation: fadeIn 0.3s ease-out;
+  line-height: 1.5;
 
   &::before {
-    content: '⚠️';
-    font-size: 1.5rem;
-    flex-shrink: 0;
+    content: '⚠️  ';
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
     filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.5));
   }
 }
