@@ -405,9 +405,53 @@
 }
 
 .auth-error {
-  margin-top: .5rem;
-  color: #fecaca;
+  display: block;
+  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 50, 50, 0.6), rgba(220, 38, 38, 0.5));
+  border: 3px solid #ff3b3b;
+  border-radius: 12px;
+  color: #ffffff;
   font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+              0 8px 20px rgba(255, 59, 59, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: shake 0.5s ease-out, errorPulse 2s ease-in-out infinite;
+  line-height: 1.6;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  &::before {
+    content: '⚠️  ';
+    font-size: 1.75rem;
+    margin-right: 0.75rem;
+    filter: drop-shadow(0 3px 6px rgba(255, 59, 59, 0.8));
+    animation: iconPulse 1s ease-in-out infinite;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes errorPulse {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(255, 59, 59, 0.6),
+                0 8px 20px rgba(255, 59, 59, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(255, 59, 59, 0.8),
+                0 8px 25px rgba(255, 59, 59, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
 /* Mensaje de requisitos de contraseña */
