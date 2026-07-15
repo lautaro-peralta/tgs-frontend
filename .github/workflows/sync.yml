@@ -26,4 +26,4 @@ jobs:
 
       - name: Push to fork
         run: |
-          git push origin main
+          git push origin deploy/vercel
