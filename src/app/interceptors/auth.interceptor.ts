@@ -18,8 +18,19 @@ import { logger } from '../core/logger';
 /** Flag para evitar múltiples refresh simultáneos */
 let isRefreshing = false;
 
+/**
+ * Request en cola esperando a que termine el refresh en curso.
+ * - `retry`: reintenta el request original (cuando el refresh fue exitoso).
+ * - `fail`: propaga el error al suscriptor (cuando el refresh falló), en vez de
+ *   reintentar contra una sesión ya inválida.
+ */
+interface PendingRequest {
+  retry: () => void;
+  fail: (error: unknown) => void;
+}
+
 /** Cola de requests que esperan a que termine el refresh */
-let pendingRequests: Array<() => void> = [];
+let pendingRequests: PendingRequest[] = [];
 
 // ============================================================================
 // UTILIDADES
@@ -55,19 +66,22 @@ function isAuthEndpoint(url: string): boolean {
 }
 
 /**
- * Procesa las requests pendientes en la cola
+ * Reintenta todas las requests en cola (refresh exitoso).
  */
 function processPendingRequests(): void {
-  pendingRequests.forEach(callback => callback());
+  const queued = pendingRequests;
   pendingRequests = [];
+  queued.forEach(p => p.retry());
 }
 
 /**
- * Rechaza todas las requests pendientes
+ * Falla todas las requests en cola (refresh fallido): se propaga el error a
+ * cada suscriptor en lugar de reintentar contra una sesión inválida.
  */
-function rejectPendingRequests(error: any): void {
-  pendingRequests.forEach(callback => callback());
+function rejectPendingRequests(error: unknown): void {
+  const queued = pendingRequests;
   pendingRequests = [];
+  queued.forEach(p => p.fail(error));
 }
 
 // ============================================================================
@@ -128,13 +142,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
           logger.debug('[AuthInterceptor] Refresh in progress - queuing request');
 
           return new Observable(observer => {
-            pendingRequests.push(() => {
-              // Reintentar el request original
-              next(req).subscribe({
-                next: (event) => observer.next(event),
-                error: (err) => observer.error(err),
-                complete: () => observer.complete()
-              });
+            pendingRequests.push({
+              // Reintentar el request original cuando el refresh haya terminado bien
+              retry: () => {
+                next(req).subscribe({
+                  next: (event) => observer.next(event),
+                  error: (err) => observer.error(err),
+                  complete: () => observer.complete()
+                });
+              },
+              // Propagar el error si el refresh falló
+              fail: (err) => observer.error(err),
             });
           });
         }
