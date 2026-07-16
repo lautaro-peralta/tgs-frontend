@@ -7,6 +7,7 @@ import { ProductImageService } from '../../services/product-image/product-image'
 import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { logger } from '../../core/logger';
 
 @Component({
   selector: 'app-product',
@@ -48,7 +49,7 @@ export class ProductComponent implements OnInit {
   currentUserDni = computed(() => {
     const user = this.currentUser();
     const dni = (user as any)?.person?.dni;
-    console.log('[ProductComponent] 🔍 Current user DNI:', {
+    logger.debug('[ProductComponent] 🔍 Current user DNI:', {
       hasUser: !!user,
       hasPerson: !!(user as any)?.person,
       dni: dni,
@@ -62,7 +63,7 @@ export class ProductComponent implements OnInit {
   filteredByRole = computed(() => {
     const allProducts = this.products();
 
-    console.log('[ProductComponent] 🔍 Filtering products:', {
+    logger.debug('[ProductComponent] 🔍 Filtering products:', {
       total: allProducts.length,
       isAdmin: this.isAdmin(),
       isPartner: this.isPartner(),
@@ -72,7 +73,7 @@ export class ProductComponent implements OnInit {
 
     // Si es admin o partner, ver todos los productos
     if (this.isAdmin() || this.isPartner()) {
-      console.log('[ProductComponent] 👑 Admin/Partner - showing all products');
+      logger.debug('[ProductComponent] 👑 Admin/Partner - showing all products');
       return allProducts;
     }
 
@@ -81,19 +82,19 @@ export class ProductComponent implements OnInit {
       const userDni = this.currentUserDni();
 
       if (!userDni) {
-        console.warn('[ProductComponent] ⚠️ Distributor has no DNI - cannot filter products');
-        console.warn('[ProductComponent] ⚠️ User might need to complete their profile');
+        logger.warn('[ProductComponent] ⚠️ Distributor has no DNI - cannot filter products');
+        logger.warn('[ProductComponent] ⚠️ User might need to complete their profile');
         return [];
       }
 
       const filtered = allProducts.filter(p => {
         if (!p.distributors || p.distributors.length === 0) {
-          console.log('[ProductComponent] ❌ Product has no distributors:', p.id);
+          logger.debug('[ProductComponent] ❌ Product has no distributors:', p.id);
           return false;
         }
         const match = p.distributors.some(d => {
           const matches = d.dni === userDni;
-          console.log('[ProductComponent] 🔍 Checking distributor:', {
+          logger.debug('[ProductComponent] 🔍 Checking distributor:', {
             productId: p.id,
             distributorDni: d.dni,
             userDni: userDni,
@@ -104,7 +105,7 @@ export class ProductComponent implements OnInit {
         return match;
       });
 
-      console.log('[ProductComponent] ✅ Filtered products for distributor:', {
+      logger.debug('[ProductComponent] ✅ Filtered products for distributor:', {
         userDni: userDni,
         totalProducts: allProducts.length,
         filteredProducts: filtered.length
@@ -114,7 +115,7 @@ export class ProductComponent implements OnInit {
     }
 
     // Otros roles: sin productos
-    console.log('[ProductComponent] ⚠️ User has no role to view products');
+    logger.debug('[ProductComponent] ⚠️ User has no role to view products');
     return [];
   });
 
@@ -244,12 +245,12 @@ export class ProductComponent implements OnInit {
     this.srv.getAllProducts().subscribe({
       next: (r: ApiResponse<ProductDTO[]> | ProductDTO[]) => {
         const data = Array.isArray(r) ? r : (r as any).data;
-        console.log('[ProductComponent] 📥 Products loaded from backend:', data);
+        logger.debug('[ProductComponent] 📥 Products loaded from backend:', data);
 
         // Log detallado de cada producto
         if (data && data.length > 0) {
           data.forEach((p: ProductDTO) => {
-            console.log(`[ProductComponent] Product ${p.id}:`, {
+            logger.debug(`[ProductComponent] Product ${p.id}:`, {
               description: p.description,
               distributors: p.distributors,
               distributorsCount: p.distributors?.length || 0
@@ -264,12 +265,12 @@ export class ProductComponent implements OnInit {
         const currentProductsCount = currentProducts.length;
 
         if (newProductsCount < currentProductsCount) {
-          console.warn('[ProductComponent] ⚠️ Backend returned LESS products than current state:', {
+          logger.warn('[ProductComponent] ⚠️ Backend returned LESS products than current state:', {
             current: currentProductsCount,
             received: newProductsCount,
             difference: currentProductsCount - newProductsCount
           });
-          console.warn('[ProductComponent] ⚠️ Keeping current state to prevent losing recently created products');
+          logger.warn('[ProductComponent] ⚠️ Keeping current state to prevent losing recently created products');
           this.loading.set(false);
           return; // NO sobrescribir el state
         }
@@ -369,25 +370,25 @@ export class ProductComponent implements OnInit {
         const userDni = this.currentUserDni();
         if (userDni) {
           dtoCreate.distributorsIds = [userDni];
-          console.log('[ProductComponent] 📦 Creating product with distributorsIds:', dtoCreate.distributorsIds);
+          logger.debug('[ProductComponent] 📦 Creating product with distributorsIds:', dtoCreate.distributorsIds);
         } else {
-          console.warn('[ProductComponent] ⚠️ Cannot create product: distributor has no DNI');
+          logger.warn('[ProductComponent] ⚠️ Cannot create product: distributor has no DNI');
           this.error.set('No puedes crear productos sin completar tu perfil personal (DNI requerido)');
           this.loading.set(false);
           return;
         }
       }
 
-      console.log('[ProductComponent] 📤 Sending to backend:', dtoCreate);
+      logger.debug('[ProductComponent] 📤 Sending to backend:', dtoCreate);
 
       this.srv.createProduct(dtoCreate).subscribe({
         next: (res: any) => {
-          console.log('[ProductComponent] 📥 Response from backend:', res);
-          console.log('[ProductComponent] 📥 Full response object:', JSON.stringify(res, null, 2));
+          logger.debug('[ProductComponent] 📥 Response from backend:', res);
+          logger.debug('[ProductComponent] 📥 Full response object:', JSON.stringify(res, null, 2));
 
           const created = ('data' in res ? res.data : res) as ProductDTO | null;
 
-          console.log('[ProductComponent] 🔍 Created product:', {
+          logger.debug('[ProductComponent] 🔍 Created product:', {
             id: created?.id,
             description: created?.description,
             distributors: created?.distributors,
@@ -397,9 +398,9 @@ export class ProductComponent implements OnInit {
 
           // ⚠️ ADVERTENCIA: Si distributors está vacío, el backend NO está retornando la relación
           if (!created?.distributors || created.distributors.length === 0) {
-            console.error('[ProductComponent] ❌ BACKEND ERROR: Product created WITHOUT distributors!');
-            console.error('[ProductComponent] ❌ The backend should return the product with distributors populated');
-            console.error('[ProductComponent] ❌ Sent distributorsIds:', dtoCreate.distributorsIds);
+            logger.error('[ProductComponent] ❌ BACKEND ERROR: Product created WITHOUT distributors!');
+            logger.error('[ProductComponent] ❌ The backend should return the product with distributors populated');
+            logger.error('[ProductComponent] ❌ Sent distributorsIds:', dtoCreate.distributorsIds);
           }
 
           if (created?.id) this.imgSvc.set(created.id, img);
@@ -411,7 +412,7 @@ export class ProductComponent implements OnInit {
           // ✅ SOLUCIÓN INMEDIATA: Agregar el producto manualmente al state
           // En lugar de esperar a que Vercel actualice el caché, lo agregamos directamente
           if (created) {
-            console.log('[ProductComponent] ➕ Adding created product to state manually');
+            logger.debug('[ProductComponent] ➕ Adding created product to state manually');
             const currentProducts = this.products();
             const productWithImage = this.imgSvc.overlay([created])[0];
             this.products.set([...currentProducts, productWithImage]);
@@ -420,17 +421,17 @@ export class ProductComponent implements OnInit {
           // ⚠️ WORKAROUND para Vercel: Hacer refreshes para sincronizar con backend
           // Esto asegura que eventualmente tengamos la versión del servidor
           setTimeout(() => {
-            console.log('[ProductComponent] 🔄 Second refresh after creation (2s)...');
+            logger.debug('[ProductComponent] 🔄 Second refresh after creation (2s)...');
             this.load();
           }, 2000);
 
           setTimeout(() => {
-            console.log('[ProductComponent] 🔄 Third refresh after creation (4s)...');
+            logger.debug('[ProductComponent] 🔄 Third refresh after creation (4s)...');
             this.load();
           }, 4000);
 
           setTimeout(() => {
-            console.log('[ProductComponent] 🔄 Fourth refresh after creation (6s)...');
+            logger.debug('[ProductComponent] 🔄 Fourth refresh after creation (6s)...');
             this.load();
           }, 6000);
 
@@ -439,7 +440,7 @@ export class ProductComponent implements OnInit {
         error: err => {
           this.loading.set(false);
           this.error.set(this.parseErrorMessage(err, 'crear'));
-          console.error('[ProductComponent] ❌ Error creating product:', err);
+          logger.error('[ProductComponent] ❌ Error creating product:', err);
         }
       });
     } else {
@@ -467,7 +468,7 @@ export class ProductComponent implements OnInit {
         error: err => {
           this.loading.set(false);
           this.error.set(this.parseErrorMessage(err, 'actualizar'));
-          console.error('Error updating product:', err);
+          logger.error('Error updating product:', err);
         }
       });
     }
@@ -558,7 +559,7 @@ export class ProductComponent implements OnInit {
       error: (err) => {
         this.error.set(err?.error?.message ?? 'Error al eliminar producto');
         this.loading.set(false);
-        console.error('Error deleting product:', err);
+        logger.error('Error deleting product:', err);
       }
     });
   }

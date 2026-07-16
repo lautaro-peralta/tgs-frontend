@@ -18,6 +18,7 @@ import {
   ChartType,
   registerables
 } from 'chart.js';
+import { logger } from '../../core/logger';
 
 // Registrar todos los componentes de Chart.js
 Chart.register(...registerables);
@@ -78,13 +79,13 @@ export class ChartComponent implements OnInit, AfterViewInit, OnChanges, OnDestr
 
   private createChart(): void {
     if (!this.chartCanvas?.nativeElement) {
-      console.error('Canvas element not found');
+      logger.error('Canvas element not found');
       return;
     }
 
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     if (!ctx) {
-      console.error('Could not get canvas context');
+      logger.error('Could not get canvas context');
       return;
     }
 
@@ -95,7 +96,7 @@ export class ChartComponent implements OnInit, AfterViewInit, OnChanges, OnDestr
         options: this.options
       });
     } catch (error) {
-      console.error('Error creating chart:', error);
+      logger.error('Error creating chart:', error);
     }
   }
 

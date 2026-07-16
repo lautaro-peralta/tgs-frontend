@@ -11,6 +11,7 @@ import { AuthService, User, Role } from '../../services/user/user';
 import { ZoneDTO } from '../../models/zone/zona.model';
 import { ProductDTO } from '../../models/product/product.model';
 import { DistributorDTO, CreateDistributorDTO, PatchDistributorDTO } from '../../models/distributor/distributor.model';
+import { logger } from '../../core/logger';
 
 /**
  * DistributorComponent
@@ -177,7 +178,7 @@ export class DistributorComponent implements OnInit {
         this.zones.set(Array.isArray(zones) ? zones : []);
       },
       error: (err) => {
-        console.error('Error loading zones:', err);
+        logger.error('Error loading zones:', err);
       }
     });
   }
@@ -189,7 +190,7 @@ export class DistributorComponent implements OnInit {
         this.products.set(Array.isArray(products) ? products : []);
       },
       error: (err) => {
-        console.error('Error loading products:', err);
+        logger.error('Error loading products:', err);
       }
     });
   }
@@ -199,10 +200,10 @@ export class DistributorComponent implements OnInit {
     this.authSrv.getAllVerifiedUsers('DISTRIBUTOR').subscribe({
       next: (verifiedUsers) => {
         this.users.set(verifiedUsers);
-        console.log(`[DistributorComponent] Loaded ${verifiedUsers.length} verified users eligible for DISTRIBUTOR role`);
+        logger.debug(`[DistributorComponent] Loaded ${verifiedUsers.length} verified users eligible for DISTRIBUTOR role`);
       },
       error: (err) => {
-        console.error('[DistributorComponent] Error loading verified users:', err);
+        logger.error('[DistributorComponent] Error loading verified users:', err);
         this.users.set([]);  // Array vacío en caso de error
       }
     });

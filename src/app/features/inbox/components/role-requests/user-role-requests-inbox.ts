@@ -7,6 +7,7 @@ import { RoleRequestModalComponent } from './role-request-modal';
 import { RoleRequestCardComponent } from './role-request-card';
 import { AuthService } from '../../../../services/auth/auth';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../../core/logger';
 
 @Component({
   selector: 'app-user-role-requests-inbox',
@@ -80,7 +81,7 @@ export class UserRoleRequestsInboxComponent implements OnInit {
       // 🔄 SIEMPRE refrescar el perfil cuando se carga el inbox
       // Esto asegura que los roles estén actualizados después de aprobaciones
       // (aplica para DISTRIBUTOR, PARTNER, AUTHORITY y cualquier rol)
-      console.log('🔄 [UserRoleRequestsInbox] Refreshing profile to ensure roles are up to date...');
+      logger.debug('🔄 [UserRoleRequestsInbox] Refreshing profile to ensure roles are up to date...');
       this.auth.forceRefresh();
     } catch (err: any) {
       this.error = err.error?.message || 'Error al cargar tus solicitudes';

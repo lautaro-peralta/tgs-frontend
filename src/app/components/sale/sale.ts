@@ -23,6 +23,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
+import { logger } from '../../core/logger';
 
 type SaleForm = {
   id: FormControl<number | null>;
@@ -112,7 +113,7 @@ export class SaleComponent implements OnInit {
   currentUserDni = computed(() => {
     const user = this.currentUser();
     const dni = (user as any)?.person?.dni;
-    console.log('[SaleComponent] 🔍 Current user DNI:', {
+    logger.debug('[SaleComponent] 🔍 Current user DNI:', {
       hasUser: !!user,
       hasPerson: !!(user as any)?.person,
       dni: dni,
@@ -179,12 +180,12 @@ export class SaleComponent implements OnInit {
   toggleStats() {
     // ⚖️ Las autoridades (sin rol de admin) no pueden ver estadísticas
     if (this.isAuthority() && !this.isAdmin()) {
-      console.log('⚖️ Authority users cannot view statistics');
+      logger.debug('⚖️ Authority users cannot view statistics');
       return;
     }
 
     const newValue = !this.showStats();
-    console.log('🔄 Toggle stats:', {
+    logger.debug('🔄 Toggle stats:', {
       before: this.showStats(),
       after: newValue,
       hasStats: !!this.stats()
@@ -192,7 +193,7 @@ export class SaleComponent implements OnInit {
     this.showStats.set(newValue);
 
     if (newValue && !this.stats()) {
-      console.log('📊 Loading stats for first time...');
+      logger.debug('📊 Loading stats for first time...');
       this.loadStats();
     }
   }
@@ -215,14 +216,14 @@ export class SaleComponent implements OnInit {
       
       return `${day}/${month}/${year}, ${hours}:${minutes}`;
     } catch (e) {
-      console.error('Error formatting date:', e);
+      logger.error('Error formatting date:', e);
       return '—';
     }
   }
   
   // --- Ciclo de vida ---
   ngOnInit(): void {
-    console.log('🚀 Component initialized. showStats:', this.showStats());
+    logger.debug('🚀 Component initialized. showStats:', this.showStats());
     this.loading.set(true);
     this.error.set(null);
 
@@ -266,9 +267,9 @@ export class SaleComponent implements OnInit {
           distributorList = res.dists.distributors;
         }
         
-        console.log('📦 Products loaded:', productList.length);
-        console.log('👥 Clients loaded:', clientList.length);
-        console.log('🚚 Distributors loaded:', distributorList.length);
+        logger.debug('📦 Products loaded:', productList.length);
+        logger.debug('👥 Clients loaded:', clientList.length);
+        logger.debug('🚚 Distributors loaded:', distributorList.length);
 
         this.products.set(productList);
         this.clients.set(clientList);
@@ -277,20 +278,20 @@ export class SaleComponent implements OnInit {
         this.loadSales();
       },
       error: (err) => { 
-        console.error('❌ Error loading catalog:', err);
+        logger.error('❌ Error loading catalog:', err);
         this.loadSales(); 
       }
     });
   }
 
   loadStats() {
-    console.log('📊 loadStats() called');
+    logger.debug('📊 loadStats() called');
     this.loadingStats.set(true);
     
     const salesData = this.sales();
     
     if (!salesData || salesData.length === 0) {
-      console.warn('⚠️ No sales data available');
+      logger.warn('⚠️ No sales data available');
       this.loadingStats.set(false);
       return;
     }
@@ -690,7 +691,7 @@ export class SaleComponent implements OnInit {
       }]
     };
 
-    console.log('✅ Stats calculated:', stats);
+    logger.debug('✅ Stats calculated:', stats);
 
     this.stats.set(stats);
     this.salesChartOptions.set(salesChart);
@@ -702,7 +703,7 @@ export class SaleComponent implements OnInit {
   private groupSalesByMonth(sales: SaleDTO[]): { month: string; amount: number }[] {
     const monthMap = new Map<string, number>();
     
-    console.log('📅 Grouping sales by month...');
+    logger.debug('📅 Grouping sales by month...');
     
     sales.forEach(sale => {
       const date = new Date(sale.saleDate || sale.date || Date.now());
@@ -713,12 +714,12 @@ export class SaleComponent implements OnInit {
       const saleTotal = this.calculateTotal(sale);
       const currentAmount = monthMap.get(monthKey) || 0;
       
-      console.log(`  Sale #${sale.id}: ${monthKey} -> ${saleTotal} (accumulated: ${currentAmount + saleTotal})`);
+      logger.debug(`  Sale #${sale.id}: ${monthKey} -> ${saleTotal} (accumulated: ${currentAmount + saleTotal})`);
       
       monthMap.set(monthKey, currentAmount + saleTotal);
     });
 
-    console.log('📅 Month map final:', Array.from(monthMap.entries()));
+    logger.debug('📅 Month map final:', Array.from(monthMap.entries()));
 
     const result = Array.from(monthMap.entries())
       .sort((a, b) => a[0].localeCompare(b[0]))
@@ -732,7 +733,7 @@ export class SaleComponent implements OnInit {
         };
       });
     
-    console.log('📅 Final result:', result);
+    logger.debug('📅 Final result:', result);
     return result;
   }
 
@@ -749,7 +750,7 @@ export class SaleComponent implements OnInit {
 
           // Skip if productId is null or undefined
           if (productId == null) {
-            console.warn('⚠️ Product detail without ID found, skipping:', detail);
+            logger.warn('⚠️ Product detail without ID found, skipping:', detail);
             return;
           }
 
@@ -772,14 +773,14 @@ export class SaleComponent implements OnInit {
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
 
-    console.log('🏆 Top 5 products:', result);
+    logger.debug('🏆 Top 5 products:', result);
     return result;
   }
 
   private getSalesByDistributor(sales: SaleDTO[]): { distributorName: string; totalSales: number }[] {
     const distributorMap = new Map<string, number>();
 
-    console.log('🚚 Calculating sales by distributor from', sales.length, 'sales');
+    logger.debug('🚚 Calculating sales by distributor from', sales.length, 'sales');
 
     sales.forEach(sale => {
       const distributorName = sale.distributor?.name || 'Sin distribuidor';
@@ -787,14 +788,14 @@ export class SaleComponent implements OnInit {
       const saleTotal = this.calculateTotal(sale);
       
       distributorMap.set(distributorName, currentAmount + saleTotal);
-      console.log(`  - ${distributorName}: +${saleTotal} (total: ${currentAmount + saleTotal})`);
+      logger.debug(`  - ${distributorName}: +${saleTotal} (total: ${currentAmount + saleTotal})`);
     });
 
     const result = Array.from(distributorMap.entries())
       .map(([distributorName, totalSales]) => ({ distributorName, totalSales }))
       .sort((a, b) => b.totalSales - a.totalSales);
 
-    console.log('🚚 Distributors result:', result);
+    logger.debug('🚚 Distributors result:', result);
     return result;
   }
 
@@ -933,37 +934,37 @@ export class SaleComponent implements OnInit {
   loadSales() {
     this.saleSrv.getAllSales().subscribe({
       next: (list: SaleDTO[]) => {
-        console.log('📋 Sales loaded from backend:', list.length, 'sales');
+        logger.debug('📋 Sales loaded from backend:', list.length, 'sales');
 
         if (list.length > 0) {
-          console.log('🔍 First sale structure:', list[0]);
-          console.log('🔍 Distributor in first sale:', list[0].distributor);
-          console.log('🔍 Client in first sale:', list[0].client);
+          logger.debug('🔍 First sale structure:', list[0]);
+          logger.debug('🔍 Distributor in first sale:', list[0].distributor);
+          logger.debug('🔍 Client in first sale:', list[0].client);
         }
 
         // Filtrar por distribuidor si no es admin
         let filteredSales = list;
         if (this.isDistributor() && !this.isAdmin()) {
           const userDni = this.currentUserDni();
-          console.log('🔍 Filtering sales for distributor DNI:', userDni);
+          logger.debug('🔍 Filtering sales for distributor DNI:', userDni);
 
           if (userDni) {
             filteredSales = list.filter(sale => {
               const distributorDni = sale.distributor?.dni;
               const matches = distributorDni === userDni;
               if (!matches) {
-                console.log('❌ Filtered out sale:', sale.id, 'distributor:', distributorDni);
+                logger.debug('❌ Filtered out sale:', sale.id, 'distributor:', distributorDni);
               }
               return matches;
             });
-            console.log('✅ Filtered sales for distributor:', filteredSales.length, 'of', list.length);
+            logger.debug('✅ Filtered sales for distributor:', filteredSales.length, 'of', list.length);
           } else {
-            console.warn('⚠️ Distributor DNI not found, showing no sales');
+            logger.warn('⚠️ Distributor DNI not found, showing no sales');
             filteredSales = [];
           }
         } else if (this.isAuthority() && !this.isAdmin()) {
           // Autoridad solo ve ventas con productos LEGALES (NO ilegales)
-          console.log('⚖️ Authority user - filtering sales WITHOUT illegal products');
+          logger.debug('⚖️ Authority user - filtering sales WITHOUT illegal products');
 
           const allProducts = this.products();
           filteredSales = list.filter(sale => {
@@ -979,9 +980,9 @@ export class SaleComponent implements OnInit {
             return !hasIllegalProduct;
           });
 
-          console.log('✅ Filtered sales for authority:', filteredSales.length, 'of', list.length, '(only legal products)');
+          logger.debug('✅ Filtered sales for authority:', filteredSales.length, 'of', list.length, '(only legal products)');
         } else if (this.isAdmin()) {
-          console.log('👑 Admin user - showing all sales');
+          logger.debug('👑 Admin user - showing all sales');
         }
 
         this.sales.set(filteredSales);
@@ -989,11 +990,11 @@ export class SaleComponent implements OnInit {
 
         // ⚖️ Las autoridades (sin rol de admin) no cargan estadísticas
         if (filteredSales.length > 0 && !(this.isAuthority() && !this.isAdmin())) {
-          console.log('📊 Auto-loading stats because sales exist');
+          logger.debug('📊 Auto-loading stats because sales exist');
           this.showStats.set(true);
           this.loadStats();
         } else if (this.isAuthority() && !this.isAdmin()) {
-          console.log('⚖️ Authority user - skipping stats auto-load');
+          logger.debug('⚖️ Authority user - skipping stats auto-load');
         }
       },
       error: (err) => {
@@ -1211,9 +1212,9 @@ export class SaleComponent implements OnInit {
 
     forkJoin(createRequests).subscribe({
       next: (results) => {
-        console.log(`? ${results.length} venta(s) creada(s) exitosamente`);
+        logger.debug(`? ${results.length} venta(s) creada(s) exitosamente`);
         if (results.length > 1) {
-          console.log(`?? Se crearon ${results.length} ventas porque hay productos de ${results.length} distribuidores diferentes`);
+          logger.debug(`?? Se crearon ${results.length} ventas porque hay productos de ${results.length} distribuidores diferentes`);
         }
         this.new();
         this.loadSales();
@@ -1225,7 +1226,7 @@ export class SaleComponent implements OnInit {
         const msg = err?.error?.message || this.t.instant('sales.err.create');
         this.error.set(msg);
         this.loading.set(false);
-        console.error('[SALE] Error creating:', err);
+        logger.error('[SALE] Error creating:', err);
       }
     });
   }

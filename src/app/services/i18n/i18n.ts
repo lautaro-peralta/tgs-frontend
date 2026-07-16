@@ -1,6 +1,7 @@
 // src/app/services/i18n/i18n.ts
 import { Injectable, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { logger } from '../../core/logger';
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
@@ -18,7 +19,7 @@ export class I18nService {
     // ✅ Inicializar desde localStorage al crear el servicio
     this.initFromStorage();
     
-    console.log('[I18nService] Initialized with language:', this.current);
+    logger.debug('[I18nService] Initialized with language:', this.current);
   }
 
   /**
@@ -27,7 +28,7 @@ export class I18nService {
   use(lang: 'en' | 'es') {
     this.t.use(lang);
     localStorage.setItem('lang', lang);
-    console.log('[I18nService] Language changed to:', lang);
+    logger.debug('[I18nService] Language changed to:', lang);
   }
 
   /**
@@ -39,13 +40,13 @@ export class I18nService {
     if (saved === 'en' || saved === 'es') {
       // Usar el idioma guardado
       this.t.use(saved);
-      console.log('[I18nService] Using saved language:', saved);
+      logger.debug('[I18nService] Using saved language:', saved);
     } else {
       // Usar idioma del navegador o español por defecto
       const browserLang = this.t.getBrowserLang();
       const langToUse = browserLang?.match(/es|en/) ? browserLang : 'es';
       this.t.use(langToUse);
-      console.log('[I18nService] Using browser language:', langToUse);
+      logger.debug('[I18nService] Using browser language:', langToUse);
     }
   }
 

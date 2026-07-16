@@ -5,6 +5,7 @@ import { EmailVerificationService } from '../services/email.verification';
 import { AuthService } from '../../../services/auth/auth';
 import { EmailVerificationSyncService } from '../../../services/email-verification-sync.service';
 import { firstValueFrom } from 'rxjs';
+import { logger } from '../../../core/logger';
 
 @Component({
   standalone: true,
@@ -326,7 +327,7 @@ export class EmailVerificationComponent implements OnInit {
 
   ngOnInit() {
     const token = this.route.snapshot.paramMap.get('token') || '';
-    console.log('[EmailVerification] Token recibido:', token);
+    logger.debug('[EmailVerification] Token recibido:', token);
 
     if (token) {
       this.run(token);
@@ -338,11 +339,11 @@ export class EmailVerificationComponent implements OnInit {
 
   async run(token: string) {
     try {
-      console.log('[EmailVerification] Verificando token...');
+      logger.debug('[EmailVerification] Verificando token...');
 
       // 1️⃣ Verificar token
       const verifyRes = await firstValueFrom(this.ev.verifyToken(token));
-      console.log('[EmailVerification] Respuesta:', verifyRes);
+      logger.debug('[EmailVerification] Respuesta:', verifyRes);
 
       // ✅ Verificar si fue exitosa
       const isSuccess = verifyRes?.success === true || verifyRes?.data?.success === true;
@@ -355,7 +356,7 @@ export class EmailVerificationComponent implements OnInit {
         };
       }
 
-      console.log('[EmailVerification] ✅ Email verificado en el backend');
+      logger.debug('[EmailVerification] ✅ Email verificado en el backend');
 
       // 2️⃣ Obtener email del usuario para notificar a la pestaña original
       let userEmail = verifyRes?.email || verifyRes?.data?.email;
@@ -368,25 +369,25 @@ export class EmailVerificationComponent implements OnInit {
             const { email } = JSON.parse(raw);
             userEmail = email;
           } catch (e) {
-            console.warn('[EmailVerification] No se pudo obtener email de pendingAuth');
+            logger.warn('[EmailVerification] No se pudo obtener email de pendingAuth');
           }
         }
       }
 
       // 3️⃣ Notificar a la pestaña original que el email fue verificado
       if (userEmail) {
-        console.log('[EmailVerification] Notificando a otras pestañas que el email fue verificado:', userEmail);
+        logger.debug('[EmailVerification] Notificando a otras pestañas que el email fue verificado:', userEmail);
         this.syncService.notifyEmailVerified(userEmail);
       } else {
-        console.warn('[EmailVerification] No se pudo obtener el email para notificar');
+        logger.warn('[EmailVerification] No se pudo obtener el email para notificar');
       }
 
       // 4️⃣ Mostrar mensaje de éxito (sin auto-login ni redirección)
       this.state.set('ok');
-      console.log('[EmailVerification] ✅ Verificación completa. El usuario debe volver a la pestaña anterior.');
+      logger.debug('[EmailVerification] ✅ Verificación completa. El usuario debe volver a la pestaña anterior.');
 
     } catch (e: any) {
-      console.error('[EmailVerification] Error:', e);
+      logger.error('[EmailVerification] Error:', e);
 
       let errorMsg = e?.message || 'Token inválido o expirado';
 
@@ -398,7 +399,7 @@ export class EmailVerificationComponent implements OnInit {
         e?.code === 'EMAIL_ALREADY_VERIFIED';
 
       if (alreadyVerified) {
-        console.log('[EmailVerification] Email ya verificado - tratando como éxito');
+        logger.debug('[EmailVerification] Email ya verificado - tratando como éxito');
 
         // Intentar obtener email de pendingAuth para notificar
         const raw = localStorage.getItem('pendingAuth');

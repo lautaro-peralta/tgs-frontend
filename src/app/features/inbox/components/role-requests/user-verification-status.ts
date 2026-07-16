@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { UserVerificationService } from '../../services/user-verification';
 import { UserVerificationStatusResponse, UserVerificationStatus } from '../../models/user-verification.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../../core/logger';
 
 @Component({
   selector: 'app-user-verification-status',
@@ -67,20 +68,20 @@ async requestVerification(): Promise<void> {
     this.requesting = true;
     this.error = null;
     
-    console.log('[UserVerificationStatus] 📤 Requesting verification:', {
+    logger.debug('[UserVerificationStatus] 📤 Requesting verification:', {
       email: this.userEmail,
       hasCompleteProfile: this.hasCompleteProfile
     });
     
     await this.userVerificationService.requestVerification({ email: this.userEmail });
     
-    console.log('[UserVerificationStatus] ✅ Verification requested successfully');
+    logger.debug('[UserVerificationStatus] ✅ Verification requested successfully');
     
     // Recargar el estado
     await this.loadVerificationStatus();
     
   } catch (err: any) {
-    console.error('[UserVerificationStatus] ❌ Error requesting verification:', err);
+    logger.error('[UserVerificationStatus] ❌ Error requesting verification:', err);
     
     // Manejo detallado de errores
     if (err.status === 500) {

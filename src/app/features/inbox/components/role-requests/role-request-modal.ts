@@ -6,6 +6,7 @@ import { RoleRequestService } from '../../services/role-request';
 import { ZoneService } from '../../../../services/zone/zone';
 import { ProductService } from '../../../../services/product/product';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../../core/logger';
 
 interface RoleOption {
   value: Role;
@@ -118,19 +119,19 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
     this.zoneService.getAllZones().subscribe({
       next: (res: any) => {
         this.zones = res?.data ?? res ?? [];
-        console.log('✅ Zones loaded:', this.zones);
+        logger.debug('✅ Zones loaded:', this.zones);
       },
-      error: (err) => console.error('❌ Error loading zones:', err)
+      error: (err) => logger.error('❌ Error loading zones:', err)
     });
     
     this.productService.getAllProducts().subscribe({
       next: (res: any) => {
         this.products = res?.data ?? res ?? [];
-        console.log('✅ Products loaded:', this.products);
+        logger.debug('✅ Products loaded:', this.products);
         this.loadingCatalogs = false;
       },
       error: (err) => {
-        console.error('❌ Error loading products:', err);
+        logger.error('❌ Error loading products:', err);
         this.loadingCatalogs = false;
       }
     });
@@ -172,7 +173,7 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
     if (this.requestedRole === Role.DISTRIBUTOR) {
       const hasZone = !!this.roleSpecificData.distributorZoneId;
       const hasAddress = !!this.roleSpecificData.distributorAddress?.trim();
-      console.log('🔍 DISTRIBUTOR validation:', { 
+      logger.debug('🔍 DISTRIBUTOR validation:', { 
         hasZone, 
         hasAddress, 
         zoneId: this.roleSpecificData.distributorZoneId,
@@ -185,7 +186,7 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
     if (this.requestedRole === Role.AUTHORITY) {
       const hasRank = !!this.roleSpecificData.authorityRank;
       const hasZone = !!this.roleSpecificData.authorityZoneId;
-      console.log('🔍 AUTHORITY validation:', { 
+      logger.debug('🔍 AUTHORITY validation:', { 
         hasRank, 
         hasZone, 
         rank: this.roleSpecificData.authorityRank,
@@ -429,7 +430,7 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
           productsIds: this.roleSpecificData.distributorProductsIds || []
         };
         
-        console.log('📦 DISTRIBUTOR payload:', JSON.stringify(payload.additionalData, null, 2));
+        logger.debug('📦 DISTRIBUTOR payload:', JSON.stringify(payload.additionalData, null, 2));
         
       } else if (this.requestedRole === Role.AUTHORITY) {
         const rank = this.roleSpecificData.authorityRank;
@@ -453,28 +454,28 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
           zoneId: zoneId
         };
         
-        console.log('⚖️ AUTHORITY payload:', JSON.stringify(payload.additionalData, null, 2));
+        logger.debug('⚖️ AUTHORITY payload:', JSON.stringify(payload.additionalData, null, 2));
       }
 
-      console.group('🚀 SENDING ROLE REQUEST');
-      console.log('Payload completo:', JSON.stringify(payload, null, 2));
-      console.log('Requested Role:', payload.requestedRole);
-      console.log('Additional Data:', payload.additionalData);
-      console.groupEnd();
+      logger.debug('🚀 SENDING ROLE REQUEST');
+      logger.debug('Payload completo:', JSON.stringify(payload, null, 2));
+      logger.debug('Requested Role:', payload.requestedRole);
+      logger.debug('Additional Data:', payload.additionalData);
+      logger.debug();
       
       await this.roleRequestService.createRequest(payload);
       
-      console.log('✅ Role request created successfully');
+      logger.debug('✅ Role request created successfully');
       
       this.requestSubmitted.emit();
       this.resetForm();
       
     } catch (err: any) {
-      console.group('❌ ERROR CREATING ROLE REQUEST');
-      console.error('Error object:', err);
-      console.error('Error response:', err.error);
-      console.error('Status:', err.status);
-      console.groupEnd();
+      logger.debug('❌ ERROR CREATING ROLE REQUEST');
+      logger.error('Error object:', err);
+      logger.error('Error response:', err.error);
+      logger.error('Status:', err.status);
+      logger.debug();
       
       if (err.error?.errors && Array.isArray(err.error.errors)) {
         this.error = err.error.errors.map((e: any) => e.message).join(', ');

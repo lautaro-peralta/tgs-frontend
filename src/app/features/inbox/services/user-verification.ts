@@ -9,6 +9,7 @@ import {
   PaginatedUserVerifications,
   UserVerificationSearchParams,
 } from '../models/user-verification.model';
+import { logger } from '../../../core/logger';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class UserVerificationService {
 // user-verification.ts - ACTUALIZAR el método requestVerification
 
   async requestVerification(data: RequestUserVerificationDTO): Promise<UserVerification> {
-    console.log('[UserVerificationService] 📤 Requesting verification:', data);
+    logger.debug('[UserVerificationService] 📤 Requesting verification:', data);
     
     try {
       const response = await firstValueFrom(
@@ -35,10 +36,10 @@ export class UserVerificationService {
         )
       );
       
-      console.log('[UserVerificationService] ✅ Verification response:', response);
+      logger.debug('[UserVerificationService] ✅ Verification response:', response);
       return response.data;
     } catch (error: any) {
-      console.error('[UserVerificationService] ❌ Request failed:', {
+      logger.error('[UserVerificationService] ❌ Request failed:', {
         status: error.status,
         statusText: error.statusText,
         error: error.error,

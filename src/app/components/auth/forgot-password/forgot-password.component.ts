@@ -5,6 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { PasswordResetService } from '../../../services/password-reset/password-reset.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../core/logger';
 
 @Component({
   standalone: true,
@@ -34,7 +35,7 @@ export class ForgotPasswordComponent {
 
     try {
       const res = await firstValueFrom(this.resetService.requestReset(this.email));
-      console.log('[ForgotPassword] Response:', res);
+      logger.debug('[ForgotPassword] Response:', res);
 
       if (res.success) {
         this.state.set('sent');
@@ -43,7 +44,7 @@ export class ForgotPasswordComponent {
         this.state.set('error');
       }
     } catch (e: any) {
-      console.error('[ForgotPassword] Error:', e);
+      logger.error('[ForgotPassword] Error:', e);
 
       if (this.resetService.isCooldownError(e)) {
         this.error.set(this.translate.instant('auth.forgotPassword.errors.cooldown'));

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
 import { ChartConfiguration } from 'chart.js';
+import { logger } from '../../core/logger';
 
 export interface SalesStats {
   totalSales: number;
@@ -65,7 +66,7 @@ export class StatsService {
 
   getStats(): Observable<SalesStats> {
     if (this.USE_MOCK_DATA) {
-      console.log('📊 Using MOCK stats data');
+      logger.debug('📊 Using MOCK stats data');
       return of(this.getMockStats());
     }
 

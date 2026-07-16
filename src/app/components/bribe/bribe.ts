@@ -11,6 +11,7 @@ import { AuthService, Role } from '../../services/user/user';
 import { BribeDTO } from '../../models/bribe/bribe.model';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../core/logger';
 
 /**
  * BribeComponent
@@ -121,7 +122,7 @@ export class BribeComponent implements OnInit {
         // 🔍 Logging diagnóstico para autoridades
         const currentUser = this.authService.user();
         if (this.isAuthority()) {
-          console.log('[BribeComponent] Authority user info:', {
+          logger.debug('[BribeComponent] Authority user info:', {
             userId: currentUser?.id,
             username: currentUser?.username,
             email: currentUser?.email,
@@ -130,12 +131,12 @@ export class BribeComponent implements OnInit {
           });
 
           if (allBribes.length === 0) {
-            console.warn('[BribeComponent] ⚠️ Authority user received 0 bribes. This could mean:');
-            console.warn('  1. No bribes have been assigned to this authority yet');
-            console.warn('  2. The authority email does not match the user email');
-            console.warn('  3. There are no illegal product sales in this authority\'s zone');
+            logger.warn('[BribeComponent] ⚠️ Authority user received 0 bribes. This could mean:');
+            logger.warn('  1. No bribes have been assigned to this authority yet');
+            logger.warn('  2. The authority email does not match the user email');
+            logger.warn('  3. There are no illegal product sales in this authority\'s zone');
           } else {
-            console.log('[BribeComponent] ✅ Authority bribes:', allBribes.map(b => ({
+            logger.debug('[BribeComponent] ✅ Authority bribes:', allBribes.map(b => ({
               id: b.id,
               totalAmount: b.totalAmount,
               authority: b.authority,

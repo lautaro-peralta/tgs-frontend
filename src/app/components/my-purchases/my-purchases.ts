@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth/auth';
 import { ProductService } from '../../services/product/product';
 import { SaleDTO, SaleDetailDTO } from '../../models/sale/sale.model';
 import { ProductDTO } from '../../models/product/product.model';
+import { logger } from '../../core/logger';
 
 @Component({
   selector: 'app-my-purchases',
@@ -75,12 +76,12 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
    * Carga las compras del usuario actual y la lista de productos
    */
   private loadPurchases(): void {
-    console.log('[MyPurchases] 🔄 Iniciando carga de compras...');
+    logger.debug('[MyPurchases] 🔄 Iniciando carga de compras...');
     this.loading.set(true);
     this.error.set(null);
 
     const currentUser = this.me();
-    console.log('[MyPurchases] 👤 Usuario actual:', {
+    logger.debug('[MyPurchases] 👤 Usuario actual:', {
       username: currentUser?.username,
       email: currentUser?.email,
       hasPersonInfo: !!currentUser?.person
@@ -95,10 +96,10 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: ({ sales, products }) => {
-          console.log('[MyPurchases] ✅ Datos recibidos exitosamente');
-          console.log('[MyPurchases] 📦 Compras del usuario:', sales.length);
-          console.log('[MyPurchases] 🛍️ Productos cargados:', products.length);
-          console.log('[MyPurchases] 📋 Detalle de compras:', sales);
+          logger.debug('[MyPurchases] ✅ Datos recibidos exitosamente');
+          logger.debug('[MyPurchases] 📦 Compras del usuario:', sales.length);
+          logger.debug('[MyPurchases] 🛍️ Productos cargados:', products.length);
+          logger.debug('[MyPurchases] 📋 Detalle de compras:', sales);
 
           // Guardar productos y compras
           this.products.set(products);
@@ -108,12 +109,12 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
           // Validar si hay compras sin detalles
           const purchasesWithoutDetails = sales.filter(s => !s.details || s.details.length === 0);
           if (purchasesWithoutDetails.length > 0) {
-            console.warn('[MyPurchases] ⚠️ Encontradas compras sin detalles:', purchasesWithoutDetails.length);
-            console.warn('[MyPurchases] 📋 Compras sin detalles:', purchasesWithoutDetails);
+            logger.warn('[MyPurchases] ⚠️ Encontradas compras sin detalles:', purchasesWithoutDetails.length);
+            logger.warn('[MyPurchases] 📋 Compras sin detalles:', purchasesWithoutDetails);
           }
         },
         error: (err: HttpErrorResponse) => {
-          console.error('[MyPurchases] ❌ Error al cargar datos');
+          logger.error('[MyPurchases] ❌ Error al cargar datos');
           this.loading.set(false);
           this.handleError(err, 'Error al cargar las compras');
         }
@@ -153,7 +154,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
    * Maneja errores HTTP
    */
   private handleError(error: HttpErrorResponse, fallbackMessage: string): void {
-    console.error('[MyPurchases] ❌ Error HTTP detectado:', {
+    logger.error('[MyPurchases] ❌ Error HTTP detectado:', {
       status: error.status,
       statusText: error.statusText,
       message: error.message,
@@ -165,8 +166,8 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       this.error.set('⚠️ No autorizado. Por favor, inicia sesión nuevamente.');
     } else if (error.status === 403) {
       // Error de permisos - probablemente el usuario no tiene acceso al endpoint
-      console.log('[MyPurchases] ⚠️ Error 403 - Sin permisos para acceder al endpoint');
-      console.log('[MyPurchases] 📋 Detalle del error:', error.error);
+      logger.debug('[MyPurchases] ⚠️ Error 403 - Sin permisos para acceder al endpoint');
+      logger.debug('[MyPurchases] 📋 Detalle del error:', error.error);
 
       this.purchases.set([]);
       this.products.set([]);
@@ -175,13 +176,13 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       this.error.set(`⚠️ ${errorMsg}. Si eres cliente, contacta al administrador.`);
     } else if (error.status === 404) {
       // No se encontraron compras o el endpoint no existe
-      console.log('[MyPurchases] ℹ️ Error 404 - No se encontraron compras');
+      logger.debug('[MyPurchases] ℹ️ Error 404 - No se encontraron compras');
       this.purchases.set([]);
       this.products.set([]);
       // No mostrar error para 404 - simplemente mostrar lista vacía
     } else if (error.status === 400) {
       // Datos inválidos - probablemente perfil incompleto
-      console.log('[MyPurchases] ⚠️ Error 400 - Datos inválidos');
+      logger.debug('[MyPurchases] ⚠️ Error 400 - Datos inválidos');
       this.purchases.set([]);
       this.products.set([]);
 
@@ -198,7 +199,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       this.error.set('⚠️ Error del servidor. Por favor, intenta más tarde.');
     } else {
       // Otros errores
-      console.warn('[MyPurchases] ⚠️ Error no manejado:', error.status, error.error?.message || error.message);
+      logger.warn('[MyPurchases] ⚠️ Error no manejado:', error.status, error.error?.message || error.message);
       this.purchases.set([]);
       this.products.set([]);
       this.error.set(`⚠️ Error ${error.status}: ${error.error?.message || error.message || fallbackMessage}`);
@@ -242,7 +243,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
     // Primero intentar obtener el total directo
     if (purchase.total || purchase.amount || purchase.saleAmount) {
       const total = purchase.total || purchase.amount || purchase.saleAmount || 0;
-      console.log(`[MyPurchases] Total directo para compra #${purchase.id}:`, total);
+      logger.debug(`[MyPurchases] Total directo para compra #${purchase.id}:`, total);
       return total;
     }
 
@@ -257,11 +258,11 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
         }
         return sum;
       }, 0);
-      console.log(`[MyPurchases] Total calculado para compra #${purchase.id}:`, calculated, 'detalles:', purchase.details);
+      logger.debug(`[MyPurchases] Total calculado para compra #${purchase.id}:`, calculated, 'detalles:', purchase.details);
       return calculated;
     }
 
-    console.warn(`[MyPurchases] ⚠️ No se pudo obtener total para compra #${purchase.id}`, purchase);
+    logger.warn(`[MyPurchases] ⚠️ No se pudo obtener total para compra #${purchase.id}`, purchase);
     return 0;
   }
 }

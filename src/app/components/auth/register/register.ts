@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../../services/auth/auth';
 import { EmailVerificationService } from '../../../features/inbox/services/email.verification';
 import { EmailVerificationSyncService } from '../../../services/email-verification-sync.service';
+import { logger } from '../../../core/logger';
 
 @Component({
   selector: 'app-register',
@@ -65,15 +66,15 @@ export class RegisterComponent implements OnDestroy {
     // Effect para detectar cuando el email fue verificado desde otra pestaña
     effect(() => {
       const verificationEvent = this.syncService.emailVerified();
-      console.log('[Register] Effect ejecutado. Verification event:', verificationEvent, 'Waiting:', this.waitingForVerification());
+      logger.debug('[Register] Effect ejecutado. Verification event:', verificationEvent, 'Waiting:', this.waitingForVerification());
 
       if (verificationEvent) {
-        console.log('[Register] ✅ Email verificado detectado!', verificationEvent);
+        logger.debug('[Register] ✅ Email verificado detectado!', verificationEvent);
         if (this.waitingForVerification()) {
-          console.log('[Register] Procediendo con auto-login para:', verificationEvent.email);
+          logger.debug('[Register] Procediendo con auto-login para:', verificationEvent.email);
           this.handleEmailVerifiedFromAnotherTab(verificationEvent.email);
         } else {
-          console.log('[Register] No estamos esperando verificación, ignorando evento');
+          logger.debug('[Register] No estamos esperando verificación, ignorando evento');
         }
       }
     });
@@ -157,21 +158,21 @@ export class RegisterComponent implements OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe({
       next: () => {
-        console.log('[Register] ✅ Registro exitoso');
+        logger.debug('[Register] ✅ Registro exitoso');
         this.loading.set(false);
         this.registrationSuccess.set(true);
         this.needsEmailVerification.set(true);
         this.waitingForVerification.set(true);
 
         // Guardar credenciales para auto-login después de verificación
-        console.log('[Register] Guardando credenciales para auto-login posterior');
+        logger.debug('[Register] Guardando credenciales para auto-login posterior');
         localStorage.setItem('pendingAuth', JSON.stringify({
           email: email!,
           password: password!
         }));
 
         // NO intentar auto-login - solo esperar la verificación
-        console.log('[Register] Esperando verificación de email para:', email);
+        logger.debug('[Register] Esperando verificación de email para:', email);
 
         // Iniciar polling para detectar cuando el email sea verificado
         this.stopPolling = this.syncService.startPollingVerification(email!, 3000);
@@ -182,7 +183,7 @@ export class RegisterComponent implements OnDestroy {
       error: (err) => {
         this.loading.set(false);
         this.error.set(err.message || 'No se pudo registrar');
-        console.error('[Register] Error en registro:', err);
+        logger.error('[Register] Error en registro:', err);
       }
     });
   }
@@ -191,12 +192,12 @@ export class RegisterComponent implements OnDestroy {
    * Maneja cuando el email fue verificado desde otra pestaña
    */
   private handleEmailVerifiedFromAnotherTab(email: string): void {
-    console.log('[Register] Intentando auto-login después de verificación:', email);
+    logger.debug('[Register] Intentando auto-login después de verificación:', email);
 
     // Obtener credenciales de pendingAuth
     const raw = localStorage.getItem('pendingAuth');
     if (!raw) {
-      console.warn('[Register] No hay credenciales pendientes para auto-login');
+      logger.warn('[Register] No hay credenciales pendientes para auto-login');
       this.waitingForVerification.set(false);
       this.router.navigate(['/login'], {
         queryParams: { verified: 'true' }
@@ -209,7 +210,7 @@ export class RegisterComponent implements OnDestroy {
 
       // Verificar que el email coincida
       if (savedEmail.toLowerCase() !== email.toLowerCase()) {
-        console.warn('[Register] El email verificado no coincide con las credenciales guardadas');
+        logger.warn('[Register] El email verificado no coincide con las credenciales guardadas');
         this.waitingForVerification.set(false);
         return;
       }
@@ -222,7 +223,7 @@ export class RegisterComponent implements OnDestroy {
           next: (user) => {
             this.loading.set(false);
             this.waitingForVerification.set(false);
-            console.log('[Register] Auto-login exitoso:', user);
+            logger.debug('[Register] Auto-login exitoso:', user);
 
             // Limpiar credenciales pendientes
             localStorage.removeItem('pendingAuth');
@@ -241,13 +242,13 @@ export class RegisterComponent implements OnDestroy {
           error: (err) => {
             this.loading.set(false);
             this.waitingForVerification.set(false);
-            console.error('[Register] Error en auto-login:', err);
+            logger.error('[Register] Error en auto-login:', err);
             this.error.set('Email verificado, pero ocurrió un error al iniciar sesión.');
             localStorage.removeItem('pendingAuth');
           }
         });
     } catch (e) {
-      console.error('[Register] Error parseando pendingAuth:', e);
+      logger.error('[Register] Error parseando pendingAuth:', e);
       this.waitingForVerification.set(false);
     }
   }
@@ -353,7 +354,7 @@ export class RegisterComponent implements OnDestroy {
    * Reenvía el email de verificación
    */
   resendVerificationEmail(): void {
-    console.log('[Register] 🔄 Botón de reenvío clickeado');
+    logger.debug('[Register] 🔄 Botón de reenvío clickeado');
 
     // Intentar obtener el email de múltiples fuentes
     let emailToUse = this.form.get('email')?.value;
@@ -365,20 +366,20 @@ export class RegisterComponent implements OnDestroy {
         try {
           const parsed = JSON.parse(pendingAuth);
           emailToUse = parsed.email;
-          console.log('[Register] Email obtenido de pendingAuth:', emailToUse);
+          logger.debug('[Register] Email obtenido de pendingAuth:', emailToUse);
         } catch (e) {
-          console.error('[Register] Error parseando pendingAuth:', e);
+          logger.error('[Register] Error parseando pendingAuth:', e);
         }
       }
     }
 
     if (!emailToUse) {
-      console.error('[Register] ❌ No se pudo obtener el email para reenviar');
+      logger.error('[Register] ❌ No se pudo obtener el email para reenviar');
       this.error.set('Por favor ingresa tu email');
       return;
     }
 
-    console.log('[Register] 📧 Reenviando email a:', emailToUse);
+    logger.debug('[Register] 📧 Reenviando email a:', emailToUse);
     this.resendingEmail.set(true);
     this.error.set(null);
 
@@ -388,30 +389,30 @@ export class RegisterComponent implements OnDestroy {
       .subscribe({
         next: (response) => {
           this.resendingEmail.set(false);
-          console.log('[Register] Respuesta del reenvío:', response);
+          logger.debug('[Register] Respuesta del reenvío:', response);
           if (response.success) {
-            console.log('[Register] ✅ Email de verificación reenviado');
+            logger.debug('[Register] ✅ Email de verificación reenviado');
             this.error.set('Email reenviado correctamente. Revisa tu bandeja de entrada.');
 
             // Reiniciar temporizador de cooldown
             this.startResendCooldown();
           } else {
-            console.warn('[Register] ⚠️ Reenvío no exitoso:', response.message);
+            logger.warn('[Register] ⚠️ Reenvío no exitoso:', response.message);
             this.error.set(response.message || 'No se pudo enviar el email.');
           }
         },
         error: (err: HttpErrorResponse) => {
           this.resendingEmail.set(false);
-          console.error('[Register] ❌ Error al reenviar:', err);
+          logger.error('[Register] ❌ Error al reenviar:', err);
 
           // Usar helpers del servicio para detectar errores específicos
           if (this.emailVerificationService.isCooldownError(err)) {
-            console.log('[Register] Error de cooldown detectado');
+            logger.debug('[Register] Error de cooldown detectado');
             this.error.set('Ya enviamos un email recientemente. Por favor espera unos minutos antes de reenviar.');
             // Aún así, reiniciar el temporizador para que el usuario pueda intentar después
             this.startResendCooldown();
           } else if (this.emailVerificationService.isAlreadyVerifiedError(err)) {
-            console.log('[Register] Email ya verificado');
+            logger.debug('[Register] Email ya verificado');
             this.error.set('Tu email ya está verificado. Intenta iniciar sesión.');
             this.needsEmailVerification.set(false);
           } else if (err.status === 404) {
