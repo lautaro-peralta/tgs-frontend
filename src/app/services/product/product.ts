@@ -13,6 +13,7 @@ import {
   CreateProductDTO,
   UpdateProductDTO,
 } from '../../models/product/product.model';
+import { unwrap, unwrapList } from '../../core/http/unwrap';
 
 /**
  * Servicio para gestión de productos
@@ -43,7 +44,7 @@ export class ProductService {
         'Expires': '0'
       }
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO[])
+      map(res => unwrapList<ProductDTO>(res))
     );
   }
 
@@ -66,7 +67,7 @@ export class ProductService {
     return this.http.get<ApiResponse<ProductDTO>>(`${this.base}/${id}`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO)
+      map(res => unwrap<ProductDTO>(res))
     );
   }
 
@@ -129,7 +130,7 @@ export class ProductService {
       params: params as any,
       withCredentials: true
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO[])
+      map(res => unwrapList<ProductDTO>(res))
     );
   }
 }

@@ -5,7 +5,7 @@
 // distribuidor puede ofrecer productos con su información de zona.
 // ============================================================================
 
-import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -13,43 +13,14 @@ import { ProductService } from '../../services/product/product';
 import { ProductImageService } from '../../services/product-image/product-image';
 import { AuthService } from '../../services/auth/auth';
 import { SaleService } from '../../services/sale/sale';
+import { CartService } from '../../services/cart/cart';
 import { ApiResponse, ProductDTO, ProductOffer } from '../../models/product/product.model';
+import { unwrapList } from '../../core/http/unwrap';
+import { logger } from '../../core/logger';
 import { TranslateModule } from '@ngx-translate/core';
 import { PurchaseSuccessModalComponent, PurchaseSuccessData } from '../../components/purchase-success-modal/purchase-success-modal';
 import { forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-type CartItem = {
-  offerId: string;          // "productId-distributorDni"
-  productId: number;        // ID del producto base
-  distributorDni: string;   // DNI del distribuidor
-  distributorName: string;  // Nombre del distribuidor
-  description: string;
-  price: number;
-  imageUrl?: string | null;
-  qty: number;
-  zone?: {
-    id: number;
-    name: string;
-    isHeadquarters?: boolean;
-  } | null;
-};
-
-type DistributorGroup = {
-  dni: string;
-  name: string;
-  zone?: {
-    id: number;
-    name: string;
-    isHeadquarters?: boolean;
-  } | null;
-  items: CartItem[];
-  subtotal: number;
-};
 
 @Component({
   selector: 'app-store',
@@ -73,6 +44,7 @@ export class StoreComponent implements OnInit {
   private imgSvc = inject(ProductImageService, { optional: true as any });
   private authService = inject(AuthService);
   private saleService = inject(SaleService);
+  private cartSrv = inject(CartService);
   private router = inject(Router);
 
   // ============================================================================
@@ -108,8 +80,7 @@ export class StoreComponent implements OnInit {
         });
       }
     });
-    
-    console.log('🛒 Offers generated:', offersList.length);
+
     return offersList;
   });
 
@@ -136,16 +107,13 @@ export class StoreComponent implements OnInit {
   });
 
   // ============================================================================
-  // STATE - Carrito
+  // STATE - Carrito (delegado en CartService: fuente única de verdad)
   // ============================================================================
-  
-  private LS_KEY = 'cart.marketplace.v1';
-  private itemsSig = signal<CartItem[]>(this.loadCart());
-  
+
   cart = {
-    items: () => this.itemsSig(),
-    count: () => this.itemsSig().reduce((a, it) => a + it.qty, 0),
-    total: () => this.itemsSig().reduce((a, it) => a + it.qty * (it.price ?? 0), 0),
+    items: () => this.cartSrv.items(),
+    count: () => this.cartSrv.count(),
+    total: () => this.cartSrv.total(),
   };
 
   // ============================================================================
@@ -161,66 +129,14 @@ export class StoreComponent implements OnInit {
   purchaseData = signal<PurchaseSuccessData | null>(null);
 
   // ============================================================================
-  // COMPUTED - Agrupación por Distribuidor
+  // COMPUTED - Agrupación por Distribuidor (delegada en CartService)
   // ============================================================================
-  
-  /**
-   * Agrupa los items del carrito por distribuidor
-   */
-  cartByDistributor = computed(() => {
-    const items = this.itemsSig();
-    const grouped = new Map<string, CartItem[]>();
-    
-    items.forEach(item => {
-      if (!grouped.has(item.distributorDni)) {
-        grouped.set(item.distributorDni, []);
-      }
-      grouped.get(item.distributorDni)!.push(item);
-    });
-    
-    return grouped;
-  });
 
   /**
-   * Lista de distribuidores seleccionados (con items en el carrito)
+   * Lista de distribuidores seleccionados (con items en el carrito), con
+   * subtotal por distribuidor. La agrupación vive en el CartService.
    */
-  selectedDistributors = computed(() => {
-    const grouped = this.cartByDistributor();
-    const distributors: DistributorGroup[] = [];
-    
-    grouped.forEach((items, dni) => {
-      if (items.length > 0) {
-        const firstItem = items[0];
-        distributors.push({
-          dni: dni,
-          name: firstItem.distributorName,
-          zone: firstItem.zone,
-          items: items,
-          subtotal: items.reduce((sum, item) => sum + (item.price * item.qty), 0)
-        });
-      }
-    });
-    
-    return distributors;
-  });
-
-  /**
-   * Verifica si hay múltiples distribuidores
-   */
-  hasMultipleDistributors = computed(() => this.selectedDistributors().length > 1);
-
-  /**
-   * Primer distribuidor (para compatibilidad con código existente)
-   */
-  selectedDistributor = computed(() => {
-    const distributors = this.selectedDistributors();
-    if (distributors.length === 0) return null;
-    return {
-      dni: distributors[0].dni,
-      name: distributors[0].name,
-      zone: distributors[0].zone
-    };
-  });
+  selectedDistributors = computed(() => this.cartSrv.distributorGroups());
 
   // ============================================================================
   // COMPUTED - Disponibilidad
@@ -248,13 +164,9 @@ export class StoreComponent implements OnInit {
   
   bumpCart() { return this.bumpSig(); }
 
-  toggleCartDrawer() { 
-    this.showCart.set(!this.showCart()); 
+  toggleCartDrawer() {
+    this.showCart.set(!this.showCart());
   }
-
-  productsByDistributor = computed(() => {
-    return this.cartByDistributor();
-  });
 
   getDistributorSubtotal(dni: string): number {
     const dist = this.selectedDistributors().find(d => d.dni === dni);
@@ -278,29 +190,19 @@ export class StoreComponent implements OnInit {
     this.loading.set(true);
     this.error.set(null);
 
-    console.log('[StoreComponent] 🔄 Refreshing products from backend...');
+    logger.debug('[StoreComponent] Refreshing products from backend...');
 
     this.productsSrv.getAllProducts().subscribe({
       next: (r: ApiResponse<ProductDTO[]> | ProductDTO[]) => {
-        const data = Array.isArray(r) ? r : (r as any).data;
-        console.log('[StoreComponent] 📥 Received products:', data?.length || 0);
-
-        // Log products with their distributors
-        if (data && data.length > 0) {
-          const productsWithDistributors = data.filter((p: ProductDTO) => p.distributors && p.distributors.length > 0);
-          console.log('[StoreComponent] 📊 Products with distributors:', productsWithDistributors.length, '/', data.length);
-
-          if (productsWithDistributors.length < data.length) {
-            console.warn('[StoreComponent] ⚠️ Some products have NO distributors and will not appear in store');
-          }
-        }
+        const data = unwrapList<ProductDTO>(r);
+        logger.debug('[StoreComponent] Received products:', data.length);
 
         const overlay = this.imgSvc?.overlay?.bind(this.imgSvc) ?? ((arr: ProductDTO[]) => arr);
-        this.products.set(overlay(data ?? []));
+        this.products.set(overlay(data));
         this.loading.set(false);
       },
       error: (err) => {
-        console.error('[StoreComponent] ❌ Error loading products:', err);
+        logger.error('[StoreComponent] Error loading products:', err);
         this.error.set(err?.error?.message ?? 'Error al cargar productos');
         this.loading.set(false);
       },
@@ -331,79 +233,44 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   
   /**
-   * Agrega una oferta al carrito
+   * Agrega una oferta al carrito (delegado en CartService)
    */
   onAddClick(event: Event, offer: ProductOffer): void {
     event.stopPropagation();
-    
+
     if (!this.isOfferAvailable(offer.offerId)) {
       return;
     }
 
-    const items = this.itemsSig();
-    const existing = items.find(it => it.offerId === offer.offerId);
+    this.cartSrv.add({
+      offerId: offer.offerId,
+      productId: offer.productId,
+      distributorDni: offer.distributorDni,
+      distributorName: offer.distributorName,
+      description: offer.description,
+      price: offer.price,
+      imageUrl: offer.imageUrl,
+      zone: offer.zone,
+    });
 
-    if (existing) {
-      existing.qty++;
-      this.itemsSig.set([...items]);
-    } else {
-      const newItem: CartItem = {
-        offerId: offer.offerId,
-        productId: offer.productId,
-        distributorDni: offer.distributorDni,
-        distributorName: offer.distributorName,
-        description: offer.description,
-        price: offer.price,
-        imageUrl: offer.imageUrl,
-        qty: 1,
-        zone: offer.zone
-      };
-      this.itemsSig.set([...items, newItem]);
-    }
-
-    this.saveCart();
     this.bump();
     this.flashId.set(offer.offerId);
     setTimeout(() => this.flashId.set(null), 600);
   }
 
-  /**
-   * Incrementar cantidad
-   */
+  /** Incrementar cantidad */
   inc(offerId: string): void {
-    const items = this.itemsSig();
-    const it = items.find(x => x.offerId === offerId);
-    if (it) {
-      it.qty++;
-      this.itemsSig.set([...items]);
-      this.saveCart();
-    }
+    this.cartSrv.inc(offerId);
   }
 
-  /**
-   * Decrementar cantidad
-   */
+  /** Decrementar cantidad (elimina si llega a 0) */
   dec(offerId: string): void {
-    const items = this.itemsSig();
-    const it = items.find(x => x.offerId === offerId);
-    if (it) {
-      it.qty--;
-      if (it.qty <= 0) {
-        this.remove(offerId);
-      } else {
-        this.itemsSig.set([...items]);
-        this.saveCart();
-      }
-    }
+    this.cartSrv.dec(offerId);
   }
 
-  /**
-   * Eliminar item del carrito
-   */
+  /** Eliminar item del carrito */
   remove(offerId: string): void {
-    const items = this.itemsSig().filter(it => it.offerId !== offerId);
-    this.itemsSig.set(items);
-    this.saveCart();
+    this.cartSrv.remove(offerId);
   }
 
   /**
@@ -412,40 +279,6 @@ export class StoreComponent implements OnInit {
   private bump(): void {
     this.bumpSig.set(true);
     setTimeout(() => this.bumpSig.set(false), 300);
-  }
-
-  /**
-   * Guardar carrito en localStorage
-   */
-  private saveCart(): void {
-    try {
-      localStorage.setItem(this.LS_KEY, JSON.stringify(this.itemsSig()));
-    } catch (e) {
-      console.error('Error saving cart:', e);
-    }
-  }
-
-  /**
-   * Cargar carrito desde localStorage
-   */
-  private loadCart(): CartItem[] {
-    try {
-      const raw = localStorage.getItem(this.LS_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      console.error('Error loading cart:', e);
-      return [];
-    }
-  }
-
-  /**
-   * Limpiar carrito
-   */
-  private clearCart(): void {
-    this.itemsSig.set([]);
-    this.saveCart();
   }
 
   // ============================================================================
@@ -467,7 +300,7 @@ export class StoreComponent implements OnInit {
     this.processing.set(true);
     this.error.set(null);
 
-    console.log('🛒 Starting checkout for', distributors.length, 'distributor(s)');
+    logger.debug('🛒 Starting checkout for', distributors.length, 'distributor(s)');
 
     // ✅ Obtener el usuario autenticado
     const user = this.authService.user();
@@ -479,7 +312,7 @@ export class StoreComponent implements OnInit {
       return;
     }
 
-    console.log('👤 Client DNI:', clientDni);
+    logger.debug('👤 Client DNI:', clientDni);
 
     // ✅ Crear una compra por cada distribuidor
     const saleRequests = distributors.map(dist => {
@@ -492,7 +325,7 @@ export class StoreComponent implements OnInit {
         }))
       };
 
-      console.log('📤 Creating sale for distributor:', dist.name, salePayload);
+      logger.debug('📤 Creating sale for distributor:', dist.name, salePayload);
 
       return this.saleService.createSale(salePayload).pipe(
         map(response => ({
@@ -502,7 +335,7 @@ export class StoreComponent implements OnInit {
           error: null
         })),
         catchError(error => {
-          console.error('❌ Error creating sale for', dist.name, ':', error);
+          logger.error('❌ Error creating sale for', dist.name, ':', error);
           return of({
             success: false,
             distributor: dist,
@@ -516,7 +349,7 @@ export class StoreComponent implements OnInit {
     // ✅ Ejecutar todas las compras en paralelo
     forkJoin(saleRequests).subscribe({
       next: (results) => {
-        console.log('✅ All sales completed:', results);
+        logger.debug('✅ All sales completed:', results);
         
         const successfulSales = results.filter(r => r.success);
         const failedSales = results.filter(r => !r.success);
@@ -534,7 +367,7 @@ export class StoreComponent implements OnInit {
         // Al menos una fue exitosa
         if (failedSales.length > 0) {
           // Algunas fallaron
-          console.warn('⚠️ Some sales failed:', failedSales);
+          logger.warn('⚠️ Some sales failed:', failedSales);
           this.error.set(
             `${successfulSales.length} de ${results.length} compras se completaron. ` +
             `Fallaron: ${failedSales.map(f => f.distributor.name).join(', ')}`
@@ -593,11 +426,11 @@ export class StoreComponent implements OnInit {
         }
 
         this.showSuccessModal.set(true);
-        this.clearCart();
+        this.cartSrv.clear();
         this.showCart.set(false);
       },
       error: (err) => {
-        console.error('❌ Fatal error in checkout:', err);
+        logger.error('❌ Fatal error in checkout:', err);
         this.processing.set(false);
         this.error.set('Error fatal al procesar las compras. Por favor, intente nuevamente.');
       }

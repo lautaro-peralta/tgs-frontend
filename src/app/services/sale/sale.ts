@@ -2,7 +2,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   ApiResponse,
@@ -11,6 +11,8 @@ import {
   UpdateSaleDTO,
   SaleDetailDTO,
 } from '../../models/sale/sale.model';
+import { unwrap, unwrapList } from '../../core/http/unwrap';
+import { logger } from '../../core/logger';
 
 /**
  * Respuesta extendida del backend al crear una venta
@@ -41,11 +43,7 @@ export class SaleService {
     return this.http.get<ApiResponse<SaleDTO[]>>(this.base, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (Array.isArray(res)) return res;
-        if (res?.data && Array.isArray(res.data)) return res.data;
-        return [];
-      })
+      map(res => unwrapList<SaleDTO>(res))
     );
   }
 
@@ -54,31 +52,11 @@ export class SaleService {
    * El backend automáticamente filtra por el DNI del usuario autenticado
    */
   getMyPurchases(): Observable<SaleDTO[]> {
-    console.log('[SaleService] 📦 Fetching my purchases from:', `${this.base}/my-purchases`);
-
+    logger.debug('[SaleService] Fetching my purchases');
     return this.http.get<ApiResponse<SaleDTO[]>>(`${this.base}/my-purchases`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        console.log('[SaleService] 📥 Raw response received:', res);
-        console.log('[SaleService] 📊 Response type:', typeof res);
-        console.log('[SaleService] 🔍 Is array?', Array.isArray(res));
-        console.log('[SaleService] 🔍 Has data property?', res?.data !== undefined);
-        console.log('[SaleService] 🔍 Is data array?', Array.isArray(res?.data));
-
-        if (Array.isArray(res)) {
-          console.log('[SaleService] ✅ Using response as direct array. Length:', res.length);
-          return res;
-        }
-        if (res?.data && Array.isArray(res.data)) {
-          console.log('[SaleService] ✅ Using response.data as array. Length:', res.data.length);
-          return res.data;
-        }
-
-        console.warn('[SaleService] ⚠️ Response format not recognized. Returning empty array.');
-        console.warn('[SaleService] 📋 Response structure:', JSON.stringify(res, null, 2));
-        return [];
-      })
+      map(res => unwrapList<SaleDTO>(res))
     );
   }
 
@@ -87,10 +65,7 @@ export class SaleService {
     return this.http.get<ApiResponse<SaleDTO>>(`${this.base}/${id}`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (res?.data) return res.data;
-        return res;
-      })
+      map(res => unwrap<SaleDTO>(res))
     );
   }
 
@@ -105,7 +80,7 @@ export class SaleService {
 // src/app/services/sale/sale.service.ts - SOLO CAMBIAR createSale()
 
   createSale(payload: CreateSaleDTO): Observable<ApiResponse<SaleDTO>> {
-    console.log('🔵 SaleService.createSale - Raw payload received:', payload);
+    logger.debug('[SaleService] createSale - raw payload:', payload);
 
     const detailsArray = (payload.details || []).map((d: SaleDetailDTO) => ({
       productId: Number(d.productId),
@@ -130,10 +105,8 @@ export class SaleService {
       };
     }
 
-    console.log('🔵 SaleService.createSale - Normalized payload:', normalizedPayload);
-    console.log('🔵 Sending POST to:', this.base);
+    logger.debug('[SaleService] createSale - normalized payload:', normalizedPayload);
 
-    // ✅ AGREGAR withCredentials
     return this.http.post<ApiResponse<SaleDTO>>(
       this.base,
       normalizedPayload,
@@ -169,11 +142,7 @@ export class SaleService {
       params: params as any,
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (Array.isArray(res)) return res;
-        if (res?.data && Array.isArray(res.data)) return res.data;
-        return [];
-      })
+      map(res => unwrapList<SaleDTO>(res))
     );
   }
 }
