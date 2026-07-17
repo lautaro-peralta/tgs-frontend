@@ -7,6 +7,7 @@ import {
   NotificationSearchParams,
   PaginatedNotifications,
 } from '../models/notification.model';
+import { logger } from '../../../core/logger';
 
 @Injectable({
   providedIn: 'root'
@@ -93,13 +94,13 @@ export class NotificationService {
       return response.count;
     } catch (error: any) {
       // Fallback: si el endpoint falla, obtener todas las notificaciones y contar
-      console.warn('[NotificationService] Error fetching unread count, using fallback method:', error?.error?.message || error?.message);
+      logger.warn('[NotificationService] Error fetching unread count, using fallback method:', error?.error?.message || error?.message);
 
       try {
         const notifications = await this.getMyNotifications();
         return notifications.filter(n => n.status === 'UNREAD').length;
       } catch (fallbackError) {
-        console.error('[NotificationService] Fallback method also failed:', fallbackError);
+        logger.error('[NotificationService] Fallback method also failed:', fallbackError);
         // En caso de error total, retornar 0 para no romper la UI
         return 0;
       }

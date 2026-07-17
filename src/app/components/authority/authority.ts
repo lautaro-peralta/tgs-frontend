@@ -9,6 +9,7 @@ import { ApiResponse, AuthorityDTO, CreateAuthorityDTO, UpdateAuthorityDTO, Patc
 import { AuthService, User, Role } from '../../services/user/user';
 import { ZoneService } from '../../services/zone/zone';
 import { ZoneDTO } from '../../models/zone/zona.model';
+import { logger } from '../../core/logger';
 
 type Mode = 'fromUser' | 'manual';
 
@@ -477,7 +478,7 @@ export class AuthorityComponent implements OnInit {
         this.zones.set(Array.isArray(zones) ? zones : []);
       },
       error: (err) => {
-        console.error('Error loading zones:', err);
+        logger.error('Error loading zones:', err);
       }
     });
   }
@@ -486,21 +487,21 @@ export class AuthorityComponent implements OnInit {
     // Verificar rol actual del usuario
     const currentUser = this.authSrv.user();
     const userRoles = currentUser?.roles || [];
-    console.log('[AuthorityComponent] Current user roles:', userRoles);
-    console.log('[AuthorityComponent] isAdmin:', this.isAdmin());
-    console.log('[AuthorityComponent] isPartner:', this.isPartner());
+    logger.debug('[AuthorityComponent] Current user roles:', userRoles);
+    logger.debug('[AuthorityComponent] isAdmin:', this.isAdmin());
+    logger.debug('[AuthorityComponent] isPartner:', this.isPartner());
 
     // Filtrar usuarios elegibles para ser AUTHORITY
     this.authSrv.getAllVerifiedUsers('AUTHORITY').subscribe({
       next: (verifiedUsers) => {
-        console.log('[AuthorityComponent] Raw response from getAllVerifiedUsers:', verifiedUsers);
-        console.log(`[AuthorityComponent] Loaded ${verifiedUsers.length} verified users eligible for AUTHORITY role`);
+        logger.debug('[AuthorityComponent] Raw response from getAllVerifiedUsers:', verifiedUsers);
+        logger.debug(`[AuthorityComponent] Loaded ${verifiedUsers.length} verified users eligible for AUTHORITY role`);
         this.users.set(verifiedUsers);
       },
       error: (err) => {
-        console.error('[AuthorityComponent] Error loading verified users:', err);
-        console.error('[AuthorityComponent] Error status:', err?.status);
-        console.error('[AuthorityComponent] Error message:', err?.error?.message || err?.message);
+        logger.error('[AuthorityComponent] Error loading verified users:', err);
+        logger.error('[AuthorityComponent] Error status:', err?.status);
+        logger.error('[AuthorityComponent] Error message:', err?.error?.message || err?.message);
         this.users.set([]);  // Array vacío en caso de error
       }
     });

@@ -5,7 +5,7 @@
  * Se encarga de la inicialización de servicios críticos como autenticación
  * e internacionalización, y proporciona la estructura base de la aplicación.
  */
-import { Component, OnInit, inject, computed } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth/auth';
@@ -14,6 +14,7 @@ import { NavbarComponent } from './components/navbar/navbar';
 import { AuthTransitionService } from './services/ui/auth-transition';
 import { FooterComponent } from './shared/footer/footer';
 import { TranslateModule } from '@ngx-translate/core';
+import { logger } from './core/logger';
 /**
  * Componente raíz de la aplicación
  * 
@@ -42,12 +43,10 @@ export class AppComponent implements OnInit {
    * - Configurar el idioma actual del sistema de internacionalización
    */
   ngOnInit(): void {
-    console.log('[AppComponent] Initializing...');
+    logger.debug('[AppComponent] Initializing... language:', this.i18n.current);
 
-    // I18nService ya se inicializa automáticamente en su constructor
-    console.log('[AppComponent] Current language:', this.i18n.current);
-
-    // Inicializar AuthService para restaurar sesión del usuario si existe
+    // I18nService ya se inicializa automáticamente en su constructor.
+    // Inicializar AuthService para restaurar sesión del usuario si existe.
     this.auth.initialize();
   }
 }

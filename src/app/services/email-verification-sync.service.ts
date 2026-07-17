@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { EmailVerificationService } from '../features/inbox/services/email.verification';
+import { logger } from '../core/logger';
 
 /**
  * Servicio para sincronizar el estado de verificación de email entre pestañas
@@ -25,14 +26,14 @@ export class EmailVerificationSyncService {
   private initializeBroadcastChannel(): void {
     try {
       if ('BroadcastChannel' in window) {
-        console.log('[EmailVerificationSync] Inicializando BroadcastChannel');
+        logger.debug('[EmailVerificationSync] Inicializando BroadcastChannel');
         this.channel = new BroadcastChannel(this.CHANNEL_NAME);
 
         // Escuchar mensajes de otras pestañas
         this.channel.onmessage = (event) => {
-          console.log('[EmailVerificationSync] Mensaje recibido via BroadcastChannel:', event.data);
+          logger.debug('[EmailVerificationSync] Mensaje recibido via BroadcastChannel:', event.data);
           if (event.data.type === 'EMAIL_VERIFIED') {
-            console.log('[EmailVerificationSync] ✅ Email verificado detectado via BroadcastChannel:', event.data.email);
+            logger.debug('[EmailVerificationSync] ✅ Email verificado detectado via BroadcastChannel:', event.data.email);
             this.emailVerified.set({
               email: event.data.email,
               timestamp: event.data.timestamp
@@ -40,10 +41,10 @@ export class EmailVerificationSyncService {
           }
         };
       } else {
-        console.warn('[EmailVerificationSync] BroadcastChannel no está disponible en este navegador');
+        logger.warn('[EmailVerificationSync] BroadcastChannel no está disponible en este navegador');
       }
     } catch (error) {
-      console.warn('[EmailVerificationSync] Error inicializando BroadcastChannel:', error);
+      logger.warn('[EmailVerificationSync] Error inicializando BroadcastChannel:', error);
     }
   }
 
@@ -51,7 +52,7 @@ export class EmailVerificationSyncService {
    * Notifica a todas las pestañas que el email fue verificado
    */
   notifyEmailVerified(email: string): void {
-    console.log('[EmailVerificationSync] Notificando que email fue verificado:', email);
+    logger.debug('[EmailVerificationSync] Notificando que email fue verificado:', email);
 
     const message = {
       type: 'EMAIL_VERIFIED',
@@ -62,17 +63,17 @@ export class EmailVerificationSyncService {
     // Enviar via BroadcastChannel
     if (this.channel) {
       try {
-        console.log('[EmailVerificationSync] Enviando mensaje via BroadcastChannel:', message);
+        logger.debug('[EmailVerificationSync] Enviando mensaje via BroadcastChannel:', message);
         this.channel.postMessage(message);
       } catch (error) {
-        console.warn('[EmailVerificationSync] Error enviando mensaje via BroadcastChannel:', error);
+        logger.warn('[EmailVerificationSync] Error enviando mensaje via BroadcastChannel:', error);
       }
     } else {
-      console.warn('[EmailVerificationSync] BroadcastChannel no disponible, usando solo localStorage');
+      logger.warn('[EmailVerificationSync] BroadcastChannel no disponible, usando solo localStorage');
     }
 
     // También guardar en localStorage como fallback
-    console.log('[EmailVerificationSync] Guardando evento en localStorage');
+    logger.debug('[EmailVerificationSync] Guardando evento en localStorage');
     localStorage.setItem('emailVerificationEvent', JSON.stringify(message));
 
     // Limpiar después de 5 segundos para no dejar basura
@@ -92,13 +93,13 @@ export class EmailVerificationSyncService {
    * Fallback para navegadores que no soportan BroadcastChannel
    */
   startPollingVerification(email: string, intervalMs: number = 3000): () => void {
-    console.log('[EmailVerificationSync] Iniciando polling para email:', email);
+    logger.debug('[EmailVerificationSync] Iniciando polling para email:', email);
 
     const interval = setInterval(() => {
-      console.log('[EmailVerificationSync] Verificando estado del email:', email);
+      logger.debug('[EmailVerificationSync] Verificando estado del email:', email);
       this.emailVerificationService.status(email).subscribe({
         next: (response) => {
-          console.log('[EmailVerificationSync] Respuesta del polling:', response);
+          logger.debug('[EmailVerificationSync] Respuesta del polling:', response);
 
           // ✅ Verificar correctamente el estado (backend devuelve data.status === 'verified')
           const isVerified = response.verified === true ||
@@ -106,25 +107,25 @@ export class EmailVerificationSyncService {
                            response.data?.verified === true;
 
           if (isVerified) {
-            console.log('[EmailVerificationSync] ✅ Email verificado! Notificando...');
+            logger.debug('[EmailVerificationSync] ✅ Email verificado! Notificando...');
             this.emailVerified.set({
               email: response.data?.email || response.email || email,
               timestamp: Date.now()
             });
             clearInterval(interval);
           } else {
-            console.log('[EmailVerificationSync] Email aún no verificado, continuando polling...');
+            logger.debug('[EmailVerificationSync] Email aún no verificado, continuando polling...');
           }
         },
         error: (err) => {
-          console.warn('[EmailVerificationSync] Error verificando estado del email:', err);
+          logger.warn('[EmailVerificationSync] Error verificando estado del email:', err);
         }
       });
     }, intervalMs);
 
     // Retornar función para detener el polling
     return () => {
-      console.log('[EmailVerificationSync] Deteniendo polling');
+      logger.debug('[EmailVerificationSync] Deteniendo polling');
       clearInterval(interval);
     };
   }
@@ -133,23 +134,23 @@ export class EmailVerificationSyncService {
    * Escucha cambios en localStorage (fallback para navegadores antiguos)
    */
   listenToStorageEvents(): () => void {
-    console.log('[EmailVerificationSync] Iniciando listener de localStorage events');
+    logger.debug('[EmailVerificationSync] Iniciando listener de localStorage events');
 
     const handler = (event: StorageEvent) => {
-      console.log('[EmailVerificationSync] Storage event recibido:', event.key, event.newValue);
+      logger.debug('[EmailVerificationSync] Storage event recibido:', event.key, event.newValue);
       if (event.key === 'emailVerificationEvent' && event.newValue) {
         try {
           const data = JSON.parse(event.newValue);
-          console.log('[EmailVerificationSync] Datos parseados:', data);
+          logger.debug('[EmailVerificationSync] Datos parseados:', data);
           if (data.type === 'EMAIL_VERIFIED') {
-            console.log('[EmailVerificationSync] ✅ Email verificado detectado via localStorage:', data.email);
+            logger.debug('[EmailVerificationSync] ✅ Email verificado detectado via localStorage:', data.email);
             this.emailVerified.set({
               email: data.email,
               timestamp: data.timestamp
             });
           }
         } catch (error) {
-          console.warn('[EmailVerificationSync] Error parseando evento de localStorage:', error);
+          logger.warn('[EmailVerificationSync] Error parseando evento de localStorage:', error);
         }
       }
     };
@@ -158,7 +159,7 @@ export class EmailVerificationSyncService {
 
     // Retornar función para remover el listener
     return () => {
-      console.log('[EmailVerificationSync] Removiendo listener de storage events');
+      logger.debug('[EmailVerificationSync] Removiendo listener de storage events');
       window.removeEventListener('storage', handler);
     };
   }

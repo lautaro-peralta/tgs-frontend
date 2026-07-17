@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../services/auth/auth.js';
 import { EmailVerificationService } from '../../../features/inbox/services/email.verification.js';
 import { EmailVerificationSyncService } from '../../../services/email-verification-sync.service.js';
+import { logger } from '../../../core/logger';
 
 @Component({
   selector: 'app-login',
@@ -70,15 +71,15 @@ export class LoginComponent implements OnDestroy {
     // Effect para detectar cuando el email fue verificado desde otra pestaña
     effect(() => {
       const verificationEvent = this.syncService.emailVerified();
-      console.log('[Login] Effect ejecutado. Verification event:', verificationEvent, 'Waiting:', this.waitingForVerification());
+      logger.debug('[Login] Effect ejecutado. Verification event:', verificationEvent, 'Waiting:', this.waitingForVerification());
 
       if (verificationEvent) {
-        console.log('[Login] ✅ Email verificado detectado!', verificationEvent);
+        logger.debug('[Login] ✅ Email verificado detectado!', verificationEvent);
         if (this.waitingForVerification()) {
-          console.log('[Login] Procediendo con auto-login para:', verificationEvent.email);
+          logger.debug('[Login] Procediendo con auto-login para:', verificationEvent.email);
           this.handleEmailVerifiedFromAnotherTab(verificationEvent.email);
         } else {
-          console.log('[Login] No estamos esperando verificación, ignorando evento');
+          logger.debug('[Login] No estamos esperando verificación, ignorando evento');
         }
       }
     });
@@ -141,7 +142,7 @@ export class LoginComponent implements OnDestroy {
     ).subscribe({
       next: (user) => {
         this.loading.set(false);
-        console.log('[Login] Success:', user);
+        logger.debug('[Login] Success:', user);
         
         // Redirigir al home o a la ruta anterior
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -158,7 +159,7 @@ export class LoginComponent implements OnDestroy {
    * Maneja errores de login con caso especial para verificación de email
    */
   private handleLoginError(error: HttpErrorResponse): void {
-    console.error('[Login] Error:', error);
+    logger.error('[Login] Error:', error);
 
     // ✅ Detectar error de email no verificado usando el servicio
     if (this.emailVerificationService.isEmailVerificationError(error)) {
@@ -171,15 +172,15 @@ export class LoginComponent implements OnDestroy {
       const realEmail = (error as any)?.email || error.error?.email;
 
       if (realEmail) {
-        console.log('[Login] ✅ Email real extraído del backend:', realEmail);
+        logger.debug('[Login] ✅ Email real extraído del backend:', realEmail);
         this.actualEmail.set(realEmail);
         emailToVerify = realEmail;
       } else {
-        console.warn('[Login] ⚠️ Backend NO devolvió el email real. Usando valor ingresado:', emailToVerify);
+        logger.warn('[Login] ⚠️ Backend NO devolvió el email real. Usando valor ingresado:', emailToVerify);
       }
 
       // Guardar credenciales para auto-login después de verificación
-      console.log('[Login] Guardando credenciales para auto-login con email:', emailToVerify);
+      logger.debug('[Login] Guardando credenciales para auto-login con email:', emailToVerify);
       localStorage.setItem('pendingAuth', JSON.stringify({
         email: emailToVerify,
         password: this.password()
@@ -189,45 +190,45 @@ export class LoginComponent implements OnDestroy {
       this.waitingForVerification.set(true);
 
       // Iniciar polling para verificar el estado del email
-      console.log('[Login] Iniciando polling para verificar email:', emailToVerify);
+      logger.debug('[Login] Iniciando polling para verificar email:', emailToVerify);
       this.stopPolling = this.syncService.startPollingVerification(emailToVerify, 3000);
 
       // ✅ Iniciar temporizador SIEMPRE al activar waitingForVerification
       this.startResendCooldown();
 
       // ✅ Enviar automáticamente el email de verificación (como en el registro)
-      console.log('[Login] 📧 Intentando enviar automáticamente email de verificación para:', emailToVerify);
+      logger.debug('[Login] 📧 Intentando enviar automáticamente email de verificación para:', emailToVerify);
       this.emailVerificationService.resendForUnverified(emailToVerify)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            console.log('[Login] Respuesta del servidor:', response);
+            logger.debug('[Login] Respuesta del servidor:', response);
             if (response.success) {
               this.emailSent.set(true);
-              console.log('[Login] ✅ Email de verificación enviado automáticamente con éxito');
+              logger.debug('[Login] ✅ Email de verificación enviado automáticamente con éxito');
               // Limpiar el error principal para que solo se muestre el mensaje de email enviado
               this.error.set('Revisa tu bandeja de entrada para verificar tu email.');
             } else {
-              console.warn('[Login] ⚠️ El servidor respondió pero no fue exitoso:', response.message);
+              logger.warn('[Login] ⚠️ El servidor respondió pero no fue exitoso:', response.message);
               // No marcar como enviado si el servidor dice que falló
             }
           },
           error: (err: HttpErrorResponse) => {
-            console.error('[Login] ❌ Error completo al enviar email:', err);
-            console.error('[Login] Error status:', err.status);
-            console.error('[Login] Error message:', err.message);
-            console.error('[Login] Error body:', err.error);
+            logger.error('[Login] ❌ Error completo al enviar email:', err);
+            logger.error('[Login] Error status:', err.status);
+            logger.error('[Login] Error message:', err.message);
+            logger.error('[Login] Error body:', err.error);
 
             // No mostrar error si ya está verificado o está en cooldown
             if (this.emailVerificationService.isAlreadyVerifiedError(err)) {
-              console.log('[Login] Email ya verificado');
+              logger.debug('[Login] Email ya verificado');
               this.error.set('Tu email ya está verificado. Intenta iniciar sesión nuevamente.');
             } else if (this.emailVerificationService.isCooldownError(err)) {
-              console.log('[Login] Email enviado recientemente, en cooldown');
+              logger.debug('[Login] Email enviado recientemente, en cooldown');
               this.emailSent.set(true); // Marcar como enviado para no confundir al usuario
               this.error.set('El email de verificación ya fue enviado. Revisa tu bandeja de entrada.');
             } else {
-              console.error('[Login] Error inesperado al enviar email automáticamente');
+              logger.error('[Login] Error inesperado al enviar email automáticamente');
               // No marcar como enviado si hubo un error real
               this.error.set('No se pudo enviar el email automáticamente. Usa el botón de reenvío abajo.');
             }
@@ -257,7 +258,7 @@ export class LoginComponent implements OnDestroy {
    * Reenvía el email de verificación para usuario no verificado
    */
   resendVerificationEmail(): void {
-    console.log('[Login] 🔄 Botón de reenvío clickeado');
+    logger.debug('[Login] 🔄 Botón de reenvío clickeado');
 
     // Intentar obtener el email de múltiples fuentes
     let emailToUse = this.actualEmail(); // Primero el email real (cuando se loguea con username)
@@ -269,9 +270,9 @@ export class LoginComponent implements OnDestroy {
         try {
           const parsed = JSON.parse(pendingAuth);
           emailToUse = parsed.email;
-          console.log('[Login] Email obtenido de pendingAuth:', emailToUse);
+          logger.debug('[Login] Email obtenido de pendingAuth:', emailToUse);
         } catch (e) {
-          console.error('[Login] Error parseando pendingAuth:', e);
+          logger.error('[Login] Error parseando pendingAuth:', e);
         }
       }
     }
@@ -279,16 +280,16 @@ export class LoginComponent implements OnDestroy {
     if (!emailToUse) {
       // Fallback al campo email del formulario
       emailToUse = this.email();
-      console.log('[Login] Email obtenido del formulario:', emailToUse);
+      logger.debug('[Login] Email obtenido del formulario:', emailToUse);
     }
 
     if (!emailToUse) {
-      console.error('[Login] ❌ No se pudo obtener el email para reenviar');
+      logger.error('[Login] ❌ No se pudo obtener el email para reenviar');
       this.error.set('Por favor ingresa tu email');
       return;
     }
 
-    console.log('[Login] 📧 Reenviando email a:', emailToUse);
+    logger.debug('[Login] 📧 Reenviando email a:', emailToUse);
     this.resendingEmail.set(true);
     this.error.set(null);
     this.emailSent.set(false);
@@ -299,11 +300,11 @@ export class LoginComponent implements OnDestroy {
       .subscribe({
         next: (response) => {
           this.resendingEmail.set(false);
-          console.log('[Login] Respuesta del reenvío:', response);
+          logger.debug('[Login] Respuesta del reenvío:', response);
           if (response.success) {
             this.emailSent.set(true);
             this.error.set(null);
-            console.log('[Login] ✅ Email de verificación reenviado');
+            logger.debug('[Login] ✅ Email de verificación reenviado');
 
             // Activar estado de espera si no está activo
             if (!this.waitingForVerification()) {
@@ -311,7 +312,7 @@ export class LoginComponent implements OnDestroy {
 
               // Iniciar polling si no está activo
               if (!this.stopPolling) {
-                console.log('[Login] Iniciando polling para verificar email:', emailToUse);
+                logger.debug('[Login] Iniciando polling para verificar email:', emailToUse);
                 this.stopPolling = this.syncService.startPollingVerification(emailToUse, 3000);
               }
             }
@@ -319,17 +320,17 @@ export class LoginComponent implements OnDestroy {
             // Reiniciar temporizador de cooldown
             this.startResendCooldown();
           } else {
-            console.warn('[Login] ⚠️ Reenvío no exitoso:', response.message);
+            logger.warn('[Login] ⚠️ Reenvío no exitoso:', response.message);
             this.error.set(response.message || 'No se pudo enviar el email.');
           }
         },
         error: (err: HttpErrorResponse) => {
           this.resendingEmail.set(false);
-          console.error('[Login] ❌ Error al reenviar:', err);
+          logger.error('[Login] ❌ Error al reenviar:', err);
 
           // Usar helpers del servicio para detectar errores específicos
           if (this.emailVerificationService.isCooldownError(err)) {
-            console.log('[Login] Error de cooldown detectado');
+            logger.debug('[Login] Error de cooldown detectado');
             const cooldownSeconds = this.emailVerificationService.getCooldownSeconds(err);
             const minutes = Math.floor(cooldownSeconds / 60);
             const seconds = cooldownSeconds % 60;
@@ -347,7 +348,7 @@ export class LoginComponent implements OnDestroy {
             // Iniciar cooldown con el tiempo exacto del backend
             this.startResendCooldown(cooldownSeconds);
           } else if (this.emailVerificationService.isAlreadyVerifiedError(err)) {
-            console.log('[Login] Email ya verificado');
+            logger.debug('[Login] Email ya verificado');
             this.error.set('Tu email ya está verificado. Intenta iniciar sesión.');
             this.needsEmailVerification.set(false);
           } else if (err.status === 404) {
@@ -363,12 +364,12 @@ export class LoginComponent implements OnDestroy {
    * Maneja cuando el email fue verificado desde otra pestaña
    */
   private handleEmailVerifiedFromAnotherTab(email: string): void {
-    console.log('[Login] Intentando auto-login después de verificación:', email);
+    logger.debug('[Login] Intentando auto-login después de verificación:', email);
 
     // Obtener credenciales de pendingAuth
     const raw = localStorage.getItem('pendingAuth');
     if (!raw) {
-      console.warn('[Login] No hay credenciales pendientes para auto-login');
+      logger.warn('[Login] No hay credenciales pendientes para auto-login');
       this.waitingForVerification.set(false);
       this.successMessage.set('Email verificado correctamente. Por favor inicia sesión.');
       return;
@@ -379,7 +380,7 @@ export class LoginComponent implements OnDestroy {
 
       // Verificar que el email coincida
       if (savedEmail.toLowerCase() !== email.toLowerCase()) {
-        console.warn('[Login] El email verificado no coincide con las credenciales guardadas');
+        logger.warn('[Login] El email verificado no coincide con las credenciales guardadas');
         this.waitingForVerification.set(false);
         return;
       }
@@ -392,7 +393,7 @@ export class LoginComponent implements OnDestroy {
           next: (user) => {
             this.loading.set(false);
             this.waitingForVerification.set(false);
-            console.log('[Login] Auto-login exitoso:', user);
+            logger.debug('[Login] Auto-login exitoso:', user);
 
             // Limpiar credenciales pendientes
             localStorage.removeItem('pendingAuth');
@@ -415,13 +416,13 @@ export class LoginComponent implements OnDestroy {
           error: (err) => {
             this.loading.set(false);
             this.waitingForVerification.set(false);
-            console.error('[Login] Error en auto-login:', err);
+            logger.error('[Login] Error en auto-login:', err);
             this.error.set('Email verificado, pero ocurrió un error al iniciar sesión. Por favor intenta nuevamente.');
             localStorage.removeItem('pendingAuth');
           }
         });
     } catch (e) {
-      console.error('[Login] Error parseando pendingAuth:', e);
+      logger.error('[Login] Error parseando pendingAuth:', e);
       this.waitingForVerification.set(false);
     }
   }

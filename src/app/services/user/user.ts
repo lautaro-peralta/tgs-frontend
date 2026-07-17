@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { tap, catchError, switchMap, finalize, shareReplay } from 'rxjs/operators';
+import { logger } from '../../core/logger';
 
 // ============================================================================
 // INTERFACES
@@ -176,7 +177,7 @@ export class AuthService {
     if (!this.isProduction()) {
       effect(() => {
         const user = this.userSignal();
-        console.log('[AuthService] User state changed:', user);
+        logger.debug('[AuthService] User state changed:', user);
       });
     }
   }
@@ -200,14 +201,14 @@ export class AuthService {
         this.userSignal.set(user);
         this.loadingSignal.set(false);
         this.initializedSignal.set(true);
-        console.log('[AuthService] Session restored successfully');
+        logger.debug('[AuthService] Session restored successfully');
       },
       error: (err) => {
         // No hay sesión válida, esto es normal
         this.userSignal.set(null);
         this.loadingSignal.set(false);
         this.initializedSignal.set(true);
-        console.log('[AuthService] No active session found');
+        logger.debug('[AuthService] No active session found');
       }
     });
   }
@@ -229,8 +230,8 @@ export class AuthService {
    * @example
    * this.auth.login({ email: 'user@example.com', password: '123456' })
    *   .subscribe({
-   *     next: (user) => console.log('Logged in:', user),
-   *     error: (err) => console.error('Login failed:', err)
+   *     next: (user) => logger.debug('Logged in:', user),
+   *     error: (err) => logger.error('Login failed:', err)
    *   });
    */
   login(payload: LoginPayload): Observable<User> {
@@ -242,12 +243,12 @@ export class AuthService {
       { withCredentials: true }
     ).pipe(
       tap(res => {
-        console.log('[AuthService] Login successful');
+        logger.debug('[AuthService] Login successful');
         this.userSignal.set(res.data);
       }),
       switchMap(res => of(res.data)),
       catchError(err => {
-        console.error('[AuthService] Login failed:', err);
+        logger.error('[AuthService] Login failed:', err);
         this.userSignal.set(null);
         return throwError(() => err);
       }),
@@ -270,8 +271,8 @@ export class AuthService {
    *   password: '123456',
    *   username: 'johndoe'
    * }).subscribe({
-   *   next: (user) => console.log('Registered:', user),
-   *   error: (err) => console.error('Registration failed:', err)
+   *   next: (user) => logger.debug('Registered:', user),
+   *   error: (err) => logger.error('Registration failed:', err)
    * });
    */
   register(payload: RegisterPayload): Observable<User> {
@@ -280,10 +281,10 @@ export class AuthService {
       payload,
       { withCredentials: true }
     ).pipe(
-      tap(res => console.log('[AuthService] Registration successful')),
+      tap(res => logger.debug('[AuthService] Registration successful')),
       switchMap(res => of(res.data)),
       catchError(err => {
-        console.error('[AuthService] Registration failed:', err);
+        logger.error('[AuthService] Registration failed:', err);
         return throwError(() => err);
       })
     );
@@ -299,7 +300,7 @@ export class AuthService {
    * 
    * @example
    * this.auth.logout().subscribe(() => {
-   *   console.log('Logged out successfully');
+   *   logger.debug('Logged out successfully');
    * });
    */
   logout(redirectToLogin: boolean = true): Observable<void> {
@@ -309,7 +310,7 @@ export class AuthService {
       { withCredentials: true }
     ).pipe(
       tap(() => {
-        console.log('[AuthService] Logout successful');
+        logger.debug('[AuthService] Logout successful');
         this.userSignal.set(null);
         if (redirectToLogin) {
           this.router.navigate(['/login']);
@@ -318,7 +319,7 @@ export class AuthService {
       switchMap(() => of(void 0)),
       catchError(err => {
         // Aunque el logout falle en el backend, limpiar estado local
-        console.warn('[AuthService] Logout request failed, clearing local state');
+        logger.warn('[AuthService] Logout request failed, clearing local state');
         this.userSignal.set(null);
         if (redirectToLogin) {
           this.router.navigate(['/login']);
@@ -342,8 +343,8 @@ export class AuthService {
    * 
    * @example
    * this.auth.me().subscribe({
-   *   next: (user) => console.log('Current user:', user),
-   *   error: (err) => console.error('Not authenticated')
+   *   next: (user) => logger.debug('Current user:', user),
+   *   error: (err) => logger.error('Not authenticated')
    * });
    */
   me(): Observable<User> {
@@ -354,7 +355,7 @@ export class AuthService {
       tap(res => this.userSignal.set(res.data)),
       switchMap(res => of(res.data)),
       catchError(err => {
-        console.error('[AuthService] Failed to fetch user profile:', err);
+        logger.error('[AuthService] Failed to fetch user profile:', err);
         if (err.status === 401) {
           this.userSignal.set(null);
         }
@@ -395,11 +396,11 @@ export class AuthService {
   refreshToken(): Observable<User> {
     // Si ya hay un refresh en proceso, retornar el mismo observable
     if (this.refreshingToken$.value && this.refreshTokenRequest$) {
-      console.log('[AuthService] Refresh token already in progress, reusing request');
+      logger.debug('[AuthService] Refresh token already in progress, reusing request');
       return this.refreshTokenRequest$;
     }
 
-    console.log('[AuthService] Starting token refresh');
+    logger.debug('[AuthService] Starting token refresh');
     this.refreshingToken$.next(true);
 
     // Crear y cachear el request
@@ -409,12 +410,12 @@ export class AuthService {
       { withCredentials: true }
     ).pipe(
       tap(res => {
-        console.log('[AuthService] Token refreshed successfully');
+        logger.debug('[AuthService] Token refreshed successfully');
         this.userSignal.set(res.data);
       }),
       switchMap(res => of(res.data)),
       catchError(err => {
-        console.error('[AuthService] Token refresh failed:', err);
+        logger.error('[AuthService] Token refresh failed:', err);
         this.userSignal.set(null);
         this.router.navigate(['/login'], {
           queryParams: { returnUrl: this.router.url, reason: 'session_expired' }
@@ -450,7 +451,7 @@ export class AuthService {
    * 
    * @example
    * if (this.auth.hasRole(Role.ADMIN)) {
-   *   console.log('User is admin');
+   *   logger.debug('User is admin');
    * }
    */
   hasRole(role: Role): boolean {
@@ -465,7 +466,7 @@ export class AuthService {
    * 
    * @example
    * if (this.auth.hasAnyRole([Role.ADMIN, Role.PARTNER])) {
-   *   console.log('User is admin or partner');
+   *   logger.debug('User is admin or partner');
    * }
    */
   hasAnyRole(roles: Role[]): boolean {
@@ -481,7 +482,7 @@ export class AuthService {
    * 
    * @example
    * if (this.auth.hasAllRoles([Role.CLIENT, Role.PARTNER])) {
-   *   console.log('User is both client and partner');
+   *   logger.debug('User is both client and partner');
    * }
    */
   hasAllRoles(roles: Role[]): boolean {
@@ -497,7 +498,7 @@ export class AuthService {
    * 
    * @example
    * if (this.auth.can('purchase')) {
-   *   console.log('User can make purchases');
+   *   logger.debug('User can make purchases');
    * }
    */
   can(action: 'purchase' | 'admin' | 'manage_users'): boolean {
@@ -607,13 +608,13 @@ export class AuthService {
    * @example
    * // Sin filtro
    * this.authSrv.getAllVerifiedUsers().subscribe({
-   *   next: (users) => console.log('Verified users:', users),
-   *   error: (err) => console.error('Failed to load users')
+   *   next: (users) => logger.debug('Verified users:', users),
+   *   error: (err) => logger.error('Failed to load users')
    * });
    * 
    * // Con filtro por rol
    * this.authSrv.getAllVerifiedUsers('AUTHORITY').subscribe({
-   *   next: (users) => console.log('Users eligible for AUTHORITY:', users)
+   *   next: (users) => logger.debug('Users eligible for AUTHORITY:', users)
    * });
    */
   getAllVerifiedUsers(targetRole?: 'AUTHORITY' | 'PARTNER' | 'DISTRIBUTOR'): Observable<User[]> {
@@ -621,7 +622,7 @@ export class AuthService {
       ? `/api/users/verified?targetRole=${targetRole}`
       : '/api/users/verified';
 
-    console.log(`[AuthService] Requesting verified users from: ${url}`);
+    logger.debug(`[AuthService] Requesting verified users from: ${url}`);
 
     return this.http.get<ApiResponse<User[]>>(
       url,
@@ -629,15 +630,15 @@ export class AuthService {
     ).pipe(
       switchMap(res => {
         const verified = res.data || [];
-        console.log(`[AuthService] Response received:`, res);
-        console.log(`[AuthService] Loaded ${verified.length} verified users${targetRole ? ` eligible for ${targetRole}` : ''}`);
+        logger.debug(`[AuthService] Response received:`, res);
+        logger.debug(`[AuthService] Loaded ${verified.length} verified users${targetRole ? ` eligible for ${targetRole}` : ''}`);
         return of(verified);
       }),
       catchError(err => {
-        console.error('[AuthService] ❌ Error fetching verified users:', err);
-        console.error('[AuthService] ❌ Status:', err?.status);
-        console.error('[AuthService] ❌ Error body:', err?.error);
-        console.error('[AuthService] ❌ This is likely a backend permission issue - Partner role may not have access to this endpoint');
+        logger.error('[AuthService] ❌ Error fetching verified users:', err);
+        logger.error('[AuthService] ❌ Status:', err?.status);
+        logger.error('[AuthService] ❌ Error body:', err?.error);
+        logger.error('[AuthService] ❌ This is likely a backend permission issue - Partner role may not have access to this endpoint');
         return of([]);  // Retornar array vacío en caso de error
       })
     );

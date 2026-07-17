@@ -8,6 +8,7 @@ import { RoleRequestCardComponent } from './role-request-card';
 import { RoleRequestReviewModalComponent } from './role-request-review-modal';
 import { AuthService } from '../../../../services/auth/auth';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../../core/logger';
 
 @Component({
   selector: 'app-admin-role-requests-inbox',
@@ -95,14 +96,14 @@ export class AdminRoleRequestsInboxComponent implements OnInit {
     if (approvedUserId) {
       const currentUser = this.auth.user();
       if (currentUser && currentUser.id === approvedUserId) {
-        console.log('🔄 [AdminRoleRequestsInbox] Role request approved for current user, refreshing profile...');
+        logger.debug('🔄 [AdminRoleRequestsInbox] Role request approved for current user, refreshing profile...');
         try {
           // Esperar un momento para que el backend termine de actualizar los roles
           await new Promise(resolve => setTimeout(resolve, 500));
           await this.auth.me().toPromise();
-          console.log('✅ [AdminRoleRequestsInbox] Profile refreshed successfully, roles updated');
+          logger.debug('✅ [AdminRoleRequestsInbox] Profile refreshed successfully, roles updated');
         } catch (err) {
-          console.error('❌ [AdminRoleRequestsInbox] Failed to refresh profile:', err);
+          logger.error('❌ [AdminRoleRequestsInbox] Failed to refresh profile:', err);
         }
       }
     }

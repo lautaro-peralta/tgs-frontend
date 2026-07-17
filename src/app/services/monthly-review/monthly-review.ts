@@ -9,6 +9,7 @@ import {
   PatchMonthlyReviewDTO,
   SalesStatisticsResponse
 } from '../../models/monthly-review/monthly-review.model';
+import { logger } from '../../core/logger';
 
 @Injectable({ providedIn: 'root' })
 export class MonthlyReviewService {
@@ -52,7 +53,7 @@ export class MonthlyReviewService {
       httpParams = httpParams.set('limit', params.limit.toString());
     }
 
-    console.log('🔍 Search params:', httpParams.toString());
+    logger.debug('🔍 Search params:', httpParams.toString());
 
     return this.http.get<PaginatedResponse<MonthlyReviewDTO>>(
       `${this.apiUrl}/search`,
@@ -82,7 +83,7 @@ export class MonthlyReviewService {
       ? `${this.apiUrl}?${httpParams.toString()}` 
       : this.apiUrl;
 
-    console.log('📋 List URL:', url);
+    logger.debug('📋 List URL:', url);
 
     return this.http.get<PaginatedResponse<MonthlyReviewDTO>>(
       this.apiUrl,
@@ -117,7 +118,7 @@ export class MonthlyReviewService {
     }
 
     const url = `${this.apiUrl}/statistics?${httpParams.toString()}`;
-    console.log('📊 Statistics URL:', url);
+    logger.debug('📊 Statistics URL:', url);
 
     return this.http.get<ApiResponse<SalesStatisticsResponse>>(
       `${this.apiUrl}/statistics`,
@@ -138,7 +139,7 @@ export class MonthlyReviewService {
    * Backend route: POST /api/monthly-reviews
    */
   create(payload: CreateMonthlyReviewDTO): Observable<ApiResponse<MonthlyReviewDTO>> {
-    console.log('➕ Creating monthly review:', payload);
+    logger.debug('➕ Creating monthly review:', payload);
     return this.http.post<ApiResponse<MonthlyReviewDTO>>(this.apiUrl, payload);
   }
 
@@ -147,7 +148,7 @@ export class MonthlyReviewService {
    * Backend route: PATCH /api/monthly-reviews/:id
    */
   update(id: number, payload: PatchMonthlyReviewDTO): Observable<ApiResponse<MonthlyReviewDTO>> {
-    console.log('✏️ Updating monthly review:', id, payload);
+    logger.debug('✏️ Updating monthly review:', id, payload);
     return this.http.patch<ApiResponse<MonthlyReviewDTO>>(
       `${this.apiUrl}/${id}`,
       payload
@@ -159,7 +160,7 @@ export class MonthlyReviewService {
    * Backend route: DELETE /api/monthly-reviews/:id
    */
   delete(id: number): Observable<ApiResponse<void>> {
-    console.log('🗑️ Deleting monthly review:', id);
+    logger.debug('🗑️ Deleting monthly review:', id);
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }
 }

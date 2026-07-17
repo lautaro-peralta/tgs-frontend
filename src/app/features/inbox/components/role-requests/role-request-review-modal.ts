@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RoleRequest } from '../../models/role-request.model';
 import { RoleRequestService } from '../../services/role-request';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../../core/logger';
 
 @Component({
   selector: 'app-role-request-review-modal',
@@ -76,13 +77,13 @@ export class RoleRequestReviewModalComponent {
       if (role === 'DISTRIBUTOR') {
         if (!data || !data.zoneId || !data.address) {
           this.error = '❌ Esta solicitud no tiene los datos adicionales requeridos (zona y dirección). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
-          console.error('❌ Cannot approve DISTRIBUTOR without additionalData:', data);
+          logger.error('❌ Cannot approve DISTRIBUTOR without additionalData:', data);
           return;
         }
       } else if (role === 'AUTHORITY') {
         if (!data || !data.rank || !data.zoneId) {
           this.error = '❌ Esta solicitud no tiene los datos adicionales requeridos (rango y zona). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
-          console.error('❌ Cannot approve AUTHORITY without additionalData:', data);
+          logger.error('❌ Cannot approve AUTHORITY without additionalData:', data);
           return;
         }
       }
@@ -91,22 +92,22 @@ export class RoleRequestReviewModalComponent {
     this.isSubmitting = true;
 
     try {
-      console.group('🔍 [ReviewModal] REQUEST DEBUG');
-      console.log('📋 Request Object:', this.request);
-      console.log('🎯 Request ID:', this.request.id);
-      console.log('👤 User ID:', this.request.user?.id);
-      console.log('🎭 Requested Role:', this.request.requestedRole);
-      console.log('📦 Additional Data:', this.request.additionalData);
-      console.log('✅ Action:', this.action);
-      console.log('💬 Comments:', this.comments || '(empty)');
+      logger.debug('🔍 [ReviewModal] REQUEST DEBUG');
+      logger.debug('📋 Request Object:', this.request);
+      logger.debug('🎯 Request ID:', this.request.id);
+      logger.debug('👤 User ID:', this.request.user?.id);
+      logger.debug('🎭 Requested Role:', this.request.requestedRole);
+      logger.debug('📦 Additional Data:', this.request.additionalData);
+      logger.debug('✅ Action:', this.action);
+      logger.debug('💬 Comments:', this.comments || '(empty)');
       
       const payload = {
         action: this.action,
         comments: this.comments || undefined,
       };
       
-      console.log('📤 Payload a enviar:', JSON.stringify(payload, null, 2));
-      console.groupEnd();
+      logger.debug('📤 Payload a enviar:', JSON.stringify(payload, null, 2));
+      logger.debug();
 
       if (!this.request.id) {
         throw new Error('Request ID is missing');
@@ -116,21 +117,21 @@ export class RoleRequestReviewModalComponent {
         throw new Error('User ID is missing from request');
       }
 
-      console.log('🚀 Calling reviewRequest API...');
+      logger.debug('🚀 Calling reviewRequest API...');
       
       const response = await this.roleRequestService.reviewRequest(this.request.id, payload);
       
-      console.log('✅ [ReviewModal] Review completed successfully:', response);
+      logger.debug('✅ [ReviewModal] Review completed successfully:', response);
 
       this.reviewComplete.emit(this.action === 'approve' ? this.request.user.id : undefined);
       
     } catch (err: any) {
-      console.group('❌ [ReviewModal] ERROR DETAILS');
-      console.error('Error object:', err);
-      console.error('Status:', err.status);
-      console.error('Status text:', err.statusText);
-      console.error('Error body:', err.error);
-      console.groupEnd();
+      logger.debug('❌ [ReviewModal] ERROR DETAILS');
+      logger.error('Error object:', err);
+      logger.error('Status:', err.status);
+      logger.error('Status text:', err.statusText);
+      logger.error('Error body:', err.error);
+      logger.debug();
       
       let errorMessage = 'Error desconocido';
 
@@ -153,7 +154,7 @@ export class RoleRequestReviewModalComponent {
       }
 
       this.error = errorMessage;
-      console.error('📢 User-facing error:', errorMessage);
+      logger.error('📢 User-facing error:', errorMessage);
       
     } finally {
       this.isSubmitting = false;

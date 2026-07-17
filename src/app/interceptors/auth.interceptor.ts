@@ -1,28 +1,36 @@
 // src/app/interceptors/auth.interceptor.ts
 import { inject } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   HttpInterceptorFn,
   HttpErrorResponse,
-  HttpRequest,
   HttpEvent,
 } from '@angular/common/http';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth';
+import { logger } from '../core/logger';
 
 // ============================================================================
 // FLAGS Y ESTADO GLOBAL
 // ============================================================================
 
-/** Flag para saber si ya terminó la primera navegación real */
-let hasNavigatedOnce = false;
-
 /** Flag para evitar múltiples refresh simultáneos */
 let isRefreshing = false;
 
+/**
+ * Request en cola esperando a que termine el refresh en curso.
+ * - `retry`: reintenta el request original (cuando el refresh fue exitoso).
+ * - `fail`: propaga el error al suscriptor (cuando el refresh falló), en vez de
+ *   reintentar contra una sesión ya inválida.
+ */
+interface PendingRequest {
+  retry: () => void;
+  fail: (error: unknown) => void;
+}
+
 /** Cola de requests que esperan a que termine el refresh */
-let pendingRequests: Array<() => void> = [];
+let pendingRequests: PendingRequest[] = [];
 
 // ============================================================================
 // UTILIDADES
@@ -58,19 +66,22 @@ function isAuthEndpoint(url: string): boolean {
 }
 
 /**
- * Procesa las requests pendientes en la cola
+ * Reintenta todas las requests en cola (refresh exitoso).
  */
 function processPendingRequests(): void {
-  pendingRequests.forEach(callback => callback());
+  const queued = pendingRequests;
   pendingRequests = [];
+  queued.forEach(p => p.retry());
 }
 
 /**
- * Rechaza todas las requests pendientes
+ * Falla todas las requests en cola (refresh fallido): se propaga el error a
+ * cada suscriptor en lugar de reintentar contra una sesión inválida.
  */
-function rejectPendingRequests(error: any): void {
-  pendingRequests.forEach(callback => callback());
+function rejectPendingRequests(error: unknown): void {
+  const queued = pendingRequests;
   pendingRequests = [];
+  queued.forEach(p => p.fail(error));
 }
 
 // ============================================================================
@@ -91,11 +102,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  // Marcar cuando finalice la primera navegación real
-  router.events
-    .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-    .subscribe(() => { hasNavigatedOnce = true; });
-
   return next(req).pipe(
     catchError((error: HttpErrorResponse): Observable<HttpEvent<unknown>> => {
       // ======================================================================
@@ -109,67 +115,74 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
 
         // 1) No interferir en verificación de email
         if (isPublicVerificationHref(href)) {
-          console.log('[AuthInterceptor] 📧 Verification page - passing through 401');
+          logger.debug('[AuthInterceptor] Verification page - passing through 401');
           return throwError(() => error);
         }
 
-        // 2) No interferir durante la primera navegación
-        if (!hasNavigatedOnce) {
-          console.log('[AuthInterceptor] 🚀 Initial navigation - passing through 401');
+        // 2) No interferir durante la primera navegación.
+        //    Angular Router ya expone `navigated` (true tras la primera
+        //    navegación), por lo que no hace falta suscribirse a router.events
+        //    dentro del interceptor (evita fugas: se ejecuta en cada request).
+        if (!router.navigated) {
+          logger.debug('[AuthInterceptor] Initial navigation - passing through 401');
           return throwError(() => error);
         }
 
         // 3) No intentar refresh en endpoints de autenticación
         if (isAuthEndpoint(req.url)) {
-          console.log('[AuthInterceptor] 🔐 Auth endpoint - passing through 401');
+          logger.debug('[AuthInterceptor] Auth endpoint - passing through 401');
           return throwError(() => error);
         }
 
         // 4) Intentar refresh del token
-        console.log('[AuthInterceptor] 🔄 401 detected - attempting token refresh');
+        logger.debug('[AuthInterceptor] 401 detected - attempting token refresh');
 
         // Si ya hay un refresh en curso, agregar a la cola
         if (isRefreshing) {
-          console.log('[AuthInterceptor] ⏳ Refresh in progress - queuing request');
-          
+          logger.debug('[AuthInterceptor] Refresh in progress - queuing request');
+
           return new Observable(observer => {
-            pendingRequests.push(() => {
-              // Reintentar el request original
-              next(req).subscribe({
-                next: (event) => observer.next(event),
-                error: (err) => observer.error(err),
-                complete: () => observer.complete()
-              });
+            pendingRequests.push({
+              // Reintentar el request original cuando el refresh haya terminado bien
+              retry: () => {
+                next(req).subscribe({
+                  next: (event) => observer.next(event),
+                  error: (err) => observer.error(err),
+                  complete: () => observer.complete()
+                });
+              },
+              // Propagar el error si el refresh falló
+              fail: (err) => observer.error(err),
             });
           });
         }
 
         // Marcar que estamos refrescando
         isRefreshing = true;
-        console.log('[AuthInterceptor] 🔄 Starting token refresh...');
+        logger.debug('[AuthInterceptor] Starting token refresh...');
 
         // Intentar refrescar el token
         return authService.refresh().pipe(
           switchMap((user) => {
-            console.log('[AuthInterceptor] ✅ Token refreshed successfully:', user.username);
+            logger.debug('[AuthInterceptor] Token refreshed successfully:', user.username);
             isRefreshing = false;
-            
+
             // Procesar todos los requests que estaban en cola
             processPendingRequests();
-            
+
             // Reintentar el request original
-            console.log('[AuthInterceptor] 🔁 Retrying original request');
+            logger.debug('[AuthInterceptor] Retrying original request');
             return next(req);
           }),
           catchError((refreshError) => {
-            console.error('[AuthInterceptor] ❌ Token refresh failed:', refreshError);
+            logger.error('[AuthInterceptor] Token refresh failed:', refreshError);
             isRefreshing = false;
-            
+
             // Rechazar todos los requests pendientes
             rejectPendingRequests(refreshError);
-            
+
             // Limpiar sesión y redirigir al login
-            console.log('[AuthInterceptor] 🚪 Logging out and redirecting to home');
+            logger.debug('[AuthInterceptor] Logging out and redirecting to home');
             authService.logout().subscribe({
               error: () => {
                 // Asegurar redirección incluso si el logout falla

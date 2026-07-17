@@ -2,6 +2,7 @@ import { inject } from '@angular/core';
 import { Router, CanActivateFn, CanMatchFn, UrlSegment, Route } from '@angular/router';
 import { AuthService } from '../services/auth/auth';
 import { Role } from '../models/user/user.model';
+import { logger } from '../core/logger';
 
 function isPublicVerificationUrl(input: string): boolean {
   try {
@@ -23,10 +24,6 @@ function isPublicVerificationUrl(input: string): boolean {
   }
 }
 
-function isLoggedInOrBypass(auth: AuthService): boolean {
-  const bypass = localStorage.getItem('authBypass') === 'true';
-  return !!auth.isAuthenticated() || bypass;
-}
 function segmentsToUrl(segments: UrlSegment[]): string {
   return '/' + segments.map(s => s.path).join('/');
 }
@@ -36,7 +33,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const url = state.url || '';
   if (isPublicVerificationUrl(url)) return true;
-  if (isLoggedInOrBypass(auth)) return true;
+  if (auth.isAuthenticated()) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -45,7 +42,7 @@ export const authMatchGuard: CanMatchFn = (route: Route, segments: UrlSegment[])
   const router = inject(Router);
   const url = segmentsToUrl(segments);
   if (isPublicVerificationUrl(url)) return true;
-  if (isLoggedInOrBypass(auth)) return true;
+  if (auth.isAuthenticated()) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -55,8 +52,7 @@ export const roleGuard = (allowed: Role[]): CanActivateFn => {
     const router = inject(Router);
     const url = state.url || '';
     if (isPublicVerificationUrl(url)) return true;
-    if (!isLoggedInOrBypass(auth)) return router.createUrlTree(['/']);
-    if (localStorage.getItem('authBypass') === 'true') return true;
+    if (!auth.isAuthenticated()) return router.createUrlTree(['/']);
 
     // 🔄 Refresh roles if they're stale (older than 15 seconds)
     // This ensures role changes (like approved role requests) are reflected immediately
@@ -77,12 +73,12 @@ export const inboxGuard: CanActivateFn = (route, state) => {
   if (isPublicVerificationUrl(url)) return true;
   
   // Solo requiere estar autenticado
-  if (isLoggedInOrBypass(auth)) {
-    console.log('[InboxGuard] ✅ User authenticated, allowing access');
+  if (auth.isAuthenticated()) {
+    logger.debug('[InboxGuard] User authenticated, allowing access');
     return true;
   }
-  
-  console.log('[InboxGuard] ❌ User not authenticated, redirecting to login');
+
+  logger.debug('[InboxGuard] User not authenticated, redirecting to login');
   return router.createUrlTree(['/login']);
 };
 

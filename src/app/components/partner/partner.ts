@@ -13,6 +13,7 @@ import {
   PatchPartnerDTO,
   PartnerDecisionRefDTO
 } from '../../models/partner/partner.model';
+import { logger } from '../../core/logger';
 
 type Mode = 'fromUser' | 'manual';
 
@@ -186,10 +187,10 @@ export class PartnerComponent implements OnInit {
     this.authSrv.getAllVerifiedUsers('PARTNER').subscribe({
       next: (verifiedUsers) => {
         this.users.set(verifiedUsers);
-        console.log(`[PartnerComponent] Loaded ${verifiedUsers.length} verified users eligible for PARTNER role`);
+        logger.debug(`[PartnerComponent] Loaded ${verifiedUsers.length} verified users eligible for PARTNER role`);
       },
       error: (err) => {
-        console.error('[PartnerComponent] Error loading verified users:', err);
+        logger.error('[PartnerComponent] Error loading verified users:', err);
         this.users.set([]);  // Array vacío en caso de error
       }
     });
@@ -396,7 +397,7 @@ export class PartnerComponent implements OnInit {
         setTimeout(() => this.success.set(null), 5000);
       },
       error: (e) => {
-        console.error('[PartnerComponent] Error deleting partner:', e);
+        logger.error('[PartnerComponent] Error deleting partner:', e);
         this.error.set(e?.error?.message ?? this.tr.instant('partner.errorDelete'));
         this.loading.set(false);
       }
@@ -420,7 +421,7 @@ export class PartnerComponent implements OnInit {
 
     this.srv.migratePartnerRoles().subscribe({
       next: (result) => {
-        console.log('[PartnerComponent] Migration result:', result);
+        logger.debug('[PartnerComponent] Migration result:', result);
         this.success.set(
           `Migración completada: ${result.data?.rolesAssigned || 0} roles asignados, ` +
           `${result.data?.alreadyHadRole || 0} ya tenían el rol, ` +
@@ -435,7 +436,7 @@ export class PartnerComponent implements OnInit {
         setTimeout(() => this.success.set(null), 10000);
       },
       error: (e) => {
-        console.error('[PartnerComponent] Migration error:', e);
+        logger.error('[PartnerComponent] Migration error:', e);
         this.error.set(e?.error?.message ?? 'Error al ejecutar la migración');
         this.loading.set(false);
       }

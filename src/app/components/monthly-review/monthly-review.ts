@@ -24,6 +24,7 @@ import { SaleDTO } from '../../models/sale/sale.model';
 
 // ✅ IMPORTAR COMPONENTE DE CHART
 import { ChartComponent } from '../chart/chart';
+import { logger } from '../../core/logger';
 
 @Component({
   selector: 'app-monthly-review',
@@ -367,7 +368,7 @@ export class MonthlyReviewComponent implements OnInit {
         this.statistics.set(res.data);
       },
       error: (e) => {
-        console.error('Error loading statistics:', e);
+        logger.error('Error loading statistics:', e);
         this.statistics.set(null);
       }
     });
@@ -375,7 +376,7 @@ export class MonthlyReviewComponent implements OnInit {
 
   // ✅ GENERAR GRÁFICOS CON DATOS MOCK
   private generateMockCharts(): void {
-    console.log('📊 Generando gráficos MOCK para demostración');
+    logger.debug('📊 Generando gráficos MOCK para demostración');
     
     // Mock: Distribución por estado
     this.statusChartData.set({
@@ -572,9 +573,9 @@ export class MonthlyReviewComponent implements OnInit {
 
   // 📊 Generar gráfico de impacto de decisiones en ventas
   private generateDecisionsImpactChart(): void {
-    console.log('🎨 Generando gráfico de decisiones...');
+    logger.debug('🎨 Generando gráfico de decisiones...');
     const salesData = this.sales();
-    console.log('📊 Sales data:', salesData?.length || 0, 'ventas');
+    logger.debug('📊 Sales data:', salesData?.length || 0, 'ventas');
 
     // Datos mock más realistas con variaciones
     const mockData = [
@@ -596,15 +597,15 @@ export class MonthlyReviewComponent implements OnInit {
 
     // Si no hay datos reales O hay menos de 3 meses de datos, usar MOCK
     if (!salesData || salesData.length === 0) {
-      console.log('📊 Usando datos MOCK (no hay ventas)');
+      logger.debug('📊 Usando datos MOCK (no hay ventas)');
       salesByMonth = mockData;
     } else {
       const realData = this.groupSalesByMonthForChart(salesData);
       if (realData.length < 3) {
-        console.log('📊 Usando datos MOCK (menos de 3 meses de datos reales)');
+        logger.debug('📊 Usando datos MOCK (menos de 3 meses de datos reales)');
         salesByMonth = mockData;
       } else {
-        console.log('📊 Usando datos reales:', realData.length, 'meses');
+        logger.debug('📊 Usando datos reales:', realData.length, 'meses');
         salesByMonth = realData;
       }
     }
@@ -775,7 +776,7 @@ export class MonthlyReviewComponent implements OnInit {
       }]
     };
 
-    console.log('✅ Gráfico de decisiones generado con', salesByMonth.length, 'meses y', decisions.length, 'decisiones');
+    logger.debug('✅ Gráfico de decisiones generado con', salesByMonth.length, 'meses y', decisions.length, 'decisiones');
     this.decisionsImpactChartOptions.set(decisionsImpactChart);
   }
 
@@ -829,7 +830,7 @@ export class MonthlyReviewComponent implements OnInit {
 
   // 📊 Generar gráfico de predicción de ventas con regresión lineal
   private generateSalesPredictionChart(): void {
-    console.log('🔮 Generando gráfico de predicción de ventas...');
+    logger.debug('🔮 Generando gráfico de predicción de ventas...');
     const salesData = this.sales();
 
     // Datos mock para cuando no hay datos reales
@@ -849,15 +850,15 @@ export class MonthlyReviewComponent implements OnInit {
 
     // Usar datos mock si no hay datos reales o hay menos de 4 meses
     if (!salesData || salesData.length === 0) {
-      console.log('📊 Usando datos MOCK para predicción (no hay ventas)');
+      logger.debug('📊 Usando datos MOCK para predicción (no hay ventas)');
       historicalData = mockData;
     } else {
       const realData = this.groupSalesByMonthForChart(salesData);
       if (realData.length < 4) {
-        console.log('📊 Usando datos MOCK para predicción (menos de 4 meses de datos)');
+        logger.debug('📊 Usando datos MOCK para predicción (menos de 4 meses de datos)');
         historicalData = mockData;
       } else {
-        console.log('📊 Usando datos reales para predicción:', realData.length, 'meses');
+        logger.debug('📊 Usando datos reales para predicción:', realData.length, 'meses');
         historicalData = realData;
       }
     }
@@ -1389,16 +1390,16 @@ export class MonthlyReviewComponent implements OnInit {
       ]
     };
 
-    console.log(`✅ Gráfico de predicción científica generado:`);
-    console.log(`   📊 ${historicalData.length} meses históricos + ${predictions.length} meses predichos`);
-    console.log(`   📐 Regresión Lineal: y = ${m.toFixed(3)}x + ${b.toFixed(2)}`);
-    console.log(`   📈 R² (Bondad de ajuste): ${r2Percentage}%`);
-    console.log(`   📉 Tasa de crecimiento promedio: ${(avgGrowthRate * 100).toFixed(2)}%`);
-    console.log(`   🎯 Desviación estándar: ${stdDev.toFixed(2)}`);
-    console.log(`   📋 Datos históricos:`, historicalAmounts);
-    console.log(`   📋 Predicciones:`, predictedAmounts);
-    console.log(`   📋 Límites superiores:`, upperBounds);
-    console.log(`   📋 Límites inferiores:`, lowerBounds);
+    logger.debug(`✅ Gráfico de predicción científica generado:`);
+    logger.debug(`   📊 ${historicalData.length} meses históricos + ${predictions.length} meses predichos`);
+    logger.debug(`   📐 Regresión Lineal: y = ${m.toFixed(3)}x + ${b.toFixed(2)}`);
+    logger.debug(`   📈 R² (Bondad de ajuste): ${r2Percentage}%`);
+    logger.debug(`   📉 Tasa de crecimiento promedio: ${(avgGrowthRate * 100).toFixed(2)}%`);
+    logger.debug(`   🎯 Desviación estándar: ${stdDev.toFixed(2)}`);
+    logger.debug(`   📋 Datos históricos:`, historicalAmounts);
+    logger.debug(`   📋 Predicciones:`, predictedAmounts);
+    logger.debug(`   📋 Límites superiores:`, upperBounds);
+    logger.debug(`   📋 Límites inferiores:`, lowerBounds);
 
     this.salesPredictionChartOptions.set(predictionChart);
   }

@@ -5,6 +5,7 @@ import { Notification, NotificationStatus, NotificationType } from '../../models
 import { NotificationCardComponent } from './notification-card';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../../services/auth/auth';
+import { logger } from '../../../../core/logger';
 
 @Component({
   selector: 'app-notifications-inbox',
@@ -55,11 +56,11 @@ export class NotificationsInboxComponent implements OnInit {
       );
 
       if (hasUnreadRoleChange) {
-        console.log('[NotificationsInbox] 🔄 Unread role change notification detected, refreshing user data...');
+        logger.debug('[NotificationsInbox] 🔄 Unread role change notification detected, refreshing user data...');
         this.auth.forceRefresh();
       }
     } catch (err: any) {
-      console.error('❌ [NotificationsInbox] Error loading notifications:', err);
+      logger.error('❌ [NotificationsInbox] Error loading notifications:', err);
       this.error = err.error?.message || this.t.instant('notifications.errorLoad') || 'Error al cargar las notificaciones';
     } finally {
       this.loading = false;
@@ -94,11 +95,11 @@ export class NotificationsInboxComponent implements OnInit {
 
       // 🔄 Auto-refresh del usuario si es una notificación de cambio de rol
       if (this.isRoleChangeNotification(notification)) {
-        console.log('[NotificationsInbox] 🔄 Role change detected, refreshing user data...');
+        logger.debug('[NotificationsInbox] 🔄 Role change detected, refreshing user data...');
         this.auth.forceRefresh();
       }
     } catch (err: any) {
-      console.error('❌ Error marking notification as read:', err);
+      logger.error('❌ Error marking notification as read:', err);
     }
   }
 
@@ -119,7 +120,7 @@ export class NotificationsInboxComponent implements OnInit {
 
       this.applyFilter();
     } catch (err: any) {
-      console.error('❌ Error deleting notification:', err);
+      logger.error('❌ Error deleting notification:', err);
       this.error = this.t.instant('notifications.errorDelete') || 'Error al eliminar la notificación';
     }
   }
@@ -139,7 +140,7 @@ export class NotificationsInboxComponent implements OnInit {
       this.unreadCount = 0;
       this.applyFilter();
     } catch (err: any) {
-      console.error('❌ Error marking all as read:', err);
+      logger.error('❌ Error marking all as read:', err);
       this.error = this.t.instant('notifications.errorMarkAllRead') || 'Error al marcar todas como leídas';
     }
   }

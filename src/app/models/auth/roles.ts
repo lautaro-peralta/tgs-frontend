@@ -57,31 +57,9 @@ export function hasAnyRole(userRoles: string[] | undefined | null, required: str
   return required.some(r => set.has(r.toUpperCase()));
 }
 
-// ---- Utilidades para desarrollo y testing ----
-
-/**
- * Verifica si está habilitado el bypass de autenticación para desarrollo
- * 
- * Permite saltarse la autenticación durante el desarrollo cuando
- * el backend no está disponible.
- * 
- * @returns true si el bypass está habilitado en localStorage
- */
-export function devBypass(): boolean {
-  return typeof localStorage !== 'undefined' && localStorage.getItem('authBypass') === 'true';
-}
-
-/**
- * Obtiene roles mock para desarrollo desde localStorage
- * 
- * Permite simular diferentes roles de usuario durante el desarrollo
- * sin necesidad de autenticación real.
- * 
- * @returns Array de roles mock configurados en localStorage
- */
-export function getMockRoles(): Role[] {
-  if (typeof localStorage === 'undefined') return [];
-  const raw = localStorage.getItem('mockRoles');
-  const items = raw ? raw.split(',').map(s => s.trim().toUpperCase()) : [];
-  return normalizeRoles(items);
-}
+// NOTA: Se eliminaron las utilidades `devBypass()` y `getMockRoles()`, que
+// permitían saltarse la autenticación o simular roles vía `localStorage`
+// (`authBypass` / `mockRoles`). La protección de rutas depende únicamente del
+// estado real de autenticación/autorización; un modo dev debe implementarse
+// fuera del flujo productivo (environment/feature flags), no con flags
+// manipulables desde el navegador.

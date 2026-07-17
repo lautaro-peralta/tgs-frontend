@@ -6,6 +6,7 @@ import { AdminService } from '../../services/admin/admin';
 import { AdminDTO, CreateAdminDTO, PatchAdminDTO } from '../../models/admin/admin.model';
 import { AuthService } from '../../services/user/user';
 import { User } from '../../models/user/user.model';
+import { logger } from '../../core/logger';
 
 /**
  * Componente: Admin
@@ -193,10 +194,10 @@ export class AdminComponent implements OnInit {
     this.authSrv.getAllVerifiedUsers().subscribe({
       next: (verifiedUsers) => {
         this.users.set(verifiedUsers);
-        console.log(`[AdminComponent] Loaded ${verifiedUsers.length} verified users`);
+        logger.debug(`[AdminComponent] Loaded ${verifiedUsers.length} verified users`);
       },
       error: (err) => {
-        console.error('[AdminComponent] Error loading verified users:', err);
+        logger.error('[AdminComponent] Error loading verified users:', err);
         this.users.set([]);
       }
     });

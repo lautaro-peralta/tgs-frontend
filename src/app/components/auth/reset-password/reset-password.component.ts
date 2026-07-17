@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PasswordResetService } from '../../../services/password-reset/password-reset.service';
 import { firstValueFrom } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../core/logger';
 
 @Component({
   standalone: true,
@@ -30,7 +31,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit() {
     const token = this.route.snapshot.paramMap.get('token') || '';
-    console.log('[ResetPassword] Token:', token);
+    logger.debug('[ResetPassword] Token:', token);
 
     if (token) {
       this.token = token;
@@ -44,7 +45,7 @@ export class ResetPasswordComponent implements OnInit {
   async validateToken() {
     try {
       const res = await firstValueFrom(this.resetService.validateToken(this.token));
-      console.log('[ResetPassword] Validation:', res);
+      logger.debug('[ResetPassword] Validation:', res);
 
       if (res.data?.isValid) {
         this.state.set('form');
@@ -59,7 +60,7 @@ export class ResetPasswordComponent implements OnInit {
         this.state.set('error');
       }
     } catch (e: any) {
-      console.error('[ResetPassword] Validation error:', e);
+      logger.error('[ResetPassword] Validation error:', e);
 
       if (this.resetService.isTokenExpired(e)) {
         this.error.set(this.translate.instant('auth.resetPassword.errors.requestNew'));
@@ -119,7 +120,7 @@ export class ResetPasswordComponent implements OnInit {
       const res = await firstValueFrom(
         this.resetService.resetPassword(this.token, this.newPassword)
       );
-      console.log('[ResetPassword] Success:', res);
+      logger.debug('[ResetPassword] Success:', res);
 
       if (res.success) {
         this.state.set('success');
@@ -131,7 +132,7 @@ export class ResetPasswordComponent implements OnInit {
         this.error.set(res.message || this.translate.instant('auth.resetPassword.errors.resetFailed'));
       }
     } catch (e: any) {
-      console.error('[ResetPassword] Error:', e);
+      logger.error('[ResetPassword] Error:', e);
 
       if (this.resetService.isTokenExpired(e)) {
         this.error.set(this.translate.instant('auth.resetPassword.errors.requestNew'));

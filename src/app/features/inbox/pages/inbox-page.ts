@@ -11,6 +11,7 @@ import { AdminUserVerificationInboxComponent } from '../components/role-requests
 import { UserVerificationStatusComponent } from '../components/role-requests/user-verification-status';
 import { NotificationsInboxComponent } from '../components/notifications/notifications-inbox';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../../core/logger';
 
 
 @Component({
@@ -90,12 +91,12 @@ export class InboxPageComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
-      console.warn('[InboxPage] User not authenticated');
+      logger.warn('[InboxPage] User not authenticated');
       this.loading.set(false);
       return;
     }
 
-    console.log('[InboxPage] 🚀 Initializing with user:', this.user());
+    logger.debug('[InboxPage] 🚀 Initializing with user:', this.user());
     this.loading.set(false);
     this.refreshUser();
   }
@@ -103,7 +104,7 @@ export class InboxPageComponent implements OnInit {
   private refreshUser(): void {
     this.authService.me().subscribe({
       next: (user) => {
-        console.log('[InboxPage] ✅ User refreshed:', {
+        logger.debug('[InboxPage] ✅ User refreshed:', {
           username: user.username,
           roles: user.roles,
           isVerified: (user as any).isVerified,
@@ -111,7 +112,7 @@ export class InboxPageComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('[InboxPage] ❌ Error refreshing user:', err);
+        logger.error('[InboxPage] ❌ Error refreshing user:', err);
       }
     });
   }
@@ -119,12 +120,12 @@ export class InboxPageComponent implements OnInit {
   setActiveSection(section: 'user-verification' | 'role-requests' | 'notifications'): void {
     // ✅ Prevenir cambio a role-requests si no está verificado (solo para usuarios no-admin)
     if (section === 'role-requests' && !this.isVerified() && !this.isAdmin()) {
-      console.warn('[InboxPage] ⚠️ Cannot access role-requests without verification');
+      logger.warn('[InboxPage] ⚠️ Cannot access role-requests without verification');
       return;
     }
 
     this.activeSection.set(section);
-    console.log('[InboxPage] 📑 Active section changed to:', section);
+    logger.debug('[InboxPage] 📑 Active section changed to:', section);
   }
 
   getUserDisplayName(): string {

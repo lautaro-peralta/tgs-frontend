@@ -1,14 +1,16 @@
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { forkJoin, of, firstValueFrom } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import { SaleService } from '../../services/sale/sale';
-import { DistributorService } from '../../services/distributor/distributor';
-import { ZoneService } from '../../services/zone/zone';
 import { AuthService } from '../../services/auth/auth';
-import { CartItem } from '../../services/cart/cart';
+import { CartService } from '../../services/cart/cart';
+import { unwrap } from '../../core/http/unwrap';
+import { logger } from '../../core/logger';
 
 interface CheckoutState {
   step: 'cart' | 'processing' | 'success' | 'error';
@@ -336,18 +338,13 @@ interface CheckoutState {
 })
 export class CheckoutComponent implements OnInit {
   private saleSrv = inject(SaleService);
-  private distSrv = inject(DistributorService);
-  private zoneSrv = inject(ZoneService);
   private authSrv = inject(AuthService);
+  private cartSrv = inject(CartService);
   private router = inject(Router);
 
-  // Props recibidas (normalmente vendrían del router state)
-  cartItems = signal<CartItem[]>([]);
-  
   state = signal<CheckoutState>({ step: 'cart' });
 
   ngOnInit() {
-    // En producción, los items vendrían del state del router o del servicio de carrito
     this.processCheckout();
   }
 
@@ -360,66 +357,65 @@ export class CheckoutComponent implements OnInit {
         throw new Error('Usuario no autenticado');
       }
 
-      // Obtener el distribuidor por defecto (o el primero disponible)
-      // En producción, esto debería venir de la lógica de negocio
-      const distributors = await this.distSrv.getAll().toPromise();
-      if (!distributors || distributors.length === 0) {
-        throw new Error('No hay distribuidores disponibles');
+      const clientDni = (user as any).person?.dni;
+      if (!clientDni) {
+        throw new Error('No se pudo obtener tu DNI. Completá tu perfil antes de comprar.');
       }
 
-      const distributor = distributors[0];
-
-      // Preparar datos de la venta
-      const saleData = {
-        clientDni: (user as any).person?.dni || user.email, // Usar DNI o email como fallback
-        distributorDni: distributor.dni,
-        details: this.cartItems().map(item => ({
-          productId: item.id,
-          quantity: item.qty
-        }))
-      };
-
-      // Crear la venta
-      const response = await this.saleSrv.createSale(saleData).toPromise();
-      
-      // Forzar refresh del usuario para obtener el nuevo rol CLIENT
-      await this.authSrv.me().toPromise();
-
-      // Obtener información de la zona para mostrar la sede
-      let zoneName = distributor.zone?.name || 'Sede central';
-      let zoneAddress = '';
-
-      if (distributor.zone?.id) {
-        try {
-          const zones = await this.zoneSrv.getAllZones().toPromise();
-          const zone = (zones as any)?.data?.find((z: any) => z.id === distributor.zone?.id) || 
-                      (Array.isArray(zones) ? zones.find((z: any) => z.id === distributor.zone?.id) : null);
-          if (zone) {
-            zoneName = zone.name;
-            zoneAddress = zone.description || '';
-          }
-        } catch (err) {
-          console.warn('No se pudo cargar información de la zona:', err);
-        }
+      // ✅ El distribuidor de cada venta proviene del carrito real (agrupado por
+      //    distribuidor), NO de "el primer distribuidor disponible".
+      const groups = this.cartSrv.distributorGroups();
+      if (groups.length === 0) {
+        throw new Error('Tu carrito está vacío');
       }
 
-      // Actualizar estado a éxito
+      // Una venta por distribuidor, en paralelo, tolerando fallos parciales.
+      const requests = groups.map(group =>
+        this.saleSrv
+          .createSale({
+            clientDni,
+            distributorDni: group.dni,
+            details: group.items.map(it => ({ productId: it.productId, quantity: it.qty })),
+          })
+          .pipe(
+            map(response => ({ ok: true as const, group, response })),
+            catchError(error =>
+              of({
+                ok: false as const,
+                group,
+                error: error?.error?.message || error?.message || 'Error desconocido',
+              })
+            )
+          )
+      );
+
+      const results = await firstValueFrom(forkJoin(requests));
+      const successful = results.filter(r => r.ok);
+      if (successful.length === 0) {
+        throw new Error('No se pudo procesar la compra. Intentá nuevamente.');
+      }
+
+      // Refrescar el usuario para reflejar el nuevo rol CLIENT si corresponde.
+      await firstValueFrom(this.authSrv.me());
+
+      const first = successful[0];
+      const firstSale = unwrap<{ id?: number }>((first as any).response);
+
       this.state.set({
         step: 'success',
-        saleId: (response as any).data?.id || (response as any).id,
-        distributorName: distributor.name,
-        zoneName,
-        zoneAddress
+        saleId: firstSale?.id,
+        distributorName: successful.map(r => r.group.name).join(', '),
+        zoneName: first.group.zone?.name || 'Sede central',
+        zoneAddress: '',
       });
 
-      // Limpiar carrito (esto debería hacerlo el componente padre)
-      this.cartItems.set([]);
-
+      // Limpiar carrito centralizado tras la compra exitosa.
+      this.cartSrv.clear();
     } catch (error: any) {
-      console.error('Error en checkout:', error);
+      logger.error('Error en checkout:', error);
       this.state.set({
         step: 'error',
-        errorMessage: error?.message || error?.error?.message || 'Error al procesar la compra'
+        errorMessage: error?.message || error?.error?.message || 'Error al procesar la compra',
       });
     }
   }

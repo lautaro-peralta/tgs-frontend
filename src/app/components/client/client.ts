@@ -14,6 +14,7 @@ import {
 } from '../../models/client/client.model';
 import { SaleDTO } from '../../models/sale/sale.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { logger } from '../../core/logger';
 
 @Component({
   selector: 'app-client',
@@ -49,7 +50,7 @@ export class ClientComponent implements OnInit {
   currentUserDni = computed(() => {
     const user = this.currentUser();
     const dni = (user as any)?.person?.dni;
-    console.log('[ClientComponent] 🔍 Current user DNI:', {
+    logger.debug('[ClientComponent] 🔍 Current user DNI:', {
       hasUser: !!user,
       hasPerson: !!(user as any)?.person,
       dni: dni,
@@ -82,19 +83,19 @@ export class ClientComponent implements OnInit {
 
     // Admin ve todos los clientes
     if (this.isAdmin()) {
-      console.log('👑 Admin - showing all clients:', allClients.length);
+      logger.debug('👑 Admin - showing all clients:', allClients.length);
       return allClients;
     }
 
     // Distribuidor solo ve clientes que le compraron
     if (this.isDistributor()) {
       const filtered = allClients.filter(client => clientDnis.has(client.dni));
-      console.log('🚚 Distributor - filtered clients:', filtered.length, 'of', allClients.length);
+      logger.debug('🚚 Distributor - filtered clients:', filtered.length, 'of', allClients.length);
       return filtered;
     }
 
     // Otros roles: sin clientes
-    console.log('⚠️ User has no permission to view clients');
+    logger.debug('⚠️ User has no permission to view clients');
     return [];
   });
 
@@ -182,8 +183,8 @@ export class ClientComponent implements OnInit {
       this.srv.getAllClients().toPromise(),
       this.saleSrv.getAllSales().toPromise()
     ]).then(([clientsRes, salesList]) => {
-      console.log('📋 Clients loaded:', clientsRes?.data?.length ?? 0);
-      console.log('📋 Sales loaded:', salesList?.length ?? 0);
+      logger.debug('📋 Clients loaded:', clientsRes?.data?.length ?? 0);
+      logger.debug('📋 Sales loaded:', salesList?.length ?? 0);
 
       this.clients.set(clientsRes?.data ?? []);
 
@@ -191,16 +192,16 @@ export class ClientComponent implements OnInit {
       let filteredSales = salesList ?? [];
       if (this.isDistributor() && !this.isAdmin()) {
         const userDni = this.currentUserDni();
-        console.log('🔍 Filtering sales for distributor DNI:', userDni);
+        logger.debug('🔍 Filtering sales for distributor DNI:', userDni);
 
         if (userDni) {
           filteredSales = filteredSales.filter(sale => {
             const distributorDni = sale.distributor?.dni;
             return distributorDni === userDni;
           });
-          console.log('✅ Filtered sales for distributor:', filteredSales.length);
+          logger.debug('✅ Filtered sales for distributor:', filteredSales.length);
         } else {
-          console.warn('⚠️ Distributor DNI not found');
+          logger.warn('⚠️ Distributor DNI not found');
           filteredSales = [];
         }
       }
