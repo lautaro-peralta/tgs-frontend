@@ -2,8 +2,8 @@ name: Sync Fork with Upstream
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # Se ejecuta cada 10 minutos
-  workflow_dispatch:         # Permite ejecutarlo manualmente desde la pestaña Actions
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
 
 jobs:
   sync:
@@ -14,6 +14,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Add upstream remote
         run: |
