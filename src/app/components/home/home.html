@@ -10,38 +10,6 @@
       [class.mode-register]="mode()==='register'" [class.hiding]="hiding" [class.enter]="entering"
       [style.--split]="mode()==='login' ? '64%' : '36%'" aria-label="Authentication">
 
-      <!-- Tab switcher (ARIA Tabs Pattern) -->
-      <div class="auth-tabs" role="tablist" aria-label="Opciones de autenticación">
-        <button
-          type="button"
-          role="tab"
-          class="auth-tab"
-          [class.active]="mode()==='login'"
-          [attr.aria-selected]="mode()==='login'"
-          [attr.tabindex]="mode()==='login' ? 0 : -1"
-          aria-controls="login-panel"
-          id="login-tab-btn"
-          (click)="setMode('login')"
-          data-cy="login-tab">
-          <span class="tab-icon" aria-hidden="true">🔐</span>
-          <span class="tab-text">{{ 'auth.login.title' | translate }}</span>
-        </button>
-        <button
-          type="button"
-          role="tab"
-          class="auth-tab"
-          [class.active]="mode()==='register'"
-          [attr.aria-selected]="mode()==='register'"
-          [attr.tabindex]="mode()==='register' ? 0 : -1"
-          aria-controls="register-panel"
-          id="register-tab-btn"
-          (click)="setMode('register')"
-          data-cy="register-tab">
-          <span class="tab-icon" aria-hidden="true">✨</span>
-          <span class="tab-text">{{ 'auth.register.title' | translate }}</span>
-        </button>
-      </div>
-
       <!-- 📱 Mobile tab switcher (same ARIA pattern) -->
       <div class="mobile-auth-tabs" role="tablist" aria-label="Opciones de autenticación móvil">
         <button
@@ -75,9 +43,10 @@
         <div class="auth-half left"
           role="tabpanel"
           id="login-panel"
-          aria-labelledby="login-tab-btn"
+          aria-labelledby="login-panel-heading"
           [class.active]="mode()==='login'"
-          [attr.hidden]="mode()!=='login' ? true : null">
+          (click)="setMode('login')"
+          data-cy="login-tab">
 
           <!-- 🔄 Banner de espera de verificación (cuando está esperando que el usuario verifique desde otra pestaña) -->
           <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='login' && !loadingLogin"
@@ -158,7 +127,7 @@
           <!-- Formulario LOGIN (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='login'" [formGroup]="loginForm"
             (ngSubmit)="submitLogin()" (click)="$event.stopPropagation()">
-            <h2>{{ 'auth.login.title' | translate }}</h2>
+            <h2 id="login-panel-heading">{{ 'auth.login.title' | translate }}</h2>
 
             <label>
               <span>{{ 'auth.fields.emailOrUsername' | translate : {} : 'Email o Usuario' }}</span>
@@ -209,9 +178,10 @@
         <div class="auth-half right"
           role="tabpanel"
           id="register-panel"
-          aria-labelledby="register-tab-btn"
+          aria-labelledby="register-panel-heading"
           [class.active]="mode()==='register'"
-          [attr.hidden]="mode()!=='register' ? true : null">
+          (click)="setMode('register')"
+          data-cy="register-tab">
 
           <!-- 🔄 Banner de espera de verificación en REGISTRO (cuando está esperando que el usuario verifique desde otra pestaña) -->
           <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='register' && !loadingRegister"
@@ -272,7 +242,7 @@
           <!-- Formulario REGISTRO (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='register'" [formGroup]="registerForm"
             (ngSubmit)="submitRegister()" (click)="$event.stopPropagation()">
-            <h2>{{ 'auth.register.title' | translate }}</h2>
+            <h2 id="register-panel-heading">{{ 'auth.register.title' | translate }}</h2>
 
             <label>
               <span>{{ 'auth.fields.username' | translate }}</span>

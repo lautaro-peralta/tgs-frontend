@@ -21,6 +21,7 @@ import { I18nService } from '../../services/i18n/i18n.js';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthTransitionService } from '../../services/ui/auth-transition';
 import { NotificationService } from '../../features/inbox/services/notification.service';
+import { LoggerService } from '../../services/logger/logger';
 
 interface MenuItem { label: string; path: string; }
 
@@ -64,6 +65,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   private i18n = inject(I18nService);
   private transition = inject(AuthTransitionService);
   private notificationService = inject(NotificationService);
+  private logger = inject(LoggerService);
 
   // Signal para el contador de notificaciones no leídas
   private unreadNotifications = signal<number>(0);
@@ -89,43 +91,16 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   readonly currentRoles = computed(() => this.auth.currentRoles());
   readonly profileCompleteness = computed(() => this.auth.profileCompleteness());
 
-  // ✅ Computed para roles con debug mejorado
-  readonly userRoles = computed(() => {
-    const roles = this.currentRoles();
-    const user = this.user();
-    console.log('[Navbar] 🔄 Roles actualizados:', {
-      roles,
-      userId: user?.id,
-      username: user?.username,
-      rolesFromUser: user?.roles
-    });
-    return roles;
-  });
+  readonly userRoles = computed(() => this.currentRoles());
 
   // ✅ Computed para verificar si puede acceder a la tienda
   readonly canSeeStore = computed(() => {
     const isAuth = this.isAuthenticated();
     const roles = this.currentRoles();
-    const user = this.user();
     const hasClient = roles.includes(Role.CLIENT);
     const hasUser = roles.includes(Role.USER);
     const hasAdmin = roles.includes(Role.ADMIN);
-    
-    console.log('[Navbar] 🛒 Store Access Check DETAILED:', {
-      isAuth,
-      user: user ? { id: user.id, username: user.username, email: user.email } : null,
-      roles,
-      rolesType: Array.isArray(roles) ? 'array' : typeof roles,
-      rolesLength: roles?.length,
-      hasClient,
-      hasUser,
-      hasAdmin,
-      Role_CLIENT_value: Role.CLIENT,
-      Role_USER_value: Role.USER,
-      Role_ADMIN_value: Role.ADMIN,
-      result: isAuth && (hasClient || hasUser || hasAdmin)
-    });
-    
+
     return isAuth && (hasClient || hasUser || hasAdmin);
   });
 
@@ -215,12 +190,6 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
       const user = this.user();
 
       if (user && roles.length > 0) {
-        console.log('[Navbar] 👤 Usuario actualizado:', {
-          id: user.id,
-          username: user.username,
-          roles: roles
-        });
-
         // Actualizar indicador visual después de cambios
         setTimeout(() => this.updateIndicator(), 100);
       }
@@ -230,9 +199,8 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
     this.startNotificationPolling();
   }
 
-  ngAfterViewInit() { 
-    this.updateIndicator(); 
-    console.log('[Navbar] 🚀 Component initialized');
+  ngAfterViewInit() {
+    this.updateIndicator();
   }
 
   isAuthenticated(): boolean {
@@ -351,7 +319,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
 
       this.unreadNotifications.set(count);
     } catch (error) {
-      console.error('[Navbar] Error loading unread notifications count:', error);
+      this.logger.error('[Navbar] Error loading unread notifications count:', error);
       // No establecer a 0 en caso de error para mantener el último valor conocido
     }
   }
@@ -390,7 +358,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
         }, 5000);
       }
     } catch (error) {
-      console.error('[Navbar] Error showing notification toast:', error);
+      this.logger.error('[Navbar] Error showing notification toast:', error);
     }
   }
 

@@ -55,19 +55,6 @@ describe('ProductService', () => {
       expect(req.request.withCredentials).toBe(true);
       req.flush({ data: mockProductsArray });
     });
-
-    it('should return products array when response is direct array', () => {
-      service.getAllProducts().subscribe(products => {
-        expect(products).toEqual(mockProductsArray);
-      });
-
-      // Use URL matcher to ignore cache-busting query parameters (_t, _r)
-      const req = httpMock.expectOne((request) => {
-        const url = new URL(request.url, 'http://localhost');
-        return url.pathname === '/api/products' && request.method === 'GET';
-      });
-      req.flush(mockProductsArray);
-    });
   });
 
   describe('list', () => {
@@ -84,19 +71,6 @@ describe('ProductService', () => {
       expect(req.request.method).toBe('GET');
       req.flush({ data: mockProductsArray });
     });
-
-    it('should return products array when response is direct array', () => {
-      service.list().subscribe(products => {
-        expect(products).toEqual(mockProductsArray);
-      });
-
-      // Use URL matcher to ignore cache-busting query parameters (_t, _r)
-      const req = httpMock.expectOne((request) => {
-        const url = new URL(request.url, 'http://localhost');
-        return url.pathname === '/api/products' && request.method === 'GET';
-      });
-      req.flush(mockProductsArray);
-    });
   });
 
   describe('getProduct', () => {
@@ -109,15 +83,6 @@ describe('ProductService', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
       req.flush({ data: mockProduct });
-    });
-
-    it('should return product when response is direct object', () => {
-      service.getProduct(1).subscribe(product => {
-        expect(product).toEqual(mockProduct);
-      });
-
-      const req = httpMock.expectOne('/api/products/1');
-      req.flush(mockProduct);
     });
 
     it('should get product with different id', () => {
@@ -317,15 +282,6 @@ describe('ProductService', () => {
       expect(req.request.params.get('min')).toBe('50');
       expect(req.request.params.get('max')).toBe('500');
       req.flush({ data: mockProductsArray });
-    });
-
-    it('should return products when response is direct array', () => {
-      service.searchProducts({}).subscribe(products => {
-        expect(products).toEqual(mockProductsArray);
-      });
-
-      const req = httpMock.expectOne(r => r.url === '/api/products/search');
-      req.flush(mockProductsArray);
     });
 
     it('should search with empty params', () => {

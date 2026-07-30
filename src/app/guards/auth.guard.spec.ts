@@ -32,12 +32,6 @@ describe('Auth Guards', () => {
     mockRoute = {} as ActivatedRouteSnapshot;
     mockState = { url: '/test-route' } as RouterStateSnapshot;
 
-    // Clear localStorage before each test
-    localStorage.clear();
-  });
-
-  afterEach(() => {
-    localStorage.clear();
   });
 
   describe('authGuard', () => {
@@ -62,17 +56,6 @@ describe('Auth Guards', () => {
 
       expect(result).toBeTruthy();
       expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/']);
-    });
-
-    it('should allow access with authBypass in localStorage', () => {
-      localStorage.setItem('authBypass', 'true');
-      mockAuthService.isAuthenticated.and.returnValue(false);
-
-      const result = TestBed.runInInjectionContext(() =>
-        authGuard(mockRoute, mockState)
-      );
-
-      expect(result).toBe(true);
     });
 
     it('should allow public verification URLs without authentication', () => {
@@ -205,19 +188,6 @@ describe('Auth Guards', () => {
       expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/']);
     });
 
-    it('should allow access with authBypass regardless of role', () => {
-      localStorage.setItem('authBypass', 'true');
-      mockAuthService.isAuthenticated.and.returnValue(false);
-
-      const guard = roleGuard([Role.ADMIN]);
-
-      const result = TestBed.runInInjectionContext(() =>
-        guard(mockRoute, mockState)
-      );
-
-      expect(result).toBe(true);
-    });
-
     it('should allow verification URLs without role check', () => {
       mockAuthService.isAuthenticated.and.returnValue(false);
       mockState.url = '/verify-email/token123';
@@ -282,17 +252,6 @@ describe('Auth Guards', () => {
       expect(mockRouter.createUrlTree).toHaveBeenCalledWith(['/login']);
     });
 
-    it('should allow access with authBypass', () => {
-      localStorage.setItem('authBypass', 'true');
-      mockAuthService.isAuthenticated.and.returnValue(false);
-
-      const result = TestBed.runInInjectionContext(() =>
-        inboxGuard(mockRoute, mockState)
-      );
-
-      expect(result).toBe(true);
-    });
-
     it('should allow verification URLs', () => {
       mockAuthService.isAuthenticated.and.returnValue(false);
       mockState.url = '/verify-email/token123';
@@ -315,18 +274,6 @@ describe('Auth Guards', () => {
       );
 
       expect(result).toBe(true);
-    });
-
-    it('should handle null localStorage', () => {
-      localStorage.removeItem('authBypass');
-      mockAuthService.isAuthenticated.and.returnValue(false);
-      mockRouter.createUrlTree.and.returnValue({} as UrlTree);
-
-      const result = TestBed.runInInjectionContext(() =>
-        authGuard(mockRoute, mockState)
-      );
-
-      expect(result).toBeTruthy();
     });
 
     it('should handle role guard with empty roles array', () => {

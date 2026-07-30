@@ -1,22 +1,20 @@
 // src/app/interceptors/auth.interceptor.ts
 import { inject } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import {
   HttpInterceptorFn,
   HttpErrorResponse,
   HttpRequest,
   HttpEvent,
 } from '@angular/common/http';
-import { catchError, filter, switchMap } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth';
+import { NavigationStateService } from '../services/ui/navigation-state';
 
 // ============================================================================
 // FLAGS Y ESTADO GLOBAL
 // ============================================================================
-
-/** Flag para saber si ya terminó la primera navegación real */
-let hasNavigatedOnce = false;
 
 /** Flag para evitar múltiples refresh simultáneos */
 let isRefreshing = false;
@@ -90,11 +88,7 @@ function rejectPendingRequests(error: any): void {
 export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<unknown>> => {
   const router = inject(Router);
   const authService = inject(AuthService);
-
-  // Marcar cuando finalice la primera navegación real
-  router.events
-    .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-    .subscribe(() => { hasNavigatedOnce = true; });
+  const navigationState = inject(NavigationStateService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse): Observable<HttpEvent<unknown>> => {
@@ -114,7 +108,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
         }
 
         // 2) No interferir durante la primera navegación
-        if (!hasNavigatedOnce) {
+        if (!navigationState.hasNavigatedOnce) {
           console.log('[AuthInterceptor] 🚀 Initial navigation - passing through 401');
           return throwError(() => error);
         }

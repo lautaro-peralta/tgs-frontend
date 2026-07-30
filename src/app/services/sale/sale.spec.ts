@@ -42,7 +42,7 @@ describe('SaleService', () => {
   });
 
   describe('getAllSales', () => {
-    it('should return sales array when response is array', () => {
+    it('should return sales array when response has data property', () => {
       service.getAllSales().subscribe(sales => {
         expect(sales).toEqual(mockSalesArray);
         expect(sales.length).toBe(2);
@@ -51,39 +51,12 @@ describe('SaleService', () => {
       const req = httpMock.expectOne('/api/sales');
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
-      req.flush(mockSalesArray);
-    });
-
-    it('should return sales array when response has data property', () => {
-      service.getAllSales().subscribe(sales => {
-        expect(sales).toEqual(mockSalesArray);
-      });
-
-      const req = httpMock.expectOne('/api/sales');
-      req.flush({ data: mockSalesArray });
-    });
-
-    it('should return empty array when response is invalid', () => {
-      service.getAllSales().subscribe(sales => {
-        expect(sales).toEqual([]);
-      });
-
-      const req = httpMock.expectOne('/api/sales');
-      req.flush({ invalid: 'response' });
-    });
-
-    it('should return empty array when response is null', () => {
-      service.getAllSales().subscribe(sales => {
-        expect(sales).toEqual([]);
-      });
-
-      const req = httpMock.expectOne('/api/sales');
-      req.flush(null);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
   });
 
   describe('getMyPurchases', () => {
-    it('should return purchases array when response is array', () => {
+    it('should return purchases array when response has data property', () => {
       service.getMyPurchases().subscribe(purchases => {
         expect(purchases).toEqual(mockSalesArray);
       });
@@ -91,34 +64,7 @@ describe('SaleService', () => {
       const req = httpMock.expectOne('/api/sales/my-purchases');
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
-      req.flush(mockSalesArray);
-    });
-
-    it('should return purchases array when response has data property', () => {
-      service.getMyPurchases().subscribe(purchases => {
-        expect(purchases).toEqual(mockSalesArray);
-      });
-
-      const req = httpMock.expectOne('/api/sales/my-purchases');
-      req.flush({ data: mockSalesArray });
-    });
-
-    it('should return empty array when response is invalid', () => {
-      service.getMyPurchases().subscribe(purchases => {
-        expect(purchases).toEqual([]);
-      });
-
-      const req = httpMock.expectOne('/api/sales/my-purchases');
-      req.flush({ something: 'else' });
-    });
-
-    it('should return empty array when response is null', () => {
-      service.getMyPurchases().subscribe(purchases => {
-        expect(purchases).toEqual([]);
-      });
-
-      const req = httpMock.expectOne('/api/sales/my-purchases');
-      req.flush(null);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
   });
 
@@ -132,15 +78,6 @@ describe('SaleService', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
       req.flush({ data: mockSale });
-    });
-
-    it('should return response directly when no data property', () => {
-      service.getSale(1).subscribe(sale => {
-        expect(sale).toEqual(mockSale);
-      });
-
-      const req = httpMock.expectOne('/api/sales/1');
-      req.flush(mockSale);
     });
   });
 
@@ -340,7 +277,7 @@ describe('SaleService', () => {
       expect(req.request.method).toBe('GET');
       expect(req.request.withCredentials).toBe(true);
       expect(req.request.params.get('q')).toBe('test');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
 
     it('should search with all parameters', () => {
@@ -373,30 +310,12 @@ describe('SaleService', () => {
       req.flush({ data: mockSalesArray });
     });
 
-    it('should return empty array when response is invalid', () => {
-      service.searchSales({}).subscribe(sales => {
-        expect(sales).toEqual([]);
-      });
-
-      const req = httpMock.expectOne(req => req.url === '/api/sales/search');
-      req.flush({ invalid: 'data' });
-    });
-
-    it('should return empty array when response is null', () => {
-      service.searchSales({}).subscribe(sales => {
-        expect(sales).toEqual([]);
-      });
-
-      const req = httpMock.expectOne(req => req.url === '/api/sales/search');
-      req.flush(null);
-    });
-
     it('should search by distributor', () => {
       service.searchSales({ by: 'distributor' }).subscribe();
 
       const req = httpMock.expectOne(req => req.url === '/api/sales/search');
       expect(req.request.params.get('by')).toBe('distributor');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
 
     it('should search by zone', () => {
@@ -404,7 +323,7 @@ describe('SaleService', () => {
 
       const req = httpMock.expectOne(req => req.url === '/api/sales/search');
       expect(req.request.params.get('by')).toBe('zone');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
 
     it('should search with date type before', () => {
@@ -412,7 +331,7 @@ describe('SaleService', () => {
 
       const req = httpMock.expectOne(req => req.url === '/api/sales/search');
       expect(req.request.params.get('type')).toBe('before');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
 
     it('should search with date type after', () => {
@@ -420,7 +339,7 @@ describe('SaleService', () => {
 
       const req = httpMock.expectOne(req => req.url === '/api/sales/search');
       expect(req.request.params.get('type')).toBe('after');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
 
     it('should search with date type between', () => {
@@ -433,7 +352,7 @@ describe('SaleService', () => {
       const req = httpMock.expectOne(req => req.url === '/api/sales/search');
       expect(req.request.params.get('type')).toBe('between');
       expect(req.request.params.get('endDate')).toBe('2024-12-31');
-      req.flush(mockSalesArray);
+      req.flush({ success: true, message: 'ok', data: mockSalesArray });
     });
   });
 });

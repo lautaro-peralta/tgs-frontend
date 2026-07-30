@@ -3,59 +3,28 @@
 // ============================================================================
 // Versión simplificada que transforma productos en "ofertas" donde cada
 // distribuidor puede ofrecer productos con su información de zona.
+// El estado del carrito y el checkout viven en CartService: este componente
+// solo se ocupa de render, búsqueda y de traducir el resultado del checkout
+// al modal de éxito.
 // ============================================================================
 
-import { Component, OnInit, inject, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product/product';
 import { ProductImageService } from '../../services/product-image/product-image';
 import { AuthService } from '../../services/auth/auth';
-import { SaleService } from '../../services/sale/sale';
-import { ApiResponse, ProductDTO, ProductOffer } from '../../models/product/product.model';
+import { CartService } from '../../services/cart/cart';
+import { ProductDTO, ProductOffer } from '../../models/product/product.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { PurchaseSuccessModalComponent, PurchaseSuccessData } from '../../components/purchase-success-modal/purchase-success-modal';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-
-// ============================================================================
-// TYPE DEFINITIONS
-// ============================================================================
-
-type CartItem = {
-  offerId: string;          // "productId-distributorDni"
-  productId: number;        // ID del producto base
-  distributorDni: string;   // DNI del distribuidor
-  distributorName: string;  // Nombre del distribuidor
-  description: string;
-  price: number;
-  imageUrl?: string | null;
-  qty: number;
-  zone?: {
-    id: number;
-    name: string;
-    isHeadquarters?: boolean;
-  } | null;
-};
-
-type DistributorGroup = {
-  dni: string;
-  name: string;
-  zone?: {
-    id: number;
-    name: string;
-    isHeadquarters?: boolean;
-  } | null;
-  items: CartItem[];
-  subtotal: number;
-};
 
 @Component({
   selector: 'app-store',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     FormsModule,
     TranslateModule,
@@ -68,17 +37,16 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // SERVICES
   // ============================================================================
-  
+
   private productsSrv = inject(ProductService);
   private imgSvc = inject(ProductImageService, { optional: true as any });
   private authService = inject(AuthService);
-  private saleService = inject(SaleService);
-  private router = inject(Router);
+  readonly cart = inject(CartService);
 
   // ============================================================================
   // STATE - Productos y Ofertas
   // ============================================================================
-  
+
   loading = signal(false);
   error = signal<string | null>(null);
   products = signal<ProductDTO[]>([]);
@@ -87,7 +55,7 @@ export class StoreComponent implements OnInit {
   offers = computed(() => {
     const allProducts = this.products();
     const offersList: ProductOffer[] = [];
-    
+
     allProducts.forEach(product => {
       // Solo productos que tienen distribuidores asociados
       if (product.distributors && product.distributors.length > 0) {
@@ -108,7 +76,7 @@ export class StoreComponent implements OnInit {
         });
       }
     });
-    
+
     console.log('🛒 Offers generated:', offersList.length);
     return offersList;
   });
@@ -116,7 +84,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // STATE - Búsqueda
   // ============================================================================
-  
+
   searchInput = signal('');
   searchQuery = signal('');
 
@@ -124,9 +92,9 @@ export class StoreComponent implements OnInit {
   list = computed(() => {
     const txt = this.searchQuery().toLowerCase().trim();
     const allOffers = this.offers();
-    
+
     if (!txt) return allOffers;
-    
+
     return allOffers.filter((offer) =>
       (offer.description ?? '').toLowerCase().includes(txt) ||
       (offer.distributorName ?? '').toLowerCase().includes(txt) ||
@@ -136,96 +104,31 @@ export class StoreComponent implements OnInit {
   });
 
   // ============================================================================
-  // STATE - Carrito
-  // ============================================================================
-  
-  private LS_KEY = 'cart.marketplace.v1';
-  private itemsSig = signal<CartItem[]>(this.loadCart());
-  
-  cart = {
-    items: () => this.itemsSig(),
-    count: () => this.itemsSig().reduce((a, it) => a + it.qty, 0),
-    total: () => this.itemsSig().reduce((a, it) => a + it.qty * (it.price ?? 0), 0),
-  };
-
-  // ============================================================================
   // STATE - UI
   // ============================================================================
-  
+
   flashId = signal<string | null>(null);
   showCart = signal(false);
   bumpSig = signal(false);
   processing = signal(false);
-  
+
   showSuccessModal = signal(false);
   purchaseData = signal<PurchaseSuccessData | null>(null);
 
   // ============================================================================
-  // COMPUTED - Agrupación por Distribuidor
+  // COMPUTED - Carrito / Distribuidores (delegado a CartService)
   // ============================================================================
-  
-  /**
-   * Agrupa los items del carrito por distribuidor
-   */
-  cartByDistributor = computed(() => {
-    const items = this.itemsSig();
-    const grouped = new Map<string, CartItem[]>();
-    
-    items.forEach(item => {
-      if (!grouped.has(item.distributorDni)) {
-        grouped.set(item.distributorDni, []);
-      }
-      grouped.get(item.distributorDni)!.push(item);
-    });
-    
-    return grouped;
-  });
 
   /**
-   * Lista de distribuidores seleccionados (con items en el carrito)
+   * Alias local para no tocar el template: internamente delega en
+   * CartService.distributorGroups(), que es la única fuente de verdad.
    */
-  selectedDistributors = computed(() => {
-    const grouped = this.cartByDistributor();
-    const distributors: DistributorGroup[] = [];
-    
-    grouped.forEach((items, dni) => {
-      if (items.length > 0) {
-        const firstItem = items[0];
-        distributors.push({
-          dni: dni,
-          name: firstItem.distributorName,
-          zone: firstItem.zone,
-          items: items,
-          subtotal: items.reduce((sum, item) => sum + (item.price * item.qty), 0)
-        });
-      }
-    });
-    
-    return distributors;
-  });
-
-  /**
-   * Verifica si hay múltiples distribuidores
-   */
-  hasMultipleDistributors = computed(() => this.selectedDistributors().length > 1);
-
-  /**
-   * Primer distribuidor (para compatibilidad con código existente)
-   */
-  selectedDistributor = computed(() => {
-    const distributors = this.selectedDistributors();
-    if (distributors.length === 0) return null;
-    return {
-      dni: distributors[0].dni,
-      name: distributors[0].name,
-      zone: distributors[0].zone
-    };
-  });
+  selectedDistributors = computed(() => this.cart.distributorGroups());
 
   // ============================================================================
   // COMPUTED - Disponibilidad
   // ============================================================================
-  
+
   /**
    * Verifica si una oferta está disponible (tiene stock)
    */
@@ -237,7 +140,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // COMPUTED - Permisos de Compra
   // ============================================================================
-  
+
   canPurchase = computed(() => this.authService.canPurchase());
   isVerified = computed(() => (this.authService.user() as any)?.isVerified ?? false);
   profileCompleteness = computed(() => this.authService.profileCompleteness());
@@ -245,27 +148,18 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // HELPERS - Visualización
   // ============================================================================
-  
+
   bumpCart() { return this.bumpSig(); }
 
-  toggleCartDrawer() { 
-    this.showCart.set(!this.showCart()); 
-  }
-
-  productsByDistributor = computed(() => {
-    return this.cartByDistributor();
-  });
-
-  getDistributorSubtotal(dni: string): number {
-    const dist = this.selectedDistributors().find(d => d.dni === dni);
-    return dist ? dist.subtotal : 0;
+  toggleCartDrawer() {
+    this.showCart.set(!this.showCart());
   }
 
   // ============================================================================
   // LIFECYCLE
   // ============================================================================
-  
-  ngOnInit() { 
+
+  ngOnInit() {
     this.authService.refreshIfStale(0);
     this.refresh();
   }
@@ -273,7 +167,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // DATA LOADING
   // ============================================================================
-  
+
   refresh() {
     this.loading.set(true);
     this.error.set(null);
@@ -281,8 +175,7 @@ export class StoreComponent implements OnInit {
     console.log('[StoreComponent] 🔄 Refreshing products from backend...');
 
     this.productsSrv.getAllProducts().subscribe({
-      next: (r: ApiResponse<ProductDTO[]> | ProductDTO[]) => {
-        const data = Array.isArray(r) ? r : (r as any).data;
+      next: (data: ProductDTO[]) => {
         console.log('[StoreComponent] 📥 Received products:', data?.length || 0);
 
         // Log products with their distributors
@@ -310,7 +203,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // SEARCH
   // ============================================================================
-  
+
   onSearch(): void {
     this.searchQuery.set(this.searchInput());
   }
@@ -327,83 +220,35 @@ export class StoreComponent implements OnInit {
   }
 
   // ============================================================================
-  // CART OPERATIONS
+  // CART OPERATIONS - delegadas a CartService (única fuente de verdad)
   // ============================================================================
-  
+
   /**
    * Agrega una oferta al carrito
    */
   onAddClick(event: Event, offer: ProductOffer): void {
     event.stopPropagation();
-    
+
     if (!this.isOfferAvailable(offer.offerId)) {
       return;
     }
 
-    const items = this.itemsSig();
-    const existing = items.find(it => it.offerId === offer.offerId);
-
-    if (existing) {
-      existing.qty++;
-      this.itemsSig.set([...items]);
-    } else {
-      const newItem: CartItem = {
-        offerId: offer.offerId,
-        productId: offer.productId,
-        distributorDni: offer.distributorDni,
-        distributorName: offer.distributorName,
-        description: offer.description,
-        price: offer.price,
-        imageUrl: offer.imageUrl,
-        qty: 1,
-        zone: offer.zone
-      };
-      this.itemsSig.set([...items, newItem]);
-    }
-
-    this.saveCart();
+    this.cart.add(offer);
     this.bump();
     this.flashId.set(offer.offerId);
     setTimeout(() => this.flashId.set(null), 600);
   }
 
-  /**
-   * Incrementar cantidad
-   */
   inc(offerId: string): void {
-    const items = this.itemsSig();
-    const it = items.find(x => x.offerId === offerId);
-    if (it) {
-      it.qty++;
-      this.itemsSig.set([...items]);
-      this.saveCart();
-    }
+    this.cart.inc(offerId);
   }
 
-  /**
-   * Decrementar cantidad
-   */
   dec(offerId: string): void {
-    const items = this.itemsSig();
-    const it = items.find(x => x.offerId === offerId);
-    if (it) {
-      it.qty--;
-      if (it.qty <= 0) {
-        this.remove(offerId);
-      } else {
-        this.itemsSig.set([...items]);
-        this.saveCart();
-      }
-    }
+    this.cart.dec(offerId);
   }
 
-  /**
-   * Eliminar item del carrito
-   */
   remove(offerId: string): void {
-    const items = this.itemsSig().filter(it => it.offerId !== offerId);
-    this.itemsSig.set(items);
-    this.saveCart();
+    this.cart.remove(offerId);
   }
 
   /**
@@ -414,110 +259,35 @@ export class StoreComponent implements OnInit {
     setTimeout(() => this.bumpSig.set(false), 300);
   }
 
-  /**
-   * Guardar carrito en localStorage
-   */
-  private saveCart(): void {
-    try {
-      localStorage.setItem(this.LS_KEY, JSON.stringify(this.itemsSig()));
-    } catch (e) {
-      console.error('Error saving cart:', e);
-    }
-  }
-
-  /**
-   * Cargar carrito desde localStorage
-   */
-  private loadCart(): CartItem[] {
-    try {
-      const raw = localStorage.getItem(this.LS_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      console.error('Error loading cart:', e);
-      return [];
-    }
-  }
-
-  /**
-   * Limpiar carrito
-   */
-  private clearCart(): void {
-    this.itemsSig.set([]);
-    this.saveCart();
-  }
-
   // ============================================================================
-  // CHECKOUT - ✅ IMPLEMENTACIÓN REAL CON BACKEND
+  // CHECKOUT - arma el payload y llama al backend vía CartService
   // ============================================================================
-  
+
   goToCheckout(): void {
     if (!this.canPurchase() || this.cart.count() === 0 || this.processing()) {
       return;
     }
 
     const distributors = this.selectedDistributors();
-    
+
     if (distributors.length === 0) {
       this.error.set('No hay distribuidores disponibles para los productos en tu carrito');
+      return;
+    }
+
+    const user = this.authService.user();
+    const clientDni = (user as any)?.person?.dni;
+
+    if (!clientDni) {
+      this.error.set('No se pudo obtener tu DNI. Por favor completa tu perfil.');
       return;
     }
 
     this.processing.set(true);
     this.error.set(null);
 
-    console.log('🛒 Starting checkout for', distributors.length, 'distributor(s)');
-
-    // ✅ Obtener el usuario autenticado
-    const user = this.authService.user();
-    const clientDni = (user as any)?.person?.dni;
-
-    if (!clientDni) {
-      this.processing.set(false);
-      this.error.set('No se pudo obtener tu DNI. Por favor completa tu perfil.');
-      return;
-    }
-
-    console.log('👤 Client DNI:', clientDni);
-
-    // ✅ Crear una compra por cada distribuidor
-    const saleRequests = distributors.map(dist => {
-      const salePayload = {
-        clientDni: clientDni,  // ✅ Agregar DNI del cliente
-        distributorDni: dist.dni,
-        details: dist.items.map(item => ({
-          productId: item.productId,
-          quantity: item.qty
-        }))
-      };
-
-      console.log('📤 Creating sale for distributor:', dist.name, salePayload);
-
-      return this.saleService.createSale(salePayload).pipe(
-        map(response => ({
-          success: true,
-          distributor: dist,
-          response: response,
-          error: null
-        })),
-        catchError(error => {
-          console.error('❌ Error creating sale for', dist.name, ':', error);
-          return of({
-            success: false,
-            distributor: dist,
-            response: null,
-            error: error?.error?.message || error?.message || 'Error desconocido'
-          });
-        })
-      );
-    });
-
-    // ✅ Ejecutar todas las compras en paralelo
-    forkJoin(saleRequests).subscribe({
+    this.cart.checkout(clientDni).subscribe({
       next: (results) => {
-        console.log('✅ All sales completed:', results);
-        
         const successfulSales = results.filter(r => r.success);
         const failedSales = results.filter(r => !r.success);
 
@@ -534,7 +304,6 @@ export class StoreComponent implements OnInit {
         // Al menos una fue exitosa
         if (failedSales.length > 0) {
           // Algunas fallaron
-          console.warn('⚠️ Some sales failed:', failedSales);
           this.error.set(
             `${successfulSales.length} de ${results.length} compras se completaron. ` +
             `Fallaron: ${failedSales.map(f => f.distributor.name).join(', ')}`
@@ -548,10 +317,9 @@ export class StoreComponent implements OnInit {
         if (successfulSales.length === 1) {
           // Una sola compra exitosa
           const result = successfulSales[0];
-          const saleData = (result.response as any)?.data || result.response;
-          
+
           this.purchaseData.set({
-            saleId: saleData?.id || 0,
+            saleId: result.saleId || 0,
             total: result.distributor.subtotal,
             distributor: {
               dni: result.distributor.dni,
@@ -568,32 +336,29 @@ export class StoreComponent implements OnInit {
             saleId: 0, // No hay un solo ID cuando son múltiples
             total: successfulSales.reduce((sum, r) => sum + r.distributor.subtotal, 0),
             distributor: null, // No hay un solo distribuidor
-            multipleSales: successfulSales.map((result, index) => {
-              const saleData = (result.response as any)?.data || result.response;
-              return {
-                saleId: saleData?.id || 0,
-                distributor: {
-                  dni: result.distributor.dni,
-                  name: result.distributor.name,
-                  phone: null,
-                  email: '',
-                  address: null,
-                  zone: result.distributor.zone || null
-                },
-                products: result.distributor.items.map(item => ({
-                  id: item.productId,
-                  description: item.description,
-                  price: item.price,
-                  qty: item.qty
-                })),
-                subtotal: result.distributor.subtotal
-              };
-            })
+            multipleSales: successfulSales.map((result) => ({
+              saleId: result.saleId || 0,
+              distributor: {
+                dni: result.distributor.dni,
+                name: result.distributor.name,
+                phone: null,
+                email: '',
+                address: null,
+                zone: result.distributor.zone || null
+              },
+              products: result.distributor.items.map(item => ({
+                id: item.productId,
+                description: item.description,
+                price: item.price,
+                qty: item.qty
+              })),
+              subtotal: result.distributor.subtotal
+            }))
           });
         }
 
         this.showSuccessModal.set(true);
-        this.clearCart();
+        this.cart.clear();
         this.showCart.set(false);
       },
       error: (err) => {

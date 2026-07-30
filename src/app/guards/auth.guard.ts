@@ -23,9 +23,8 @@ function isPublicVerificationUrl(input: string): boolean {
   }
 }
 
-function isLoggedInOrBypass(auth: AuthService): boolean {
-  const bypass = localStorage.getItem('authBypass') === 'true';
-  return !!auth.isAuthenticated() || bypass;
+function isLoggedIn(auth: AuthService): boolean {
+  return !!auth.isAuthenticated();
 }
 function segmentsToUrl(segments: UrlSegment[]): string {
   return '/' + segments.map(s => s.path).join('/');
@@ -36,7 +35,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const url = state.url || '';
   if (isPublicVerificationUrl(url)) return true;
-  if (isLoggedInOrBypass(auth)) return true;
+  if (isLoggedIn(auth)) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -45,7 +44,7 @@ export const authMatchGuard: CanMatchFn = (route: Route, segments: UrlSegment[])
   const router = inject(Router);
   const url = segmentsToUrl(segments);
   if (isPublicVerificationUrl(url)) return true;
-  if (isLoggedInOrBypass(auth)) return true;
+  if (isLoggedIn(auth)) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -55,8 +54,7 @@ export const roleGuard = (allowed: Role[]): CanActivateFn => {
     const router = inject(Router);
     const url = state.url || '';
     if (isPublicVerificationUrl(url)) return true;
-    if (!isLoggedInOrBypass(auth)) return router.createUrlTree(['/']);
-    if (localStorage.getItem('authBypass') === 'true') return true;
+    if (!isLoggedIn(auth)) return router.createUrlTree(['/']);
 
     // 🔄 Refresh roles if they're stale (older than 15 seconds)
     // This ensures role changes (like approved role requests) are reflected immediately
@@ -77,7 +75,7 @@ export const inboxGuard: CanActivateFn = (route, state) => {
   if (isPublicVerificationUrl(url)) return true;
   
   // Solo requiere estar autenticado
-  if (isLoggedInOrBypass(auth)) {
+  if (isLoggedIn(auth)) {
     console.log('[InboxGuard] ✅ User authenticated, allowing access');
     return true;
   }

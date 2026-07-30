@@ -13,6 +13,16 @@ import {
 } from '../../models/sale/sale.model';
 
 /**
+ * Forma real de la respuesta del backend para listados de ventas
+ * (ResponseUtil.successList: data siempre presente, nunca un array pelado)
+ */
+interface SaleListResponse {
+  success: boolean;
+  message: string;
+  data: SaleDTO[];
+}
+
+/**
  * Respuesta extendida del backend al crear una venta
  */
 export interface CreateSaleResponse {
@@ -38,14 +48,10 @@ export class SaleService {
 
   /** GET /api/sales - Obtiene todas las ventas */
   getAllSales(): Observable<SaleDTO[]> {
-    return this.http.get<ApiResponse<SaleDTO[]>>(this.base, {
+    return this.http.get<SaleListResponse>(this.base, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (Array.isArray(res)) return res;
-        if (res?.data && Array.isArray(res.data)) return res.data;
-        return [];
-      })
+      map((res) => res.data)
     );
   }
 
@@ -54,31 +60,10 @@ export class SaleService {
    * El backend automáticamente filtra por el DNI del usuario autenticado
    */
   getMyPurchases(): Observable<SaleDTO[]> {
-    console.log('[SaleService] 📦 Fetching my purchases from:', `${this.base}/my-purchases`);
-
-    return this.http.get<ApiResponse<SaleDTO[]>>(`${this.base}/my-purchases`, {
+    return this.http.get<SaleListResponse>(`${this.base}/my-purchases`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        console.log('[SaleService] 📥 Raw response received:', res);
-        console.log('[SaleService] 📊 Response type:', typeof res);
-        console.log('[SaleService] 🔍 Is array?', Array.isArray(res));
-        console.log('[SaleService] 🔍 Has data property?', res?.data !== undefined);
-        console.log('[SaleService] 🔍 Is data array?', Array.isArray(res?.data));
-
-        if (Array.isArray(res)) {
-          console.log('[SaleService] ✅ Using response as direct array. Length:', res.length);
-          return res;
-        }
-        if (res?.data && Array.isArray(res.data)) {
-          console.log('[SaleService] ✅ Using response.data as array. Length:', res.data.length);
-          return res.data;
-        }
-
-        console.warn('[SaleService] ⚠️ Response format not recognized. Returning empty array.');
-        console.warn('[SaleService] 📋 Response structure:', JSON.stringify(res, null, 2));
-        return [];
-      })
+      map((res) => res.data)
     );
   }
 
@@ -87,10 +72,7 @@ export class SaleService {
     return this.http.get<ApiResponse<SaleDTO>>(`${this.base}/${id}`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (res?.data) return res.data;
-        return res;
-      })
+      map((res) => res.data as SaleDTO)
     );
   }
 
@@ -165,15 +147,11 @@ export class SaleService {
     page?: number;
     limit?: number;
   }): Observable<SaleDTO[]> {
-    return this.http.get<ApiResponse<SaleDTO[]>>(`${this.base}/search`, {
+    return this.http.get<SaleListResponse>(`${this.base}/search`, {
       params: params as any,
       withCredentials: true
     }).pipe(
-      map((res: any) => {
-        if (Array.isArray(res)) return res;
-        if (res?.data && Array.isArray(res.data)) return res.data;
-        return [];
-      })
+      map((res) => res.data)
     );
   }
 }

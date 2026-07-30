@@ -15,6 +15,16 @@ import {
 } from '../../models/product/product.model';
 
 /**
+ * Forma real de la respuesta del backend para listados de productos
+ * (ResponseUtil.successList: data siempre presente, nunca un array pelado)
+ */
+interface ProductListResponse {
+  success: boolean;
+  message: string;
+  data: ProductDTO[];
+}
+
+/**
  * Servicio para gestión de productos
  * 
  * Proporciona métodos para crear, leer, actualizar y eliminar productos,
@@ -35,7 +45,7 @@ export class ProductService {
     // Add timestamp to prevent browser and Vercel caching
     const timestamp = new Date().getTime();
     const random = Math.random().toString(36).substring(7);
-    return this.http.get<ApiResponse<ProductDTO[]>>(`${this.base}?_t=${timestamp}&_r=${random}`, {
+    return this.http.get<ProductListResponse>(`${this.base}?_t=${timestamp}&_r=${random}`, {
       withCredentials: true,
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -43,7 +53,7 @@ export class ProductService {
         'Expires': '0'
       }
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO[])
+      map((res) => res.data)
     );
   }
 
@@ -66,7 +76,7 @@ export class ProductService {
     return this.http.get<ApiResponse<ProductDTO>>(`${this.base}/${id}`, {
       withCredentials: true
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO)
+      map((res) => res.data as ProductDTO)
     );
   }
 
@@ -125,11 +135,11 @@ export class ProductService {
     page?: number;                 // Página para paginación
     limit?: number;                // Límite de resultados por página
   }): Observable<ProductDTO[]> {
-    return this.http.get<ApiResponse<ProductDTO[]>>(`${this.base}/search`, {
+    return this.http.get<ProductListResponse>(`${this.base}/search`, {
       params: params as any,
       withCredentials: true
     }).pipe(
-      map((res: any) => ('data' in res ? res.data : res) as ProductDTO[])
+      map((res) => res.data)
     );
   }
 }

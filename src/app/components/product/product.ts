@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ProductService } from '../../services/product/product';
-import { ApiResponse, ProductDTO, CreateProductDTO, UpdateProductDTO } from '../../models/product/product.model';
+import { ProductDTO, CreateProductDTO, UpdateProductDTO } from '../../models/product/product.model';
 import { ProductImageService } from '../../services/product-image/product-image';
 import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
@@ -242,8 +242,7 @@ export class ProductComponent implements OnInit {
     this.error.set(null);
 
     this.srv.getAllProducts().subscribe({
-      next: (r: ApiResponse<ProductDTO[]> | ProductDTO[]) => {
-        const data = Array.isArray(r) ? r : (r as any).data;
+      next: (data: ProductDTO[]) => {
         this.products.set(this.imgSvc.overlay(data ?? []));
         this.loading.set(false);
       },
@@ -351,8 +350,8 @@ export class ProductComponent implements OnInit {
       console.log('[ProductComponent] 📤 Sending to backend:', dtoCreate);
 
       this.srv.createProduct(dtoCreate).subscribe({
-        next: (res: any) => {
-          const created = ('data' in res ? res.data : res) as ProductDTO | null;
+        next: (res) => {
+          const created = res.data;
 
           if (created?.id) this.imgSvc.set(created.id, img);
           this.loading.set(false);

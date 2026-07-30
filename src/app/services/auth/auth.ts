@@ -8,12 +8,13 @@
  * - Cálculo de profileCompleteness sincronizado con backend
  * - Manejo robusto de errores y sesiones
  */
-import { Injectable, inject, signal, computed, effect } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, throwError, of, timer } from 'rxjs';
 import { tap, catchError, map, take, timeout } from 'rxjs/operators';
 import { Role, User } from '../../models/user/user.model';
+import { LoggerService } from '../logger/logger';
 
 const API_URL = '';
 
@@ -48,6 +49,7 @@ export class AuthService {
   
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
   
   /** Marca temporal del último sync exitoso con el backend */
   private _lastSyncAt = 0;
@@ -69,93 +71,51 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.userSignal() !== null);
   
   /** Roles actuales del usuario */
-  readonly currentRoles = computed(() => {
-    const user = this.userSignal();
-    const roles = user?.roles ?? [];
-    console.log('[AuthService] 📋 Roles computed:', {
-      userId: user?.id,
-      username: user?.username,
-      roles: roles
-    });
-    return roles;
-  });
+  readonly currentRoles = computed(() => this.userSignal()?.roles ?? []);
 
   /** Completitud del perfil sincronizada con el backend */
   readonly profileCompleteness = computed(() => {
     const user = this.userSignal();
     if (!user) return 0;
-    
+
     // PRIORIDAD 1: Usar el valor del backend si existe
     if ((user as any).profileCompleteness !== undefined) {
-      console.log('[AuthService] 📊 Using backend profileCompleteness:', (user as any).profileCompleteness);
       return (user as any).profileCompleteness;
     }
-    
+
     // FALLBACK: Calcular manualmente (coincide con backend)
     let completeness = 25; // Base por tener una cuenta
-    
+
     if ((user as any).isVerified) {
       completeness += 25; // +25% por verificación del admin
     }
-    
+
     if ((user as any).hasPersonalInfo) {
       completeness += 50; // +50% por datos personales completos
     }
-    
-    const result = Math.min(completeness, 100);
-    
-    console.log('[AuthService] 📊 Profile completeness calculated:', {
-      base: 25,
-      isVerified: (user as any).isVerified,
-      isVerifiedBonus: (user as any).isVerified ? 25 : 0,
-      hasPersonalInfo: (user as any).hasPersonalInfo,
-      hasPersonalInfoBonus: (user as any).hasPersonalInfo ? 50 : 0,
-      total: result
-    });
-    
-    return result;
+
+    return Math.min(completeness, 100);
   });
 
   /** Indica si tiene información personal completa */
-  readonly hasPersonalInfo = computed(() => {
-    const hasInfo = (this.userSignal() as any)?.hasPersonalInfo ?? false;
-    console.log('[AuthService] 📋 hasPersonalInfo:', hasInfo);
-    return hasInfo;
-  });
+  readonly hasPersonalInfo = computed(() => (this.userSignal() as any)?.hasPersonalInfo ?? false);
 
   /** Indica si el email está verificado */
-  readonly emailVerified = computed(() => {
-    const verified = this.userSignal()?.emailVerified ?? false;
-    console.log('[AuthService] ✉️ emailVerified:', verified);
-    return verified;
-  });
+  readonly emailVerified = computed(() => this.userSignal()?.emailVerified ?? false);
 
   /** Indica si está verificado por un admin */
-  readonly isVerified = computed(() => {
-    const verified = (this.userSignal() as any)?.isVerified ?? false;
-    console.log('[AuthService] ✅ isVerified (by admin):', verified);
-    return verified;
-  });
+  readonly isVerified = computed(() => (this.userSignal() as any)?.isVerified ?? false);
 
   /** Indica si puede solicitar verificación */
   readonly canRequestVerification = computed(() => {
     const user = this.userSignal();
     if (!user) return false;
-    
+
     const hasEmail = !!user.emailVerified;
     const hasPersonal = !!(user as any).hasPersonalInfo;
     const notVerified = !(user as any).isVerified;
-    const result = hasEmail && hasPersonal && notVerified;
-    
-    console.log('[AuthService] 🔍 Can request verification:', {
-      hasEmail,
-      hasPersonal,
-      notVerified,
-      profileCompleteness: this.profileCompleteness(),
-      result
-    });
-    
-    return result;
+
+    return hasEmail && hasPersonal && notVerified;
   });
 
   // BehaviorSubject para compatibilidad con código legacy
@@ -167,27 +127,7 @@ export class AuthService {
   // ============================================================================
   
   constructor() {
-    console.log('[AuthService] 🚀 Initialized with API:', API_URL);
-    
-    // Effect para debug de cambios en el usuario
-    effect(() => {
-      const user = this.userSignal();
-      if (user) {
-        console.log('[AuthService] 👤 User state changed:', {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: user.roles,
-          emailVerified: user.emailVerified,
-          hasPersonalInfo: (user as any).hasPersonalInfo,
-          isVerified: (user as any).isVerified,
-          profileCompleteness: this.profileCompleteness(),
-          canRequestVerification: this.canRequestVerification()
-        });
-      } else {
-        console.log('[AuthService] 👤 User cleared');
-      }
-    });
+    this.logger.debug('[AuthService] Initialized');
   }
 
   // ============================================================================
@@ -199,32 +139,26 @@ export class AuthService {
    * Intenta restaurar la sesión usando el refresh token existente
    */
   public initialize(): void {
-    console.log('[AuthService] 🔄 Initializing auth state...');
-
     // ✅ Intentar restaurar token desde localStorage
     const storedToken = localStorage.getItem('auth_token');
     const storedUser = localStorage.getItem('auth_user');
 
     if (storedToken && storedUser) {
-      console.log('[AuthService] 💾 Found stored token and user in localStorage');
       try {
         const user = JSON.parse(storedUser);
         this.setUser(user);
-        console.log('[AuthService] ✅ Session restored from localStorage:', user);
       } catch (err) {
-        console.warn('[AuthService] ⚠️ Failed to parse stored user:', err);
+        this.logger.warn('[AuthService] Failed to parse stored user:', err);
         localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
       }
     }
 
     this.me().subscribe({
-      next: (user) => {
-        console.log('[AuthService] ✅ Session verified with backend:', user);
+      next: () => {
         this.scheduleTokenRefresh();
       },
-      error: (err) => {
-        console.log('[AuthService] ℹ️ No active session:', err?.message || err);
+      error: () => {
         // Limpiar localStorage si la sesión no es válida
         localStorage.removeItem('auth_token');
         localStorage.removeItem('auth_user');
@@ -240,29 +174,23 @@ export class AuthService {
    * Inicia sesión con credenciales
    */
   login(credentials: LoginRequest): Observable<User> {
-    console.log('[AuthService] \uD83D\uDD10 Login attempt for:', credentials.email);
-
     return this.http.post<AuthResponse>(
       `${API_URL}/api/auth/login`,
       credentials,
       { withCredentials: true }
     ).pipe(
       tap(response => {
-        console.log('[AuthService] 📥 Login response:', response);
-
         // ✅ Guardar token en localStorage si está presente en la respuesta
         if (response.meta && (response.meta as any).token) {
           localStorage.setItem('auth_token', (response.meta as any).token);
-          console.log('[AuthService] 💾 Token saved to localStorage');
         }
 
         // ✅ Guardar usuario en localStorage
         localStorage.setItem('auth_user', JSON.stringify(response.data));
-        console.log('[AuthService] 💾 User saved to localStorage');
       }),
       map(response => response.data),
       tap(user => {
-        console.log('[AuthService] ✅ Login successful, setting user:', user);
+        this.logger.debug('[AuthService] Login successful:', user.username);
         this.setUser(user);
         this.scheduleTokenRefresh();
         this.forceRefresh();
@@ -275,17 +203,12 @@ export class AuthService {
    * Registra un nuevo usuario
    */
   register(data: RegisterRequest): Observable<any> {
-    console.log('[AuthService] 🔐 Register attempt for:', data.email);
-
     return this.http.post<any>(
       `${API_URL}/api/auth/register`,
       data,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        console.log('[AuthService] 📥 Register response:', response);
-        return response.data || response;
-      }),
+      map(response => response.data || response),
       catchError(this.handleError.bind(this))
     );
   }
@@ -295,8 +218,6 @@ export class AuthService {
    * OPTIMIZADO: Limpia el estado local inmediatamente sin esperar al backend
    */
   logout(): Observable<void> {
-    console.log('[AuthService] 🚪 Logout - limpiando estado local inmediatamente');
-
     // ✅ OPTIMIZACIÓN 1: Cancelar el timer de refresh
     this.cancelTokenRefresh();
 
@@ -306,7 +227,6 @@ export class AuthService {
     // ✅ LIMPIEZA DE LOCALSTORAGE
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
-    console.log('[AuthService] 🗑️ localStorage cleared');
 
     // ✅ OPTIMIZACIÓN 3: Redirigir inmediatamente
     this.router.navigate(['/']);
@@ -321,7 +241,7 @@ export class AuthService {
       timeout(5000), // Timeout de 5 segundos
       catchError(err => {
         // Ignorar errores del backend - ya limpiamos el estado local
-        console.warn('[AuthService] ⚠️ Logout backend falló o tardó, pero estado local ya fue limpiado:', err);
+        this.logger.warn('[AuthService] Logout backend falló o tardó, estado local ya limpiado:', err);
         return of(undefined as any);
       })
     ).subscribe(); // Fire and forget
@@ -335,8 +255,6 @@ export class AuthService {
    * NOTA: Este método es llamado automáticamente por el interceptor
    */
   refresh(): Observable<User> {
-    console.log('[AuthService] 🔄 Refreshing token');
-
     return this.http.post<AuthResponse>(
       `${API_URL}/api/auth/refresh`,
       {},
@@ -344,37 +262,28 @@ export class AuthService {
     ).pipe(
       map(response => response.data),
       tap(user => {
-        console.log('[AuthService] ✅ Token refreshed, user:', user);
         this.setUser(user);
         this.scheduleTokenRefresh();
       }),
       catchError(err => {
-        console.error('[AuthService] ❌ Refresh failed:', err);
+        this.logger.error('[AuthService] Refresh failed:', err);
         this.clearUser();
         this.cancelTokenRefresh();
         return throwError(() => err);
       })
     );
   }
-  
+
   /**
    * Obtiene el usuario actual desde el servidor
    */
   me(): Observable<User> {
-    console.log('[AuthService] 👤 Fetching current user');
-
     return this.http.get<AuthResponse>(
       `${API_URL}/api/users/me`,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        console.log('[AuthService] 📥 Me response:', response);
-        return response.data;
-      }),
-      tap(user => {
-        console.log('[AuthService] ✅ Current user fetched:', user);
-        this.setUser(user);
-      }),
+      map(response => response.data),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -392,29 +301,13 @@ export class AuthService {
     phone: string;
     address: string;
   }): Observable<User> {
-    console.log('[AuthService] 📝 Completing profile with data:', {
-      dni: data.dni,
-      name: data.name,
-      phone: data.phone,
-      address: data.address
-    });
-
     return this.http.put<AuthResponse>(
       `${API_URL}/api/users/me/complete-profile`,
       data,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        console.log('[AuthService] 📥 Profile completion response:', response);
-        return response.data;
-      }),
-      tap(user => {
-        console.log('[AuthService] ✅ Profile completed successfully:', {
-          hasPersonalInfo: (user as any).hasPersonalInfo,
-          profileCompleteness: (user as any).profileCompleteness
-        });
-        this.setUser(user);
-      }),
+      map(response => response.data),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -423,18 +316,13 @@ export class AuthService {
    * Actualiza información personal del usuario (teléfono, dirección)
    */
   updatePersonalInfo(data: { phone?: string; address?: string }): Observable<User> {
-    console.log('[AuthService] ✏️ Updating personal info:', data);
-
     return this.http.patch<AuthResponse>(
       `${API_URL}/api/users/me/personal-info`,
       data,
       { withCredentials: true }
     ).pipe(
       map(response => response.data),
-      tap(user => {
-        console.log('[AuthService] ✅ Personal info updated successfully');
-        this.setUser(user);
-      }),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -470,9 +358,7 @@ export class AuthService {
   // ============================================================================
   
   hasRole(role: Role): boolean {
-    const result = this.currentRoles().includes(role);
-    console.log('[AuthService] 🔍 hasRole check:', { role, result, currentRoles: this.currentRoles() });
-    return result;
+    return this.currentRoles().includes(role);
   }
 
   hasAnyRole(roles: Role[]): boolean {
@@ -501,12 +387,6 @@ export class AuthService {
     // Usuarios verificados con info personal completa pueden comprar
     const isVerified = !!(user as any).isVerified;
     const hasPersonalInfo = !!(user as any).hasPersonalInfo;
-
-    console.log('[AuthService] 🛒 canPurchase check:', {
-      isVerified,
-      hasPersonalInfo,
-      result: isVerified && hasPersonalInfo
-    });
 
     return isVerified && hasPersonalInfo;
   }
@@ -561,32 +441,19 @@ export class AuthService {
    * Actualiza el estado del usuario en las señales
    */
   private setUser(user: User | null): void {
-    console.log('[AuthService] 💾 Setting user signal:', user);
-    
     // Forzar nueva referencia para trigger de señales
     const userCopy = user ? { ...user } : null;
-    
+
     this.userSignal.set(userCopy);
     this.userSubject.next(userCopy);
-    
+
     this._lastSyncAt = Date.now();
-    
-    if (userCopy) {
-      console.log('[AuthService] ✅ User signal updated:', {
-        roles: userCopy.roles,
-        emailVerified: userCopy.emailVerified,
-        hasPersonalInfo: (userCopy as any).hasPersonalInfo,
-        isVerified: (userCopy as any).isVerified,
-        profileCompleteness: (userCopy as any).profileCompleteness
-      });
-    }
   }
 
   /**
    * Limpia el estado del usuario
    */
   private clearUser(): void {
-    console.log('[AuthService] 🗑️ Clearing user');
     this.setUser(null);
   }
 
@@ -605,18 +472,11 @@ export class AuthService {
     // Programar nuevo refresh a los 14 minutos (840 segundos)
     // El token expira a los 15 minutos (900 segundos)
     const refreshTime = 14 * 60 * 1000; // 14 minutos en milisegundos
-    
-    console.log('[AuthService] ⏰ Scheduling token refresh in 14 minutes');
-    
+
     this._refreshTimer = timer(refreshTime).pipe(take(1)).subscribe(() => {
-      console.log('[AuthService] ⏰ Auto-refreshing token...');
-      
       this.refresh().subscribe({
-        next: (user) => {
-          console.log('[AuthService] ✅ Auto-refresh successful:', user.username);
-        },
         error: (err) => {
-          console.error('[AuthService] ❌ Auto-refresh failed:', err);
+          this.logger.error('[AuthService] Auto-refresh failed:', err);
           // El interceptor manejará el error y hará logout si es necesario
         }
       });
@@ -628,7 +488,6 @@ export class AuthService {
    */
   private cancelTokenRefresh(): void {
     if (this._refreshTimer) {
-      console.log('[AuthService] ⏰ Cancelling scheduled token refresh');
       this._refreshTimer.unsubscribe();
       this._refreshTimer = undefined;
     }
@@ -644,13 +503,6 @@ export class AuthService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      console.error('[AuthService] ❌ HTTP Error:', {
-        status: error.status,
-        statusText: error.statusText,
-        error: error.error,
-        url: error.url
-      });
-
       if (error.status === 0) {
         errorMessage = 'No se pudo conectar con el servidor. Verifica que el backend esté corriendo.';
       } else if (error.status === 401) {
@@ -680,7 +532,6 @@ export class AuthService {
     // ✅ Preservar el email del backend cuando está presente (importante para verificación)
     if (error.error?.email) {
       normalized.email = error.error.email;
-      console.log('[AuthService] 📧 Email preservado en error normalizado:', normalized.email);
     }
 
     // ✅ Preservar la estructura completa del error para casos especiales
@@ -690,7 +541,7 @@ export class AuthService {
       message: errorMessage
     };
 
-    console.error('[AuthService] ❌ Error normalized:', normalized);
+    this.logger.error('[AuthService] HTTP error:', { status: error.status, url: error.url, normalized });
     return throwError(() => normalized);
   }
 }

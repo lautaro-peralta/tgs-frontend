@@ -2,13 +2,15 @@ import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProductService } from '../product/product';
 import { CartService, CartItem } from '../cart/cart';
-import { ProductDTO, ApiResponse } from '../../models/product/product.model';
+import { ProductDTO, ProductOffer } from '../../models/product/product.model';
 
 /**
- * Integration Tests: Store Flow (Product → Cart → Checkout)
+ * Integration Tests: Store Flow (Product → Offer → Cart → Checkout)
  *
- * These tests verify the complete e-commerce flow from browsing products,
- * adding to cart, managing quantities, calculating totals, to checkout preparation.
+ * Verifica el flujo real de la tienda: los productos traídos del backend se
+ * convierten en ofertas por distribuidor (misma transformación que hace
+ * StoreComponent), se agregan al carrito centralizado (CartService) y se
+ * despachan al checkout, que crea una venta por cada distribuidor presente.
  */
 describe('Store Flow Integration Tests', () => {
   let productService: ProductService;
@@ -22,7 +24,8 @@ describe('Store Flow Integration Tests', () => {
     stock: 10,
     imageUrl: 'whisky.jpg',
     detail: 'Premium whisky',
-    isIllegal: false
+    isIllegal: false,
+    distributors: [{ dni: '11111111', name: 'Distribuidor Norte', zone: { id: 1, name: 'Zona Norte', isHeadquarters: false } }]
   };
 
   const mockProduct2: ProductDTO = {
@@ -32,7 +35,8 @@ describe('Store Flow Integration Tests', () => {
     stock: 20,
     imageUrl: 'wine.jpg',
     detail: 'Argentine wine',
-    isIllegal: false
+    isIllegal: false,
+    distributors: [{ dni: '11111111', name: 'Distribuidor Norte', zone: { id: 1, name: 'Zona Norte', isHeadquarters: false } }]
   };
 
   const mockProduct3: ProductDTO = {
@@ -42,8 +46,32 @@ describe('Store Flow Integration Tests', () => {
     stock: 15,
     imageUrl: 'vodka.jpg',
     detail: 'Imported vodka',
-    isIllegal: false
+    isIllegal: false,
+    distributors: [{ dni: '22222222', name: 'Distribuidor Sur', zone: { id: 2, name: 'Zona Sur', isHeadquarters: true } }]
   };
+
+  /** Replica la transformación producto -> oferta que hace StoreComponent */
+  function toOffers(products: ProductDTO[]): ProductOffer[] {
+    const offers: ProductOffer[] = [];
+    products.forEach(p => {
+      (p.distributors ?? []).forEach(dist => {
+        offers.push({
+          offerId: `${p.id}-${dist.dni}`,
+          productId: p.id,
+          description: p.description,
+          detail: p.detail,
+          imageUrl: p.imageUrl,
+          price: p.price,
+          stock: p.stock,
+          isIllegal: p.isIllegal,
+          distributorDni: dist.dni,
+          distributorName: dist.name,
+          zone: dist.zone
+        });
+      });
+    });
+    return offers;
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -55,7 +83,6 @@ describe('Store Flow Integration Tests', () => {
     cartService = TestBed.inject(CartService);
     httpMock = TestBed.inject(HttpTestingController);
 
-    // Clear localStorage before each test
     localStorage.clear();
     cartService.clear();
   });
@@ -66,17 +93,16 @@ describe('Store Flow Integration Tests', () => {
   });
 
   describe('Complete Shopping Flow', () => {
-    it('should browse products, add to cart, and calculate totals', fakeAsync(() => {
-      // Step 1: Fetch product list
+    it('should browse products, convert them to offers, add to cart, and calculate totals', fakeAsync(() => {
       productService.getAllProducts().subscribe(products => {
         expect(products.length).toBe(3);
 
-        // Step 2: Add products to cart
-        cartService.add(products[0]); // Whisky: 5000
-        cartService.add(products[1]); // Wine: 3000
-        cartService.add(products[0]); // Whisky again: +5000
+        const offers = toOffers(products);
 
-        // Step 3: Verify cart state
+        cartService.add(offers[0]); // Whisky: 5000
+        cartService.add(offers[1]); // Wine: 3000
+        cartService.add(offers[0]); // Whisky again: +5000
+
         expect(cartService.items().length).toBe(2);
         expect(cartService.count()).toBe(3); // 2 whisky + 1 wine
         expect(cartService.total()).toBe(13000); // (5000*2) + 3000
@@ -97,17 +123,13 @@ describe('Store Flow Integration Tests', () => {
       flush();
     }));
 
-    it('should fetch product details and add to cart', fakeAsync(() => {
-      // Step 1: Get specific product
+    it('should fetch a single product and add its offer to the cart', fakeAsync(() => {
       productService.getProduct(1).subscribe(product => {
-        expect(product.id).toBe(1);
+        const [offer] = toOffers([product]);
+        cartService.add(offer);
 
-        // Step 2: Add to cart
-        cartService.add(product);
-
-        // Step 3: Verify cart
         expect(cartService.items().length).toBe(1);
-        expect(cartService.items()[0].id).toBe(1);
+        expect(cartService.items()[0].productId).toBe(1);
         expect(cartService.items()[0].price).toBe(5000);
       });
 
@@ -124,284 +146,83 @@ describe('Store Flow Integration Tests', () => {
   });
 
   describe('Cart Management Integration', () => {
-    it('should manage cart quantities and update totals', () => {
-      // Add products
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
+    let offer1: ProductOffer, offer2: ProductOffer, offer3: ProductOffer;
 
-      expect(cartService.count()).toBe(2);
-      expect(cartService.total()).toBe(8000); // 5000 + 3000
-
-      // Increment product 1
-      cartService.inc(1);
-      expect(cartService.count()).toBe(3);
-      expect(cartService.total()).toBe(13000); // (5000*2) + 3000
-
-      // Decrement product 1
-      cartService.dec(1);
-      expect(cartService.count()).toBe(2);
-      expect(cartService.total()).toBe(8000); // 5000 + 3000
+    beforeEach(() => {
+      [offer1, offer2, offer3] = toOffers([mockProduct1, mockProduct2, mockProduct3]);
     });
 
-    it('should remove products from cart and recalculate', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-      cartService.add(mockProduct3);
+    it('should manage cart quantities and update totals', () => {
+      cartService.add(offer1);
+      cartService.add(offer2);
 
-      expect(cartService.items().length).toBe(3);
+      expect(cartService.count()).toBe(2);
+      expect(cartService.total()).toBe(8000); // 5000 + 3000
+
+      cartService.inc(offer1.offerId);
+      expect(cartService.count()).toBe(3);
+      expect(cartService.total()).toBe(13000);
+
+      cartService.dec(offer1.offerId);
+      expect(cartService.count()).toBe(2);
+      expect(cartService.total()).toBe(8000);
+    });
+
+    it('should remove offers from cart and recalculate totals', () => {
+      cartService.add(offer1);
+      cartService.add(offer2);
+      cartService.add(offer3);
+
       expect(cartService.total()).toBe(12500); // 5000 + 3000 + 4500
 
-      // Remove product 2
-      cartService.remove(2);
-      expect(cartService.items().length).toBe(2);
-      expect(cartService.total()).toBe(9500); // 5000 + 4500
-    });
-
-    it('should handle cart persistence across operations', () => {
-      // Add products
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-
-      // Verify persistence
-      const stored = localStorage.getItem('cart.v1');
-      expect(stored).toBeTruthy();
-
-      const parsed = JSON.parse(stored!);
-      expect(parsed.length).toBe(2);
-      expect(parsed[0].id).toBe(2); // Most recent first (unshift)
-      expect(parsed[1].id).toBe(1);
-    });
-
-    it('should clear entire cart', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-      cartService.add(mockProduct3);
-
-      expect(cartService.items().length).toBe(3);
-
-      cartService.clear();
-
-      expect(cartService.items().length).toBe(0);
-      expect(cartService.count()).toBe(0);
-      expect(cartService.total()).toBe(0);
-
-      const stored = localStorage.getItem('cart.v1');
-      expect(JSON.parse(stored!)).toEqual([]);
-    });
-  });
-
-  describe('Product to Cart Flow', () => {
-    it('should add same product multiple times and merge quantities', () => {
-      cartService.add(mockProduct1);
-      expect(cartService.items().length).toBe(1);
-      expect(cartService.items()[0].qty).toBe(1);
-
-      cartService.add(mockProduct1);
-      expect(cartService.items().length).toBe(1); // Still 1 item
-      expect(cartService.items()[0].qty).toBe(2); // Quantity increased
-
-      cartService.add(mockProduct1);
-      expect(cartService.items()[0].qty).toBe(3);
-    });
-
-    it('should handle products with null/undefined imageUrl', () => {
-      const productNoImage: ProductDTO = {
-        ...mockProduct1,
-        imageUrl: undefined
-      };
-
-      cartService.add(productNoImage);
-
-      expect(cartService.items()[0].imageUrl).toBeNull();
-    });
-
-    it('should handle products with null description', () => {
-      const productNoDesc: ProductDTO = {
-        ...mockProduct1,
-        description: null as any
-      };
-
-      cartService.add(productNoDesc);
-
-      expect(cartService.items()[0].description).toBe('Producto 1');
-    });
-
-    it('should maintain correct order when adding multiple products', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-      cartService.add(mockProduct3);
-
-      const items = cartService.items();
-      // Items are added with unshift, so newest first
-      expect(items[0].id).toBe(3);
-      expect(items[1].id).toBe(2);
-      expect(items[2].id).toBe(1);
-    });
-  });
-
-  describe('Cart Calculations', () => {
-    it('should calculate total for single item with multiple quantities', () => {
-      cartService.add(mockProduct1);
-      expect(cartService.total()).toBe(5000);
-
-      cartService.inc(1);
-      expect(cartService.total()).toBe(10000);
-
-      cartService.inc(1);
-      expect(cartService.total()).toBe(15000);
-    });
-
-    it('should calculate total for multiple different items', () => {
-      cartService.add(mockProduct1); // 5000
-      cartService.add(mockProduct2); // 3000
-      cartService.add(mockProduct3); // 4500
-
-      expect(cartService.total()).toBe(12500);
-    });
-
-    it('should calculate count correctly across all items', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct1); // qty = 2
-      cartService.add(mockProduct2);
-      cartService.add(mockProduct3);
-      cartService.add(mockProduct3); // qty = 2
-
-      expect(cartService.count()).toBe(5); // 2 + 1 + 2
-    });
-
-    it('should handle zero total for empty cart', () => {
-      expect(cartService.total()).toBe(0);
-      expect(cartService.count()).toBe(0);
-    });
-
-    it('should update totals when removing items', () => {
-      cartService.add(mockProduct1); // 5000
-      cartService.add(mockProduct2); // 3000
-      cartService.add(mockProduct3); // 4500
-
-      expect(cartService.total()).toBe(12500);
-
-      cartService.remove(2); // Remove wine
+      cartService.remove(offer2.offerId);
       expect(cartService.total()).toBe(9500);
-
-      cartService.remove(3); // Remove vodka
-      expect(cartService.total()).toBe(5000);
-    });
-  });
-
-  describe('Stock Validation Preparation', () => {
-    it('should prepare cart data for stock validation', fakeAsync(() => {
-      // Get products with stock info
-      productService.getAllProducts().subscribe(products => {
-        // Add products to cart
-        cartService.add(products[0]);
-        cartService.inc(1);
-        cartService.inc(1); // 3 units
-
-        // Verify cart doesn't exceed stock
-        const cartItem = cartService.items().find(i => i.id === 1);
-        expect(cartItem?.qty).toBe(3);
-        expect(cartItem!.qty).toBeLessThanOrEqual(products[0].stock);
-      });
-
-      // Use URL matcher to ignore cache-busting query parameters (_t, _r)
-      const req = httpMock.expectOne((request) => {
-        const url = new URL(request.url, 'http://localhost');
-        return url.pathname === '/api/products' && request.method === 'GET';
-      });
-      req.flush({
-        success: true,
-        message: 'Products retrieved',
-        data: [mockProduct1, mockProduct2, mockProduct3]
-      });
-
-      tick();
-      flush();
-    }));
-
-    it('should identify when cart quantity approaches stock limit', fakeAsync(() => {
-      productService.getProduct(1).subscribe(product => {
-        // Add 8 units (stock is 10)
-        cartService.add(product);
-        for (let i = 0; i < 7; i++) {
-          cartService.inc(1);
-        }
-
-        const cartItem = cartService.items()[0];
-        expect(cartItem.qty).toBe(8);
-
-        // Could add check for "low stock" warning
-        const stockRemaining = product.stock - cartItem.qty;
-        expect(stockRemaining).toBe(2);
-        expect(stockRemaining).toBeLessThan(5); // Low stock threshold
-      });
-
-      const req = httpMock.expectOne('/api/products/1');
-      req.flush({
-        success: true,
-        message: 'Product retrieved',
-        data: mockProduct1
-      });
-
-      tick();
-      flush();
-    }));
-  });
-
-  describe('Checkout Preparation', () => {
-    it('should prepare cart data for checkout', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-      cartService.inc(1); // 2x whisky
-
-      const checkoutData = {
-        items: cartService.items().map(item => ({
-          productId: item.id,
-          quantity: item.qty,
-          price: item.price,
-          subtotal: item.price * item.qty
-        })),
-        total: cartService.total(),
-        itemCount: cartService.count()
-      };
-
-      expect(checkoutData.items.length).toBe(2);
-      expect(checkoutData.total).toBe(13000); // (5000*2) + 3000
-      expect(checkoutData.itemCount).toBe(3);
-
-      // Verify individual item calculations
-      const whiskyItem = checkoutData.items.find(i => i.productId === 1);
-      expect(whiskyItem?.subtotal).toBe(10000);
-
-      const wineItem = checkoutData.items.find(i => i.productId === 2);
-      expect(wineItem?.subtotal).toBe(3000);
     });
 
-    it('should handle empty cart checkout attempt', () => {
-      const checkoutData = {
-        items: cartService.items(),
-        total: cartService.total(),
-        itemCount: cartService.count()
-      };
+    it('should persist cart state across operations', () => {
+      cartService.add(offer1);
+      cartService.add(offer2);
 
-      expect(checkoutData.items.length).toBe(0);
-      expect(checkoutData.total).toBe(0);
-      expect(checkoutData.itemCount).toBe(0);
-    });
-
-    it('should persist cart state during checkout preparation', () => {
-      cartService.add(mockProduct1);
-      cartService.add(mockProduct2);
-
-      // Simulate reading cart for checkout
       const stored = localStorage.getItem('cart.v1');
-      const cartFromStorage = JSON.parse(stored!) as CartItem[];
+      const parsed = JSON.parse(stored!);
 
-      expect(cartFromStorage.length).toBe(2);
+      expect(parsed.length).toBe(2);
+      expect(cartService.items().length).toBe(parsed.length);
+    });
+  });
 
-      // Verify cart service and storage are in sync
-      expect(cartService.items().length).toBe(cartFromStorage.length);
-      expect(cartService.items()[0].id).toBe(cartFromStorage[0].id);
+  describe('Multi-Distributor Checkout Flow', () => {
+    it('should group offers by distributor and check out one sale per distributor', () => {
+      const [offer1, offer2, offer3] = toOffers([mockProduct1, mockProduct2, mockProduct3]);
+
+      cartService.add(offer1); // Distribuidor Norte
+      cartService.add(offer2); // Distribuidor Norte
+      cartService.add(offer3); // Distribuidor Sur
+
+      expect(cartService.distributorGroups().length).toBe(2);
+      expect(cartService.hasMultipleDistributors()).toBeTrue();
+
+      let results: { success: boolean }[] | undefined;
+      cartService.checkout('12345678').subscribe(r => (results = r));
+
+      const reqs = httpMock.match('/api/sales');
+      expect(reqs.length).toBe(2);
+      reqs.forEach(req => req.flush({ success: true, message: 'ok', data: { id: 1 } }));
+
+      expect(results?.length).toBe(2);
+      expect(results?.every(r => r.success)).toBeTrue();
+    });
+
+    it('should leave the cart untouched on checkout so the caller decides when to clear it', () => {
+      const [offer1] = toOffers([mockProduct1]);
+      cartService.add(offer1);
+
+      cartService.checkout('12345678').subscribe();
+
+      const req = httpMock.expectOne('/api/sales');
+      req.flush({ success: true, message: 'ok', data: { id: 1 } });
+
+      expect(cartService.items().length).toBe(1);
     });
   });
 
@@ -411,13 +232,10 @@ describe('Store Flow Integration Tests', () => {
         next: () => fail('should have failed'),
         error: (error) => {
           expect(error.status).toBe(500);
-
-          // Cart should remain empty
           expect(cartService.items().length).toBe(0);
         }
       });
 
-      // Use URL matcher to ignore cache-busting query parameters (_t, _r)
       const req = httpMock.expectOne((request) => {
         const url = new URL(request.url, 'http://localhost');
         return url.pathname === '/api/products' && request.method === 'GET';
@@ -431,13 +249,11 @@ describe('Store Flow Integration Tests', () => {
       flush();
     }));
 
-    it('should handle product not found when adding to cart', fakeAsync(() => {
+    it('should handle product not found when preparing to add to cart', fakeAsync(() => {
       productService.getProduct(999).subscribe({
         next: () => fail('should have failed'),
         error: (error) => {
           expect(error.status).toBe(404);
-
-          // Cart should not have the non-existent product
           expect(cartService.items().length).toBe(0);
         }
       });
@@ -455,88 +271,33 @@ describe('Store Flow Integration Tests', () => {
 
   describe('Cart Persistence and Recovery', () => {
     it('should restore cart from localStorage on service initialization', () => {
-      // Setup cart data in localStorage
       const savedCart: CartItem[] = [
         {
-          id: 1,
-          description: 'Saved Product',
-          price: 1000,
+          offerId: '1-11111111',
+          productId: 1,
+          distributorDni: '11111111',
+          distributorName: 'Distribuidor Norte',
+          description: 'Whisky Premium',
+          price: 5000,
           qty: 2,
-          imageUrl: 'image.jpg'
+          imageUrl: 'whisky.jpg'
         }
       ];
       localStorage.setItem('cart.v1', JSON.stringify(savedCart));
 
-      // Create new service instance
-      const newCartService = new CartService();
+      const freshService = TestBed.runInInjectionContext(() => new CartService());
 
-      expect(newCartService.items()).toEqual(savedCart);
-      expect(newCartService.count()).toBe(2);
-      expect(newCartService.total()).toBe(2000);
+      expect(freshService.count()).toBe(2);
+      expect(freshService.total()).toBe(10000);
     });
 
     it('should handle corrupted cart data in localStorage', () => {
       localStorage.setItem('cart.v1', 'invalid json {]');
 
-      // Should not throw error
-      const newCartService = new CartService();
+      const freshService = TestBed.runInInjectionContext(() => new CartService());
 
-      expect(newCartService.items()).toEqual([]);
-      expect(newCartService.count()).toBe(0);
-    });
-
-    it('should handle missing cart data in localStorage', () => {
-      localStorage.removeItem('cart.v1');
-
-      const newCartService = new CartService();
-
-      expect(newCartService.items()).toEqual([]);
-    });
-  });
-
-  describe('Complex Shopping Scenarios', () => {
-    it('should handle bulk purchase flow', () => {
-      // Add 5 units of product 1
-      for (let i = 0; i < 5; i++) {
-        cartService.add(mockProduct1);
-      }
-
-      expect(cartService.items().length).toBe(1);
-      expect(cartService.items()[0].qty).toBe(5);
-      expect(cartService.total()).toBe(25000); // 5000 * 5
-    });
-
-    it('should handle mixed increment and decrement operations', () => {
-      cartService.add(mockProduct1);
-
-      cartService.inc(1); // 2
-      cartService.inc(1); // 3
-      cartService.inc(1); // 4
-      cartService.dec(1); // 3
-      cartService.dec(1); // 2
-
-      expect(cartService.items()[0].qty).toBe(2);
-      expect(cartService.total()).toBe(10000);
-    });
-
-    it('should handle add, remove, and re-add same product', () => {
-      cartService.add(mockProduct1);
-      expect(cartService.items().length).toBe(1);
-
-      cartService.remove(1);
-      expect(cartService.items().length).toBe(0);
-
-      cartService.add(mockProduct1);
-      expect(cartService.items().length).toBe(1);
-      expect(cartService.items()[0].qty).toBe(1); // Fresh start
-    });
-
-    it('should handle updating quantities to zero removes item', () => {
-      cartService.add(mockProduct1);
-      expect(cartService.items().length).toBe(1);
-
-      cartService.dec(1);
-      expect(cartService.items().length).toBe(0);
+      expect(freshService.items()).toEqual([]);
+      expect(freshService.count()).toBe(0);
     });
   });
 });

@@ -56,32 +56,3 @@ export function hasAnyRole(userRoles: string[] | undefined | null, required: str
   const set = new Set((userRoles ?? []).map(r => r.toUpperCase()));
   return required.some(r => set.has(r.toUpperCase()));
 }
-
-// ---- Utilidades para desarrollo y testing ----
-
-/**
- * Verifica si está habilitado el bypass de autenticación para desarrollo
- * 
- * Permite saltarse la autenticación durante el desarrollo cuando
- * el backend no está disponible.
- * 
- * @returns true si el bypass está habilitado en localStorage
- */
-export function devBypass(): boolean {
-  return typeof localStorage !== 'undefined' && localStorage.getItem('authBypass') === 'true';
-}
-
-/**
- * Obtiene roles mock para desarrollo desde localStorage
- * 
- * Permite simular diferentes roles de usuario durante el desarrollo
- * sin necesidad de autenticación real.
- * 
- * @returns Array de roles mock configurados en localStorage
- */
-export function getMockRoles(): Role[] {
-  if (typeof localStorage === 'undefined') return [];
-  const raw = localStorage.getItem('mockRoles');
-  const items = raw ? raw.split(',').map(s => s.trim().toUpperCase()) : [];
-  return normalizeRoles(items);
-}
