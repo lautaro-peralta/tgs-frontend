@@ -1,0 +1,25 @@
+# Test de carga para flujo de autenticación
+config:
+  target: 'http://localhost:3000/api'
+  phases:
+    - duration: 60
+      arrivalRate: 30
+      name: "Auth load test"
+
+scenarios:
+  - name: "Login Flow"
+    flow:
+      - post:
+          url: "/auth/login"
+          json:
+            email: "test@example.com"
+            password: "password123"
+          capture:
+            - json: "$.token"
+              as: "authToken"
+      - get:
+          url: "/users/me"
+          headers:
+            Authorization: "Bearer {{ authToken }}"
+          expect:
+            - statusCode: 200

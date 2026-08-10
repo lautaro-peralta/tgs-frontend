@@ -1,0 +1,37 @@
+{
+  "defaults": {
+    "timeout": 30000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-setuid-sandbox"]
+    },
+    "standard": "WCAG2AA",
+    "runners": [
+      "axe",
+      "htmlcs"
+    ],
+    "includeNotices": false,
+    "includeWarnings": true,
+    "wait": 1000,
+    "viewport": {
+      "width": 1280,
+      "height": 1024
+    },
+    "screenCapture": "screenshots/pa11y-{url}-{datetime}.png",
+    "log": {
+      "debug": false,
+      "error": true,
+      "info": true
+    },
+    "threshold": 0
+  },
+  "urls": [
+    "http://localhost:4200/",
+    "http://localhost:4200/sobre-nosotros",
+    "http://localhost:4200/faqs",
+    "http://localhost:4200/contactanos",
+    "http://localhost:4200/tienda",
+    "http://localhost:4200/terminos",
+    "http://localhost:4200/privacidad",
+    "http://localhost:4200/cookies"
+  ]
+}

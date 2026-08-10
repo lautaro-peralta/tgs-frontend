@@ -54,6 +54,11 @@ export class I18nService {
    * Obtiene una traducción instantánea
    */
   instant(key: string, params?: any): string {
+    // ✅ Validar que el key no esté vacío
+    if (!key || key.trim() === '') {
+      console.warn('[I18nService] Empty translation key provided');
+      return '';
+    }
     return this.t.instant(key, params);
   }
 

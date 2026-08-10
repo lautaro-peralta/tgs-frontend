@@ -1,0 +1,48 @@
+# Test de carga para endpoints críticos de API
+config:
+  target: 'http://localhost:3000/api'
+  phases:
+    - duration: 30
+      arrivalRate: 20
+      name: "API warm up"
+    - duration: 60
+      arrivalRate: 100
+      name: "API sustained load"
+
+scenarios:
+  - name: "Product Listing"
+    weight: 40
+    flow:
+      - get:
+          url: "/products?page=1&limit=20"
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+  - name: "Product Search"
+    weight: 30
+    flow:
+      - get:
+          url: "/products/search?q=test"
+          expect:
+            - statusCode: 200
+
+  - name: "Cart Operations"
+    weight: 20
+    flow:
+      - post:
+          url: "/cart/add"
+          json:
+            productId: 1
+            quantity: 2
+      - get:
+          url: "/cart"
+
+  - name: "Checkout Flow"
+    weight: 10
+    flow:
+      - post:
+          url: "/orders"
+          json:
+            items: []
+            total: 100

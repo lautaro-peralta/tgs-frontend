@@ -3,30 +3,28 @@
 // ============================================================================
 // Versión simplificada que transforma productos en "ofertas" donde cada
 // distribuidor puede ofrecer productos con su información de zona.
+// El estado del carrito y el checkout viven en CartService: este componente
+// solo se ocupa de render, búsqueda y de traducir el resultado del checkout
+// al modal de éxito.
 // ============================================================================
 
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product/product';
 import { ProductImageService } from '../../services/product-image/product-image';
 import { AuthService } from '../../services/auth/auth';
-import { SaleService } from '../../services/sale/sale';
 import { CartService } from '../../services/cart/cart';
-import { ApiResponse, ProductDTO, ProductOffer } from '../../models/product/product.model';
-import { unwrapList } from '../../core/http/unwrap';
-import { logger } from '../../core/logger';
+import { ProductDTO, ProductOffer } from '../../models/product/product.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { PurchaseSuccessModalComponent, PurchaseSuccessData } from '../../components/purchase-success-modal/purchase-success-modal';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-store',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     FormsModule,
     TranslateModule,
@@ -39,18 +37,16 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // SERVICES
   // ============================================================================
-  
+
   private productsSrv = inject(ProductService);
   private imgSvc = inject(ProductImageService, { optional: true as any });
   private authService = inject(AuthService);
-  private saleService = inject(SaleService);
-  private cartSrv = inject(CartService);
-  private router = inject(Router);
+  readonly cart = inject(CartService);
 
   // ============================================================================
   // STATE - Productos y Ofertas
   // ============================================================================
-  
+
   loading = signal(false);
   error = signal<string | null>(null);
   products = signal<ProductDTO[]>([]);
@@ -59,7 +55,7 @@ export class StoreComponent implements OnInit {
   offers = computed(() => {
     const allProducts = this.products();
     const offersList: ProductOffer[] = [];
-    
+
     allProducts.forEach(product => {
       // Solo productos que tienen distribuidores asociados
       if (product.distributors && product.distributors.length > 0) {
@@ -81,13 +77,14 @@ export class StoreComponent implements OnInit {
       }
     });
 
+    console.log('🛒 Offers generated:', offersList.length);
     return offersList;
   });
 
   // ============================================================================
   // STATE - Búsqueda
   // ============================================================================
-  
+
   searchInput = signal('');
   searchQuery = signal('');
 
@@ -95,9 +92,9 @@ export class StoreComponent implements OnInit {
   list = computed(() => {
     const txt = this.searchQuery().toLowerCase().trim();
     const allOffers = this.offers();
-    
+
     if (!txt) return allOffers;
-    
+
     return allOffers.filter((offer) =>
       (offer.description ?? '').toLowerCase().includes(txt) ||
       (offer.distributorName ?? '').toLowerCase().includes(txt) ||
@@ -107,41 +104,31 @@ export class StoreComponent implements OnInit {
   });
 
   // ============================================================================
-  // STATE - Carrito (delegado en CartService: fuente única de verdad)
-  // ============================================================================
-
-  cart = {
-    items: () => this.cartSrv.items(),
-    count: () => this.cartSrv.count(),
-    total: () => this.cartSrv.total(),
-  };
-
-  // ============================================================================
   // STATE - UI
   // ============================================================================
-  
+
   flashId = signal<string | null>(null);
   showCart = signal(false);
   bumpSig = signal(false);
   processing = signal(false);
-  
+
   showSuccessModal = signal(false);
   purchaseData = signal<PurchaseSuccessData | null>(null);
 
   // ============================================================================
-  // COMPUTED - Agrupación por Distribuidor (delegada en CartService)
+  // COMPUTED - Carrito / Distribuidores (delegado a CartService)
   // ============================================================================
 
   /**
-   * Lista de distribuidores seleccionados (con items en el carrito), con
-   * subtotal por distribuidor. La agrupación vive en el CartService.
+   * Alias local para no tocar el template: internamente delega en
+   * CartService.distributorGroups(), que es la única fuente de verdad.
    */
-  selectedDistributors = computed(() => this.cartSrv.distributorGroups());
+  selectedDistributors = computed(() => this.cart.distributorGroups());
 
   // ============================================================================
   // COMPUTED - Disponibilidad
   // ============================================================================
-  
+
   /**
    * Verifica si una oferta está disponible (tiene stock)
    */
@@ -153,7 +140,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // COMPUTED - Permisos de Compra
   // ============================================================================
-  
+
   canPurchase = computed(() => this.authService.canPurchase());
   isVerified = computed(() => (this.authService.user() as any)?.isVerified ?? false);
   profileCompleteness = computed(() => this.authService.profileCompleteness());
@@ -161,23 +148,18 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // HELPERS - Visualización
   // ============================================================================
-  
+
   bumpCart() { return this.bumpSig(); }
 
   toggleCartDrawer() {
     this.showCart.set(!this.showCart());
   }
 
-  getDistributorSubtotal(dni: string): number {
-    const dist = this.selectedDistributors().find(d => d.dni === dni);
-    return dist ? dist.subtotal : 0;
-  }
-
   // ============================================================================
   // LIFECYCLE
   // ============================================================================
-  
-  ngOnInit() { 
+
+  ngOnInit() {
     this.authService.refreshIfStale(0);
     this.refresh();
   }
@@ -185,24 +167,33 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // DATA LOADING
   // ============================================================================
-  
+
   refresh() {
     this.loading.set(true);
     this.error.set(null);
 
-    logger.debug('[StoreComponent] Refreshing products from backend...');
+    console.log('[StoreComponent] 🔄 Refreshing products from backend...');
 
     this.productsSrv.getAllProducts().subscribe({
-      next: (r: ApiResponse<ProductDTO[]> | ProductDTO[]) => {
-        const data = unwrapList<ProductDTO>(r);
-        logger.debug('[StoreComponent] Received products:', data.length);
+      next: (data: ProductDTO[]) => {
+        console.log('[StoreComponent] 📥 Received products:', data?.length || 0);
+
+        // Log products with their distributors
+        if (data && data.length > 0) {
+          const productsWithDistributors = data.filter((p: ProductDTO) => p.distributors && p.distributors.length > 0);
+          console.log('[StoreComponent] 📊 Products with distributors:', productsWithDistributors.length, '/', data.length);
+
+          if (productsWithDistributors.length < data.length) {
+            console.warn('[StoreComponent] ⚠️ Some products have NO distributors and will not appear in store');
+          }
+        }
 
         const overlay = this.imgSvc?.overlay?.bind(this.imgSvc) ?? ((arr: ProductDTO[]) => arr);
-        this.products.set(overlay(data));
+        this.products.set(overlay(data ?? []));
         this.loading.set(false);
       },
       error: (err) => {
-        logger.error('[StoreComponent] Error loading products:', err);
+        console.error('[StoreComponent] ❌ Error loading products:', err);
         this.error.set(err?.error?.message ?? 'Error al cargar productos');
         this.loading.set(false);
       },
@@ -212,7 +203,7 @@ export class StoreComponent implements OnInit {
   // ============================================================================
   // SEARCH
   // ============================================================================
-  
+
   onSearch(): void {
     this.searchQuery.set(this.searchInput());
   }
@@ -229,11 +220,11 @@ export class StoreComponent implements OnInit {
   }
 
   // ============================================================================
-  // CART OPERATIONS
+  // CART OPERATIONS - delegadas a CartService (única fuente de verdad)
   // ============================================================================
-  
+
   /**
-   * Agrega una oferta al carrito (delegado en CartService)
+   * Agrega una oferta al carrito
    */
   onAddClick(event: Event, offer: ProductOffer): void {
     event.stopPropagation();
@@ -242,35 +233,22 @@ export class StoreComponent implements OnInit {
       return;
     }
 
-    this.cartSrv.add({
-      offerId: offer.offerId,
-      productId: offer.productId,
-      distributorDni: offer.distributorDni,
-      distributorName: offer.distributorName,
-      description: offer.description,
-      price: offer.price,
-      imageUrl: offer.imageUrl,
-      zone: offer.zone,
-    });
-
+    this.cart.add(offer);
     this.bump();
     this.flashId.set(offer.offerId);
     setTimeout(() => this.flashId.set(null), 600);
   }
 
-  /** Incrementar cantidad */
   inc(offerId: string): void {
-    this.cartSrv.inc(offerId);
+    this.cart.inc(offerId);
   }
 
-  /** Decrementar cantidad (elimina si llega a 0) */
   dec(offerId: string): void {
-    this.cartSrv.dec(offerId);
+    this.cart.dec(offerId);
   }
 
-  /** Eliminar item del carrito */
   remove(offerId: string): void {
-    this.cartSrv.remove(offerId);
+    this.cart.remove(offerId);
   }
 
   /**
@@ -282,75 +260,34 @@ export class StoreComponent implements OnInit {
   }
 
   // ============================================================================
-  // CHECKOUT - ✅ IMPLEMENTACIÓN REAL CON BACKEND
+  // CHECKOUT - arma el payload y llama al backend vía CartService
   // ============================================================================
-  
+
   goToCheckout(): void {
     if (!this.canPurchase() || this.cart.count() === 0 || this.processing()) {
       return;
     }
 
     const distributors = this.selectedDistributors();
-    
+
     if (distributors.length === 0) {
       this.error.set('No hay distribuidores disponibles para los productos en tu carrito');
+      return;
+    }
+
+    const user = this.authService.user();
+    const clientDni = (user as any)?.person?.dni;
+
+    if (!clientDni) {
+      this.error.set('No se pudo obtener tu DNI. Por favor completa tu perfil.');
       return;
     }
 
     this.processing.set(true);
     this.error.set(null);
 
-    logger.debug('🛒 Starting checkout for', distributors.length, 'distributor(s)');
-
-    // ✅ Obtener el usuario autenticado
-    const user = this.authService.user();
-    const clientDni = (user as any)?.person?.dni;
-
-    if (!clientDni) {
-      this.processing.set(false);
-      this.error.set('No se pudo obtener tu DNI. Por favor completa tu perfil.');
-      return;
-    }
-
-    logger.debug('👤 Client DNI:', clientDni);
-
-    // ✅ Crear una compra por cada distribuidor
-    const saleRequests = distributors.map(dist => {
-      const salePayload = {
-        clientDni: clientDni,  // ✅ Agregar DNI del cliente
-        distributorDni: dist.dni,
-        details: dist.items.map(item => ({
-          productId: item.productId,
-          quantity: item.qty
-        }))
-      };
-
-      logger.debug('📤 Creating sale for distributor:', dist.name, salePayload);
-
-      return this.saleService.createSale(salePayload).pipe(
-        map(response => ({
-          success: true,
-          distributor: dist,
-          response: response,
-          error: null
-        })),
-        catchError(error => {
-          logger.error('❌ Error creating sale for', dist.name, ':', error);
-          return of({
-            success: false,
-            distributor: dist,
-            response: null,
-            error: error?.error?.message || error?.message || 'Error desconocido'
-          });
-        })
-      );
-    });
-
-    // ✅ Ejecutar todas las compras en paralelo
-    forkJoin(saleRequests).subscribe({
+    this.cart.checkout(clientDni).subscribe({
       next: (results) => {
-        logger.debug('✅ All sales completed:', results);
-        
         const successfulSales = results.filter(r => r.success);
         const failedSales = results.filter(r => !r.success);
 
@@ -367,7 +304,6 @@ export class StoreComponent implements OnInit {
         // Al menos una fue exitosa
         if (failedSales.length > 0) {
           // Algunas fallaron
-          logger.warn('⚠️ Some sales failed:', failedSales);
           this.error.set(
             `${successfulSales.length} de ${results.length} compras se completaron. ` +
             `Fallaron: ${failedSales.map(f => f.distributor.name).join(', ')}`
@@ -381,10 +317,9 @@ export class StoreComponent implements OnInit {
         if (successfulSales.length === 1) {
           // Una sola compra exitosa
           const result = successfulSales[0];
-          const saleData = (result.response as any)?.data || result.response;
-          
+
           this.purchaseData.set({
-            saleId: saleData?.id || 0,
+            saleId: result.saleId || 0,
             total: result.distributor.subtotal,
             distributor: {
               dni: result.distributor.dni,
@@ -401,36 +336,33 @@ export class StoreComponent implements OnInit {
             saleId: 0, // No hay un solo ID cuando son múltiples
             total: successfulSales.reduce((sum, r) => sum + r.distributor.subtotal, 0),
             distributor: null, // No hay un solo distribuidor
-            multipleSales: successfulSales.map((result, index) => {
-              const saleData = (result.response as any)?.data || result.response;
-              return {
-                saleId: saleData?.id || 0,
-                distributor: {
-                  dni: result.distributor.dni,
-                  name: result.distributor.name,
-                  phone: null,
-                  email: '',
-                  address: null,
-                  zone: result.distributor.zone || null
-                },
-                products: result.distributor.items.map(item => ({
-                  id: item.productId,
-                  description: item.description,
-                  price: item.price,
-                  qty: item.qty
-                })),
-                subtotal: result.distributor.subtotal
-              };
-            })
+            multipleSales: successfulSales.map((result) => ({
+              saleId: result.saleId || 0,
+              distributor: {
+                dni: result.distributor.dni,
+                name: result.distributor.name,
+                phone: null,
+                email: '',
+                address: null,
+                zone: result.distributor.zone || null
+              },
+              products: result.distributor.items.map(item => ({
+                id: item.productId,
+                description: item.description,
+                price: item.price,
+                qty: item.qty
+              })),
+              subtotal: result.distributor.subtotal
+            }))
           });
         }
 
         this.showSuccessModal.set(true);
-        this.cartSrv.clear();
+        this.cart.clear();
         this.showCart.set(false);
       },
       error: (err) => {
-        logger.error('❌ Fatal error in checkout:', err);
+        console.error('❌ Fatal error in checkout:', err);
         this.processing.set(false);
         this.error.set('Error fatal al procesar las compras. Por favor, intente nuevamente.');
       }

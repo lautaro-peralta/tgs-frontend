@@ -97,10 +97,10 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
   };
   
   readonly AUTHORITY_RANKS = [
-    { value: '0', label: 'Rango 0 - Base' },
-    { value: '1', label: 'Rango 1 - Intermedio' },
-    { value: '2', label: 'Rango 2 - Senior' },
-    { value: '3', label: 'Rango 3 - Ejecutivo' }
+    { value: '0', label: 'Rango 0 - Ejecutivo' },
+    { value: '1', label: 'Rango 1 - Senior' },
+    { value: '2', label: 'Rango 2 - Intermedio' },
+    { value: '3', label: 'Rango 3 - Base' }
   ];
 
   ngOnInit(): void {

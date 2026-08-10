@@ -5,10 +5,19 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine"
-    ]
+      "jasmine",
+      "node"
+    ],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.spec.ts",
+    "tests/**/*.spec.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "cypress"
   ]
 }

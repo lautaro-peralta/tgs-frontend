@@ -1,6 +1,6 @@
-<section class="store">
+<main class="store" role="main" aria-label="Tienda">
   <header class="store__header">
-    <h2 class="store__title">{{ 'store.title' | translate }}</h2>
+    <h1 class="store__title">{{ 'store.title' | translate }}</h1>
 
     <div class="store__filters">
       <label class="field">
@@ -23,7 +23,7 @@
     </div>
   </header>
 
-  <div class="search-indicator" *ngIf="searchQuery()">
+  <div class="search-indicator" *ngIf="searchQuery()" role="status" aria-live="polite">
     <span class="search-indicator__text">
       🔍 Buscando: <strong>{{ searchQuery() }}</strong>
     </span>
@@ -36,26 +36,26 @@
   <div class="muted" *ngIf="loading()">{{ 'account.loading' | translate }}</div>
 
   <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
-  <div class="store__grid" *ngIf="!loading() && list().length > 0">
-    <article class="store-card" *ngFor="let offer of list()" [class.flash]="flashId() === offer.offerId"
-      [class.unavailable]="!isOfferAvailable(offer.offerId)">
+  <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" aria-label="Listado de productos">
+    <article class="store-card product-card" *ngFor="let offer of list()" [class.flash]="flashId() === offer.offerId"
+      [class.unavailable]="!isOfferAvailable(offer.offerId)" [attr.data-cy]="'product-' + offer.offerId">
 
       <div class="store-card__media">
         <ng-container *ngIf="offer.imageUrl as url; else noimg">
           <img [src]="url" [alt]="offer.description || ('Producto ' + offer.productId)" loading="lazy" />
         </ng-container>
         <ng-template #noimg>
-          <div class="noimg">{{ 'store.noImage' | translate }}</div>
+          <div class="noimg" role="img" [attr.aria-label]="'Sin imagen para ' + (offer.description || 'producto')">{{ 'store.noImage' | translate }}</div>
         </ng-template>
 
         <!-- Badge de "No disponible" -->
-        <div class="unavailable-badge" *ngIf="!isOfferAvailable(offer.offerId)">
+        <div class="unavailable-badge" *ngIf="!isOfferAvailable(offer.offerId)" aria-hidden="true">
           <span>⚠️ No disponible</span>
         </div>
       </div>
 
       <div class="store-card__body">
-        <h4 class="store-card__title">{{ offer.description || ('Producto ' + offer.productId) }}</h4>
+        <h2 class="store-card__title">{{ offer.description || ('Producto ' + offer.productId) }}</h2>
 
         <!-- ✅ NUEVO: Información del distribuidor -->
         <div class="store-card__distributor">
@@ -74,13 +74,15 @@
       </div>
 
       <div class="store-card__footer">
-        <div class="store-card__price">
+        <div class="store-card__price price" data-cy="price">
           <span class="currency">$</span>
           <span class="amount">{{ offer.price | number: '1.2-2' }}</span>
         </div>
 
-        <button class="btn btn--accent" type="button" (click)="onAddClick($event, offer)"
+        <button class="btn btn--accent add-to-cart" type="button" (click)="onAddClick($event, offer)"
           [disabled]="!isOfferAvailable(offer.offerId)"
+          [attr.aria-label]="'Agregar ' + (offer.description || 'producto') + ' al carrito'"
+          [attr.data-cy]="'add-cart-' + offer.offerId"
           [title]="!isOfferAvailable(offer.offerId) ? 'Producto no disponible - Sin stock' : ''">
           {{ !isOfferAvailable(offer.offerId) ? '🚫 Sin stock' : ('store.add' | translate) }}
         </button>
@@ -233,4 +235,4 @@
   <app-purchase-success-modal *ngIf="showSuccessModal() && purchaseData()" [data]="purchaseData()!"
     (close)="onCloseSuccessModal()">
   </app-purchase-success-modal>
-</section>
+</main>

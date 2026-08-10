@@ -1,0 +1,36 @@
+# Dockerfile for Frontend Testing Environment
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies for Cypress and Chrome
+RUN apk add --no-cache \
+    chromium \
+    chromium-chromedriver \
+    curl \
+    bash
+
+# Set environment variables for Cypress
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/lib/chromium/ \
+    CYPRESS_CACHE_FOLDER=/root/.cache/Cypress
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 4200
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:4200 || exit 1
+
+# Start development server
+CMD ["npm", "start"]

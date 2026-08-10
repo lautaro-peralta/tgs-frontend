@@ -21,7 +21,7 @@ import { I18nService } from '../../services/i18n/i18n.js';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthTransitionService } from '../../services/ui/auth-transition';
 import { NotificationService } from '../../features/inbox/services/notification.service';
-import { logger } from '../../core/logger';
+import { LoggerService } from '../../services/logger/logger';
 
 interface MenuItem { label: string; path: string; }
 
@@ -65,6 +65,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   private i18n = inject(I18nService);
   private transition = inject(AuthTransitionService);
   private notificationService = inject(NotificationService);
+  private logger = inject(LoggerService);
 
   // Signal para el contador de notificaciones no leídas
   private unreadNotifications = signal<number>(0);
@@ -90,7 +91,6 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   readonly currentRoles = computed(() => this.auth.currentRoles());
   readonly profileCompleteness = computed(() => this.auth.profileCompleteness());
 
-  // ✅ Computed para roles (fuente única de verdad: AuthService)
   readonly userRoles = computed(() => this.currentRoles());
 
   // ✅ Computed para verificar si puede acceder a la tienda
@@ -100,6 +100,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
     const hasClient = roles.includes(Role.CLIENT);
     const hasUser = roles.includes(Role.USER);
     const hasAdmin = roles.includes(Role.ADMIN);
+
     return isAuth && (hasClient || hasUser || hasAdmin);
   });
 
@@ -318,7 +319,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
 
       this.unreadNotifications.set(count);
     } catch (error) {
-      logger.error('[Navbar] Error loading unread notifications count:', error);
+      this.logger.error('[Navbar] Error loading unread notifications count:', error);
       // No establecer a 0 en caso de error para mantener el último valor conocido
     }
   }
@@ -357,7 +358,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
         }, 5000);
       }
     } catch (error) {
-      logger.error('[Navbar] Error showing notification toast:', error);
+      this.logger.error('[Navbar] Error showing notification toast:', error);
     }
   }
 

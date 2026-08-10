@@ -1,11 +1,9 @@
-import { Injectable, computed, signal } from '@angular/core';
-import { logger } from '../../core/logger';
+import { Injectable, computed, inject, signal } from '@angular/core';
+import { Observable, forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { ProductOffer } from '../../models/product/product.model';
+import { SaleService } from '../sale/sale';
 
-/**
- * Item del carrito (marketplace): una "oferta" = producto + distribuidor.
- * La `offerId` (`"productId-distributorDni"`) identifica de forma única la
- * combinación producto/distribuidor dentro del carrito.
- */
 export interface CartItem {
   offerId: string;
   productId: number;
@@ -15,156 +13,161 @@ export interface CartItem {
   price: number;
   imageUrl?: string | null;
   qty: number;
-  zone?: { id: number; name: string; isHeadquarters?: boolean } | null;
+  zone?: {
+    id: number;
+    name: string;
+    isHeadquarters?: boolean;
+  } | null;
 }
 
-/** Datos necesarios para agregar una oferta al carrito (la cantidad la maneja el servicio). */
-export type CartOfferInput = Omit<CartItem, 'qty'>;
-
-/** Agrupación de items por distribuidor, con subtotal. Base del checkout por distribuidor. */
 export interface DistributorGroup {
   dni: string;
   name: string;
-  zone?: { id: number; name: string; isHeadquarters?: boolean } | null;
+  zone?: CartItem['zone'];
   items: CartItem[];
   subtotal: number;
 }
 
-/** Payload de venta que espera el backend (se crea una venta por distribuidor). */
-export interface SalePayload {
-  clientDni: string;
-  distributorDni: string;
-  details: Array<{ productId: number; quantity: number }>;
+export interface CheckoutResult {
+  distributor: DistributorGroup;
+  success: boolean;
+  saleId?: number;
+  error?: string;
 }
 
 /**
- * Servicio de carrito: ÚNICA FUENTE DE VERDAD del dominio carrito/checkout.
- *
- * Centraliza (issue de "centralizar lógica de carrito y checkout"):
- * - estado del carrito (signals),
- * - persistencia en localStorage,
- * - totales,
- * - agrupación por distribuidor,
- * - armado del payload de compra.
- *
- * Los componentes (store, checkout) sólo renderizan y delegan en este servicio;
- * no vuelven a implementar la estructura del item, ni la persistencia, ni el
- * cálculo de totales/agrupaciones.
+ * Fuente única de verdad del carrito: estado, persistencia, agrupación por
+ * distribuidor y armado/envío del checkout. Los componentes solo deben
+ * delegar acá en vez de reimplementar esta lógica.
  */
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  /**
-   * Clave de storage. Se reutiliza la clave previa del store (`cart.marketplace.v1`)
-   * para no perder los carritos ya guardados por usuarios existentes.
-   */
-  private readonly storageKey = 'cart.marketplace.v1';
+  private readonly saleSrv = inject(SaleService);
+  private readonly LS_KEY = 'cart.v1';
 
   private readonly itemsSig = signal<CartItem[]>(this.load());
-
-  /** Items del carrito (solo lectura). */
   readonly items = this.itemsSig.asReadonly();
 
-  /** Cantidad total de unidades en el carrito. */
   readonly count = computed(() => this.itemsSig().reduce((n, it) => n + it.qty, 0));
-
-  /** Importe total del carrito. */
   readonly total = computed(() => this.itemsSig().reduce((s, it) => s + it.price * it.qty, 0));
 
-  /** Items agrupados por distribuidor, con subtotal por grupo. */
   readonly distributorGroups = computed<DistributorGroup[]>(() => {
-    const groups = new Map<string, DistributorGroup>();
+    const grouped = new Map<string, CartItem[]>();
     for (const item of this.itemsSig()) {
-      const existing = groups.get(item.distributorDni);
-      if (existing) {
-        existing.items.push(item);
-        existing.subtotal += item.price * item.qty;
-      } else {
-        groups.set(item.distributorDni, {
-          dni: item.distributorDni,
-          name: item.distributorName,
-          zone: item.zone ?? null,
-          items: [item],
-          subtotal: item.price * item.qty,
-        });
-      }
+      const list = grouped.get(item.distributorDni);
+      if (list) list.push(item);
+      else grouped.set(item.distributorDni, [item]);
     }
-    return [...groups.values()];
+    return Array.from(grouped.values()).map((items) => ({
+      dni: items[0].distributorDni,
+      name: items[0].distributorName,
+      zone: items[0].zone,
+      items,
+      subtotal: items.reduce((s, it) => s + it.price * it.qty, 0),
+    }));
   });
 
-  /** Indica si el carrito abarca más de un distribuidor. */
   readonly hasMultipleDistributors = computed(() => this.distributorGroups().length > 1);
 
-  /** Agrega una oferta (o incrementa su cantidad si ya está en el carrito). */
-  add(offer: CartOfferInput): void {
-    const items = [...this.itemsSig()];
-    const idx = items.findIndex(it => it.offerId === offer.offerId);
+  add(offer: ProductOffer): void {
+    const items = this.itemsSig();
+    const idx = items.findIndex((it) => it.offerId === offer.offerId);
     if (idx >= 0) {
-      items[idx] = { ...items[idx], qty: items[idx].qty + 1 };
+      const updated = [...items];
+      updated[idx] = { ...updated[idx], qty: updated[idx].qty + 1 };
+      this.itemsSig.set(updated);
     } else {
-      items.push({ ...offer, qty: 1 });
+      this.itemsSig.set([
+        ...items,
+        {
+          offerId: offer.offerId,
+          productId: offer.productId,
+          distributorDni: offer.distributorDni,
+          distributorName: offer.distributorName,
+          description: offer.description,
+          price: offer.price,
+          imageUrl: offer.imageUrl,
+          qty: 1,
+          zone: offer.zone,
+        },
+      ]);
     }
-    this.commit(items);
+    this.persist();
   }
 
-  /** Incrementa la cantidad de una oferta. */
   inc(offerId: string): void {
-    this.commit(
-      this.itemsSig().map(it => (it.offerId === offerId ? { ...it, qty: it.qty + 1 } : it))
+    this.itemsSig.set(
+      this.itemsSig().map((it) => (it.offerId === offerId ? { ...it, qty: it.qty + 1 } : it))
     );
+    this.persist();
   }
 
-  /** Decrementa la cantidad de una oferta; la elimina si llega a 0. */
   dec(offerId: string): void {
     const items = this.itemsSig()
-      .map(it => (it.offerId === offerId ? { ...it, qty: it.qty - 1 } : it))
-      .filter(it => it.qty > 0);
-    this.commit(items);
-  }
-
-  /** Elimina una oferta del carrito. */
-  remove(offerId: string): void {
-    this.commit(this.itemsSig().filter(it => it.offerId !== offerId));
-  }
-
-  /** Vacía el carrito. */
-  clear(): void {
-    this.commit([]);
-  }
-
-  /**
-   * Construye un payload de venta por cada distribuidor presente en el carrito.
-   * El distribuidor de cada venta proviene de los propios items del carrito,
-   * nunca de "el primero disponible".
-   */
-  buildSalePayloads(clientDni: string): SalePayload[] {
-    return this.distributorGroups().map(group => ({
-      clientDni,
-      distributorDni: group.dni,
-      details: group.items.map(it => ({ productId: it.productId, quantity: it.qty })),
-    }));
-  }
-
-  private commit(items: CartItem[]): void {
+      .map((it) => (it.offerId === offerId ? { ...it, qty: it.qty - 1 } : it))
+      .filter((it) => it.qty > 0);
     this.itemsSig.set(items);
     this.persist();
   }
 
+  remove(offerId: string): void {
+    this.itemsSig.set(this.itemsSig().filter((it) => it.offerId !== offerId));
+    this.persist();
+  }
+
+  clear(): void {
+    this.itemsSig.set([]);
+    this.persist();
+  }
+
+  /**
+   * Arma un pedido por cada distribuidor presente en el carrito y los
+   * envía en paralelo. No limpia el carrito: eso lo decide quien llama
+   * según el resultado (puede haber compras parciales fallidas).
+   */
+  checkout(clientDni: string): Observable<CheckoutResult[]> {
+    const requests = this.distributorGroups().map((group) =>
+      this.saleSrv
+        .createSale({
+          clientDni,
+          distributorDni: group.dni,
+          details: group.items.map((it) => ({ productId: it.productId, quantity: it.qty })),
+        })
+        .pipe(
+          map(
+            (response): CheckoutResult => ({
+              distributor: group,
+              success: true,
+              saleId: response.data?.id,
+            })
+          ),
+          catchError((error) =>
+            of<CheckoutResult>({
+              distributor: group,
+              success: false,
+              error: error?.error?.message || error?.message || 'Error desconocido',
+            })
+          )
+        )
+    );
+    return forkJoin(requests);
+  }
+
   private persist(): void {
     try {
-      localStorage.setItem(this.storageKey, JSON.stringify(this.itemsSig()));
+      localStorage.setItem(this.LS_KEY, JSON.stringify(this.itemsSig()));
     } catch (e) {
-      logger.error('[CartService] Error saving cart:', e);
+      console.error('[CartService] Error al guardar el carrito:', e);
     }
   }
 
   private load(): CartItem[] {
     try {
-      const raw = localStorage.getItem(this.storageKey);
+      const raw = localStorage.getItem(this.LS_KEY);
       if (!raw) return [];
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      logger.error('[CartService] Error loading cart:', e);
+    } catch {
       return [];
     }
   }

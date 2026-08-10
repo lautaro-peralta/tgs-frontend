@@ -1,0 +1,35 @@
+# Stress testing - encontrar punto de quiebre
+config:
+  target: 'http://localhost:4200'
+  phases:
+    - duration: 60
+      arrivalRate: 50
+      name: "Normal load"
+    - duration: 60
+      arrivalRate: 100
+      name: "Increased load"
+    - duration: 60
+      arrivalRate: 200
+      name: "High load"
+    - duration: 60
+      arrivalRate: 500
+      name: "Breaking point test"
+
+scenarios:
+  - name: "Homepage Load"
+    weight: 50
+    flow:
+      - get:
+          url: "/"
+
+  - name: "Products Page"
+    weight: 30
+    flow:
+      - get:
+          url: "/products"
+
+  - name: "Cart Page"
+    weight: 20
+    flow:
+      - get:
+          url: "/cart"

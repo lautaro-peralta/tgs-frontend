@@ -9,6 +9,7 @@ import {
 import { catchError, switchMap } from 'rxjs/operators';
 import { throwError, Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth';
+import { NavigationStateService } from '../services/ui/navigation-state';
 import { logger } from '../core/logger';
 
 // ============================================================================
@@ -101,6 +102,7 @@ function rejectPendingRequests(error: unknown): void {
 export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEvent<unknown>> => {
   const router = inject(Router);
   const authService = inject(AuthService);
+  const navigationState = inject(NavigationStateService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse): Observable<HttpEvent<unknown>> => {
@@ -119,12 +121,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
           return throwError(() => error);
         }
 
-        // 2) No interferir durante la primera navegación.
-        //    Angular Router ya expone `navigated` (true tras la primera
-        //    navegación), por lo que no hace falta suscribirse a router.events
-        //    dentro del interceptor (evita fugas: se ejecuta en cada request).
-        if (!router.navigated) {
-          logger.debug('[AuthInterceptor] Initial navigation - passing through 401');
+        // 2) No interferir durante la primera navegación
+        if (!navigationState.hasNavigatedOnce) {
+          console.log('[AuthInterceptor] 🚀 Initial navigation - passing through 401');
           return throwError(() => error);
         }
 

@@ -11,8 +11,17 @@ import {
   UpdateSaleDTO,
   SaleDetailDTO,
 } from '../../models/sale/sale.model';
-import { unwrap, unwrapList } from '../../core/http/unwrap';
 import { logger } from '../../core/logger';
+
+/**
+ * Forma real de la respuesta del backend para listados de ventas
+ * (ResponseUtil.successList: data siempre presente, nunca un array pelado)
+ */
+interface SaleListResponse {
+  success: boolean;
+  message: string;
+  data: SaleDTO[];
+}
 
 /**
  * Respuesta extendida del backend al crear una venta
@@ -40,10 +49,10 @@ export class SaleService {
 
   /** GET /api/sales - Obtiene todas las ventas */
   getAllSales(): Observable<SaleDTO[]> {
-    return this.http.get<ApiResponse<SaleDTO[]>>(this.base, {
+    return this.http.get<SaleListResponse>(this.base, {
       withCredentials: true
     }).pipe(
-      map(res => unwrapList<SaleDTO>(res))
+      map((res) => res.data)
     );
   }
 
@@ -52,11 +61,10 @@ export class SaleService {
    * El backend automáticamente filtra por el DNI del usuario autenticado
    */
   getMyPurchases(): Observable<SaleDTO[]> {
-    logger.debug('[SaleService] Fetching my purchases');
-    return this.http.get<ApiResponse<SaleDTO[]>>(`${this.base}/my-purchases`, {
+    return this.http.get<SaleListResponse>(`${this.base}/my-purchases`, {
       withCredentials: true
     }).pipe(
-      map(res => unwrapList<SaleDTO>(res))
+      map((res) => res.data)
     );
   }
 
@@ -65,7 +73,7 @@ export class SaleService {
     return this.http.get<ApiResponse<SaleDTO>>(`${this.base}/${id}`, {
       withCredentials: true
     }).pipe(
-      map(res => unwrap<SaleDTO>(res))
+      map((res) => res.data as SaleDTO)
     );
   }
 
@@ -138,11 +146,11 @@ export class SaleService {
     page?: number;
     limit?: number;
   }): Observable<SaleDTO[]> {
-    return this.http.get<ApiResponse<SaleDTO[]>>(`${this.base}/search`, {
+    return this.http.get<SaleListResponse>(`${this.base}/search`, {
       params: params as any,
       withCredentials: true
     }).pipe(
-      map(res => unwrapList<SaleDTO>(res))
+      map((res) => res.data)
     );
   }
 }

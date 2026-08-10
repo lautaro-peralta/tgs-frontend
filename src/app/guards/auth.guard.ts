@@ -24,6 +24,9 @@ function isPublicVerificationUrl(input: string): boolean {
   }
 }
 
+function isLoggedIn(auth: AuthService): boolean {
+  return !!auth.isAuthenticated();
+}
 function segmentsToUrl(segments: UrlSegment[]): string {
   return '/' + segments.map(s => s.path).join('/');
 }
@@ -33,7 +36,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const url = state.url || '';
   if (isPublicVerificationUrl(url)) return true;
-  if (auth.isAuthenticated()) return true;
+  if (isLoggedIn(auth)) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -42,7 +45,7 @@ export const authMatchGuard: CanMatchFn = (route: Route, segments: UrlSegment[])
   const router = inject(Router);
   const url = segmentsToUrl(segments);
   if (isPublicVerificationUrl(url)) return true;
-  if (auth.isAuthenticated()) return true;
+  if (isLoggedIn(auth)) return true;
   return router.createUrlTree(['/']);
 };
 
@@ -52,7 +55,7 @@ export const roleGuard = (allowed: Role[]): CanActivateFn => {
     const router = inject(Router);
     const url = state.url || '';
     if (isPublicVerificationUrl(url)) return true;
-    if (!auth.isAuthenticated()) return router.createUrlTree(['/']);
+    if (!isLoggedIn(auth)) return router.createUrlTree(['/']);
 
     // 🔄 Refresh roles if they're stale (older than 15 seconds)
     // This ensures role changes (like approved role requests) are reflected immediately
@@ -73,7 +76,7 @@ export const inboxGuard: CanActivateFn = (route, state) => {
   if (isPublicVerificationUrl(url)) return true;
   
   // Solo requiere estar autenticado
-  if (auth.isAuthenticated()) {
+  if (isLoggedIn(auth)) {
     logger.debug('[InboxGuard] User authenticated, allowing access');
     return true;
   }

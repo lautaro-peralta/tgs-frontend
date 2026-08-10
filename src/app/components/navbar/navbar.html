@@ -90,9 +90,9 @@
       </li>
 
       <!-- Gestión (ADMIN | PARTNER | DISTRIBUTOR) -->
-      <li class="menu__item menu__item--dropdown" role="none" tabindex="0"
+      <li class="menu__item menu__item--dropdown" role="none"
         *ngIf="isAuthenticated() && (isAdmin() || isPartner() || isDistributor() || isAuthority())">
-        <button #mainBtn class="dropdown__toggle has-underline" type="button" aria-haspopup="true" aria-expanded="false"
+        <button #mainBtn class="dropdown__toggle has-underline" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false"
           [class.active]="isGestionActive()">
           {{ 'nav.management' | translate }} <span class="chevron">▾</span>
           <span class="underline"></span>
@@ -316,9 +316,9 @@
       </li>
 
       <!-- ✅ Usuario (SIMPLIFICADO) -->
-      <li class="menu__item menu__item--dropdown" role="none" tabindex="0" *ngIf="isAuthenticated()">
-        <button class="dropdown__toggle icon-only" type="button" aria-haspopup="true" aria-expanded="false"
-          [attr.aria-label]="displayName()">
+      <li class="menu__item menu__item--dropdown" role="none" *ngIf="isAuthenticated()">
+        <button class="dropdown__toggle icon-only" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false"
+          [attr.aria-label]="displayName()" data-cy="user-menu">
           <span class="material-symbols-outlined account-icon" aria-hidden="true">account_box</span>
           <span *ngIf="!isProfileComplete()" class="profile-incomplete-badge"
             [attr.title]="'Perfil ' + getProfileCompleteness() + '% completo'">
@@ -376,7 +376,7 @@
 
           <!-- ✅ Logout -->
           <li class="dropdown__item" role="none">
-            <button type="button" class="btn-logout" (click)="logout()">
+            <button type="button" role="menuitem" class="btn-logout" (click)="logout()" data-cy="logout-button">
               <span class="material-symbols-outlined">logout</span>
               {{ 'nav.logout' | translate }}
             </button>

@@ -217,7 +217,7 @@
 -------------------------------------------------------------------*/
 .auth-panel {
   --split: 50%;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
   z-index: 10;
   min-height: var(--auth-min-h);
@@ -306,6 +306,8 @@
   height: 100%;
   align-items: stretch;
   flex: 1 1 auto;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .auth-half {

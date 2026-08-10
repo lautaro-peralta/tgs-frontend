@@ -1,0 +1,59 @@
+# ZAP Scanning Rules Configuration
+# Format: <rule_id>	<threshold>	<strength>
+#
+# Thresholds: IGNORE, INFO, LOW, MEDIUM, HIGH
+# Strengths: LOW, MEDIUM, HIGH
+#
+# Common vulnerabilities to check:
+
+# XSS Protection
+40012	MEDIUM	HIGH
+40014	MEDIUM	HIGH
+40016	MEDIUM	HIGH
+40017	MEDIUM	HIGH
+
+# SQL Injection
+40018	HIGH	HIGH
+
+# CSRF Protection
+10202	MEDIUM	MEDIUM
+
+# Insecure Authentication
+10105	HIGH	HIGH
+
+# Missing Security Headers
+10020	LOW	MEDIUM
+10021	LOW	MEDIUM
+10023	MEDIUM	MEDIUM
+10035	MEDIUM	MEDIUM
+10036	MEDIUM	MEDIUM
+10038	LOW	MEDIUM
+10055	MEDIUM	MEDIUM
+10096	LOW	MEDIUM
+10098	LOW	MEDIUM
+
+# Information Disclosure
+10097	MEDIUM	MEDIUM
+
+# Cookie Security
+10054	MEDIUM	MEDIUM
+
+# HTTPS Issues (if applicable)
+10015	LOW	MEDIUM
+10017	LOW	MEDIUM
+10019	MEDIUM	MEDIUM
+
+# Application Error Disclosure
+90022	LOW	MEDIUM
+
+# Server-Side Request Forgery
+40018	HIGH	HIGH
+
+# Directory Browsing
+0	LOW	MEDIUM
+
+# Vulnerable JavaScript Libraries
+10003	MEDIUM	HIGH
+
+# Content Security Policy
+10055	MEDIUM	MEDIUM

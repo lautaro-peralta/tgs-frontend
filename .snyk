@@ -1,0 +1,24 @@
+# Snyk (https://snyk.io) policy file
+# Configuration for security vulnerability scanning
+
+# Language settings
+language-settings:
+  javascript:
+    # Ignore devDependencies in production scans
+    ignoreDevDependencies: true
+
+# Patch settings
+patch:
+  # Auto-patch vulnerabilities when possible
+  auto: true
+
+# Ignore specific vulnerabilities (use with caution)
+ignore:
+  # Example:
+  # SNYK-JS-AXIOS-1234567:
+  #   - '*':
+  #       reason: 'Not applicable to our use case'
+  #       expires: '2024-12-31T23:59:59.999Z'
+
+# Version of this policy file
+version: v1.25.0
