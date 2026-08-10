@@ -172,8 +172,21 @@
   transition: background .2s ease, border-color .2s ease;
 
   &:hover {
-    background: rgba(195, 164, 98, 0.12);
+    background: rgba(195, 164, 98, 0.2);
     border-color: rgba(195, 164, 98, 0.55);
+  }
+
+  // El elemento elegido. Antes esto se pintaba con [style.background] en la
+  // plantilla y el hover con onmouseenter/onmouseleave en JavaScript plano;
+  // como el estilo en línea gana siempre, la regla :hover de arriba no
+  // llegaba a aplicarse nunca sobre estos elementos.
+  &.is-selected {
+    background: rgba(195, 164, 98, 0.3);
+    border-color: rgba(195, 164, 98, 0.6);
+  }
+
+  &.is-selected:hover {
+    background: rgba(195, 164, 98, 0.38);
   }
 }
 

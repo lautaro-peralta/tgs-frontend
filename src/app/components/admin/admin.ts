@@ -46,6 +46,14 @@ export class AdminComponent implements OnInit {
   users = signal<User[]>([]);
   userSearch = signal('');
   fromUser = signal(false);
+  /**
+   * Id del usuario elegido en la lista de usuarios verificados.
+   *
+   * `fromUser` sólo dice si el formulario se llenó desde un usuario, no cuál:
+   * usarlo para resaltar pintaba TODA la lista como seleccionada en cuanto se
+   * elegía uno. Distribuidor y socio ya llevaban su equivalente.
+   */
+  selectedUserId = signal<string | null>(null);
 
   // Filtro
   fTextInput = signal('');
@@ -125,6 +133,7 @@ export class AdminComponent implements OnInit {
   new(): void {
     this.isEdit.set(false);
     this.fromUser.set(false);
+    this.selectedUserId.set(null);
     this.userSearch.set('');
     this.form.reset({ dni: '', name: '', email: '', phone: null });
   }
@@ -133,6 +142,7 @@ export class AdminComponent implements OnInit {
   edit(it: AdminDTO): void {
     this.isEdit.set(true);
     this.fromUser.set(false);
+    this.selectedUserId.set(null);
     this.form.patchValue({ dni: it.dni, name: it.name, email: it.email, phone: it.phone ?? null });
     this.isNewOpen = true;
   }
@@ -150,6 +160,7 @@ export class AdminComponent implements OnInit {
       phone: person.phone ?? null
     });
     this.fromUser.set(true);
+    this.selectedUserId.set(userId);
   }
 
   /** Crea/actualiza y refresca listado. */

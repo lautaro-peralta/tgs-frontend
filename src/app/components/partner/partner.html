@@ -151,10 +151,7 @@
                 verificados disponibles ({{ filteredUsers().length }})</h4>
               <div class="scroll-list">
                 <div class="pick-item" *ngFor="let u of filteredUsers()" (click)="selectUserByDni(getUserPersonDni(u))"
-                  [style.background]="selectedUserDni() === getUserPersonDni(u) ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
-                  onmouseenter="this.style.background='rgba(195, 164, 98, 0.2)'"
-                  onmouseleave="this.style.background=this.getAttribute('data-selected') === 'true' ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
-                  [attr.data-selected]="selectedUserDni() === getUserPersonDni(u)">
+                  [class.is-selected]="selectedUserDni() === getUserPersonDni(u)">
                   <div class="row-between">
                     <div>
                       <div class="text-accent">{{ getUserPerson(u)?.name }}</div>

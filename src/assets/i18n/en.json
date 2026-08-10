@@ -493,9 +493,6 @@
         "yes": "With purchases",
         "no": "Without purchases"
       },
-      "purchases_all": "All",
-      "purchases_yes": "With purchases",
-      "purchases_no": "No purchases",
       "purchaseFilterLabel": "Filter by purchases"
     },
     "table": {
@@ -1408,17 +1405,8 @@
         "dateRequired": "Date required"
       }
     },
-    "buttons": {
-      "new": "+ New",
-      "close": "Close",
-      "create": "Create",
-      "save": "Save",
-      "clear": "Clear",
-      "cancel": "Cancel"
-    },
     "errorCreate": "Could not create review",
     "errorSave": "Could not save review",
-    "errorLoad": "Could not load reviews",
     "errorDelete": "Could not delete review",
     "confirmDelete": "Delete this review?",
     "sampleData": "📋 Sample data",
@@ -1477,13 +1465,6 @@
     "noAdmins": "No administrators available. Create one first.",
     "pickAuthority": "— Pick an authority —",
     "noAuthorities": "No authorities available. Create one first."
-  },
-  "buttons": {
-    "new": "+ New",
-    "create": "Create",
-    "save": "Save",
-    "clear": "Clear",
-    "cancel": "Cancel"
   },
   "inbox": {
     "title": "Inbox",
@@ -2054,34 +2035,6 @@
       "systemIntegration": {
         "q": "Does it integrate with other systems?",
         "a": "We offer API and importers to connect your current stack."
-      }
-    },
-    "footer": {
-      "tagline": "The platform that takes your business to the next level",
-      "rights": "All rights reserved",
-      "sections": {
-        "company": "Company",
-        "legal": "Legal",
-        "resources": "Resources"
-      },
-      "links": {
-        "about": "About us",
-        "contact": "Contact",
-        "faqs": "FAQs",
-        "terms": "Terms and conditions",
-        "privacy": "Privacy policy",
-        "cookies": "Cookie policy",
-        "docs": "Documentation",
-        "api": "API",
-        "support": "Support"
-      },
-      "social": {
-        "github": "Visit GitHub",
-        "email": "Send email"
-      },
-      "university": {
-        "prefix": "Academic project by",
-        "name": "UTN Rosario"
       }
     }
   },

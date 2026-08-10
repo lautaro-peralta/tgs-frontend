@@ -496,7 +496,6 @@
     "new": "Nuevo",
     "available": "Clientes disponibles",
     "newTitle": "Nuevo cliente",
-    "none": "No hay clientes disponibles",
     "editTitle": "Editar cliente",
     "loading": "Cargando clientes...",
     "noResults": "Sin resultados",
@@ -1123,7 +1122,6 @@
     }
   },
   "status": {
-    "PENDIENTE": "PENDIENTE",
     "PENDING": "PENDIENTE",
     "IN_REVIEW": "EN REVISIÓN",
     "COMPLETED": "COMPLETADA",
@@ -1312,11 +1310,6 @@
       "title": "Estadísticas del Período",
       "empty": "Sin datos para el período seleccionado.",
       "period": "Período",
-      "totalLabel": "Total:",
-      "clientsNoun": "clientes",
-      "withPurchasesLabel": "Con compras:",
-      "withoutPurchasesLabel": "Sin compras:",
-      "filteredLabel": "Filtrados:",
       "totalSales": "Total Ventas",
       "totalAmount": "Monto Total",
       "averageAmount": "Promedio",
@@ -1411,7 +1404,11 @@
     },
     "sampleData": "📋 Datos de ejemplo",
     "sampleDataAlt": "🧪 Datos de ejemplo",
-    "placeholder": "Espacio reservado"
+    "placeholder": "Espacio reservado",
+    "confirmDelete": "¿Eliminar esta revisión?",
+    "errorCreate": "No se pudo crear la revisión",
+    "errorDelete": "No se pudo eliminar la revisión",
+    "errorSave": "No se pudo guardar la revisión"
   },
   "clandestineAgreement": {
     "title": "Acuerdos Clandestinos",
@@ -2011,7 +2008,10 @@
         "hint": "Contacto directo por email"
       }
     },
-    "mapsIconAlt": "Icono de Google Maps"
+    "mapsIconAlt": "Icono de Google Maps",
+    "actions": {
+      "viewOnMaps": "Ver en Google Maps"
+    }
   },
   "faqs": {
     "title": "Preguntas Frecuentes",
