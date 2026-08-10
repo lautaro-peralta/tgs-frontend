@@ -2,16 +2,23 @@ name: Sync Fork with Upstream
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 * * * *"
   workflow_dispatch:
+
+concurrency:
+  group: sync-fork
+  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout fork
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -28,8 +35,17 @@ jobs:
 
       - name: Merge upstream changes
         run: |
-          git merge upstream/main --no-edit || true
+          if ! git merge upstream/main --no-edit; then
+            echo "::error::Conflicto al mergear upstream/main en deploy/vercel. Hay que resolverlo a mano y pushear; el sync automatico no puede continuar."
+            git diff --name-only --diff-filter=U
+            git merge --abort
+            exit 1
+          fi
 
       - name: Push to fork
         run: |
+          if [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/deploy/vercel)" ]; then
+            echo "Sin cambios nuevos de upstream; no hay nada que pushear."
+            exit 0
+          fi
           git push origin deploy/vercel
