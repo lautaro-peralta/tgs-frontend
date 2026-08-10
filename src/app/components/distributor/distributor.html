@@ -114,7 +114,7 @@
   <div class="distributor-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
     <button type="button" class="distributor-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
 
-    <div class="distributor-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="distributor-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="cancel()" (click)="$event.stopPropagation()">
       <div class="header compact">
         <h2 class="title">
           {{ isEdit()

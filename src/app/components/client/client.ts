@@ -15,15 +15,18 @@ import {
 import { SaleDTO } from '../../models/sale/sale.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-client',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './client.html',
   styleUrls: ['./client.scss']
 })
 export class ClientComponent implements OnInit {
+  private confirmDialog = inject(ConfirmService);
   private fb = inject(FormBuilder);
   private srv = inject(ClientService);
   private saleSrv = inject(SaleService);
@@ -251,8 +254,8 @@ export class ClientComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  delete(dni: string) {
-    if (!confirm(this.t.instant('clients.confirmDelete'))) return;
+  async delete(dni: string) {
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('clients.confirmDelete'), danger: true }))) return;
     
     this.loading.set(true);
     this.error.set(null);

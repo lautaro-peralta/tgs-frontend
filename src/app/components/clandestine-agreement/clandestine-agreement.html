@@ -158,7 +158,7 @@
   <div class="clandestine-overlay" [class.is-open]="isNewOpen()" [attr.aria-hidden]="!isNewOpen()">
     <button type="button" class="clandestine-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
 
-    <div class="clandestine-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="clandestine-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen()" (dialogClose)="cancel()" (click)="$event.stopPropagation()">
       <div class="header compact">
         <h2 class="title">
           {{ isEdit()

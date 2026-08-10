@@ -244,7 +244,8 @@
       "yes": "Sí",
       "no": "No"
     },
-    "imageFile": "Imagen (archivo)"
+    "imageFile": "Imagen (archivo)",
+    "confirmDelete": "¿Estás seguro de eliminar este producto?"
   },
   "auth": {
     "user": "usuario",
@@ -459,7 +460,8 @@
     "clear": "Limpiar",
     "applyFiltersTitle": "Aplicar filtros",
     "clearFiltersTitle": "Limpiar filtros",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "confirm": "Confirmar"
   },
   "clients": {
     "toggle": {
@@ -578,7 +580,8 @@
       "total": "Total socios:",
       "withDecisions": "Con decisiones:",
       "filtered": "Filtrados:"
-    }
+    },
+    "confirmMigration": "¿Ejecutar la migración de roles? Se asignará el rol PARTNER a todos los usuarios que tengan un socio asociado."
   },
   "sales": {
     "title": "Ventas",
@@ -953,7 +956,8 @@
       "active": "Activas:",
       "filtered": "Filtradas:"
     },
-    "noResults": "Sin resultados para el filtro aplicado"
+    "noResults": "Sin resultados para el filtro aplicado",
+    "confirmDelete": "¿Eliminar esta decisión?"
   },
   "topics": {
     "title": "Temáticas",

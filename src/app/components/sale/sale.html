@@ -220,7 +220,7 @@
   <div class="new-sale-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
     <button type="button" class="new-sale-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
 
-    <div class="new-sale-overlay__panel glass-dark card" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
+    <div class="new-sale-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
       <div class="header compact">
         <h2 class="title">{{ 'sales.newTitle' | translate }}</h2>
         <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>

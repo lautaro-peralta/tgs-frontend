@@ -1,6 +1,6 @@
 <!-- role-request-modal.component.html - Versión mejorada -->
 <div *ngIf="isOpen" class="modal-overlay" (click)="onOverlayClick($event)">
-  <div class="modal role-request-modal glass-modal" (click)="$event.stopPropagation()">
+  <div class="modal role-request-modal glass-modal" appDialog [dialogOpen]="isOpen" (dialogClose)="close.emit()" (click)="$event.stopPropagation()">
 
     <!-- Header mejorado -->
     <div class="modal-header">

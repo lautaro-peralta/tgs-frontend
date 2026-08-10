@@ -186,7 +186,7 @@
 <div class="authority-overlay is-open" *ngIf="isFormOpen">
   <button type="button" class="authority-overlay__backdrop" (click)="toggleForm()" aria-label="Cerrar"></button>
 
-  <div class="authority-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+  <div class="authority-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="toggleForm()" (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2 class="title">
         {{ editDni() == null

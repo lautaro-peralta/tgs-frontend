@@ -24,6 +24,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
 
 type SaleForm = {
   id: FormControl<number | null>;
@@ -72,8 +73,7 @@ interface DistributorListResponse {
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    NgxEchartsModule
-  ],
+    NgxEchartsModule, DialogDirective],
   templateUrl: './sale.html',
   styleUrls: ['./sale.scss'],
 })

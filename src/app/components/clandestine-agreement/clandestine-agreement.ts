@@ -20,15 +20,18 @@ import {
 import { AuthorityDTO } from '../../models/authority/authority.model';
 import { AdminDTO } from '../../models/admin/admin.model';
 import { ShelbyCouncilDTO } from '../../models/shelby-council/shelby-council.model';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-clandestine-agreement',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './clandestine-agreement.html',
   styleUrls: ['./clandestine-agreement.scss'],
 })
 export class ClandestineAgreementComponent implements OnInit {
+  private confirmDialog = inject(ConfirmService);
   private fb  = inject(FormBuilder);
   private srv = inject(ClandestineAgreementService);
   private authoritySrv = inject(AuthorityService);
@@ -228,9 +231,9 @@ export class ClandestineAgreementComponent implements OnInit {
     }
   }
 
-  delete(it: ClandestineAgreementDTO): void {
+  async delete(it: ClandestineAgreementDTO): Promise<void> {
     const msg = this.tr.instant('clandestineAgreement.confirmDelete') || '¿Eliminar este acuerdo clandestino?';
-    if (!confirm(msg)) return;
+    if (!(await this.confirmDialog.ask({ title: msg, danger: true }))) return;
     
     this.loading.set(true);
     this.srv.delete(it.id).subscribe({ 

@@ -226,7 +226,8 @@
       "yes": "Yes",
       "no": "No"
     },
-    "imageFile": "Image (file)"
+    "imageFile": "Image (file)",
+    "confirmDelete": "Are you sure you want to delete this product?"
   },
   "auth": {
     "user": "user",
@@ -444,7 +445,8 @@
     "clear": "Clear",
     "applyFiltersTitle": "Apply filters",
     "clearFiltersTitle": "Clear filters",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "confirm": "Confirm"
   },
   "clients": {
     "title": "Clients",
@@ -565,7 +567,8 @@
       "total": "Total partners:",
       "withDecisions": "With decisions:",
       "filtered": "Filtered:"
-    }
+    },
+    "confirmMigration": "Run the role migration? The PARTNER role will be assigned to every user linked to a partner."
   },
   "sales": {
     "title": "Sales",
@@ -940,7 +943,8 @@
       "active": "Active:",
       "filtered": "Filtered:"
     },
-    "noResults": "No results for the applied filter"
+    "noResults": "No results for the applied filter",
+    "confirmDelete": "Delete this decision?"
   },
   "topics": {
     "title": "Topics",

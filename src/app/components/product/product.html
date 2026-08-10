@@ -163,7 +163,7 @@
 <div class="new-product-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
   <button type="button" class="new-product-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
 
-  <div class="new-product-overlay__panel glass-dark card">
+  <div class="new-product-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()">
     <div class="header compact">
       <h2 class="title">
         {{ editId() == null

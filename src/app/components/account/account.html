@@ -283,7 +283,7 @@
 <!-- Modales de edición -->
 <!-- Modal de edición de teléfono -->
 <div class="edit-modal-overlay" *ngIf="editingPhone()" (click)="cancelEdit('phone')">
-  <div class="edit-modal" (click)="$event.stopPropagation()">
+  <div class="edit-modal" appDialog [dialogOpen]="editingPhone()" (dialogClose)="cancelEdit('phone')" (click)="$event.stopPropagation()">
     <div class="edit-modal-header">
       <h3>Editar Teléfono</h3>
       <button type="button" class="close-btn" (click)="cancelEdit('phone')">
@@ -312,7 +312,7 @@
 
 <!-- Modal de edición de dirección -->
 <div class="edit-modal-overlay" *ngIf="editingAddress()" (click)="cancelEdit('address')">
-  <div class="edit-modal" (click)="$event.stopPropagation()">
+  <div class="edit-modal" appDialog [dialogOpen]="editingAddress()" (dialogClose)="cancelEdit('address')" (click)="$event.stopPropagation()">
     <div class="edit-modal-header">
       <h3>Editar Dirección</h3>
       <button type="button" class="close-btn" (click)="cancelEdit('address')">

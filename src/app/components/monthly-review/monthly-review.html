@@ -300,7 +300,7 @@
   <button type="button" class="monthly-overlay__backdrop" (click)="cancel()"
     [attr.aria-label]="'common.close' | translate : {} : 'Cerrar'"></button>
 
-  <div class="monthly-overlay__panel glass-dark card" role="dialog" aria-modal="true"
+  <div class="monthly-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen()" (dialogClose)="cancel()"
     (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2 class="title">
@@ -392,7 +392,7 @@
 
 <!-- Modal para gráfico expandido -->
 <div *ngIf="expandedChart()" class="chart-modal-overlay" (click)="closeExpandedChart()">
-  <div class="chart-modal-content" (click)="$event.stopPropagation()">
+  <div class="chart-modal-content" appDialog [dialogOpen]="!!expandedChart()" (dialogClose)="closeExpandedChart()" (click)="$event.stopPropagation()">
     <!-- Header -->
     <div class="chart-modal-header">
       <h3 class="chart-modal-title">

@@ -144,7 +144,7 @@
 <div class="new-client-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
   <button type="button" class="new-client-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
 
-  <div class="new-client-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+  <div class="new-client-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()" (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2 class="title">
         {{ (editDni() == null ? 'clients.newTitle' : 'clients.editTitle') | translate }}

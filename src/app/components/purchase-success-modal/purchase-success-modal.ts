@@ -2,6 +2,7 @@
 
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
 
 // ✅ INTERFAZ ACTUALIZADA: Soporte para múltiples ventas
 export interface PurchaseSuccessData {
@@ -47,10 +48,10 @@ export interface PurchaseSuccessData {
 @Component({
   selector: 'app-purchase-success-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, DialogDirective],
   template: `
     <div class="modal-overlay" (click)="onClose()">
-      <div class="modal purchase-success-modal" (click)="$event.stopPropagation()">
+      <div class="modal purchase-success-modal" appDialog [dialogOpen]="true" (dialogClose)="onClose()" (click)="$event.stopPropagation()">
         <div class="modal-header">
           <div class="success-icon">✅</div>
           <h2>

@@ -96,7 +96,7 @@
 <div class="new-admin-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
   <button type="button" class="new-admin-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
 
-  <div class="new-admin-overlay__panel glass-dark card" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
+  <div class="new-admin-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()" (click)="$event.stopPropagation()" style="overscroll-behavior: contain;">
     <div class="header compact">
       <h2 class="title">
         {{ isEdit()

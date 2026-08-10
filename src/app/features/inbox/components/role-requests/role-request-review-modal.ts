@@ -5,11 +5,12 @@ import { RoleRequest } from '../../models/role-request.model';
 import { RoleRequestService } from '../../services/role-request';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { logger } from '../../../../core/logger';
+import { DialogDirective } from '../../../../shared/a11y/dialog.directive';
 
 @Component({
   selector: 'app-role-request-review-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, DialogDirective],
   templateUrl: './role-request-review-modal.html',
   styleUrls: ['./role-requests.scss']
 })

@@ -88,7 +88,7 @@
 <div class="topic-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
   <button type="button" class="topic-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
 
-  <div class="topic-overlay__panel glass-dark card" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+  <div class="topic-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="cancel()" (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2>
         {{ isEdit()

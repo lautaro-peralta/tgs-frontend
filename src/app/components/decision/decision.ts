@@ -1,13 +1,15 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { DecisionService } from '../../services/decision/decision';
 import { DecisionDTO, CreateDecisionDTO, PatchDecisionDTO } from '../../models/decision/decision.model';
 import { TopicService } from '../../services/topic/topic';
 import { TopicDTO } from '../../models/topic/topic.model';
 import { AuthService, Role } from '../../services/user/user';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 /**
  * DecisionComponent
@@ -29,12 +31,14 @@ type DecisionForm = {
 @Component({
   selector: 'app-decision',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './decision.html',
   styleUrls: ['./decision.scss'],
 })
 export class DecisionComponent implements OnInit {
   // --- Inyección ---
+  private confirmDialog = inject(ConfirmService);
+  private t = inject(TranslateService);
   private fb = inject(FormBuilder);
   private srv = inject(DecisionService);
   private topicSrv = inject(TopicService);
@@ -241,8 +245,8 @@ export class DecisionComponent implements OnInit {
     this.form.controls.topicId.markAsTouched();
   }
 
-  delete(id: number) {
-    if (!confirm('¿Eliminar esta decisión?')) return;
+  async delete(id: number) {
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('decisions.confirmDelete'), danger: true }))) return;
     
     this.loading.set(true);
     this.error.set(null);

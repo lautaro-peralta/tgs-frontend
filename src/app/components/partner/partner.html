@@ -111,7 +111,7 @@
   <div class="partner-overlay" [class.is-open]="isNewOpen()" [attr.aria-hidden]="!isNewOpen()">
     <button type="button" class="partner-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
 
-    <div class="partner-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+    <div class="partner-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen()" (dialogClose)="toggleNew()" (click)="$event.stopPropagation()">
       <div class="header compact">
         <h2 class="title">
           {{ isEdit() ? ('partner.edit' | translate) : ('partner.create' | translate) }}

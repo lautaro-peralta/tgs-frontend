@@ -6,6 +6,8 @@ import { ZoneService } from '../../services/zone/zone';
 import { ApiResponse, ZoneDTO } from '../../models/zone/zona.model';
 import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 /**
  * ZoneComponent
@@ -17,12 +19,13 @@ import { Role } from '../../models/user/user.model';
 @Component({
   selector: 'app-zone',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './zone.html',
   styleUrls: ['./zone.scss']
 })
 export class ZoneComponent implements OnInit {
   // --- Inyección ---
+  private confirmDialog = inject(ConfirmService);
   private fb = inject(FormBuilder);
   private srv = inject(ZoneService);
   private t = inject(TranslateService);
@@ -210,7 +213,7 @@ export class ZoneComponent implements OnInit {
   }
 
   // --- Borrado ---
-  delete(z: ZoneDTO) {
+  async delete(z: ZoneDTO) {
     // Bloquea eliminación de la sede central con mensaje i18n
     if (z.isHeadquarters) {
       this.error.set(this.t.instant('zones.err.cannotDeleteHq', { name: z.name }));
@@ -218,7 +221,7 @@ export class ZoneComponent implements OnInit {
       return;
     }
 
-    if (!confirm(this.t.instant('zones.confirmDelete', { name: z.name }))) return;
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('zones.confirmDelete', { name: z.name }), danger: true }))) return;
 
     this.loading.set(true);
     this.success.set(null); // ✅ Limpiar mensaje previo
