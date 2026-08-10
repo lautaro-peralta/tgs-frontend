@@ -1,3 +1,8 @@
+@use 'sass:math';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass:list';
+
 // ============================================================================
 // RESPONSIVE DESIGN SYSTEM - Mobile-First Approach
 // ============================================================================
@@ -20,30 +25,30 @@ $breakpoints: (
 
 // Usage: @include min-width(md) { ... }
 @mixin min-width($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: #{map.get($breakpoints, $breakpoint)}) {
       @content;
     }
   } @else {
-    @warn "Breakpoint '#{$breakpoint}' no existe. Usa: #{map-keys($breakpoints)}";
+    @warn "Breakpoint '#{$breakpoint}' no existe. Usa: #{map.keys($breakpoints)}";
   }
 }
 
 // Usage: @include max-width(md) { ... }
 @mixin max-width($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (max-width: #{map-get($breakpoints, $breakpoint) - 1px}) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: #{map.get($breakpoints, $breakpoint) - 1px}) {
       @content;
     }
   } @else {
-    @warn "Breakpoint '#{$breakpoint}' no existe. Usa: #{map-keys($breakpoints)}";
+    @warn "Breakpoint '#{$breakpoint}' no existe. Usa: #{map.keys($breakpoints)}";
   }
 }
 
 // Usage: @include between(sm, lg) { ... }
 @mixin between($min, $max) {
-  @if map-has-key($breakpoints, $min) and map-has-key($breakpoints, $max) {
-    @media (min-width: #{map-get($breakpoints, $min)}) and (max-width: #{map-get($breakpoints, $max) - 1px}) {
+  @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
+    @media (min-width: #{map.get($breakpoints, $min)}) and (max-width: #{map.get($breakpoints, $max) - 1px}) {
       @content;
     }
   }
@@ -64,8 +69,8 @@ $breakpoints: (
 
 // Helper function to remove units
 @function strip-unit($number) {
-  @if type-of($number) == 'number' and not unitless($number) {
-    @return $number / ($number * 0 + 1);
+  @if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+    @return math.div($number, $number * 0 + 1);
   }
   @return $number;
 }

@@ -126,6 +126,7 @@
 
           <!-- Formulario LOGIN (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='login'" [formGroup]="loginForm"
+            [attr.inert]="mode()==='login' ? null : ''"
             (ngSubmit)="submitLogin()" (click)="$event.stopPropagation()">
             <h2 id="login-panel-heading">{{ 'auth.login.title' | translate }}</h2>
 
@@ -241,6 +242,7 @@
 
           <!-- Formulario REGISTRO (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='register'" [formGroup]="registerForm"
+            [attr.inert]="mode()==='register' ? null : ''"
             (ngSubmit)="submitRegister()" (click)="$event.stopPropagation()">
             <h2 id="register-panel-heading">{{ 'auth.register.title' | translate }}</h2>
 

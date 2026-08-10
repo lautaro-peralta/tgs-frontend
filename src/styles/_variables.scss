@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 /**
  * TGS Frontend - Variables Globales
  * ==================================
@@ -170,7 +172,7 @@ $z-tooltip: 1070;
   font-weight: 700;
   background: linear-gradient(180deg, rgba($color, 0.3), rgba($color, 0.2));
   border: 1px solid rgba($color, 0.4);
-  color: lighten($color, 20%);
+  color: color.adjust($color, $lightness: 20%);
   backdrop-filter: blur(8px);
 }
 

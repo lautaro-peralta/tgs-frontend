@@ -88,15 +88,21 @@ export const routes: Routes = [
   // RUTAS DE AUTENTICACIÓN (redirigen a home que tiene el panel integrado)
   // ═══════════════════════════════════════════════════════════════════════
 
+  // El panel de acceso vive en la portada, así que estas rutas montan la home
+  // y le dicen en qué pestaña abrir. Antes redirigían a '' y la URL rebotaba:
+  // routerLinkActive no coincidía nunca y los enlaces del menú móvil llevaban
+  // a la portada en modo login aunque el usuario hubiera pedido registrarse.
   {
     path: 'login',
-    redirectTo: '',
-    pathMatch: 'full'
+    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent),
+    data: { authMode: 'login' },
+    title: 'Iniciar sesión - GarrSYS'
   },
   {
     path: 'register',
-    redirectTo: '',
-    pathMatch: 'full'
+    loadComponent: () => import('./components/home/home').then(m => m.HomeComponent),
+    data: { authMode: 'register' },
+    title: 'Crear cuenta - GarrSYS'
   },
 
   // ═══════════════════════════════════════════════════════════════════════

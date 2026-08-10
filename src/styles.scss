@@ -1,3 +1,4 @@
+@use 'sass:color';
 // @use debe ir antes que cualquier otra regla del archivo.
 // 'as *' expone los mixins responsive (min-width/max-width) sin prefijo.
 @use 'app/styles/responsive' as *;
@@ -35,10 +36,6 @@ body {
   /* Mobile-first font size */
   font-size: 14px;
 
-  @include min-width(md) {
-    font-size: 16px;
-  }
-
   /* Better mobile rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -46,6 +43,12 @@ body {
 
   /* Prevent horizontal scroll */
   overflow-x: hidden;
+
+  /* Las declaraciones van antes que las reglas anidadas: Sass va a cambiar el
+     orden de aplicación de las que quedan detrás para alinearse con CSS. */
+  @include min-width(md) {
+    font-size: 16px;
+  }
 
   /* Compensar navbar fija en móvil */
   @media (max-width: 768px) {
@@ -444,13 +447,6 @@ app {
   width: 100%;
 }
 
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  flex: 1;
-}
-
 .app-main {
   flex: 1 0 auto;
   /* ✅ Esto hace que el contenido empuje el footer hacia abajo */
@@ -603,7 +599,7 @@ $scrollbar-thumb-hover: rgba(100, 200, 255, 0.4);
   }
 
   &:active {
-    background: lighten($scrollbar-thumb-hover, 10%);
+    background: color.adjust($scrollbar-thumb-hover, $lightness: 10%);
   }
 }
 

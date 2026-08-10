@@ -295,6 +295,23 @@
   left: auto;
 }
 
+/* Acceso para visitantes: acentuado para que destaque sobre las páginas
+   informativas, sin llegar a competir con la marca. */
+.menu__item--auth .auth-link {
+  border-color: rgba(96, 165, 250, .45);
+  background: rgba(96, 165, 250, .12);
+  color: var(--text-strong);
+}
+
+.menu__item--auth .auth-link:hover {
+  background: rgba(96, 165, 250, .2);
+  border-color: rgba(96, 165, 250, .65);
+}
+
+.menu__item--auth .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
 /* Divider */
 .dropdown__divider {
   height: 1px;

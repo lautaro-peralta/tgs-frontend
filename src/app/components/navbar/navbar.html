@@ -307,6 +307,16 @@
         </ul>
       </li>
 
+      <!-- Acceso para visitantes. Antes sólo existía en el menú móvil: en
+           escritorio un usuario sin sesión no tenía ninguna llamada a la acción. -->
+      <li class="menu__item menu__item--auth" role="none" *ngIf="!isAuthenticated()">
+        <a role="menuitem" routerLink="/login" routerLinkActive="active" class="auth-link">
+          <span class="material-symbols-outlined" aria-hidden="true">login</span>
+          {{ 'nav.login' | translate }}
+          <span class="underline"></span>
+        </a>
+      </li>
+
       <!-- ✅ INBOX - Visible para TODOS los usuarios autenticados -->
       <li class="menu__item" role="none" *ngIf="isAuthenticated()">
         <a #mainBtn role="menuitem" routerLink="/inbox" routerLinkActive="active" class="inbox-link"

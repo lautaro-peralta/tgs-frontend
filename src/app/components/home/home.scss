@@ -354,6 +354,9 @@
   opacity: .95;
 }
 
+/* El formulario inactivo lleva `inert` en la plantilla, que sí lo saca del
+   orden de tabulación; `pointer-events` sólo frenaba al mouse. Esta regla se
+   mantiene para navegadores sin soporte de inert. */
 .auth-half:not(.active) .auth-form {
   pointer-events: none;
   user-select: none;

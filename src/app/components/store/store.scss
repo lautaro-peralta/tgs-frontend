@@ -334,7 +334,6 @@
   transition: transform .12s ease, box-shadow .22s ease;
 }
 
-
 .cart-fab:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 28px rgba(195, 164, 98, .34);
@@ -431,19 +430,6 @@
   margin-bottom: var(--sp-3);
 }
 
-.cart-drawer__list {
-  flex: 1 1 auto;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  scrollbar-gutter: stable;
-}
 
 .cart-drawer__item {
   display: grid;
@@ -958,7 +944,6 @@
     font-size: 0.8rem;
   }
 }
-
 
 /* ============================================
    MODAL DE INCOMPATIBILIDAD DE PRODUCTOS

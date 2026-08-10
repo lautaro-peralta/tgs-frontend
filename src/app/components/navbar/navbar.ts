@@ -435,15 +435,31 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
       this.loadUnreadCount();
     }
 
-    // Actualizar cada 30 segundos
+    // Actualizar cada 30 segundos, pero sólo con la pestaña visible: antes
+    // seguía consultando en todas las pestañas olvidadas de fondo, y cada vez
+    // que detectaba una notificación nueva hacía una segunda petición para
+    // traer la lista completa.
     this.pollingInterval = window.setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
       if (this.isAuthenticated()) {
         this.loadUnreadCount();
       } else {
         this.unreadNotifications.set(0);
       }
     }, 30000);
+
+    // Al volver a la pestaña, refrescar en el acto en vez de esperar al
+    // siguiente ciclo: si estuvo oculta un rato, el contador está viejo.
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', this.onVisibilityChange);
+    }
   }
+
+  private readonly onVisibilityChange = (): void => {
+    if (document.visibilityState === 'visible' && this.isAuthenticated()) {
+      this.loadUnreadCount();
+    }
+  };
 
   trackByPath(_i: number, it: MenuItem) { return it.path; }
 
@@ -572,6 +588,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
     }
     if (typeof document !== 'undefined') {
       document.body.classList.remove('has-drawer-open');
+      document.removeEventListener('visibilitychange', this.onVisibilityChange);
     }
   }
 }

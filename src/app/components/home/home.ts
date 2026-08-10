@@ -16,6 +16,7 @@ import { AuthTransitionService } from '../../services/ui/auth-transition';
 import { AuthService } from '../../services/auth/auth';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { logger } from '../../core/logger';
+import { ActivatedRoute } from '@angular/router';
 
 type IntroItem = { titleKey: string; detailKey: string };
 
@@ -60,7 +61,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   hiding = false;
 
   // --- Modo actual: login | register ---
-  mode = signal<'login' | 'register'>('login');
+  // Las rutas /login y /register montan este componente y piden el modo por
+  // `data.authMode`, así que un enlace directo abre la pestaña correcta.
+  private readonly route = inject(ActivatedRoute);
+  mode = signal<'login' | 'register'>(
+    this.route.snapshot.data['authMode'] === 'register' ? 'register' : 'login'
+  );
   setMode(m: 'login' | 'register') {
     if (this.mode() === m) return;
     this.mode.set(m);
