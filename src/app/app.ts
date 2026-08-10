@@ -12,9 +12,10 @@ import { AuthService } from './services/auth/auth';
 import { I18nService } from './services/i18n/i18n';
 import { NavbarComponent } from './components/navbar/navbar';
 import { AuthTransitionService } from './services/ui/auth-transition';
+import { NavigationStateService } from './services/ui/navigation-state';
+import { LoggerService } from './services/logger/logger';
 import { FooterComponent } from './shared/footer/footer';
 import { TranslateModule } from '@ngx-translate/core';
-import { logger } from './core/logger';
 /**
  * Componente raíz de la aplicación
  * 
@@ -34,6 +35,10 @@ export class AppComponent implements OnInit {
   readonly auth = inject(AuthService);
   private readonly i18n = inject(I18nService);
   readonly transition = inject(AuthTransitionService);
+  // Inyectado únicamente para inicializar la suscripción a router.events
+  // en un solo punto (ver NavigationStateService).
+  private readonly navigationState = inject(NavigationStateService);
+  private readonly logger = inject(LoggerService);
 
   /**
    * Inicialización del componente
@@ -43,10 +48,9 @@ export class AppComponent implements OnInit {
    * - Configurar el idioma actual del sistema de internacionalización
    */
   ngOnInit(): void {
-    logger.debug('[AppComponent] Initializing... language:', this.i18n.current);
+    this.logger.debug('[AppComponent] Initializing, language:', this.i18n.current);
 
-    // I18nService ya se inicializa automáticamente en su constructor.
-    // Inicializar AuthService para restaurar sesión del usuario si existe.
+    // Inicializar AuthService para restaurar sesión del usuario si existe
     this.auth.initialize();
   }
 }

@@ -47,10 +47,10 @@ export class RoleRequestReviewModalComponent {
   
   getRankLabel(rank: string): string {
     const labels: Record<string, string> = {
-      '0': 'Rango 0 - Base',
-      '1': 'Rango 1 - Intermedio',
-      '2': 'Rango 2 - Senior',
-      '3': 'Rango 3 - Ejecutivo'
+      '0': 'Rango 0 - Ejecutivo',
+      '1': 'Rango 1 - Senior',
+      '2': 'Rango 2 - Intermedio',
+      '3': 'Rango 3 - Base'
     };
     return labels[rank] || `Rango ${rank}`;
   }

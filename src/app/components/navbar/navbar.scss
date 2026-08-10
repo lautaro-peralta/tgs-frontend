@@ -12,7 +12,9 @@
 }
 
 .nav {
-  position: static; /* No sticky por defecto en desktop */
+  /* position: relative (no static) para que z-index tenga efecto;
+     no queda "sticky" en desktop, solo habilita el stacking */
+  position: relative;
   z-index: 30;
   backdrop-filter: blur(8px);
 

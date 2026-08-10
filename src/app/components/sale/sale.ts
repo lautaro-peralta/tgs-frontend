@@ -13,10 +13,10 @@ import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
 
 import {
-  SaleDTO, CreateSaleDTO, ApiResponse as ApiSaleResp, SaleDetailDTO, SaleClientDTO
+  SaleDTO, CreateSaleDTO, SaleDetailDTO, SaleClientDTO
 } from '../../models/sale/sale.model';
-import { ProductDTO, ApiResponse as ApiProdResp } from '../../models/product/product.model';
-import { ClientDTO, ApiResponse as ApiCliResp } from '../../models/client/client.model';
+import { ProductDTO } from '../../models/product/product.model';
+import { ClientDTO } from '../../models/client/client.model';
 
 import { forkJoin } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -52,6 +52,16 @@ type Line = {
 interface DistributorDTO {
   dni: string;
   name: string;
+}
+
+/**
+ * Forma real de la respuesta del backend para listados de distribuidores
+ * (ResponseUtil.successList: data siempre presente, nunca un array pelado)
+ */
+interface DistributorListResponse {
+  success: boolean;
+  message: string;
+  data: DistributorDTO[];
 }
 
 @Component({
@@ -230,50 +240,16 @@ export class SaleComponent implements OnInit {
     forkJoin({
       prods: this.prodSrv.getAllProducts(),
       clis: this.cliSrv.getAllClients(),
-      dists: this.http.get<any>('/api/distributors', { withCredentials: true }),
+      dists: this.http.get<DistributorListResponse>('/api/distributors', { withCredentials: true }),
     }).subscribe({
-      next: (res: { 
-        prods: ApiProdResp<ProductDTO[]> | any; 
-        clis: ApiCliResp<ClientDTO[]> | any;
-        dists: any;
-      }) => {
-        // Normalizar productos
-        let productList: ProductDTO[] = [];
-        if (Array.isArray(res.prods)) {
-          productList = res.prods;
-        } else if (res.prods?.data && Array.isArray(res.prods.data)) {
-          productList = res.prods.data;
-        } else if (res.prods?.products && Array.isArray(res.prods.products)) {
-          productList = res.prods.products;
-        }
+      next: (res) => {
+        console.log('📦 Products loaded:', res.prods.length);
+        console.log('👥 Clients loaded:', res.clis.data.length);
+        console.log('🚚 Distributors loaded:', res.dists.data.length);
 
-        // Normalizar clientes
-        let clientList: ClientDTO[] = [];
-        if (Array.isArray(res.clis)) {
-          clientList = res.clis;
-        } else if (res.clis?.data && Array.isArray(res.clis.data)) {
-          clientList = res.clis.data;
-        } else if (res.clis?.clients && Array.isArray(res.clis.clients)) {
-          clientList = res.clis.clients;
-        }
-
-        // Normalizar distribuidores
-        let distributorList: DistributorDTO[] = [];
-        if (Array.isArray(res.dists)) {
-          distributorList = res.dists;
-        } else if (res.dists?.data && Array.isArray(res.dists.data)) {
-          distributorList = res.dists.data;
-        } else if (res.dists?.distributors && Array.isArray(res.dists.distributors)) {
-          distributorList = res.dists.distributors;
-        }
-        
-        logger.debug('📦 Products loaded:', productList.length);
-        logger.debug('👥 Clients loaded:', clientList.length);
-        logger.debug('🚚 Distributors loaded:', distributorList.length);
-
-        this.products.set(productList);
-        this.clients.set(clientList);
-        this.distributors.set(distributorList);
+        this.products.set(res.prods);
+        this.clients.set(res.clis.data);
+        this.distributors.set(res.dists.data);
 
         this.loadSales();
       },

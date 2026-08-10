@@ -1,0 +1,324 @@
+/**
+ * TGS Frontend - Variables Globales
+ * ==================================
+ *
+ * Variables SCSS compartidas para todo el proyecto.
+ * Importar en componentes con: @use '../../styles/variables' as *;
+ */
+
+/* ====== Paleta de Colores GarrSYS ====== */
+$primary-color: #c3a462;
+$primary-700: #9e844e;
+$primary-600: #b3935a;
+$primary-rgb: 195, 164, 98;
+
+$blue-accent: #3b82f6;
+$blue-accent-700: #2563eb;
+$blue-accent-rgb: 59, 130, 246;
+
+$success-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$info-color: #3b82f6;
+
+/* Status Colors */
+$pending-color: #f59e0b;
+$approved-color: #10b981;
+$rejected-color: #ef4444;
+
+/* ====== Texto ====== */
+$text-light: #e5e7eb;
+$text-strong: #ffffff;
+$text-muted: #9ca3af;
+$text-secondary: #cbd5e1;
+
+/* ====== Fondos ====== */
+$bg-dark: #0c1220;
+$bg-darker: #0a0e16;
+$glass-bg: rgba(255, 255, 255, 0.06);
+$glass-bg-hover: rgba(255, 255, 255, 0.10);
+$glass-bg-strong: rgba(255, 255, 255, 0.12);
+
+/* ====== Bordes ====== */
+$border-glass: rgba(255, 255, 255, 0.18);
+$border-solid: rgba(255, 255, 255, 0.16);
+$border-light: rgba(255, 255, 255, 0.12);
+
+/* ====== Espaciado ====== */
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+$spacing-3xl: 64px;
+
+/* ====== Border Radius ====== */
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$border-radius-lg: 16px;
+$border-radius-xl: 20px;
+
+/* ====== Transiciones ====== */
+$transition-fast: 150ms ease;
+$transition-normal: 250ms ease;
+$transition-slow: 350ms ease;
+
+/* ====== Sombras ====== */
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.25);
+$shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.3);
+
+/* ====== Z-Index Scale ====== */
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+/* ====== Mixins Reutilizables ====== */
+
+/**
+ * Glass effect (glassmorphism)
+ * @param {number} $opacity - Opacidad del fondo (default: 0.06)
+ */
+@mixin glass-effect($opacity: 0.06) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $border-glass;
+}
+
+/**
+ * Flexbox center (horizontal y vertical)
+ */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Flexbox space-between
+ */
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/**
+ * Text truncate con ellipsis
+ */
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/**
+ * Text truncate multi-línea
+ * @param {number} $lines - Número de líneas antes de truncar
+ */
+@mixin text-truncate-multiline($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/**
+ * Button base styles
+ */
+@mixin button-base {
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+  font-weight: 600;
+  transition: all $transition-normal;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+}
+
+/**
+ * Status badge con color específico
+ * @param {color} $color - Color del badge
+ */
+@mixin status-badge($color) {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $border-radius-sm;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: linear-gradient(180deg, rgba($color, 0.3), rgba($color, 0.2));
+  border: 1px solid rgba($color, 0.4);
+  color: lighten($color, 20%);
+  backdrop-filter: blur(8px);
+}
+
+/**
+ * Card con efecto glass
+ */
+@mixin glass-card($padding: $spacing-lg) {
+  @include glass-effect(0.06);
+  border-radius: $border-radius;
+  padding: $padding;
+  transition: all $transition-normal;
+
+  &:hover {
+    @include glass-effect(0.10);
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+/**
+ * Input base styles
+ */
+@mixin input-base {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius-sm;
+  border: 1px solid $border-solid;
+  background: $glass-bg;
+  color: $text-light;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all $transition-normal;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    background: $glass-bg-hover;
+    box-shadow: 0 0 0 3px rgba($primary-rgb, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/**
+ * Scrollbar personalizado
+ */
+@mixin custom-scrollbar($width: 8px, $track-color: transparent, $thumb-color: rgba(255, 255, 255, 0.2)) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: $width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $width;
+    transition: background $transition-normal;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: $thumb-color $track-color;
+}
+
+/**
+ * Responsive breakpoints
+ */
+$breakpoint-xs: 480px;
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == xs {
+    @media (min-width: $breakpoint-xs) { @content; }
+  }
+  @else if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) { @content; }
+  }
+  @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) { @content; }
+  }
+  @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) { @content; }
+  }
+  @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) { @content; }
+  }
+  @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) { @content; }
+  }
+}
+
+/**
+ * Aspect ratio box
+ */
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    padding-top: calc($height / $width * 100%);
+  }
+
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/**
+ * Absolute center (position: absolute)
+ */
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/**
+ * Clearfix para floats
+ */
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}

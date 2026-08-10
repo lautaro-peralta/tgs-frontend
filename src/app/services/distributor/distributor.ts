@@ -126,7 +126,10 @@ export class DistributorService {
     if (patch.address !== undefined) payload.address = String(patch.address).trim();
     if (patch.zoneId !== undefined) payload.zoneId = String(patch.zoneId); // ← Como STRING
     if (patch.productsIds !== undefined) {
-      payload.productsIds = (patch.productsIds || []).map(Number).filter(n => !isNaN(n));
+      // ✅ Filtrar IDs inválidos: null, undefined, 0, negativos, NaN
+      payload.productsIds = (patch.productsIds || [])
+        .map(Number)
+        .filter(n => !isNaN(n) && n != null && n > 0 && Number.isInteger(n));
     }
 
     logger.debug('📤 Service sending UPDATE:', payload);

@@ -1,0 +1,147 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # PostgreSQL Database (for backend)
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: tgs-postgres-test
+    environment:
+      POSTGRES_DB: tgs_test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d tgs_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tgs-test-network
+
+  # ============================================
+  # Redis Cache (for backend)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: tgs-redis-test
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tgs-test-network
+
+  # ============================================
+  # Backend API (Node.js + Express)
+  # ============================================
+  backend:
+    build:
+      context: ../TGS-Backend-main
+      dockerfile: Dockerfile
+    container_name: tgs-backend-test
+    environment:
+      - NODE_ENV=test
+      - PORT=3000
+      - DATABASE_URL=postgresql://test:test@postgres:5432/tgs_test
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=test-secret-key-12345
+      - JWT_EXPIRES_IN=1h
+      - CORS_ORIGIN=http://frontend:4200,http://localhost:4200
+      - LOG_LEVEL=debug
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - tgs-test-network
+    command: >
+      sh -c "
+        echo '⏳ Waiting for database...' &&
+        sleep 5 &&
+        echo '🔄 Running migrations...' &&
+        npm run db:migrate &&
+        echo '🌱 Seeding test data...' &&
+        npm run db:seed &&
+        echo '🚀 Starting backend server...' &&
+        npm start
+      "
+
+  # ============================================
+  # Frontend (Angular)
+  # ============================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: tgs-frontend-test
+    environment:
+      - NODE_ENV=test
+      - API_URL=http://backend:3000
+      - NG_CLI_ANALYTICS=false
+    ports:
+      - "4200:4200"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - tgs-test-network
+    volumes:
+      - ./src:/app/src:ro
+      - ./cypress:/app/cypress:ro
+      - ./node_modules:/app/node_modules
+    command: npm start
+
+  # ============================================
+  # Cypress E2E Testing Runner
+  # ============================================
+  cypress:
+    image: cypress/included:13.6.0
+    container_name: tgs-cypress-test
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    environment:
+      - CYPRESS_BASE_URL=http://frontend:4200
+      - CYPRESS_API_URL=http://backend:3000
+    working_dir: /e2e
+    volumes:
+      - ./cypress:/e2e/cypress
+      - ./cypress.config.ts:/e2e/cypress.config.ts
+      - ./cypress/videos:/e2e/cypress/videos
+      - ./cypress/screenshots:/e2e/cypress/screenshots
+    networks:
+      - tgs-test-network
+    entrypoint: cypress run --browser chrome
+
+networks:
+  tgs-test-network:
+    driver: bridge
+
+volumes:
+  postgres_test_data:

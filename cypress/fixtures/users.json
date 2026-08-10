@@ -1,0 +1,38 @@
+{
+  "admin": {
+    "email": "admin@tgs.com",
+    "password": "Admin123!",
+    "name": "Admin User",
+    "role": "ADMIN"
+  },
+  "partner": {
+    "email": "partner@tgs.com",
+    "password": "Partner123!",
+    "name": "Partner User",
+    "role": "PARTNER"
+  },
+  "distributor": {
+    "email": "distributor@tgs.com",
+    "password": "Distributor123!",
+    "name": "Distributor User",
+    "role": "DISTRIBUTOR"
+  },
+  "client": {
+    "email": "client@tgs.com",
+    "password": "Client123!",
+    "name": "Client User",
+    "role": "CLIENT"
+  },
+  "user": {
+    "email": "user@tgs.com",
+    "password": "User123!",
+    "name": "Regular User",
+    "role": "USER"
+  },
+  "testUser": {
+    "email": "test@example.com",
+    "password": "Test123!",
+    "name": "Test User",
+    "role": "USER"
+  }
+}

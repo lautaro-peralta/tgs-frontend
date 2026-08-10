@@ -112,12 +112,6 @@ export const routes: Routes = [
     ]
   },
 
-  {
-  path: 'checkout',
-  loadComponent: () => import('./components/checkout/checkout').then(m => m.CheckoutComponent),
-  canActivate: [authGuard] // Si tienes guards de autenticación
-  },
-
   // ═══════════════════════════════════════════════════════════════════════
   // GESTIÓN DE CUENTA
   // ═══════════════════════════════════════════════════════════════════════

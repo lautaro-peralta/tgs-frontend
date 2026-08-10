@@ -37,6 +37,14 @@ yarn-error.log
 testem.log
 /typings
 
+# Test outputs (generated dynamically)
+/cypress/screenshots
+/cypress/videos
+/cypress/results
+/dist/test-out
+/performance-tests/reports
+/.lighthouseci
+
 # System files
 .DS_Store
 Thumbs.db

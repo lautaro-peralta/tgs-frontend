@@ -1,0 +1,23 @@
+{
+  "whiskey": {
+    "name": "Irish Whiskey Premium",
+    "description": "Whiskey irlandés de alta calidad",
+    "price": 45.99,
+    "stock": 100,
+    "category": "Bebidas Alcohólicas"
+  },
+  "gin": {
+    "name": "London Dry Gin",
+    "description": "Gin seco estilo londinense",
+    "price": 32.50,
+    "stock": 75,
+    "category": "Bebidas Alcohólicas"
+  },
+  "testProduct": {
+    "name": "Test Product",
+    "description": "Product for testing purposes",
+    "price": 19.99,
+    "stock": 50,
+    "category": "Test Category"
+  }
+}

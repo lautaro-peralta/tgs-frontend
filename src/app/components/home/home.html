@@ -10,32 +10,43 @@
       [class.mode-register]="mode()==='register'" [class.hiding]="hiding" [class.enter]="entering"
       [style.--split]="mode()==='login' ? '64%' : '36%'" aria-label="Authentication">
 
-      <!-- 📱 Tab switcher para móviles -->
-      <div class="mobile-auth-tabs">
+      <!-- 📱 Mobile tab switcher (same ARIA pattern) -->
+      <div class="mobile-auth-tabs" role="tablist" aria-label="Opciones de autenticación móvil">
         <button
           type="button"
+          role="tab"
           class="mobile-tab"
           [class.active]="mode()==='login'"
-          (click)="setMode('login')"
-          aria-label="Iniciar sesión">
-          <span class="tab-icon">🔐</span>
+          [attr.aria-selected]="mode()==='login'"
+          [attr.tabindex]="mode()==='login' ? 0 : -1"
+          aria-controls="login-panel"
+          (click)="setMode('login')">
+          <span class="tab-icon" aria-hidden="true">🔐</span>
           <span class="tab-text">{{ 'auth.login.title' | translate }}</span>
         </button>
         <button
           type="button"
+          role="tab"
           class="mobile-tab"
           [class.active]="mode()==='register'"
-          (click)="setMode('register')"
-          aria-label="Registrarse">
-          <span class="tab-icon">✨</span>
+          [attr.aria-selected]="mode()==='register'"
+          [attr.tabindex]="mode()==='register' ? 0 : -1"
+          aria-controls="register-panel"
+          (click)="setMode('register')">
+          <span class="tab-icon" aria-hidden="true">✨</span>
           <span class="tab-text">{{ 'auth.register.title' | translate }}</span>
         </button>
       </div>
 
       <div class="auth-body">
-        <!-- LOGIN -->
-        <div class="auth-half left" [class.active]="mode()==='login'" (click)="setMode('login')" role="button"
-          tabindex="0">
+        <!-- LOGIN PANEL -->
+        <div class="auth-half left"
+          role="tabpanel"
+          id="login-panel"
+          aria-labelledby="login-panel-heading"
+          [class.active]="mode()==='login'"
+          (click)="setMode('login')"
+          data-cy="login-tab">
 
           <!-- 🔄 Banner de espera de verificación (cuando está esperando que el usuario verifique desde otra pestaña) -->
           <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='login' && !loadingLogin"
@@ -116,14 +127,14 @@
           <!-- Formulario LOGIN (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='login'" [formGroup]="loginForm"
             (ngSubmit)="submitLogin()" (click)="$event.stopPropagation()">
-            <h2>{{ 'auth.login.title' | translate }}</h2>
+            <h2 id="login-panel-heading">{{ 'auth.login.title' | translate }}</h2>
 
             <label>
               <span>{{ 'auth.fields.emailOrUsername' | translate : {} : 'Email o Usuario' }}</span>
               <input type="text" formControlName="email" [attr.placeholder]="mode() === 'login' && emailAnimOn() ? animatedPlaceholder : ''"
                 [attr.data-anim]="mode() === 'login' && emailAnimOn() ? 'on' : 'off'" autocomplete="username" required
                 [class.star-wars-placeholder]="mode() === 'login' && emailAnimOn()" (focus)="onEmailFocus()"
-                (blur)="onEmailBlur()" />
+                (blur)="onEmailBlur()" data-cy="email-input" />
             </label>
 
             <label>
@@ -136,7 +147,7 @@
                   (focus)="onPasswordFocus()"
                   (blur)="onPasswordBlur()"
                   autocomplete="current-password"
-                  required />
+                  required data-cy="password-input" />
                 <button type="button" class="pwd-toggle" (click)="showLoginPwd = !showLoginPwd"
                   [attr.aria-label]="showLoginPwd ? ('home.password.hide' | translate) : ('home.password.show' | translate)"
                   [attr.title]="showLoginPwd ? ('home.password.hide' | translate) : ('home.password.show' | translate)">
@@ -149,7 +160,7 @@
               <a routerLink="/forgot-password">{{ 'auth.login.forgot_password' | translate }}</a>
             </div>
 
-            <button type="submit" [disabled]="loadingLogin" class="btn-main" [class.is-loading]="loadingLogin">
+            <button type="submit" [disabled]="loadingLogin" class="btn-main" [class.is-loading]="loadingLogin" data-cy="login-button">
               <span class="btn-label">{{ 'auth.login.submit' | translate }}</span>
               <span class="spinner" *ngIf="loadingLogin" aria-hidden="true"></span>
             </button>
@@ -163,9 +174,14 @@
         <!-- División -->
         <div class="auth-divider" aria-hidden="true"></div>
 
-        <!-- REGISTRO -->
-        <div class="auth-half right" [class.active]="mode()==='register'" (click)="setMode('register')" role="button"
-          tabindex="0">
+        <!-- REGISTER PANEL -->
+        <div class="auth-half right"
+          role="tabpanel"
+          id="register-panel"
+          aria-labelledby="register-panel-heading"
+          [class.active]="mode()==='register'"
+          (click)="setMode('register')"
+          data-cy="register-tab">
 
           <!-- 🔄 Banner de espera de verificación en REGISTRO (cuando está esperando que el usuario verifique desde otra pestaña) -->
           <div class="verification-standalone" *ngIf="waitingForVerification() && mode()==='register' && !loadingRegister"
@@ -226,7 +242,7 @@
           <!-- Formulario REGISTRO (solo visible si NO hay banner de verificación) -->
           <form class="auth-form" *ngIf="!needsEmailVerification() || mode()!=='register'" [formGroup]="registerForm"
             (ngSubmit)="submitRegister()" (click)="$event.stopPropagation()">
-            <h2>{{ 'auth.register.title' | translate }}</h2>
+            <h2 id="register-panel-heading">{{ 'auth.register.title' | translate }}</h2>
 
             <label>
               <span>{{ 'auth.fields.username' | translate }}</span>
@@ -234,7 +250,7 @@
                 [attr.placeholder]="mode() === 'register' && nameAnimOn() ? animatedNamePlaceholder : ''"
                 [attr.data-anim]="mode() === 'register' && nameAnimOn() ? 'on' : 'off'" autocomplete="off" required
                 [class.star-wars-placeholder]="mode() === 'register' && nameAnimOn()" (focus)="onNameFocus()"
-                (blur)="onNameBlur()" />
+                (blur)="onNameBlur()" data-cy="name-input" />
             </label>
 
             <label>
@@ -242,7 +258,7 @@
               <input type="email" formControlName="email" [attr.placeholder]="mode() === 'register' && emailAnimOn() ? animatedPlaceholder : ''"
                 [attr.data-anim]="mode() === 'register' && emailAnimOn() ? 'on' : 'off'" autocomplete="email" required
                 [class.star-wars-placeholder]="mode() === 'register' && emailAnimOn()" (focus)="onEmailFocus()"
-                (blur)="onEmailBlur()" />
+                (blur)="onEmailBlur()" data-cy="email-input" />
             </label>
 
             <label>
@@ -254,7 +270,7 @@
                   [class.star-wars-placeholder]="mode() === 'register' && passwordAnimOn()"
                   (focus)="onRegisterPasswordFocus()"
                   (blur)="onRegisterPasswordBlur()"
-                  autocomplete="new-password" required />
+                  autocomplete="new-password" required data-cy="password-input" />
                 <button type="button" class="pwd-toggle" (click)="showRegisterPwd = !showRegisterPwd"
                   [attr.aria-label]="showRegisterPwd ? ('home.password.hide' | translate) : ('home.password.show' | translate)"
                   [attr.title]="showRegisterPwd ? ('home.password.hide' | translate) : ('home.password.show' | translate)">
@@ -274,7 +290,7 @@
               </div>
             </label>
 
-            <button type="submit" [disabled]="loadingRegister">{{ 'auth.register.submit' | translate }}</button>
+            <button type="submit" [disabled]="loadingRegister" data-cy="register-button">{{ 'auth.register.submit' | translate }}</button>
 
             <p class="auth-error" *ngIf="errorRegister">
               {{ errorRegister }}

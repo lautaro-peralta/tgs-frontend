@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, throwError, of, timer } from 'rxjs';
 import { tap, catchError, map, take, timeout } from 'rxjs/operators';
 import { Role, User } from '../../models/user/user.model';
-import { logger } from '../../core/logger';
+import { LoggerService } from '../logger/logger';
 
 const API_URL = '';
 
@@ -49,6 +49,7 @@ export class AuthService {
   
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
   
   /** Marca temporal del último sync exitoso con el backend */
   private _lastSyncAt = 0;
@@ -84,8 +85,15 @@ export class AuthService {
 
     // FALLBACK: Calcular manualmente (coincide con backend)
     let completeness = 25; // Base por tener una cuenta
-    if ((user as any).isVerified) completeness += 25;      // +25% verificación del admin
-    if ((user as any).hasPersonalInfo) completeness += 50; // +50% datos personales completos
+
+    if ((user as any).isVerified) {
+      completeness += 25; // +25% por verificación del admin
+    }
+
+    if ((user as any).hasPersonalInfo) {
+      completeness += 50; // +50% por datos personales completos
+    }
+
     return Math.min(completeness, 100);
   });
 
@@ -106,12 +114,21 @@ export class AuthService {
     const hasEmail = !!user.emailVerified;
     const hasPersonal = !!(user as any).hasPersonalInfo;
     const notVerified = !(user as any).isVerified;
+
     return hasEmail && hasPersonal && notVerified;
   });
 
   // BehaviorSubject para compatibilidad con código legacy
   private userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this.userSubject.asObservable();
+
+  // ============================================================================
+  // CONSTRUCTOR
+  // ============================================================================
+  
+  constructor() {
+    this.logger.debug('[AuthService] Initialized');
+  }
 
   // ============================================================================
   // MÉTODOS PÚBLICOS - INICIALIZACIÓN
@@ -122,14 +139,29 @@ export class AuthService {
    * Intenta restaurar la sesión usando el refresh token existente
    */
   public initialize(): void {
-    logger.debug('[AuthService] 🔄 Initializing auth state...');
+    // ✅ Intentar restaurar token desde localStorage
+    const storedToken = localStorage.getItem('auth_token');
+    const storedUser = localStorage.getItem('auth_user');
+
+    if (storedToken && storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        this.setUser(user);
+      } catch (err) {
+        this.logger.warn('[AuthService] Failed to parse stored user:', err);
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
+      }
+    }
+
     this.me().subscribe({
-      next: (user) => {
-        logger.debug('[AuthService] ✅ Session restored:', user);
+      next: () => {
         this.scheduleTokenRefresh();
       },
-      error: (err) => {
-        logger.debug('[AuthService] ℹ️ No active session:', err?.message || err);
+      error: () => {
+        // Limpiar localStorage si la sesión no es válida
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
       }
     });
   }
@@ -142,19 +174,23 @@ export class AuthService {
    * Inicia sesión con credenciales
    */
   login(credentials: LoginRequest): Observable<User> {
-    logger.debug('[AuthService] \uD83D\uDD10 Login attempt for:', credentials.email);
-
     return this.http.post<AuthResponse>(
       `${API_URL}/api/auth/login`,
       credentials,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        logger.debug('[AuthService] 📥 Login response:', response);
-        return response.data;
+      tap(response => {
+        // ✅ Guardar token en localStorage si está presente en la respuesta
+        if (response.meta && (response.meta as any).token) {
+          localStorage.setItem('auth_token', (response.meta as any).token);
+        }
+
+        // ✅ Guardar usuario en localStorage
+        localStorage.setItem('auth_user', JSON.stringify(response.data));
       }),
+      map(response => response.data),
       tap(user => {
-        logger.debug('[AuthService] ✅ Login successful, setting user:', user);
+        this.logger.debug('[AuthService] Login successful:', user.username);
         this.setUser(user);
         this.scheduleTokenRefresh();
         this.forceRefresh();
@@ -167,17 +203,12 @@ export class AuthService {
    * Registra un nuevo usuario
    */
   register(data: RegisterRequest): Observable<any> {
-    logger.debug('[AuthService] 🔐 Register attempt for:', data.email);
-
     return this.http.post<any>(
       `${API_URL}/api/auth/register`,
       data,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        logger.debug('[AuthService] 📥 Register response:', response);
-        return response.data || response;
-      }),
+      map(response => response.data || response),
       catchError(this.handleError.bind(this))
     );
   }
@@ -187,13 +218,15 @@ export class AuthService {
    * OPTIMIZADO: Limpia el estado local inmediatamente sin esperar al backend
    */
   logout(): Observable<void> {
-    logger.debug('[AuthService] 🚪 Logout - limpiando estado local inmediatamente');
-
     // ✅ OPTIMIZACIÓN 1: Cancelar el timer de refresh
     this.cancelTokenRefresh();
 
     // ✅ OPTIMIZACIÓN 2: Limpiar estado local INMEDIATAMENTE (sin esperar backend)
     this.clearUser();
+
+    // ✅ LIMPIEZA DE LOCALSTORAGE
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
 
     // ✅ OPTIMIZACIÓN 3: Redirigir inmediatamente
     this.router.navigate(['/']);
@@ -208,7 +241,7 @@ export class AuthService {
       timeout(5000), // Timeout de 5 segundos
       catchError(err => {
         // Ignorar errores del backend - ya limpiamos el estado local
-        logger.warn('[AuthService] ⚠️ Logout backend falló o tardó, pero estado local ya fue limpiado:', err);
+        this.logger.warn('[AuthService] Logout backend falló o tardó, estado local ya limpiado:', err);
         return of(undefined as any);
       })
     ).subscribe(); // Fire and forget
@@ -222,8 +255,6 @@ export class AuthService {
    * NOTA: Este método es llamado automáticamente por el interceptor
    */
   refresh(): Observable<User> {
-    logger.debug('[AuthService] 🔄 Refreshing token');
-
     return this.http.post<AuthResponse>(
       `${API_URL}/api/auth/refresh`,
       {},
@@ -231,37 +262,28 @@ export class AuthService {
     ).pipe(
       map(response => response.data),
       tap(user => {
-        logger.debug('[AuthService] ✅ Token refreshed, user:', user);
         this.setUser(user);
         this.scheduleTokenRefresh();
       }),
       catchError(err => {
-        logger.error('[AuthService] ❌ Refresh failed:', err);
+        this.logger.error('[AuthService] Refresh failed:', err);
         this.clearUser();
         this.cancelTokenRefresh();
         return throwError(() => err);
       })
     );
   }
-  
+
   /**
    * Obtiene el usuario actual desde el servidor
    */
   me(): Observable<User> {
-    logger.debug('[AuthService] 👤 Fetching current user');
-
     return this.http.get<AuthResponse>(
       `${API_URL}/api/users/me`,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        logger.debug('[AuthService] 📥 Me response:', response);
-        return response.data;
-      }),
-      tap(user => {
-        logger.debug('[AuthService] ✅ Current user fetched:', user);
-        this.setUser(user);
-      }),
+      map(response => response.data),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -279,29 +301,13 @@ export class AuthService {
     phone: string;
     address: string;
   }): Observable<User> {
-    logger.debug('[AuthService] 📝 Completing profile with data:', {
-      dni: data.dni,
-      name: data.name,
-      phone: data.phone,
-      address: data.address
-    });
-
     return this.http.put<AuthResponse>(
       `${API_URL}/api/users/me/complete-profile`,
       data,
       { withCredentials: true }
     ).pipe(
-      map(response => {
-        logger.debug('[AuthService] 📥 Profile completion response:', response);
-        return response.data;
-      }),
-      tap(user => {
-        logger.debug('[AuthService] ✅ Profile completed successfully:', {
-          hasPersonalInfo: (user as any).hasPersonalInfo,
-          profileCompleteness: (user as any).profileCompleteness
-        });
-        this.setUser(user);
-      }),
+      map(response => response.data),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -310,18 +316,13 @@ export class AuthService {
    * Actualiza información personal del usuario (teléfono, dirección)
    */
   updatePersonalInfo(data: { phone?: string; address?: string }): Observable<User> {
-    logger.debug('[AuthService] ✏️ Updating personal info:', data);
-
     return this.http.patch<AuthResponse>(
       `${API_URL}/api/users/me/personal-info`,
       data,
       { withCredentials: true }
     ).pipe(
       map(response => response.data),
-      tap(user => {
-        logger.debug('[AuthService] ✅ Personal info updated successfully');
-        this.setUser(user);
-      }),
+      tap(user => this.setUser(user)),
       catchError(this.handleError.bind(this))
     );
   }
@@ -357,9 +358,7 @@ export class AuthService {
   // ============================================================================
   
   hasRole(role: Role): boolean {
-    const result = this.currentRoles().includes(role);
-    logger.debug('[AuthService] 🔍 hasRole check:', { role, result, currentRoles: this.currentRoles() });
-    return result;
+    return this.currentRoles().includes(role);
   }
 
   hasAnyRole(roles: Role[]): boolean {
@@ -388,12 +387,6 @@ export class AuthService {
     // Usuarios verificados con info personal completa pueden comprar
     const isVerified = !!(user as any).isVerified;
     const hasPersonalInfo = !!(user as any).hasPersonalInfo;
-
-    logger.debug('[AuthService] 🛒 canPurchase check:', {
-      isVerified,
-      hasPersonalInfo,
-      result: isVerified && hasPersonalInfo
-    });
 
     return isVerified && hasPersonalInfo;
   }
@@ -448,32 +441,19 @@ export class AuthService {
    * Actualiza el estado del usuario en las señales
    */
   private setUser(user: User | null): void {
-    logger.debug('[AuthService] 💾 Setting user signal:', user);
-    
     // Forzar nueva referencia para trigger de señales
     const userCopy = user ? { ...user } : null;
-    
+
     this.userSignal.set(userCopy);
     this.userSubject.next(userCopy);
-    
+
     this._lastSyncAt = Date.now();
-    
-    if (userCopy) {
-      logger.debug('[AuthService] ✅ User signal updated:', {
-        roles: userCopy.roles,
-        emailVerified: userCopy.emailVerified,
-        hasPersonalInfo: (userCopy as any).hasPersonalInfo,
-        isVerified: (userCopy as any).isVerified,
-        profileCompleteness: (userCopy as any).profileCompleteness
-      });
-    }
   }
 
   /**
    * Limpia el estado del usuario
    */
   private clearUser(): void {
-    logger.debug('[AuthService] 🗑️ Clearing user');
     this.setUser(null);
   }
 
@@ -492,18 +472,11 @@ export class AuthService {
     // Programar nuevo refresh a los 14 minutos (840 segundos)
     // El token expira a los 15 minutos (900 segundos)
     const refreshTime = 14 * 60 * 1000; // 14 minutos en milisegundos
-    
-    logger.debug('[AuthService] ⏰ Scheduling token refresh in 14 minutes');
-    
+
     this._refreshTimer = timer(refreshTime).pipe(take(1)).subscribe(() => {
-      logger.debug('[AuthService] ⏰ Auto-refreshing token...');
-      
       this.refresh().subscribe({
-        next: (user) => {
-          logger.debug('[AuthService] ✅ Auto-refresh successful:', user.username);
-        },
         error: (err) => {
-          logger.error('[AuthService] ❌ Auto-refresh failed:', err);
+          this.logger.error('[AuthService] Auto-refresh failed:', err);
           // El interceptor manejará el error y hará logout si es necesario
         }
       });
@@ -515,7 +488,6 @@ export class AuthService {
    */
   private cancelTokenRefresh(): void {
     if (this._refreshTimer) {
-      logger.debug('[AuthService] ⏰ Cancelling scheduled token refresh');
       this._refreshTimer.unsubscribe();
       this._refreshTimer = undefined;
     }
@@ -531,13 +503,6 @@ export class AuthService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = `Error: ${error.error.message}`;
     } else {
-      logger.error('[AuthService] ❌ HTTP Error:', {
-        status: error.status,
-        statusText: error.statusText,
-        error: error.error,
-        url: error.url
-      });
-
       if (error.status === 0) {
         errorMessage = 'No se pudo conectar con el servidor. Verifica que el backend esté corriendo.';
       } else if (error.status === 401) {
@@ -567,7 +532,6 @@ export class AuthService {
     // ✅ Preservar el email del backend cuando está presente (importante para verificación)
     if (error.error?.email) {
       normalized.email = error.error.email;
-      logger.debug('[AuthService] 📧 Email preservado en error normalizado:', normalized.email);
     }
 
     // ✅ Preservar la estructura completa del error para casos especiales
@@ -577,7 +541,7 @@ export class AuthService {
       message: errorMessage
     };
 
-    logger.error('[AuthService] ❌ Error normalized:', normalized);
+    this.logger.error('[AuthService] HTTP error:', { status: error.status, url: error.url, normalized });
     return throwError(() => normalized);
   }
 }

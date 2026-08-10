@@ -14,7 +14,7 @@
 export interface AuthorityDTO {
   dni: string;        // Documento Nacional de Identidad
   name: string;       // Nombre completo de la autoridad
-  rank: number;       // Rango de la autoridad (0-3)
+  rank: number;       // Rango de la autoridad (0-3, donde 0 es el más alto y 3 el más bajo)
   zone?: {           // Zona asignada (opcional)
     id?: number | string;
     name?: string;
@@ -34,7 +34,7 @@ export interface CreateAuthorityDTO {
   email: string;                  // Email (requerido)
   address?: string;               // Dirección (opcional)
   phone?: string;                 // Teléfono (opcional)
-  // El backend espera un string '0'|'1'|'2'|'3' y lo transforma a número
+  // El backend espera un string '0'|'1'|'2'|'3' y lo transforma a número (0=más alto, 3=más bajo)
   rank: '0' | '1' | '2' | '3';
   // El backend espera un string y lo transforma a número
   zoneId: string;
@@ -49,7 +49,7 @@ export interface CreateAuthorityDTO {
  */
 export interface UpdateAuthorityDTO {
   name: string;                   // Nuevo nombre (requerido)
-  rank: '0' | '1' | '2' | '3';   // Nuevo rango (requerido)
+  rank: '0' | '1' | '2' | '3';   // Nuevo rango (requerido, 0=más alto, 3=más bajo)
   zoneId: string;                 // Nueva zona (requerido)
 }
 
@@ -60,7 +60,7 @@ export interface UpdateAuthorityDTO {
  */
 export interface PatchAuthorityDTO {
   name?: string;                  // Nuevo nombre (opcional)
-  rank?: '0' | '1' | '2' | '3';  // Nuevo rango (opcional)
+  rank?: '0' | '1' | '2' | '3';  // Nuevo rango (opcional, 0=más alto, 3=más bajo)
   zoneId?: string;                // Nueva zona (opcional)
 }
 
