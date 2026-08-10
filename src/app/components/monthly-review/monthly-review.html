@@ -145,18 +145,18 @@
               <h4 style="margin: 0 0 var(--sp-3); font-size: 0.95rem; color: var(--text);">
                 📌 {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
               </h4>
-              <app-chart *ngIf="statusChartData()" type="doughnut" [data]="statusChartData()!" height="260px">
-              </app-chart>
+              <div echarts *ngIf="statusChartOptions()" [options]="statusChartOptions()!" [theme]="'dark'"
+                   style="height: 260px; width: 100%;"></div>
             </div>
 
             <!-- Gráfico 3: Ventas por Producto -->
             <div style="padding: var(--sp-4); background: rgba(0,0,0,0.2); border-radius: var(--radius);"
-              *ngIf="productSalesChartData()">
+              *ngIf="productSalesChartOptions()">
               <h4 style="margin: 0 0 var(--sp-3); font-size: 0.95rem; color: var(--text);">
                 🏆 {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
               </h4>
-              <app-chart type="bar" [data]="productSalesChartData()!" height="280px">
-              </app-chart>
+              <div echarts [options]="productSalesChartOptions()!" [theme]="'dark'"
+                   style="height: 280px; width: 100%;"></div>
             </div>
           </ng-container>
         </section>

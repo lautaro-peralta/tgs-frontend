@@ -1,7 +1,29 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
-import { ChartConfiguration } from 'chart.js';
+/**
+ * Forma mínima de un conjunto de datos para gráficos.
+ *
+ * Antes esto se tipaba con `ChartConfiguration['data']` de chart.js — una
+ * librería que ya no usa la aplicación, y que además no era la que consumía
+ * estos datos: las tres funciones de abajo alimentan la pantalla de ventas,
+ * que dibuja con ECharts.
+ *
+ * Nota: hoy ningún componente llama a getSalesChartData, getTopProductsChartData
+ * ni getDistributorsChartData. sale.ts inyecta StatsService pero no lo usa.
+ */
+export interface ChartData {
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+    backgroundColor?: string | string[];
+    borderColor?: string | string[];
+    borderWidth?: number;
+    fill?: boolean;
+    tension?: number;
+  }>;
+}
 import { logger } from '../../core/logger';
 
 export interface SalesStats {
@@ -81,7 +103,7 @@ export class StatsService {
    * 📊 GRÁFICO DE BARRAS - Ventas por mes
    * Con gradiente dorado brillante
    */
-  getSalesChartData(): Observable<ChartConfiguration['data']> {
+  getSalesChartData(): Observable<ChartData> {
     return this.getStats().pipe(
       map(stats => ({
         labels: stats.salesByMonth.map(s => s.month),
@@ -109,7 +131,7 @@ export class StatsService {
    * 🍩 GRÁFICO DE DONA - Top productos
    * Cada producto con color COMPLETAMENTE DIFERENTE
    */
-  getTopProductsChartData(): Observable<ChartConfiguration['data']> {
+  getTopProductsChartData(): Observable<ChartData> {
     return this.getStats().pipe(
       map(stats => ({
         labels: stats.topProducts.map(p => p.productName),
@@ -147,7 +169,7 @@ export class StatsService {
    * 📊 GRÁFICO HORIZONTAL - Distribuidores
    * Cada barra con color diferente
    */
-  getDistributorsChartData(): Observable<ChartConfiguration['data']> {
+  getDistributorsChartData(): Observable<ChartData> {
     return this.getStats().pipe(
       map(stats => ({
         labels: stats.salesByDistributor.map(d => d.distributorName),
