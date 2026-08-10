@@ -22,7 +22,13 @@
     "faqs": "FAQs",
     "contact": "Contact us",
     "language": "Language",
-    "home": "Home"
+    "home": "Home",
+    "closeMenu": "Close menu",
+    "profileComplete": "{{value}}% complete",
+    "profileTooltip": "Profile {{value}}% complete",
+    "verifyEmailWarning": "Verify your email",
+    "verifyNow": "Verify now",
+    "rolesLabel": "Roles:"
   },
   "store": {
     "title": "Store",

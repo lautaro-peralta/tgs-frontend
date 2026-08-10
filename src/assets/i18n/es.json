@@ -22,7 +22,13 @@
     "faqs": "FAQs",
     "contact": "Contáctanos",
     "language": "Idioma",
-    "home": "Inicio"
+    "home": "Inicio",
+    "closeMenu": "Cerrar menú",
+    "profileComplete": "{{value}}% completo",
+    "profileTooltip": "Perfil {{value}}% completo",
+    "verifyEmailWarning": "Verifica tu email",
+    "verifyNow": "Verificar ahora",
+    "rolesLabel": "Roles:"
   },
   "mgmt": {
     "product": "Productos",

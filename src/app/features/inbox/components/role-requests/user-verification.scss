@@ -162,7 +162,7 @@ $spacing-xl: 32px;
         color: $text-strong;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-family: 'Google Sans Code', '', monospace;
+        font-family: 'Google Sans Code', ui-monospace, monospace;
       }
 
       ul {
@@ -348,7 +348,7 @@ $spacing-xl: 32px;
         color: $text-strong;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-family: 'Google Sans Code', '', monospace;
+        font-family: 'Google Sans Code', ui-monospace, monospace;
       }
 
       ul {
@@ -734,7 +734,7 @@ $spacing-xl: 32px;
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', '', monospace;
+      font-family: 'Google Sans Code', ui-monospace, monospace;
     }
 
     p {

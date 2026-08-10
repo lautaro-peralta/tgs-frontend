@@ -74,7 +74,6 @@
     "@ngx-translate/http-loader": "^17.0.0",
     "chart.js": "^4.5.1",
     "echarts": "^6.0.0",
-    "gsap": "^3.13.0",
     "ngx-echarts": "^20.0.2",
     "rxjs": "~7.8.2",
     "tslib": "^2.3.0",

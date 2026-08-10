@@ -80,6 +80,16 @@
 .collapsible.open {
   grid-template-rows: 1fr;
   opacity: 1;
+  /* Ya abierto hay que soltar el recorte: con `overflow: hidden` permanente
+     se cortaban los anillos de foco, los mensajes de validación y cualquier
+     panel flotante del formulario contra el borde del contenedor.
+     La animación de apertura sigue recortada porque el cambio se aplica al
+     terminar la transición. */
+  animation: collapsible-reveal 0s .3s forwards;
+}
+
+@keyframes collapsible-reveal {
+  to { overflow: visible; }
 }
 
 .collapsible__content {
@@ -336,6 +346,9 @@ textarea.input {
   border-radius: var(--radius);
   position: relative;
   z-index: 3;
+  /* El thead sticky necesita un contenedor con scroll propio */
+  max-height: min(70vh, 720px);
+  overscroll-behavior: contain;
 }
 
 .table {
@@ -345,7 +358,7 @@ textarea.input {
   background: linear-gradient(180deg, rgba(255, 255, 255, .015), transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow: hidden;
+  /* el recorte de esquinas lo hace .table-wrap: overflow aquí rompía el thead sticky */
 }
 
 .table thead th {
@@ -360,7 +373,7 @@ textarea.input {
   text-align: left;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: var(--z-sticky);
 }
 
 .table tbody td {
@@ -765,7 +778,7 @@ textarea.input {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
   padding: var(--sp-4);
   backdrop-filter: blur(2px);
 }
@@ -2485,7 +2498,7 @@ fieldset.group legend {
   opacity: 0;
   visibility: hidden;
   transition: opacity .3s ease, visibility 0s linear .3s;
-  z-index: 100;
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;

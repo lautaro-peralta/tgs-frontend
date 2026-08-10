@@ -2166,7 +2166,7 @@
   inset: 0;
   display: grid;
   place-items: center;
-  z-index: 1000;
+  z-index: var(--z-veil);
   pointer-events: auto;
   background: rgba(10, 14, 22, .28);
   -webkit-backdrop-filter: blur(14px) saturate(1.05);

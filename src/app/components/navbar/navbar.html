@@ -12,7 +12,9 @@
             type="button"
             [class.active]="mobileMenuOpen()"
             (click)="toggleMobileMenu()"
-            aria-label="Menu">
+            [attr.aria-expanded]="mobileMenuOpen()"
+            aria-controls="mobile-menu"
+            [attr.aria-label]="(mobileMenuOpen() ? 'nav.closeMenu' : 'nav.menu') | translate">
       <span class="hamburger__line"></span>
       <span class="hamburger__line"></span>
       <span class="hamburger__line"></span>
@@ -49,7 +51,6 @@
       <li class="menu__item menu__item--dropdown"
           [class.open]="langDropdownOpen()"
           role="none"
-          tabindex="0"
           (mouseenter)="openLangDropdown()"
           (mouseleave)="closeLangDropdown()">
         <button class="dropdown__toggle has-underline lang-toggle"
@@ -91,8 +92,11 @@
 
       <!-- Gestión (ADMIN | PARTNER | DISTRIBUTOR) -->
       <li class="menu__item menu__item--dropdown" role="none"
+        [class.open]="isDropdownOpen('mgmt')"
         *ngIf="isAuthenticated() && (isAdmin() || isPartner() || isDistributor() || isAuthority())">
-        <button #mainBtn class="dropdown__toggle has-underline" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false"
+        <button #mainBtn class="dropdown__toggle has-underline" type="button" role="menuitem" aria-haspopup="true"
+          [attr.aria-expanded]="isDropdownOpen('mgmt')"
+          (click)="toggleDropdown('mgmt')"
           [class.active]="isGestionActive()">
           {{ 'nav.management' | translate }} <span class="chevron">▾</span>
           <span class="underline"></span>
@@ -316,12 +320,14 @@
       </li>
 
       <!-- ✅ Usuario (SIMPLIFICADO) -->
-      <li class="menu__item menu__item--dropdown" role="none" *ngIf="isAuthenticated()">
-        <button class="dropdown__toggle icon-only" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false"
+      <li class="menu__item menu__item--dropdown" role="none" [class.open]="isDropdownOpen('user')" *ngIf="isAuthenticated()">
+        <button class="dropdown__toggle icon-only" type="button" role="menuitem" aria-haspopup="true"
+          [attr.aria-expanded]="isDropdownOpen('user')"
+          (click)="toggleDropdown('user')"
           [attr.aria-label]="displayName()" data-cy="user-menu">
           <span class="material-symbols-outlined account-icon" aria-hidden="true">account_box</span>
           <span *ngIf="!isProfileComplete()" class="profile-incomplete-badge"
-            [attr.title]="'Perfil ' + getProfileCompleteness() + '% completo'">
+            [attr.title]="'nav.profileTooltip' | translate: { value: getProfileCompleteness() }">
             {{ getProfileCompleteness() }}%
           </span>
           <span class="underline"></span>
@@ -342,15 +348,15 @@
                 <span class="status-fill" [style.width.%]="getProfileCompleteness()"
                   [class.complete]="isProfileComplete()"></span>
               </span>
-              <span class="status-text">{{ getProfileCompleteness() }}% completo</span>
+              <span class="status-text">{{ 'nav.profileComplete' | translate: { value: getProfileCompleteness() } }}</span>
             </div>
           </li>
 
           <!-- ✅ Alerta de email no verificado -->
           <li class="dropdown__item dropdown__item--warning" role="none" *ngIf="!isEmailVerified()">
             <div class="warning-message">
-              ⚠️ Verifica tu email
-              <a routerLink="/verify-email" class="verify-link">Verificar ahora</a>
+              ⚠️ {{ 'nav.verifyEmailWarning' | translate }}
+              <a routerLink="/verify-email" class="verify-link">{{ 'nav.verifyNow' | translate }}</a>
             </div>
           </li>
 
@@ -359,7 +365,7 @@
           <!-- ✅ Roles del usuario -->
           <li class="dropdown__item dropdown__item--info" role="none" aria-disabled="true">
             <div class="user-roles">
-              <span class="roles-label">Roles:</span>
+              <span class="roles-label">{{ 'nav.rolesLabel' | translate }}</span>
               <span class="role-badge" *ngFor="let role of userRoles()">{{ role }}</span>
             </div>
           </li>
@@ -395,7 +401,7 @@
       <strong class="toast-floating-title">{{ newNotificationToast()!.title }}</strong>
       <p class="toast-floating-message">{{ newNotificationToast()!.message }}</p>
     </div>
-    <button class="toast-floating-close" (click)="closeNotificationToast()" aria-label="Cerrar notificación">×</button>
+    <button class="toast-floating-close" (click)="closeNotificationToast()" [attr.aria-label]="'common.close' | translate">×</button>
   </div>
 </nav>
 
@@ -407,12 +413,14 @@
 
 <!-- 📱 Menú lateral móvil -->
 <aside class="mobile-menu"
+       id="mobile-menu"
        [class.open]="mobileMenuOpen()"
        role="navigation"
-       aria-label="Menú móvil">
+       [attr.aria-hidden]="!mobileMenuOpen()"
+       [attr.aria-label]="'nav.menu' | translate">
   <div class="mobile-menu__header">
     <span class="mobile-menu__title">{{ 'nav.menu' | translate }}</span>
-    <button class="mobile-menu__close" (click)="closeMobileMenu()" aria-label="Cerrar menú">
+    <button class="mobile-menu__close" (click)="closeMobileMenu()" [attr.aria-label]="'nav.closeMenu' | translate">
       <span class="material-symbols-outlined">close</span>
     </button>
   </div>
@@ -607,7 +615,7 @@
         <span class="material-symbols-outlined">manage_accounts</span>
         <span>{{ 'nav.myAccount' | translate }}</span>
       </a>
-      <button class="mobile-menu__action mobile-menu__action--danger" (click)="logout()">
+      <button class="mobile-menu__action mobile-menu__action--danger" (click)="closeMobileMenu(); logout()">
         <span class="material-symbols-outlined">logout</span>
         <span>{{ 'nav.logout' | translate }}</span>
       </button>
