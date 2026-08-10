@@ -41,6 +41,8 @@ type AuthorityForm = {
 
 @Component({
   selector: 'app-authority',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgxEchartsModule, DialogDirective],
   templateUrl: './authority.html',

@@ -30,6 +30,8 @@ type DecisionForm = {
 
 @Component({
   selector: 'app-decision',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './decision.html',

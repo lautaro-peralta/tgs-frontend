@@ -67,6 +67,8 @@ interface DistributorListResponse {
 
 @Component({
   selector: 'app-sale',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [
     CommonModule,

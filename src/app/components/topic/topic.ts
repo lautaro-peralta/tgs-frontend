@@ -19,6 +19,8 @@ type TopicForm = { id: FormControl<number | null>; description: FormControl<stri
 
 @Component({
   selector: 'app-topic',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './topic.html',

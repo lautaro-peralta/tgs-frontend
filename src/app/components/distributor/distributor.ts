@@ -44,6 +44,8 @@ type DistForm = {
 
 @Component({
   selector: 'app-distributor',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './distributor.html',
