@@ -1,8 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
+import { logger } from '../../core/logger';
+
 /**
- * Forma mínima de un conjunto de datos para gráficos.
+ * Un conjunto de datos para gráficos, con las propiedades de estilo que este
+ * servicio produce de verdad.
  *
  * Antes esto se tipaba con `ChartConfiguration['data']` de chart.js — una
  * librería que ya no usa la aplicación, y que además no era la que consumía
@@ -12,19 +15,29 @@ import { Observable, map, of } from 'rxjs';
  * Nota: hoy ningún componente llama a getSalesChartData, getTopProductsChartData
  * ni getDistributorsChartData. sale.ts inyecta StatsService pero no lo usa.
  */
+export interface ChartDataset {
+  label: string;
+  data: number[];
+  backgroundColor?: string | string[];
+  borderColor?: string | string[];
+  borderWidth?: number;
+  borderRadius?: number;
+  borderSkipped?: boolean;
+  fill?: boolean;
+  tension?: number;
+  /** Estilos al pasar el puntero por encima. */
+  hoverBackgroundColor?: string | string[];
+  hoverBorderColor?: string | string[];
+  hoverBorderWidth?: number;
+  /** Separación de los segmentos en gráficos circulares. */
+  hoverOffset?: number;
+  spacing?: number;
+}
+
 export interface ChartData {
   labels: string[];
-  datasets: Array<{
-    label: string;
-    data: number[];
-    backgroundColor?: string | string[];
-    borderColor?: string | string[];
-    borderWidth?: number;
-    fill?: boolean;
-    tension?: number;
-  }>;
+  datasets: ChartDataset[];
 }
-import { logger } from '../../core/logger';
 
 export interface SalesStats {
   totalSales: number;

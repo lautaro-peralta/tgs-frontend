@@ -11,7 +11,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { SaleService } from '../../src/app/services/sale/sale';
 import { CartService, CartItem } from '../../src/app/services/cart/cart';
 import { ProductService } from '../../src/app/services/product/product';
-import { ProductDTO } from '../../src/app/models/product/product.model';
+import { ProductOffer } from '../../src/app/models/product/product.model';
 import { SaleDTO, CreateSaleDTO } from '../../src/app/models/sale/sale.model';
 
 describe('Integration: Sales Workflow', () => {
@@ -20,24 +20,35 @@ describe('Integration: Sales Workflow', () => {
   let productService: ProductService;
   let httpMock: HttpTestingController;
 
-  const mockProduct1: ProductDTO = {
-    id: 1,
+  // El carrito trabaja con ofertas: un producto puesto a la venta por un
+  // distribuidor concreto. El offerId es "productId-distributorDni" y es la
+  // clave con la que el servicio identifica cada línea.
+  const mockOffer1: ProductOffer = {
+    productId: 1,
+    offerId: '1-87654321B',
     description: 'Whiskey Premium',
     detail: 'Irish Whiskey',
     price: 45.99,
     stock: 100,
     isIllegal: false,
-    imageUrl: 'whiskey.jpg'
+    imageUrl: 'whiskey.jpg',
+    distributorDni: '87654321B',
+    distributorName: 'Test Distributor',
+    zone: { id: 1, name: 'Small Heath', isHeadquarters: true }
   };
 
-  const mockProduct2: ProductDTO = {
-    id: 2,
+  const mockOffer2: ProductOffer = {
+    productId: 2,
+    offerId: '2-87654321B',
     description: 'Gin London Dry',
     detail: 'Dry Gin',
     price: 32.50,
     stock: 75,
     isIllegal: false,
-    imageUrl: 'gin.jpg'
+    imageUrl: 'gin.jpg',
+    distributorDni: '87654321B',
+    distributorName: 'Test Distributor',
+    zone: { id: 1, name: 'Small Heath', isHeadquarters: true }
   };
 
   const mockSale: SaleDTO = {
@@ -88,17 +99,17 @@ describe('Integration: Sales Workflow', () => {
     expect(cartService.count()).toBe(0);
 
     // Add first product
-    cartService.add(mockProduct1);
+    cartService.add(mockOffer1);
 
     expect(cartService.items().length).toBe(1);
-    expect(cartService.items()[0].id).toBe(1);
+    expect(cartService.items()[0].productId).toBe(1);
     expect(cartService.items()[0].qty).toBe(1);
     expect(cartService.items()[0].price).toBe(45.99);
     expect(cartService.count()).toBe(1);
     expect(cartService.total()).toBeCloseTo(45.99, 2);
 
     // Add same product again (should increment quantity)
-    cartService.add(mockProduct1);
+    cartService.add(mockOffer1);
 
     expect(cartService.items().length).toBe(1); // Still 1 item
     expect(cartService.items()[0].qty).toBe(2); // Quantity increased
@@ -106,7 +117,7 @@ describe('Integration: Sales Workflow', () => {
     expect(cartService.total()).toBeCloseTo(91.98, 2);
 
     // Add different product
-    cartService.add(mockProduct2);
+    cartService.add(mockOffer2);
 
     expect(cartService.items().length).toBe(2);
     expect(cartService.count()).toBe(3); // 2 whiskey + 1 gin
@@ -119,9 +130,9 @@ describe('Integration: Sales Workflow', () => {
    */
   it('should calculate total with discount correctly', () => {
     // Add products to cart
-    cartService.add(mockProduct1); // 45.99
-    cartService.add(mockProduct1); // 91.98 total
-    cartService.add(mockProduct2); // 124.48 total
+    cartService.add(mockOffer1); // 45.99
+    cartService.add(mockOffer1); // 91.98 total
+    cartService.add(mockOffer2); // 124.48 total
 
     const subtotal = cartService.total();
     expect(subtotal).toBeCloseTo(124.48, 2);
@@ -147,9 +158,9 @@ describe('Integration: Sales Workflow', () => {
    */
   it('should create sale from cart and persist to backend', (done) => {
     // Setup cart
-    cartService.add(mockProduct1);
-    cartService.add(mockProduct1);
-    cartService.add(mockProduct2);
+    cartService.add(mockOffer1);
+    cartService.add(mockOffer1);
+    cartService.add(mockOffer2);
 
     const saleData: CreateSaleDTO = {
       clientDni: '12345678A',
@@ -296,31 +307,31 @@ describe('Integration: Sales Workflow', () => {
    * Integration Test: Cart increment/decrement functionality
    */
   it('should handle cart item quantity changes correctly', () => {
-    cartService.add(mockProduct1); // qty: 1
+    cartService.add(mockOffer1); // qty: 1
 
     expect(cartService.items()[0].qty).toBe(1);
 
     // Increment
-    cartService.inc(mockProduct1.id);
+    cartService.inc(mockOffer1.offerId);
     expect(cartService.items()[0].qty).toBe(2);
     expect(cartService.total()).toBeCloseTo(91.98, 2);
 
     // Increment again
-    cartService.inc(mockProduct1.id);
+    cartService.inc(mockOffer1.offerId);
     expect(cartService.items()[0].qty).toBe(3);
     expect(cartService.total()).toBeCloseTo(137.97, 2);
 
     // Decrement
-    cartService.dec(mockProduct1.id);
+    cartService.dec(mockOffer1.offerId);
     expect(cartService.items()[0].qty).toBe(2);
     expect(cartService.total()).toBeCloseTo(91.98, 2);
 
     // Decrement to 1
-    cartService.dec(mockProduct1.id);
+    cartService.dec(mockOffer1.offerId);
     expect(cartService.items()[0].qty).toBe(1);
 
     // Decrement to 0 (should remove from cart)
-    cartService.dec(mockProduct1.id);
+    cartService.dec(mockOffer1.offerId);
     expect(cartService.items().length).toBe(0);
     expect(cartService.total()).toBe(0);
   });
@@ -329,16 +340,16 @@ describe('Integration: Sales Workflow', () => {
    * Integration Test: Remove item from cart
    */
   it('should remove item from cart completely', () => {
-    cartService.add(mockProduct1);
-    cartService.add(mockProduct2);
+    cartService.add(mockOffer1);
+    cartService.add(mockOffer2);
 
     expect(cartService.items().length).toBe(2);
 
     // Remove first product
-    cartService.remove(mockProduct1.id);
+    cartService.remove(mockOffer1.offerId);
 
     expect(cartService.items().length).toBe(1);
-    expect(cartService.items()[0].id).toBe(mockProduct2.id);
+    expect(cartService.items()[0].offerId).toBe(mockOffer2.offerId);
     expect(cartService.total()).toBeCloseTo(32.50, 2);
   });
 
@@ -346,8 +357,8 @@ describe('Integration: Sales Workflow', () => {
    * Integration Test: Clear entire cart
    */
   it('should clear entire cart', () => {
-    cartService.add(mockProduct1);
-    cartService.add(mockProduct2);
+    cartService.add(mockOffer1);
+    cartService.add(mockOffer2);
 
     expect(cartService.items().length).toBe(2);
 
@@ -411,8 +422,8 @@ describe('Integration: Sales Workflow', () => {
    * Edge Case: Cart persistence in localStorage
    */
   it('should persist cart to localStorage', () => {
-    cartService.add(mockProduct1);
-    cartService.add(mockProduct2);
+    cartService.add(mockOffer1);
+    cartService.add(mockOffer2);
 
     // Verify localStorage has cart data
     const cartData = localStorage.getItem('cart.v1');
@@ -420,7 +431,7 @@ describe('Integration: Sales Workflow', () => {
 
     const parsedCart = JSON.parse(cartData!);
     expect(parsedCart.length).toBe(2);
-    expect(parsedCart[0].id).toBe(mockProduct1.id);
+    expect(parsedCart[0].offerId).toBe(mockOffer1.offerId);
   });
 });
 
