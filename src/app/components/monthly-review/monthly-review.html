@@ -16,10 +16,9 @@
   <!-- BOTÓN PARA MOSTRAR/OCULTAR GRÁFICOS EN MOBILE -->
   <button
     type="button"
-    class="charts-toggle-mobile"
+    class="charts-toggle-mobile u-hidden"
     [class.collapsed]="chartsCollapsed()"
-    (click)="toggleCharts()"
-    style="display: none;">
+    (click)="toggleCharts()">
     <span>📊 {{ chartsCollapsed()
       ? ('monthlyReview.charts.showCharts' | translate : {} : 'Mostrar Gráficos')
       : ('monthlyReview.charts.hideCharts' | translate : {} : 'Ocultar Gráficos') }}</span>
@@ -30,72 +29,68 @@
   <div class="charts-container-mobile" [class.expanded]="!chartsCollapsed()">
     <div class="glass-dark card stack-md monthly-shell">
 
-        <!-- ESTADÍSTICAS RÁPIDAS 
-        <div *ngIf="!loading() && items().length > 0"
-          style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-3); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+        <!-- ESTADÍSTICAS RÁPIDAS
+        <div class="stats-bar stats-bar--3 stats-bar--flush" *ngIf="!loading() && items().length > 0">
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.total' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-strong);">{{ totalReviews() }}</div>
+            <div class="stat__value stat__value--strong">{{ totalReviews() }}</div>
           </div>
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.pending' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #f59e0b;">{{ reviewsByStatus()['PENDING'] }}</div>
+            <div class="stat__value stat__value--warn">{{ reviewsByStatus()['PENDING'] }}</div>
           </div>
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.inReview' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">{{ reviewsByStatus()['IN_REVIEW'] }}</div>
+            <div class="stat__value stat__value--info">{{ reviewsByStatus()['IN_REVIEW'] }}</div>
           </div>
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.completed' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #6b7280;">{{ reviewsByStatus()['COMPLETED'] }}</div>
+            <div class="stat__value stat__value--mute">{{ reviewsByStatus()['COMPLETED'] }}</div>
           </div>
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.approved' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #4a8d72;">{{ reviewsByStatus()['APPROVED'] }}</div>
+            <div class="stat__value stat__value--ok">{{ reviewsByStatus()['APPROVED'] }}</div>
           </div>
-          <div style="text-align: center;">
-            <div class="muted" style="font-size: 11px; text-transform: uppercase; margin-bottom: 4px;">{{
+          <div class="u-center">
+            <div class="muted stat__label">{{
               'monthlyReview.stats.rejected' | translate }}</div>
-            <div style="font-size: 1.5rem; font-weight: 700; color: #a94545;">{{ reviewsByStatus()['REJECTED'] }}</div>
+            <div class="stat__value stat__value--danger">{{ reviewsByStatus()['REJECTED'] }}</div>
           </div>
         </div>-->
 
         <!-- GRÁFICOS -->
         <section>
           <!-- 📊 NUEVO: Gráfico de Impacto de Decisiones (DESTACADO) -->
-          <div *ngIf="showDecisionsChart() && decisionsImpactChartOptions()"
-            style="padding: var(--sp-4); background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(195, 164, 98, 0.06)); border-radius: var(--radius); margin-bottom: var(--sp-4); border: 2px solid rgba(59, 130, 246, 0.3); position: relative; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);">
+          <div class="chart-card chart-card--highlight-blue" *ngIf="showDecisionsChart() && decisionsImpactChartOptions()">
             <!-- Botón expandir -->
-            <button type="button" (click)="expandChart('decisions')"
-              style="position: absolute; top: 12px; right: 12px; background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: rgba(147, 197, 253, 1); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; z-index: 10;"
+            <button class="chart-expand chart-expand--blue" type="button" (click)="expandChart('decisions')"
               [attr.title]="'Expandir gráfico'">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
               </svg>
             </button>
-            <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--sp-2); padding-right: 40px;">
+            <div class="row-between row-between--top">
               <div>
-                <h4 style="margin: 0; font-size: 1rem; color: rgba(147, 197, 253, 1); font-weight: 700;">
+                <h4 class="chart-card__title">
                   📊 {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
                 </h4>
-                <p style="margin: 4px 0 0; color: var(--muted); font-size: 12px;">
+                <p class="hint-muted">
                   {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
                 </p>
               </div>
-              <span *ngIf="!sales() || sales().length === 0" style="background: rgba(255, 193, 7, 0.2); color: #ffc107; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;">
-                📋 DATOS DE EJEMPLO
+              <span class="chart-badge chart-badge--warn chart-badge--sm" *ngIf="!sales() || sales().length === 0">
+                {{ 'monthlyReview.sampleData' | translate }}
               </span>
             </div>
-            <div echarts [options]="decisionsImpactChartOptions()!" [theme]="'dark'"
-              style="height: 420px; width: 100%; position: relative; z-index: 1;">
+            <div class="chart-box chart-box--tall" echarts [options]="decisionsImpactChartOptions()!" [theme]="'dark'">
             </div>
-            <div *ngIf="!sales() || sales().length === 0" style="margin-top: var(--sp-3); padding: var(--sp-3); background: rgba(59, 130, 246, 0.1); border-left: 3px solid rgba(59, 130, 246, 0.6); border-radius: 4px;">
-              <p style="margin: 0; color: rgba(147, 197, 253, 0.9); font-size: 12px;">
+            <div class="chart-note chart-note--tight chart-note--blue-strong" *ngIf="!sales() || sales().length === 0">
+              <p class="chart-note__text">
                 💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.decisionsImpactNote' | translate : {} : 'Este gráfico muestra datos de ejemplo.' }}
               </p>
@@ -103,34 +98,31 @@
           </div>
 
           <!-- 🔮 NUEVO: Gráfico de Predicción de Ventas (DESTACADO) -->
-          <div *ngIf="showDecisionsChart() && salesPredictionChartOptions()"
-            style="padding: var(--sp-4); background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(147, 51, 234, 0.06)); border-radius: var(--radius); margin-bottom: var(--sp-4); border: 2px solid rgba(96, 165, 250, 0.3); position: relative; box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);">
+          <div class="chart-card chart-card--highlight-sky" *ngIf="showDecisionsChart() && salesPredictionChartOptions()">
             <!-- Botón expandir -->
-            <button type="button" (click)="expandChart('prediction')"
-              style="position: absolute; top: 12px; right: 12px; background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); color: rgba(147, 197, 253, 1); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; z-index: 10;"
+            <button class="chart-expand chart-expand--sky" type="button" (click)="expandChart('prediction')"
               [attr.title]="'Expandir gráfico'">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
               </svg>
             </button>
-            <div style="display: flex; align-items: start; justify-content: space-between; margin-bottom: var(--sp-2); padding-right: 40px;">
+            <div class="row-between row-between--top">
               <div>
-                <h4 style="margin: 0; font-size: 1rem; color: rgba(147, 197, 253, 1); font-weight: 700;">
+                <h4 class="chart-card__title">
                   🔮 {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
                 </h4>
-                <p style="margin: 4px 0 0; color: var(--muted); font-size: 12px;">
+                <p class="hint-muted">
                   {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
                 </p>
               </div>
-              <span *ngIf="!sales() || sales().length === 0" style="background: rgba(147, 51, 234, 0.2); color: #9333ea; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap;">
-                🧪 DATOS DE EJEMPLO
+              <span class="chart-badge chart-badge--purple chart-badge--sm" *ngIf="!sales() || sales().length === 0">
+                {{ 'monthlyReview.sampleDataAlt' | translate }}
               </span>
             </div>
-            <div echarts [options]="salesPredictionChartOptions()!" [theme]="'dark'"
-              style="height: 420px; width: 100%; position: relative; z-index: 1;">
+            <div class="chart-box chart-box--tall" echarts [options]="salesPredictionChartOptions()!" [theme]="'dark'">
             </div>
-            <div *ngIf="!sales() || sales().length === 0" style="margin-top: var(--sp-3); padding: var(--sp-3); background: rgba(96, 165, 250, 0.1); border-left: 3px solid rgba(96, 165, 250, 0.6); border-radius: 4px;">
-              <p style="margin: 0; color: rgba(147, 197, 253, 0.9); font-size: 12px;">
+            <div class="chart-note chart-note--tight chart-note--sky-strong" *ngIf="!sales() || sales().length === 0">
+              <p class="chart-note__text">
                 💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.salesPredictionNote' | translate : {} : 'Este gráfico muestra una proyección basada en regresión lineal.' }}
               </p>
@@ -140,23 +132,23 @@
           <!-- Otros gráficos (solo si hay datos) -->
           <ng-container *ngIf="showCharts()">
             <!-- Gráfico 1: Distribución por Estado -->
-            <div
-              style="padding: var(--sp-4); background: rgba(0,0,0,0.2); border-radius: var(--radius); margin-bottom: var(--sp-4);">
-              <h4 style="margin: 0 0 var(--sp-3); font-size: 0.95rem; color: var(--text);">
+            <div class="chart-panel chart-panel--spaced"
+             >
+              <h4 class="chart-heading">
                 📌 {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
               </h4>
-              <div echarts *ngIf="statusChartOptions()" [options]="statusChartOptions()!" [theme]="'dark'"
-                   style="height: 260px; width: 100%;"></div>
+              <div class="chart-box chart-box--sm" echarts *ngIf="statusChartOptions()" [options]="statusChartOptions()!" [theme]="'dark'"
+                  ></div>
             </div>
 
             <!-- Gráfico 3: Ventas por Producto -->
-            <div style="padding: var(--sp-4); background: rgba(0,0,0,0.2); border-radius: var(--radius);"
+            <div class="chart-panel"
               *ngIf="productSalesChartOptions()">
-              <h4 style="margin: 0 0 var(--sp-3); font-size: 0.95rem; color: var(--text);">
+              <h4 class="chart-heading">
                 🏆 {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
               </h4>
-              <div echarts [options]="productSalesChartOptions()!" [theme]="'dark'"
-                   style="height: 280px; width: 100%;"></div>
+              <div class="chart-box chart-box--md" echarts [options]="productSalesChartOptions()!" [theme]="'dark'"
+                  ></div>
             </div>
           </ng-container>
         </section>
@@ -168,7 +160,7 @@
   <!-- FIN CONTENEDOR COLAPSABLE DE GRÁFICOS -->
 
   <!-- ✅ GRID DE 2 COLUMNAS: IZQUIERDA (VACÍA) | DERECHA (FILTROS + TABLA) -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-6); align-items: start;">
+  <div class="charts-grid">
 
     <!-- ========== COLUMNA IZQUIERDA: VACÍA ========== -->
     <div class="stack-md">
@@ -183,7 +175,7 @@
         <section>
 
 
-          <div style="display: grid; gap: var(--sp-3);">
+          <div class="stack-sm">
             <label class="label">
               <span class="label-text">{{ 'monthlyReview.filters.year' | translate : {} : 'Año' }}</span>
               <input class="input" type="number" [value]="fYearInput()"
@@ -212,8 +204,8 @@
               </select>
             </label>
 
-            <div style="display: flex; gap: var(--sp-2);">
-              <button class="btn btn-primary" type="button" (click)="applyFilters()" style="flex: 1;">
+            <div class="actions-row">
+              <button class="btn btn-primary u-grow" type="button" (click)="applyFilters()">
                 🔍 {{ 'common.search' | translate }}
               </button>
               <button class="btn ghost" type="button" (click)="clearFilters()"
@@ -234,8 +226,8 @@
 
         <!-- LISTADO DE REVISIONES -->
         <section>
-          <h3
-            style="margin: 0 0 var(--sp-3); font-size: 1.1rem; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: var(--sp-2);">
+          <h3 class="section-heading"
+           >
             📋 {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
           </h3>
 
@@ -243,13 +235,13 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th style="width:50px;">{{ 'monthlyReview.table.id' | translate : {} : 'ID' }}</th>
+                  <th class="u-w-50">{{ 'monthlyReview.table.id' | translate : {} : 'ID' }}</th>
                   <th>{{ 'monthlyReview.table.period' | translate : {} : 'PERÍODO' }}</th>
                   <th>{{ 'monthlyReview.table.status' | translate : {} : 'ESTADO' }}</th>
                   <th>{{ 'monthlyReview.table.reviewer' | translate : {} : 'REVISOR' }}</th>
                   <th class="right">{{ 'monthlyReview.table.totalAmount' | translate : {} : 'MONTO' }}</th>
                   <th class="right">{{ 'monthlyReview.table.totalCount' | translate : {} : 'VENTAS' }}</th>
-                  <th class="right" style="width:100px;">{{ 'common.actions' | translate : {} : 'ACCIONES' }}</th>
+                  <th class="right u-w-100">{{ 'common.actions' | translate : {} : 'ACCIONES' }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -333,7 +325,7 @@
       </label>
 
       <!-- Fecha de Revisión y Estado (alineados) -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); grid-column: 1 / -1;">
+      <div class="form-full-split">
         <!-- Fecha de Revisión (extrae automáticamente año y mes) -->
         <label class="label">
           <span>📅 {{ 'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión' }} *</span>
@@ -357,7 +349,7 @@
             <option value="APPROVED">👍 {{ 'status.APPROVED' | translate : {} : 'Aprobado' }}</option>
             <option value="REJECTED">❌ {{ 'status.REJECTED' | translate : {} : 'Rechazado' }}</option>
           </select>
-          <small class="muted" style="visibility: hidden;">Espacio reservado</small>
+          <small class="muted u-invisible">{{ 'monthlyReview.placeholder' | translate }}</small>
         </label>
       </div>
 
@@ -410,13 +402,11 @@
     </div>
     <!-- Gráfico -->
     <div class="chart-modal-body">
-      <div *ngIf="expandedChart() === 'decisions' && decisionsImpactChartOptions()"
-           echarts [options]="decisionsImpactChartOptions()!" [theme]="'dark'"
-           style="height: 100%; width: 100%;">
+      <div class="u-fill" *ngIf="expandedChart() === 'decisions' && decisionsImpactChartOptions()"
+           echarts [options]="decisionsImpactChartOptions()!" [theme]="'dark'">
       </div>
-      <div *ngIf="expandedChart() === 'prediction' && salesPredictionChartOptions()"
-           echarts [options]="salesPredictionChartOptions()!" [theme]="'dark'"
-           style="height: 100%; width: 100%;">
+      <div class="u-fill" *ngIf="expandedChart() === 'prediction' && salesPredictionChartOptions()"
+           echarts [options]="salesPredictionChartOptions()!" [theme]="'dark'">
       </div>
     </div>
   </div>

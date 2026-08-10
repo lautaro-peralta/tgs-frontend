@@ -13,9 +13,8 @@
     </header>
 
     <!-- Mensajes -->
-    <div class="success" *ngIf="success()"
-      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-      <span style="font-size: 20px;">✔</span>
+    <div class="success alert-inline alert-inline--success" *ngIf="success()">
+      <span class="alert-inline__icon">✔</span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -26,11 +25,10 @@
       {{ 'product.loading' | translate : {} : 'Cargando productos...' }}
     </div>
 
-    
+
 
     <!-- Estadísticas -->
-    <div *ngIf="!loading() && products().length > 0" class="filters"
-      style="background: rgba(195, 164, 98, 0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+    <div *ngIf="!loading() && products().length > 0" class="filters panel-accent">
       <span class="muted">
         <strong>{{ 'product.stats.totalLabel' | translate }}</strong> {{ totalProducts() }}
       </span>
@@ -46,14 +44,14 @@
     </div>
 
     <!-- Filtros -->
-    <section class="filters" style="align-items: flex-end;">
-      <label class="label" style="flex: 1;">
+    <section class="filters">
+      <label class="label u-grow">
         <span class="label-text">{{ 'product.filters.search' | translate }}</span>
         <input class="input" type="text" [placeholder]="'product.filters.searchPh' | translate" [value]="fTextInput()"
           (input)="fTextInput.set($any($event.target).value)" (keyup.enter)="applyFilters()" />
       </label>
 
-      <label class="label" style="min-width: 200px;">
+      <label class="label u-minw-200">
         <span class="label-text">{{ 'product.filters.stockLabel' | translate }}</span>
         <select class="input" [value]="fStockInput()" (change)="fStockInput.set($any($event.target).value)">
           <option value="all">{{ 'product.filters.stock.all' | translate }}</option>
@@ -63,7 +61,7 @@
       </label>
 
       <!-- Botones -->
-      <div style="display: flex; gap: var(--sp-2);">
+      <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
           🔍 {{ 'common.search' | translate }}
         </button>
@@ -82,16 +80,16 @@
         <table class="table">
           <thead>
             <tr>
-              <th style="width:80px;">{{ 'product.table.id' | translate }}</th>
+              <th class="u-w-80">{{ 'product.table.id' | translate }}</th>
               <th>{{ 'product.fields.description' | translate }}</th>
               <th>{{ 'product.fields.detail' | translate }}</th>
-              <th style="width:120px;">{{ 'product.fields.imageUrl' | translate }}</th>
-              <th style="width:140px;">{{ 'product.fields.price' | translate }}</th>
-              <th style="width:120px;">{{ 'product.fields.stock' | translate }}</th>
-              <th style="width:120px;">{{ 'product.fields.illegal' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.imageUrl' | translate }}</th>
+              <th class="u-w-140">{{ 'product.fields.price' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.stock' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.illegal' | translate }}</th>
               <!-- ✅ NUEVA COLUMNA: Distribuidor (visible para admin y socio) -->
-              <th *ngIf="isAdmin() || isPartner()" style="width:180px;">Distribuidor(es)</th>
-              <th *ngIf="canEdit() || canDelete()" style="width:140px;" class="right">{{ 'product.table.actions' | translate }}</th>
+              <th class="u-w-180" *ngIf="isAdmin() || isPartner()">{{ 'product.distributors' | translate }}</th>
+              <th *ngIf="canEdit() || canDelete()" class="right u-w-140">{{ 'product.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -100,8 +98,7 @@
               <td [attr.data-label]="'product.fields.description' | translate">{{ p.description }}</td>
               <td [attr.data-label]="'product.fields.detail' | translate">{{ p.detail || '—' }}</td>
               <td [attr.data-label]="'product.fields.imageUrl' | translate">
-                <img *ngIf="p.imageUrl" [src]="p.imageUrl!" alt=""
-                  style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--border);" />
+                <img class="thumb" *ngIf="p.imageUrl" [src]="p.imageUrl!" alt="" />
                 <span *ngIf="!p.imageUrl" class="muted">—</span>
               </td>
               <td [attr.data-label]="'product.fields.price' | translate">{{ p.price | currency:'':'symbol':'1.0-2' }}</td>
@@ -115,7 +112,7 @@
               </td>
               <!-- ✅ NUEVA CELDA: Mostrar distribuidores (admins y socios) -->
               <td *ngIf="isAdmin() || isPartner()" data-label="Distribuidor(es)">
-                <span class="truncate" style="max-width: 160px;" [title]="getDistributorNames(p)">
+                <span class="truncate u-maxw-160" [title]="getDistributorNames(p)">
                   {{ getDistributorNames(p) }}
                 </span>
               </td>
@@ -149,9 +146,8 @@
             : ('product.empty.desc' | translate) }}
           </p>
           <!-- ✅ NUEVO: Mensaje especial para distribuidores sin productos -->
-          <p *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0" style="margin-top: 16px;">
-            💡 <strong>Consejo:</strong> Creá tu primer producto haciendo clic en "Nuevo Producto" arriba.
-          </p>
+          <p class="u-mt-md" *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0">
+            💡 <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
         </div>
       </ng-template>
     </section>
@@ -161,7 +157,7 @@
 
 <!-- MODAL/OVERLAY DE FORMULARIO (FUERA DEL SHELL) -->
 <div class="new-product-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
-  <button type="button" class="new-product-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+  <button type="button" class="new-product-overlay__backdrop" (click)="toggleNew()" [attr.aria-label]="'common.close' | translate"></button>
 
   <div class="new-product-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()">
     <div class="header compact">
@@ -170,7 +166,7 @@
         ? ('product.create' | translate)
         : ('product.editTitle' | translate : { id: editId() } : ('Editar producto #' + editId())) }}
       </h2>
-      <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">
+      <button type="button" class="btn-close" (click)="toggleNew()" [attr.aria-label]="'common.close' | translate">
         ×
       </button>
     </div>
@@ -225,7 +221,7 @@
       <!-- Imagen (URL) -->
       <label class="label col-2">
         <span>{{ 'product.fields.imageUrl' | translate }}</span>
-        <input class="input" type="url" formControlName="imageUrl" placeholder="https://..."
+        <input class="input" type="url" formControlName="imageUrl" [placeholder]="'product.imageUrlPlaceholder' | translate"
           (input)="onImageUrlInput($event)" />
         <small class="muted">
           {{ 'product.imageUrlHint' | translate : {} : 'Pegá un link a una imagen (JPG/PNG/WebP). Si preferís subir

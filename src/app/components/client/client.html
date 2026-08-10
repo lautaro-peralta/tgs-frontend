@@ -12,9 +12,8 @@
     </div>
 
     <!-- Success message -->
-    <div *ngIf="success()"
-      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-      <span style="font-size: 20px;">✓</span>
+    <div class="alert-inline alert-inline--success" *ngIf="success()">
+      <span class="alert-inline__icon">✓</span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -22,8 +21,7 @@
     <div *ngIf="error()" class="error">{{ error() }}</div>
 
     <!-- Resumen de estadísticas -->
-    <div *ngIf="!loading() && clients().length > 0" class="filters"
-      style="background: rgba(195, 164, 98, 0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
+    <div *ngIf="!loading() && clients().length > 0" class="filters panel-accent">
       <span class="muted">
         <strong>{{ 'clients.stats.totalLabel' | translate }}</strong>
         {{ totalClients() }} {{ 'clients.stats.clientsNoun' | translate }}
@@ -43,14 +41,14 @@
     </div>
 
     <!-- Filters (CON BOTÓN BUSCAR) -->
-    <div class="filters" style="align-items: flex-end;">
-      <label class="label" style="flex: 1;">
+    <div class="filters">
+      <label class="label u-grow">
         <span>{{ 'clients.filters.search' | translate }}</span>
         <input class="input" [placeholder]="'clients.filters.searchPh' | translate" [ngModel]="fTextInput()"
           (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
-      <label class="label" style="min-width: 200px;">
+      <label class="label u-minw-200">
         <span>{{ 'clients.filters.purchaseFilterLabel' | translate }}</span>
         <select class="input" [ngModel]="fPurchasesInput()" (ngModelChange)="fPurchasesInput.set($event)">
           <option value="all">{{ 'clients.filters.purchases.all' | translate }}</option>
@@ -60,7 +58,7 @@
       </label>
 
       <!-- BOTONES DE FILTRO -->
-      <div style="display: flex; gap: var(--sp-2);">
+      <div class="actions-row">
         <button class="btn btn-primary" (click)="applyFilters()" [attr.title]="'common.applyFiltersTitle' | translate">
           🔍 {{ 'common.search' | translate }}
         </button>
@@ -79,13 +77,13 @@
     <div class="table-wrap" *ngIf="!loading()">
       <table class="table" *ngIf="filteredClients().length > 0; else empty">
         <colgroup>
-          <col style="width:10%" />
-          <col style="width:18%" />
-          <col style="width:22%" />
-          <col style="width:20%" />
-          <col style="width:13%" />
-          <col style="width:8%" />
-          <col *ngIf="isAdmin()" style="width:9%" />
+          <col class="u-wpct-10" />
+          <col class="u-wpct-18" />
+          <col class="u-wpct-22" />
+          <col class="u-wpct-20" />
+          <col class="u-wpct-13" />
+          <col class="u-wpct-8" />
+          <col class="u-wpct-9" *ngIf="isAdmin()" />
         </colgroup>
 
         <thead>
@@ -112,7 +110,7 @@
               </span>
             </td>
             <td class="right" *ngIf="isAdmin()" [attr.data-label]="'clients.table.actions' | translate">
-              <div style="display: inline-flex; gap: 8px; justify-content: flex-end; padding-right: 8px;">
+              <div class="row-inline--end">
                 <button class="btn ghost btn--icon" (click)="edit(c)"
                   [attr.title]="'common.edit' | translate">
                   ✏️
@@ -142,14 +140,14 @@
 
 <!-- Overlay flotante para nuevo/editar cliente -->
 <div class="new-client-overlay" [class.is-open]="isNewOpen" [attr.aria-hidden]="!isNewOpen">
-  <button type="button" class="new-client-overlay__backdrop" (click)="toggleNew()" aria-label="Cerrar"></button>
+  <button type="button" class="new-client-overlay__backdrop" (click)="toggleNew()" [attr.aria-label]="'common.close' | translate"></button>
 
   <div class="new-client-overlay__panel glass-dark card" appDialog [dialogOpen]="isNewOpen" (dialogClose)="toggleNew()" (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2 class="title">
         {{ (editDni() == null ? 'clients.newTitle' : 'clients.editTitle') | translate }}
       </h2>
-      <button type="button" class="btn-close" (click)="toggleNew()" aria-label="Cerrar">&times;</button>
+      <button type="button" class="btn-close" (click)="toggleNew()" [attr.aria-label]="'common.close' | translate">&times;</button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">

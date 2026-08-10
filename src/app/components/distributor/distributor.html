@@ -11,14 +11,12 @@
     </header>
 
     <!-- ✅ Success message -->
-    <div *ngIf="success()"
-      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-      <span style="font-size: 20px;">✓</span>
+    <div class="alert-inline alert-inline--success" *ngIf="success()">
+      <span class="alert-inline__icon">✓</span>
       <strong>{{ success() }}</strong>
     </div>
 
-    <div *ngIf="!loading() && list().length > 0"
-      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+    <div class="stats-bar" *ngIf="!loading() && list().length > 0">
       <span class="muted">
         <strong>{{ 'distributors.stats.total' | translate }}</strong> {{ totalDistributors() }}
       </span>
@@ -35,14 +33,14 @@
     </div>
     <div class="muted" *ngIf="loading()">{{ 'distributors.loading' | translate }}</div>
 
-    <section class="filters" style="align-items: flex-end;">
-      <label class="label" style="flex: 1;">
+    <section class="filters">
+      <label class="label u-grow">
         <span class="label-text">{{ 'distributors.filters.search' | translate }}</span>
         <input class="input" type="text" [placeholder]="'distributors.filters.searchPh' | translate"
           [ngModel]="fTextInput()" (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
-      <div style="display: flex; gap: var(--sp-2);">
+      <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
           🔍 {{ 'common.search' | translate }}
         </button>
@@ -58,13 +56,13 @@
       <div class="table-wrap" *ngIf="filtered().length; else empty">
         <table class="table">
           <colgroup>
-            <col style="width: 120px;" /> <!-- DNI -->
-            <col style="width: 180px;" /> <!-- Name -->
-            <col style="width: 140px;" /> <!-- Phone -->
-            <col style="width: 220px;" /> <!-- Email -->
-            <col style="width: 150px;" /> <!-- Zone -->
-            <col style="width: 100px;" /> <!-- Products -->
-            <col style="width: 100px;" *ngIf="canEdit() || canDelete()" /> <!-- Actions -->
+            <col class="u-w-120" /> <!-- DNI -->
+            <col class="u-w-180" /> <!-- Name -->
+            <col class="u-w-140" /> <!-- Phone -->
+            <col class="u-w-220" /> <!-- Email -->
+            <col class="u-w-150" /> <!-- Zone -->
+            <col class="u-w-100" /> <!-- Products -->
+            <col class="u-w-100" *ngIf="canEdit() || canDelete()" /> <!-- Actions -->
           </colgroup>
 
           <thead>
@@ -75,7 +73,7 @@
               <th>{{ 'distributors.table.email' | translate }}</th>
               <th>{{ 'distributors.table.zone' | translate }}</th>
               <th class="center">{{ 'distributors.table.products' | translate }}</th>
-              <th *ngIf="canEdit() || canDelete()" style="text-align: right; padding-right: 14px;">{{ 'distributors.table.actions' | translate }}</th>
+              <th class="u-right" *ngIf="canEdit() || canDelete()">{{ 'distributors.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +110,7 @@
 
   <!-- FORM OVERLAY -->
   <div class="distributor-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
-    <button type="button" class="distributor-overlay__backdrop" (click)="cancel()" aria-label="Cerrar"></button>
+    <button type="button" class="distributor-overlay__backdrop" (click)="cancel()" [attr.aria-label]="'common.close' | translate"></button>
 
     <div class="distributor-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="cancel()" (click)="$event.stopPropagation()">
       <div class="header compact">
@@ -121,7 +119,7 @@
           ? ('distributors.form.editTitle' | translate:{ dni: form.controls.dni.value })
           : ('distributors.form.newTitle' | translate) }}
         </h2>
-        <button type="button" class="btn-close" (click)="cancel()" aria-label="Cerrar">&times;</button>
+        <button type="button" class="btn-close" (click)="cancel()" [attr.aria-label]="'common.close' | translate">&times;</button>
       </div>
 
       <div class="error" *ngIf="error()">{{ error() }}</div>
@@ -155,41 +153,32 @@
 
           <div class="col-2">
             <!-- Listado de usuarios verificados -->
-            <div *ngIf="filteredUsers().length > 0"
-              style="padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
-              <h4 style="margin: 0 0 var(--sp-2) 0; font-size: 0.875rem; color: rgba(195, 164, 98, 0.9);">Usuarios
+            <div class="panel-accent" *ngIf="filteredUsers().length > 0">
+              <h4 class="section-hint">Usuarios
                 verificados disponibles ({{ filteredUsers().length }})</h4>
-              <div
-                style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 300px; overflow-y: auto;">
-                <div *ngFor="let u of filteredUsers()" (click)="selectUserByDni(getUserPersonDni(u))"
-                  style="padding: var(--sp-2); background: rgba(0, 0, 0, 0.2); border-radius: 6px; cursor: pointer; border: 1px solid rgba(195, 164, 98, 0.3); transition: all 0.2s;"
+              <div class="scroll-list">
+                <div class="pick-item" *ngFor="let u of filteredUsers()" (click)="selectUserByDni(getUserPersonDni(u))"
                   [style.background]="selectedUserDni() === getUserPersonDni(u) ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
                   onmouseenter="this.style.background='rgba(195, 164, 98, 0.2)'"
                   onmouseleave="this.style.background=this.getAttribute('data-selected') === 'true' ? 'rgba(195, 164, 98, 0.3)' : 'rgba(0, 0, 0, 0.2)'"
                   [attr.data-selected]="selectedUserDni() === getUserPersonDni(u)">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div class="row-between">
                     <div>
-                      <div style="font-weight: 600; color: rgba(195, 164, 98, 1);">{{ getUserPerson(u)?.name }}</div>
-                      <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">DNI: {{
+                      <div class="text-accent">{{ getUserPerson(u)?.name }}</div>
+                      <div class="mono-hint">DNI: {{
                         getUserPerson(u)?.dni }} • {{ u.email }}</div>
-                      <div style="font-size: 0.75rem; margin-top: 4px;">
-                        <span
-                          style="background: rgba(76, 175, 80, 0.25); padding: 2px 6px; border-radius: 4px; color: #81c784; font-weight: 500;">✓
-                          Verificado</span>
-                        <span
-                          style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500; margin-left: 4px;">Perfil
-                          100%</span>
+                      <div class="hint-sm">
+                        <span class="tag tag--ok">{{ 'users.verifiedBadge' | translate }}</span>
+                        <span class="tag tag--info">{{ 'users.profileFull' | translate }}</span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="filteredUsers().length === 0"
-              style="padding: var(--sp-3); text-align: center; color: var(--clr-text-muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3);">
-              <p style="margin: 0;">No hay usuarios verificados disponibles</p>
-              <small style="display: block; margin-top: var(--sp-1);">Los usuarios deben tener su cuenta verificada por
-                un administrador y perfil completo al 100%</small>
+            <div class="empty-inline" *ngIf="filteredUsers().length === 0">
+              <p class="u-flush">{{ 'users.noneVerified' | translate }}</p>
+              <small class="u-block-gap">{{ 'users.mustBeVerified' | translate }}</small>
             </div>
           </div>
         </ng-container>
@@ -275,13 +264,12 @@
 
               <label class="label">
                 <span>{{ 'distributor.fields.password' | translate }}</span>
-                <div style="position: relative;">
+                <div class="input-with-action">
                   <input class="input" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
                     (blur)="form.controls.password.markAsTouched()"
-                    style="padding-right: 40px;" />
-                  <button type="button"
+                    />
+                  <button class="input-action-btn" type="button"
                     (click)="togglePasswordVisibility()"
-                    style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px 8px; color: var(--color-text-muted, #888); font-size: 1.2rem;"
                     [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
                     {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
                   </button>

@@ -4,6 +4,8 @@
 @use 'app/styles/responsive' as *;
 // Estilos compartidos por las 12 pantallas de gestión (antes duplicados en cada hoja).
 @use 'styles/crud';
+// Clases que reemplazan a los estilos en línea de las plantillas.
+@use 'styles/utilities';
 
 /* ========== Reset suave ========== */
 *,

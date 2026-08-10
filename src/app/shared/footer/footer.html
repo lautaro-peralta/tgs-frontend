@@ -10,7 +10,7 @@
         <p class="brand-tagline">{{ 'footer.tagline' | translate }}</p>
 
         <!-- Redes Sociales -->
-        <div class="social-links" role="navigation" aria-label="Social media links">
+        <div class="social-links" role="navigation" [attr.aria-label]="'footer.ariaSocial' | translate">
           <a *ngFor="let social of socialLinks; trackBy: trackBySocial" [href]="social.url" target="_blank"
             rel="noopener noreferrer" class="social-link" [attr.aria-label]="social.ariaLabel | translate"
             [title]="social.name">

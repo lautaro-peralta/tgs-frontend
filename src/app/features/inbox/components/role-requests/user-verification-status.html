@@ -136,7 +136,7 @@
           <span class="label">{{ 'userVerification.status.pending.details.requestedAt' | translate }}</span>
           <span class="value">{{ formatDate(verificationStatus.createdAt) }}</span>
         </div>
-        
+
         <div class="detail-item">
           <span class="label">{{ 'userVerification.status.pending.details.email' | translate }}</span>
           <span class="value">{{ verificationStatus.email }}</span>
@@ -180,12 +180,12 @@
       <div *ngIf="isLastAttempt && !hasNoAttemptsLeft" class="alert alert-danger">
         <span class="icon">⚠️</span>
         <div>
-          <strong>¡ATENCIÓN! Este es tu último intento</strong>
-          <p>Si tu solicitud es rechazada nuevamente, no podrás solicitar verificación otra vez. Por favor, revisa cuidadosamente tu información personal antes de continuar.</p>
+          <strong>{{ 'verification.lastAttempt' | translate }}</strong>
+          <p>{{ 'verification.lastWarning' | translate }}</p>
           <ul class="warning-list">
-            <li>Verifica que tu DNI sea correcto y coincida con tu documento</li>
-            <li>Asegúrate de que tu nombre completo esté escrito correctamente</li>
-            <li>Confirma que tu dirección y teléfono sean válidos</li>
+            <li>{{ 'verification.checkDni' | translate }}</li>
+            <li>{{ 'verification.checkName' | translate }}</li>
+            <li>{{ 'verification.checkContact' | translate }}</li>
           </ul>
         </div>
       </div>
@@ -194,7 +194,7 @@
       <div *ngIf="verificationStatus" class="info-box" [class.warning]="isLastAttempt">
         <span class="icon">{{ isLastAttempt ? '⚠️' : 'ℹ️' }}</span>
         <p>
-          <strong>Intentos restantes:</strong> {{ attemptsLeft }} de {{ verificationStatus.maxAttempts }}
+          <strong>{{ 'verification.attemptsLeft' | translate }}</strong> {{ attemptsLeft }} de {{ verificationStatus.maxAttempts }}
         </p>
       </div>
 
@@ -202,8 +202,8 @@
       <div *ngIf="hasNoAttemptsLeft" class="alert alert-danger">
         <span class="icon">🚫</span>
         <div>
-          <strong>Has alcanzado el límite de intentos</strong>
-          <p>Has agotado todos los intentos disponibles para solicitar la verificación. Si crees que esto es un error, por favor contacta al soporte técnico.</p>
+          <strong>{{ 'verification.limitReached' | translate }}</strong>
+          <p>{{ 'verification.exhausted' | translate }}</p>
         </div>
       </div>
 

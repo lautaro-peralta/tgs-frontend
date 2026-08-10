@@ -21,7 +21,7 @@
     </button>
 
     <!-- Menú IZQUIERDO: SIEMPRE visible -->
-    <ul #menu class="menu menu--left" role="menubar" aria-label="Principal">
+    <ul #menu class="menu menu--left" role="menubar" [attr.aria-label]="'nav.ariaMain' | translate">
       <!-- Indicador vidrio -->
       <div class="glass-indicator" [class.visible]="indicator.visible" [ngStyle]="{
              transform: 'translate(' + indicator.x + 'px,' + indicator.y + 'px)',
@@ -82,7 +82,7 @@
     <div class="spacer"></div>
 
     <!-- Menú DERECHO: públicas + gestión + bandeja + usuario -->
-    <ul class="menu menu--right" role="menubar" aria-label="Páginas">
+    <ul class="menu menu--right" role="menubar" [attr.aria-label]="'nav.ariaPages' | translate">
       <!-- Páginas públicas -->
       <li class="menu__item" role="none" *ngFor="let p of publicItems; trackBy: trackByPath">
         <a role="menuitem" [routerLink]="p.path" routerLinkActive="active">
@@ -102,7 +102,7 @@
           <span class="underline"></span>
         </button>
 
-        <ul class="dropdown" role="menu" aria-label="Gestión">
+        <ul class="dropdown" role="menu" [attr.aria-label]="'nav.management' | translate">
           <!-- ADMIN - Acceso completo -->
           <ng-container *ngIf="isAdmin(); else notAdminBlock">
             <li class="dropdown__item" role="none">
@@ -147,7 +147,7 @@
                 <span class="dropdown__subgroup-title">{{ 'nav.society' | translate }}</span>
                 <span class="chevron">▸</span>
               </div>
-              <ul class="dropdown dropdown--inner dropdown--inner-diag" role="menu" aria-label="Sociedad">
+              <ul class="dropdown dropdown--inner dropdown--inner-diag" role="menu" [attr.aria-label]="'nav.society' | translate">
                 <li class="dropdown__item" role="none">
                   <a role="menuitem" routerLink="/decision" routerLinkActive="active">
                     {{ 'mgmt.decision' | translate }} <span class="underline"></span>
@@ -229,7 +229,7 @@
                   <span class="dropdown__subgroup-title">{{ 'nav.society' | translate }}</span>
                   <span class="chevron">▸</span>
                 </div>
-                <ul class="dropdown dropdown--inner dropdown--inner-diag" role="menu" aria-label="Sociedad">
+                <ul class="dropdown dropdown--inner dropdown--inner-diag" role="menu" [attr.aria-label]="'nav.society' | translate">
                   <li class="dropdown__item" role="none">
                     <a role="menuitem" routerLink="/decision" routerLinkActive="active">
                       {{ 'mgmt.decision' | translate }} <span class="underline"></span>
@@ -343,7 +343,7 @@
           <span class="underline"></span>
         </button>
 
-        <ul class="dropdown dropdown--user" role="menu" aria-label="Usuario">
+        <ul class="dropdown dropdown--user" role="menu" [attr.aria-label]="'nav.ariaUser' | translate">
           <!-- ✅ Cabecera simple: solo nombre -->
           <li class="dropdown__item dropdown__item--header" role="none" aria-disabled="true">
             <div class="dropdown__header">

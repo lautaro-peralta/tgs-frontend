@@ -28,7 +28,10 @@
     "profileTooltip": "Perfil {{value}}% completo",
     "verifyEmailWarning": "Verifica tu email",
     "verifyNow": "Verificar ahora",
-    "rolesLabel": "Roles:"
+    "rolesLabel": "Roles:",
+    "ariaMain": "Principal",
+    "ariaPages": "Páginas",
+    "ariaUser": "Usuario"
   },
   "mgmt": {
     "product": "Productos",
@@ -84,7 +87,11 @@
       "requestVerification": "Solicitar verificación",
       "completeProfile100": "Completa tu perfil al 100% para comprar.",
       "completeProfile": "Completar perfil"
-    }
+    },
+    "searching": "🔍 Buscando:",
+    "unavailableBadge": "⚠️ No disponible",
+    "clearSearch": "Limpiar búsqueda",
+    "productList": "Listado de productos"
   },
   "myPurchases": {
     "title": "Mis Compras",
@@ -168,7 +175,11 @@
         "emailNotVerified": "Email no verificado"
       }
     },
-    "readonlyNote": "ℹ️ Los datos personales no pueden modificarse una vez completados."
+    "readonlyNote": "ℹ️ Los datos personales no pueden modificarse una vez completados.",
+    "editPhone": "Editar teléfono",
+    "editAddress": "Editar dirección",
+    "namePlaceholder": "Juan Pérez",
+    "addressPlaceholder": "Av. Siempre Viva 123"
   },
   "product": {
     "title": "Productos",
@@ -245,7 +256,11 @@
       "no": "No"
     },
     "imageFile": "Imagen (archivo)",
-    "confirmDelete": "¿Estás seguro de eliminar este producto?"
+    "confirmDelete": "¿Estás seguro de eliminar este producto?",
+    "distributors": "Distribuidor(es)",
+    "imageUrlPlaceholder": "https://…",
+    "councilLabel": "Consejo:",
+    "firstProductHint": "Creá tu primer producto haciendo clic en «Nuevo producto», arriba."
   },
   "auth": {
     "user": "usuario",
@@ -440,7 +455,10 @@
     "password": {
       "show": "Mostrar contraseña",
       "hide": "Ocultar contraseña"
-    }
+    },
+    "ariaAuth": "Autenticación",
+    "ariaAuthMobile": "Opciones de autenticación",
+    "ariaBranding": "Marca"
   },
   "common": {
     "close": "Cerrar",
@@ -461,7 +479,13 @@
     "applyFiltersTitle": "Aplicar filtros",
     "clearFiltersTitle": "Limpiar filtros",
     "refresh": "Actualizar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "closeNotification": "Cerrar notificación",
+    "required": "Campo requerido",
+    "errorLabel": "Error:",
+    "sending": "Enviando",
+    "sendingEllipsis": "⏳ Enviando...",
+    "searchAction": "🔍 Buscar"
   },
   "clients": {
     "toggle": {
@@ -670,7 +694,11 @@
       "revenueLabel": "Ingresos totales:",
       "filteredLabel": "Filtradas:"
     },
-    "empty": "No hay ventas registradas"
+    "empty": "No hay ventas registradas",
+    "lineItems": "📦 Productos de la venta",
+    "quantity": "Cantidad:",
+    "noClients": "No hay clientes disponibles",
+    "noProducts": "No hay productos disponibles"
   },
   "zones": {
     "title": "Zonas",
@@ -820,7 +848,8 @@
     },
     "successCreate": "Autoridad creada correctamente",
     "successUpdate": "Autoridad actualizada correctamente",
-    "successDelete": "Autoridad eliminada correctamente"
+    "successDelete": "Autoridad eliminada correctamente",
+    "range": "Rango"
   },
   "authority": {
     "fields": {
@@ -913,9 +942,11 @@
       "paid": "Pagados",
       "pending": "Pendientes",
       "pendingAmount": "Monto pendiente",
-      "filtered": "Filtrados"
+      "filtered": "Filtrados",
+      "totalAmount": "Monto total"
     },
-    "empty": "No hay sobornos registrados"
+    "empty": "No hay sobornos registrados",
+    "paid": "Pagado"
   },
   "decisions": {
     "title": "Decisiones estratégicas",
@@ -957,7 +988,9 @@
       "filtered": "Filtradas:"
     },
     "noResults": "Sin resultados para el filtro aplicado",
-    "confirmDelete": "¿Eliminar esta decisión?"
+    "confirmDelete": "¿Eliminar esta decisión?",
+    "availableTopics": "📋 Temáticas disponibles",
+    "searchTopic": "🔍 Buscar temática…"
   },
   "topics": {
     "title": "Temáticas",
@@ -1209,7 +1242,10 @@
     },
     "messages": {
       "errorSubmit": "No se pudo enviar la solicitud"
-    }
+    },
+    "incompatible": "Roles incompatibles",
+    "theRole": "El rol",
+    "cannotCombine": "no puede combinarse con:"
   },
   "shelbyCouncil": {
     "title": "Consejo Shelby",
@@ -1250,7 +1286,17 @@
       "uniquePartners": "Socios únicos",
       "uniqueDecisions": "Decisiones únicas",
       "filtered": "Filtrados"
-    }
+    },
+    "pickPartner": "— Seleccioná un socio —",
+    "noPartners": "No hay socios disponibles. Creá uno primero.",
+    "partnerLocked": "El socio no se puede cambiar al editar",
+    "pickDecision": "— Seleccioná una decisión —",
+    "noDecisions": "No hay decisiones disponibles. Creá una primero.",
+    "decisionLocked": "La decisión no se puede cambiar al editar",
+    "roleHint": "Opcional: describí el rol o la responsabilidad en este consejo",
+    "notesHint": "Opcional: agregá cualquier nota o comentario relevante",
+    "rolePlaceholder": "Asesor financiero, líder estratégico, etc.",
+    "notesPlaceholder": "Información adicional sobre la participación en este consejo…"
   },
   "monthlyReview": {
     "title": "Revisiones Mensuales",
@@ -1362,7 +1408,10 @@
         "partnerDni": "DNI del socio requerido (mín. 6 caracteres)",
         "dateRequired": "Fecha requerida"
       }
-    }
+    },
+    "sampleData": "📋 Datos de ejemplo",
+    "sampleDataAlt": "🧪 Datos de ejemplo",
+    "placeholder": "Espacio reservado"
   },
   "clandestineAgreement": {
     "title": "Acuerdos Clandestinos",
@@ -1409,7 +1458,13 @@
       "uniqueAdmins": "Admins únicos",
       "uniqueAuthorities": "Autoridades únicas",
       "filtered": "Filtrados"
-    }
+    },
+    "pickCouncil": "— Seleccioná un consejo —",
+    "noCouncils": "No hay consejos disponibles. Creá uno primero.",
+    "pickAdmin": "— Seleccioná un administrador —",
+    "noAdmins": "No hay administradores disponibles. Creá uno primero.",
+    "pickAuthority": "— Seleccioná una autoridad —",
+    "noAuthorities": "No hay autoridades disponibles. Creá una primero."
   },
   "inbox": {
     "title": "Bandeja de entrada",
@@ -1955,7 +2010,8 @@
         "value": "thegarrisonsystem@gmail.com",
         "hint": "Contacto directo por email"
       }
-    }
+    },
+    "mapsIconAlt": "Icono de Google Maps"
   },
   "faqs": {
     "title": "Preguntas Frecuentes",
@@ -2008,7 +2064,8 @@
     "social": {
       "github": "Síguenos en GitHub",
       "email": "Envíanos un email"
-    }
+    },
+    "ariaSocial": "Redes sociales"
   },
   "legal": {
     "backHome": "Volver al inicio",
@@ -2265,5 +2322,61 @@
         }
       }
     }
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "subtitle": "Ingresá tus credenciales para acceder",
+    "emailUnverified": "Email no verificado",
+    "mustVerify": "Tenés que verificar tu email antes de iniciar sesión.",
+    "verificationSent": "Email de verificación enviado",
+    "checkInbox": "Revisá tu bandeja de entrada y hacé clic en el enlace para verificar tu cuenta.",
+    "noEmail": "¿No recibiste el email?",
+    "resendHint": "Usá el botón de abajo para reenviarlo.",
+    "resendAgain": "📧 Reenviar nuevamente",
+    "sendVerification": "📧 Enviar email de verificación",
+    "waitingVerification": "Esperando verificación…",
+    "resendEmail": "📧 Reenviar email",
+    "emailOrUser": "Email o usuario",
+    "password": "Contraseña",
+    "noAccount": "¿No tenés cuenta?",
+    "registerHere": "Registrate acá",
+    "emailPlaceholder": "tu@email.com o tu_usuario",
+    "clickLinkHint": "Hacé clic en el enlace que enviamos a tu email. Esta página se actualizará automáticamente cuando verifiques tu cuenta."
+  },
+  "register": {
+    "title": "Crear cuenta",
+    "waitingVerification": "Esperando verificación de email…",
+    "created": "¡Cuenta creada!",
+    "verifyToContinue": "Verificá tu email para continuar.",
+    "email": "Email",
+    "usernameOptional": "Usuario (opcional)",
+    "emailSentHint": "Enviamos un email a tu dirección. Hacé clic en el enlace para verificar tu cuenta y entrar automáticamente."
+  },
+  "emailVerification": {
+    "verifying": "Verificando tu email…",
+    "pleaseWait": "Esperá mientras procesamos tu solicitud.",
+    "done": "¡Email verificado!",
+    "redirecting": "Te llevamos al inicio en unos segundos…",
+    "goHome": "Ir al inicio ahora",
+    "error": "Error de verificación",
+    "resend": "Reenviar email de verificación",
+    "backToLogin": "Volver a iniciar sesión",
+    "title": "Verificación de email"
+  },
+  "verification": {
+    "lastAttempt": "¡Atención! Este es tu último intento",
+    "checkDni": "Revisá que tu DNI sea correcto y coincida con tu documento",
+    "checkName": "Revisá que tu nombre completo esté bien escrito",
+    "checkContact": "Confirmá que tu dirección y teléfono sean válidos",
+    "attemptsLeft": "Intentos restantes:",
+    "limitReached": "Alcanzaste el límite de intentos",
+    "lastWarning": "Si tu solicitud es rechazada nuevamente, no podrás solicitar verificación otra vez. Por favor revisá bien tus datos antes de enviarla.",
+    "exhausted": "Agotaste todos los intentos disponibles para solicitar la verificación. Si creés que se trata de un error, comunicate con un administrador."
+  },
+  "users": {
+    "noneVerified": "No hay usuarios verificados disponibles",
+    "mustBeVerified": "Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100% para poder ser seleccionados.",
+    "verifiedBadge": "✓ Verificado",
+    "profileFull": "Perfil 100%"
   }
 }

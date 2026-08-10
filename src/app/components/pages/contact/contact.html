@@ -62,7 +62,7 @@
 
         <p class="address">{{ 'contact.location.address' | translate }}</p>
         <a class="link pill-link" [href]="mapHref" target="_blank" rel="noopener">
-          <img [src]="mapIcon" alt="Google Maps icon" class="pill-icon">
+          <img [src]="mapIcon" [alt]="'contact.mapsIconAlt' | translate" class="pill-icon">
           {{ 'contact.actions.viewOnMaps' | translate }}
         </a>
       </article>

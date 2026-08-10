@@ -11,9 +11,8 @@
     </div>
 
     <!-- ✅ Success message -->
-    <div *ngIf="success()"
-      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-      <span style="font-size: 20px;">✓</span>
+    <div class="alert-inline alert-inline--success" *ngIf="success()">
+      <span class="alert-inline__icon">✓</span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -71,8 +70,7 @@
               <div echarts
                 [options]="rankChartOptions()!"
                 [theme]="'dark'"
-                class="chart"
-                style="height: 450px; width: 100%;">
+                class="chart chart-box u-w-450">
               </div>
             </div>
           </div>
@@ -81,23 +79,23 @@
     </div>
 
     <!-- Filtros -->
-    <div class="filters" style="align-items: flex-end;">
+    <div class="filters">
       <!-- Búsqueda general por nombre/rango -->
-      <label class="label" style="flex: 1;">
+      <label class="label u-grow">
         <span>{{ 'authorities.filters.search' | translate }}</span>
         <input class="input" [placeholder]="'authorities.filters.searchPh' | translate" [ngModel]="fTextInput()"
           (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
       <!-- ✅ Filtro por DNI -->
-      <label class="label" style="min-width: 150px;">
+      <label class="label u-minw-150">
         <span>{{ 'authorities.filters.dni' | translate }}</span>
         <input class="input" maxlength="8" [placeholder]="'authorities.filters.dniPh' | translate"
           [ngModel]="fDniInput()" (ngModelChange)="fDniInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
       <!-- Filtro por zona -->
-      <label class="label" style="min-width: 150px;">
+      <label class="label u-minw-150">
         <span>{{ 'authorities.filters.zoneId' | translate }}</span>
         <select class="input" [ngModel]="fZoneIdInput()" (ngModelChange)="fZoneIdInput.set($event); applyFilters()">
           <option value="">{{ 'authorities.filters.allZones' | translate : {} : 'Todas las zonas' }}</option>
@@ -106,7 +104,7 @@
       </label>
 
       <!-- Botones -->
-      <div style="display: flex; gap: var(--sp-2);">
+      <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
           🔍 {{ 'common.search' | translate }}
         </button>
@@ -118,15 +116,14 @@
     </div>
 
     <!-- Botón de ordenamiento por rango -->
-    <div *ngIf="filteredAuthorities().length > 0"
-        style="display: flex; justify-content: flex-end; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-3); padding: 0 var(--sp-2);">
+    <div class="row-end row-end--toolbar" *ngIf="filteredAuthorities().length > 0">
       <button class="rank-order-btn" type="button" (click)="toggleRankOrder()">
         <div class="rank-order-icon" [class.desc]="rankOrder() === 'desc'">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M8 3L8 13M8 3L5 6M8 3L11 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <span class="rank-order-text">Rango</span>
+        <span class="rank-order-text">{{ 'authorities.range' | translate }}</span>
         <span class="rank-order-badge">
           {{ rankOrder() === 'asc' ? '0→3' : '3→0' }}
         </span>
@@ -136,11 +133,11 @@
     <div class="table-wrap">
       <table class="table" *ngIf="filteredAuthorities().length; else empty">
         <colgroup>
-          <col style="width:120px" />
+          <col class="u-w-120" />
           <col />
-          <col style="width:120px" />
-          <col style="width:200px" />
-          <col style="width:140px" *ngIf="canEdit() || canDelete()" />
+          <col class="u-w-120" />
+          <col class="u-w-200" />
+          <col class="u-w-140" *ngIf="canEdit() || canDelete()" />
         </colgroup>
 
         <thead>
@@ -184,7 +181,7 @@
 </section>
 
 <div class="authority-overlay is-open" *ngIf="isFormOpen">
-  <button type="button" class="authority-overlay__backdrop" (click)="toggleForm()" aria-label="Cerrar"></button>
+  <button type="button" class="authority-overlay__backdrop" (click)="toggleForm()" [attr.aria-label]="'common.close' | translate"></button>
 
   <div class="authority-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="toggleForm()" (click)="$event.stopPropagation()">
     <div class="header compact">
@@ -193,7 +190,7 @@
         ? ('authorities.form.newTitle' | translate)
         : ('authorities.form.editTitle' | translate: { dni: editDni() }) }}
       </h2>
-      <button type="button" class="btn-close" (click)="toggleForm()" aria-label="Cerrar">&times;</button>
+      <button type="button" class="btn-close" (click)="toggleForm()" [attr.aria-label]="'common.close' | translate">&times;</button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
@@ -231,30 +228,26 @@
 
         <div class="col-2">
           <!-- Listado de usuarios verificados -->
-          <div *ngIf="filteredUsers().length > 0"
-            style="padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2);">
-            <h4 style="margin: 0 0 var(--sp-2) 0; font-size: 0.875rem; color: rgba(195, 164, 98, 0.9);">{{ 'authorities.user.verifiedAvailableTitle' | translate:{count: filteredUsers().length} : ('Usuarios verificados disponibles (' + filteredUsers().length + ')') }}</h4>
-            <div
-              style="display: flex; flex-direction: column; gap: var(--sp-2); max-height: 300px; overflow-y: auto;">
+          <div class="panel-accent" *ngIf="filteredUsers().length > 0">
+            <h4 class="section-hint">{{ 'authorities.user.verifiedAvailableTitle' | translate:{count: filteredUsers().length} : ('Usuarios verificados disponibles (' + filteredUsers().length + ')') }}</h4>
+            <div class="scroll-list">
               <div *ngFor="let u of filteredUsers()"
                 (click)="selectUserByDni(getUserPersonDni(u))"
                 class="user-card"
                 [class.selected]="selectedUserDni() === getUserPersonDni(u)">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                  <div style="flex: 1;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <div style="font-weight: 600; color: rgba(195, 164, 98, 1);">{{ getUserPerson(u)?.name }}</div>
-                      <span *ngIf="selectedUserDni() === getUserPersonDni(u)" style="color: rgba(195, 164, 98, 1); font-size: 1.2rem; font-weight: bold; margin-left: var(--sp-2);">✓</span>
+                <div class="row-top">
+                  <div class="u-grow">
+                    <div class="row-between">
+                      <div class="text-accent">{{ getUserPerson(u)?.name }}</div>
+                      <span class="pick-check pick-check--accent" *ngIf="selectedUserDni() === getUserPersonDni(u)">✓</span>
                     </div>
-                    <div style="font-size: 0.813rem; color: rgba(255, 255, 255, 0.8); font-family: monospace;">
+                    <div class="mono-hint">
                       {{ 'authorities.user.dniLabel' | translate : {} : 'DNI' }}: {{ getUserPerson(u)?.dni }} • {{ u.email }}
                     </div>
-                    <div style="font-size: 0.75rem; margin-top: 4px;">
-                      <span
-                        style="background: rgba(76, 175, 80, 0.25); padding: 2px 6px; border-radius: 4px; color: #81c784; font-weight: 500;">✓
+                    <div class="hint-sm">
+                      <span class="tag tag--ok">✓
                         {{ 'authorities.user.verified' | translate : {} : 'Verificado' }}</span>
-                      <span
-                        style="background: rgba(33, 150, 243, 0.25); padding: 2px 6px; border-radius: 4px; color: #64b5f6; font-weight: 500; margin-left: 4px;">
+                      <span class="tag tag--info">
                         {{ 'authorities.user.profileComplete' | translate : {} : 'Perfil 100%' }}</span>
                     </div>
                   </div>
@@ -262,10 +255,9 @@
               </div>
             </div>
           </div>
-          <div *ngIf="filteredUsers().length === 0"
-            style="padding: var(--sp-3); text-align: center; color: var(--clr-text-muted); background: rgba(195, 164, 98, 0.05); border-radius: 8px; border: 1px dashed rgba(195, 164, 98, 0.3);">
-            <p style="margin: 0;">{{ 'authorities.user.none' | translate : {} : 'No hay usuarios verificados disponibles' }}</p>
-            <small style="display: block; margin-top: var(--sp-1);">{{ 'authorities.user.requirements' | translate : {} : 'Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100%' }}</small>
+          <div class="empty-inline" *ngIf="filteredUsers().length === 0">
+            <p class="u-flush">{{ 'authorities.user.none' | translate : {} : 'No hay usuarios verificados disponibles' }}</p>
+            <small class="u-block-gap">{{ 'authorities.user.requirements' | translate : {} : 'Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100%' }}</small>
           </div>
         </div>
       </ng-container>
@@ -342,13 +334,12 @@
 
             <label class="label">
               <span>{{ 'authority.fields.password' | translate : {} : 'Contraseña' }}</span>
-              <div style="position: relative;">
+              <div class="input-with-action">
                 <input class="input" [type]="showPassword() ? 'text' : 'password'" formControlName="password"
                   (blur)="form.controls.password.markAsTouched()"
-                  style="padding-right: 40px;" />
-                <button type="button"
+                  />
+                <button class="input-action-btn" type="button"
                   (click)="togglePasswordVisibility()"
-                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 4px 8px; color: var(--color-text-muted, #888); font-size: 1.2rem;"
                   [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
                   {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
                 </button>

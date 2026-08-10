@@ -2163,3 +2163,185 @@
     min-width: 100%;
   }
 }
+
+/* ===========================================================================
+   Clases que reemplazan a los estilos en línea de sale.html.
+   Antes esta plantilla tenía 57 atributos `style`, el máximo de la aplicación.
+   =========================================================================== */
+
+/* Celdas de la tabla de ventas */
+.cell-center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cell-total {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.cell-flush {
+  padding: 0;
+}
+
+/* Panel de detalle de una venta */
+.detail-panel {
+  padding: var(--sp-4);
+  background: rgba(195, 164, 98, 0.05);
+  border-left: 3px solid var(--accent);
+}
+
+.detail-panel__title {
+  margin: 0 0 var(--sp-3);
+  color: var(--accent);
+  font-size: 0.95rem;
+}
+
+.detail-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-2) 0;
+}
+
+.detail-line__name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.detail-line__meta {
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.detail-line__total {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+
+.detail-qty {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: rgba(195, 164, 98, 0.1);
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: 8px;
+}
+
+.detail-qty__unit {
+  font-size: 0.813rem;
+}
+
+/* Selectores plegables de cliente y distribuidor */
+.pick-box {
+  padding: var(--sp-3);
+  border-radius: 8px;
+}
+
+.pick-box--ok {
+  background: rgba(76, 175, 80, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.25);
+}
+
+.pick-box--info {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.pick-toggle {
+  all: unset;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pick-toggle__chevron {
+  opacity: .8;
+  transform: translateY(1px);
+}
+
+.pick-toggle__chevron--end {
+  margin-left: auto;
+}
+
+.pick-selected {
+  font-weight: 600;
+  color: rgba(129, 199, 132, 1);
+}
+
+.pick-selected--info {
+  color: rgba(147, 197, 253, 1);
+}
+
+.pick-check {
+  color: rgba(129, 199, 132, 1);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.pick-check--info {
+  color: rgba(147, 197, 253, 1);
+}
+
+.pick-hint {
+  font-size: 0.813rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+/* Línea de producto dentro del formulario de venta */
+.line-card {
+  grid-column: 1 / -1;
+  border: 1px solid rgba(195, 164, 98, 0.2);
+  border-radius: 8px;
+  padding: var(--sp-3);
+}
+
+.line-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-3);
+}
+
+.line-card__title {
+  margin: 0;
+  color: rgba(195, 164, 98, 0.9);
+}
+
+.label--narrow {
+  margin-top: var(--sp-3);
+  max-width: 200px;
+}
+
+.detail-line--boxed {
+  padding: var(--sp-3);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(195, 164, 98, 0.25);
+  border-radius: 8px;
+}
+
+.detail-qty--tight {
+  background: rgba(195, 164, 98, 0.15);
+  border-radius: 6px;
+}
+
+.pick-box--ok-soft {
+  background: rgba(76, 175, 80, 0.08);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.pick-box--info-soft {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.pick-toggle--ok   { color: rgba(129, 199, 132, 0.9); font-weight: 700; font-size: 0.875rem; }
+.pick-toggle--info { color: rgba(147, 197, 253, 0.9); font-weight: 700; font-size: 0.875rem; }
+
+.line-card--soft   { background: rgba(0, 0, 0, 0.1); }
+.line-card__head--tight { margin-bottom: var(--sp-2); }

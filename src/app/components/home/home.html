@@ -8,10 +8,10 @@
     <!-- IZQUIERDA: Panel Auth -->
     <section *ngIf="showAuthPanel" class="auth-panel glass" [class.mode-login]="mode()==='login'"
       [class.mode-register]="mode()==='register'" [class.hiding]="hiding" [class.enter]="entering"
-      [style.--split]="mode()==='login' ? '64%' : '36%'" aria-label="Authentication">
+      [style.--split]="mode()==='login' ? '64%' : '36%'" [attr.aria-label]="'home.ariaAuth' | translate">
 
       <!-- 📱 Mobile tab switcher (same ARIA pattern) -->
-      <div class="mobile-auth-tabs" role="tablist" aria-label="Opciones de autenticación móvil">
+      <div class="mobile-auth-tabs" role="tablist" [attr.aria-label]="'home.ariaAuthMobile' | translate">
         <button
           type="button"
           role="tab"
@@ -303,7 +303,7 @@
     </section>
 
     <!-- DERECHA: Brand / Bienvenida -->
-    <section class="brand-plain" [class.is-logged]="isLoggedIn() && !showAuthPanel" aria-label="Branding">
+    <section class="brand-plain" [class.is-logged]="isLoggedIn() && !showAuthPanel" [attr.aria-label]="'home.ariaBranding' | translate">
       <div class="welcome-badge" *ngIf="isLoggedIn() && !showAuthPanel">
         <span class="wave" aria-hidden="true">👋</span>
         <span>{{ 'home.welcome' | translate }} <strong>{{ user()?.username || ('auth.user' | translate)

@@ -40,7 +40,7 @@
         </div>
       </div>
 
-    
+
 
       <!-- Roles Grid - Diseño de tarjetas mejorado -->
       <div class="form-section">
@@ -55,8 +55,7 @@
             *ngFor="let role of availableRoles"
             class="role-card"
             [class.selected]="requestedRole === role.value"
-            [class.disabled]="isSubmitting"
-          >
+            [class.disabled]="isSubmitting">
             <input
               type="radio"
               name="requestedRole"
@@ -105,8 +104,7 @@
             *ngFor="let role of removableRoles"
             class="role-card role-card-small"
             [class.selected]="roleToRemove === role"
-            [class.disabled]="isSubmitting"
-          >
+            [class.disabled]="isSubmitting">
             <input
               type="radio"
               name="roleToRemove"
@@ -164,8 +162,7 @@
             minlength="20"
             maxlength="500"
             rows="4"
-            class="textarea-input"
-          ></textarea>
+            class="textarea-input"></textarea>
           <div class="textarea-footer">
             <span class="character-count">
               {{ justification.length }} / 500
@@ -173,20 +170,20 @@
             <span *ngIf="justification.length > 0 && justification.length < 20" class="validation-hint error">
               {{ 'roleRequests.modal.minCharacters' | translate }}
             </span>
-            <span *ngIf="justification.length >= 20" class="validation-hint success">
+            <span *ngIf="justification.length>= 20" class="validation-hint success">
               {{ 'roleRequests.modal.valid' | translate }}
             </span>
           </div>
         </div>
       </div>
 
-      <!-- Info box - Incompatibilidades 
+      <!-- Info box - Incompatibilidades
       <div *ngIf="incompatibleRolesText && requestedRole" class="info-box warning">
         <span class="info-icon">⚠️</span>
         <div class="info-content">
-          <strong>Roles Incompatibles</strong>
+          <strong>{{ 'roleRequest.incompatible' | translate }}</strong>
           <p>
-            El rol <strong>{{ getRoleInfo(requestedRole)?.label }}</strong> no puede combinarse con:
+            {{ 'roleRequest.theRole' | translate }} <strong>{{ getRoleInfo(requestedRole)?.label }}</strong> {{ 'roleRequest.cannotCombine' | translate }}
             <strong>{{ incompatibleRolesText }}</strong>
           </p>
         </div>
@@ -198,8 +195,7 @@
           type="button"
           class="btn btn-cancel"
           (click)="onClose()"
-          [disabled]="isSubmitting"
-        >
+          [disabled]="isSubmitting">
           <span class="btn-icon">✕</span>
           {{ 'roleRequests.modal.actions.cancel' | translate }}
         </button>
@@ -208,8 +204,7 @@
           type="submit"
           class="btn btn-submit"
           [disabled]="isSubmitting || !requestedRole || (isRoleChange && !roleToRemove) ||
-                      (justification.length > 0 && justification.length < 20)"
-        >
+                      (justification.length >  0 && justification.length < 20)">
           <span class="btn-icon" *ngIf="!isSubmitting">
             {{ requiresAdditionalData ? '→' : '✓' }}
           </span>
@@ -236,7 +231,7 @@
         </div>
       </div>
 
-      
+
 
       <!-- ========== Datos para DISTRIBUTOR ========== -->
       <ng-container *ngIf="requestedRole === 'DISTRIBUTOR'">
@@ -253,8 +248,7 @@
             name="distZone"
             [disabled]="isSubmitting || loadingCatalogs"
             required
-            class="select-input"
-          >
+            class="select-input">
             <option [ngValue]="null">{{ 'roleRequests.modal.distributor.selectZone' | translate }}</option>
             <option *ngFor="let zone of zones" [ngValue]="zone.id">
               <span class="zone-id">#{{ zone.id }}</span> {{ zone.name }}
@@ -301,8 +295,7 @@
             name="authRank"
             [disabled]="isSubmitting"
             required
-            class="select-input"
-          >
+            class="select-input">
             <option [ngValue]="null">{{ 'roleRequests.modal.authority.selectRank' | translate }}</option>
             <option *ngFor="let rank of AUTHORITY_RANKS" [ngValue]="rank.value">
               {{ rank.label }}
@@ -324,8 +317,7 @@
             name="authZone"
             [disabled]="isSubmitting || loadingCatalogs"
             required
-            class="select-input"
-          >
+            class="select-input">
             <option [ngValue]="null">{{ 'roleRequests.modal.authority.selectZone' | translate }}</option>
             <option *ngFor="let zone of zones" [ngValue]="zone.id">
               #{{ zone.id }} - {{ zone.name }}
@@ -341,8 +333,7 @@
           type="button"
           class="btn btn-secondary"
           (click)="backToStep1()"
-          [disabled]="isSubmitting"
-        >
+          [disabled]="isSubmitting">
           <span class="btn-icon">←</span>
           {{ 'roleRequests.modal.actions.back' | translate }}
         </button>
@@ -350,8 +341,7 @@
         <button
           type="submit"
           class="btn btn-submit"
-          [disabled]="isSubmitting || !additionalDataValid"
-        >
+          [disabled]="isSubmitting || !additionalDataValid">
           <span class="btn-icon" *ngIf="!isSubmitting">✓</span>
           <span class="spinner-small" *ngIf="isSubmitting"></span>
           {{ isSubmitting

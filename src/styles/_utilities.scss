@@ -1,0 +1,351 @@
+@use 'sass:math';
+
+// ============================================================================
+// CAPA DE CLASES QUE REEMPLAZA A LOS ESTILOS EN LÍNEA
+//
+// Las plantillas tenían 384 atributos `style` con 1.038 declaraciones dentro.
+// Eso trae tres problemas: ganan a cualquier hoja de estilos (de ahí buena
+// parte de los !important), no responden a media queries, y sacan los colores
+// del sistema de diseño — había 92 colores escritos a mano.
+//
+// Aquí viven los patrones que se repetían. Dos familias:
+//   · clases semánticas (.stat, .stats-bar, .alert…) que describen QUÉ es el
+//     elemento, y son las que conviene usar al escribir marcado nuevo;
+//   · utilidades con prefijo `u-` para ajustes puntuales de una sola propiedad.
+// ============================================================================
+
+// ── Franja de estadísticas ──────────────────────────────────────────────────
+// Aparecía en casi todas las pantallas de gestión, siempre con los mismos
+// valores escritos a mano.
+.stats-bar {
+  display: flex;
+  gap: var(--sp-4);
+  padding: var(--sp-3);
+  background: rgba(195, 164, 98, 0.08);
+  border: 1px solid rgba(195, 164, 98, 0.2);
+  border-radius: 8px;
+  margin-bottom: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.stats-bar--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--sp-3);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+
+.stat__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+
+  &--strong { color: var(--text-strong, #fff); }
+  &--ok     { color: #4a8d72; }
+  &--danger { color: #a94545; }
+  &--info   { color: #3b82f6; }
+}
+
+// ── Paneles y cabeceras ─────────────────────────────────────────────────────
+.panel-accent {
+  padding: var(--sp-3);
+  background: rgba(195, 164, 98, 0.08);
+  border: 1px solid rgba(195, 164, 98, 0.2);
+  border-radius: 8px;
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.row-between--top {
+  align-items: flex-start;
+  margin-bottom: var(--sp-2);
+  padding-right: 40px;
+}
+
+// ── Acciones ────────────────────────────────────────────────────────────────
+.actions-row {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+// ── Mensajes ────────────────────────────────────────────────────────────────
+.alert-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.alert-inline--success {
+  background: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #4caf50;
+}
+
+.alert-inline__icon {
+  font-size: 20px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+// ── Textos auxiliares ───────────────────────────────────────────────────────
+.section-hint {
+  margin: 0 0 var(--sp-2);
+  font-size: 0.875rem;
+  color: rgba(195, 164, 98, 0.9);
+}
+
+.mono-hint {
+  font-size: 0.813rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Google Sans Code', ui-monospace, monospace;
+}
+
+.hint-sm {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.hint-muted {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.text-accent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+// ── Etiquetas de estado ─────────────────────────────────────────────────────
+.tag {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.tag--ok {
+  background: rgba(76, 175, 80, 0.25);
+  color: #81c784;
+}
+
+.tag--info {
+  background: rgba(33, 150, 243, 0.25);
+  color: #64b5f6;
+  margin-left: 4px;
+}
+
+// ── Listas y estados vacíos embebidos ───────────────────────────────────────
+.scroll-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  max-height: 300px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.pick-item {
+  padding: var(--sp-2);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(195, 164, 98, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+
+  &:hover {
+    background: rgba(195, 164, 98, 0.12);
+    border-color: rgba(195, 164, 98, 0.55);
+  }
+}
+
+.empty-inline {
+  padding: var(--sp-3);
+  text-align: center;
+  color: var(--muted);
+  background: rgba(195, 164, 98, 0.05);
+  border: 1px dashed rgba(195, 164, 98, 0.3);
+  border-radius: 8px;
+}
+
+.empty-inline--spaced {
+  margin-top: var(--sp-2);
+}
+
+// ── Formularios ─────────────────────────────────────────────────────────────
+// `grid-column: 1 / -1` sobre la rejilla de formulario: el campo ocupa la fila.
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-full-split {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Campo con un botón dentro (limpiar, mostrar contraseña…).
+.input-with-action {
+  position: relative;
+
+  > input,
+  > .input {
+    padding-right: 40px;
+  }
+}
+
+.input-action-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+// ── Gráficos ────────────────────────────────────────────────────────────────
+.chart-box {
+  height: 320px;
+  width: 100%;
+  position: relative;
+}
+
+.chart-box--tall {
+  height: 420px;
+}
+
+.chart-heading {
+  margin: 0 0 var(--sp-3);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+// ── Utilidades de una sola propiedad ────────────────────────────────────────
+.u-grow    { flex: 1; }
+.u-flush   { margin: 0; }
+.u-center  { text-align: center; }
+.u-right   { text-align: right; }
+.u-nowrap  { white-space: nowrap; }
+.u-hidden  { display: none; }
+.u-fill    { width: 100%; height: 100%; }
+.u-block-gap { display: block; margin-top: var(--sp-1); }
+.u-mt-sm   { margin-top: var(--sp-2); }
+.u-invisible { visibility: hidden; }
+.u-mono    { font-family: 'Google Sans Code', ui-monospace, monospace; }
+.u-text-ok { color: #81c784; }
+
+.hint-xs {
+  font-size: 0.75rem;
+  margin-top: 6px;
+}
+
+.tag--special {
+  background: rgba(156, 39, 176, 0.25);
+  color: #ba68c8;
+}
+
+.stack-sm {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.scroll-list--sm { max-height: 250px; }
+
+@each $w in 40, 50, 80, 100, 110, 120, 140, 150, 160, 180, 200 {
+  .u-w-#{$w}    { width: #{$w}px; }
+  .u-minw-#{$w} { min-width: #{$w}px; }
+  .u-maxw-#{$w} { max-width: #{$w}px; }
+}
+
+// ── Anchos de columna en porcentaje (elementos <col> de las tablas) ─────────
+@each $p in 8, 9, 10, 13, 15, 18, 20, 22, 25, 30 {
+  .u-wpct-#{$p} { width: math.percentage(math.div($p, 100)); }
+}
+
+@each $w in 64, 90, 130, 220, 250, 450 {
+  .u-w-#{$w} { width: #{$w}px; }
+}
+
+// Celda que recorta con puntos suspensivos. El ancho lo pone .u-maxw-*.
+.cell-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-maxw-250 { max-width: 250px; }
+.u-mt-md    { margin-top: var(--sp-4); }
+.u-mr-sm    { margin-right: var(--sp-2); }
+
+.row-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.row-inline {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+
+.row-inline--end {
+  display: inline-flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-right: 8px;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.stat__value--sm { font-size: 1.3rem; }
+
+// Variantes de los patrones anteriores que aparecían con un ajuste puntual.
+.stats-bar--flush      { margin-bottom: 0; }
+.stats-bar--spaced-top { margin-bottom: 0; margin-top: var(--sp-3); }
+.filters--wrap         { flex-wrap: wrap; }
+.row-end--toolbar      { margin-bottom: var(--sp-3); padding: 0 var(--sp-2); }
+.scroll-list--spaced   { margin-top: var(--sp-2); }
+.pick-box--spaced      { margin-top: var(--sp-2); }
+.tag--inline           { margin-left: 4px; }

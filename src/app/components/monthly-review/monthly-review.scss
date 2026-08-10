@@ -1573,3 +1573,166 @@ button[title="Expandir gráfico"] {
   }
 }
 
+
+/* ===========================================================================
+   Clases que reemplazan a los estilos en línea de monthly-review.html.
+   Esta plantilla tenía 53 atributos `style`, la segunda de la aplicación.
+   =========================================================================== */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-6);
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+.chart-panel {
+  padding: var(--sp-4);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius);
+}
+
+.chart-panel--spaced {
+  margin-bottom: var(--sp-4);
+}
+
+.chart-card {
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+  position: relative;
+}
+
+.chart-card--blue {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(59, 130, 246, 0.02));
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.chart-card--sky {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(96, 165, 250, 0.02));
+  border: 1px solid rgba(96, 165, 250, 0.2);
+}
+
+.chart-card__title {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(147, 197, 253, 1);
+  font-weight: 700;
+}
+
+.chart-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.chart-badge--warn {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.chart-badge--purple {
+  background: rgba(147, 51, 234, 0.2);
+  color: #9333ea;
+}
+
+.chart-note {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  border-radius: 8px;
+}
+
+.chart-note--blue {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid rgba(59, 130, 246, 0.5);
+}
+
+.chart-note--sky {
+  background: rgba(96, 165, 250, 0.1);
+  border-left: 3px solid rgba(96, 165, 250, 0.5);
+}
+
+.chart-note__text {
+  margin: 0;
+  color: rgba(147, 197, 253, 0.9);
+  font-size: 12px;
+}
+
+.chart-box--sm { height: 260px; }
+.chart-box--md { height: 280px; }
+
+.stats-bar--3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.stat__value--warn { color: #f59e0b; }
+.stat__value--mute { color: #6b7280; }
+
+.section-heading {
+  margin: 0 0 var(--sp-3);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* Tarjetas destacadas de los gráficos de análisis */
+.chart-card--highlight-blue {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(195, 164, 98, 0.06));
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  margin-bottom: var(--sp-4);
+}
+
+.chart-card--highlight-sky {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(147, 51, 234, 0.06));
+  border: 2px solid rgba(96, 165, 250, 0.3);
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
+  margin-bottom: var(--sp-4);
+}
+
+.chart-expand {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+  color: rgba(147, 197, 253, 1);
+  z-index: var(--z-sticky);
+}
+
+.chart-expand--blue {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.chart-expand--sky {
+  background: rgba(96, 165, 250, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.4);
+}
+
+.chart-badge--sm {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.chart-note--tight {
+  border-radius: 4px;
+}
+
+.chart-note--blue-strong { border-left: 3px solid rgba(59, 130, 246, 0.6); }
+.chart-note--sky-strong  { border-left: 3px solid rgba(96, 165, 250, 0.6); }

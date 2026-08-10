@@ -237,6 +237,8 @@
     gap: var(--sp-4);
     padding: 0 0 var(--sp-4);
     margin-bottom: var(--sp-2);
+      /* venía como style="align-items: flex-end" en 12 plantillas */
+    align-items: flex-end;
   }
 
   .label {

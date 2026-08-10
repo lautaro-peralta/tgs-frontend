@@ -1,4 +1,4 @@
-<main class="store" role="main" aria-label="Tienda">
+<main class="store" role="main" [attr.aria-label]="'nav.store' | translate">
   <header class="store__header">
     <h1 class="store__title">{{ 'store.title' | translate }}</h1>
 
@@ -11,7 +11,7 @@
 
           <div class="search-actions">
             <button class="btn btn--search" type="button" (click)="onSearch()" [disabled]="!searchInput()">
-              🔍 Buscar
+              {{ 'common.searchAction' | translate }}
             </button>
 
             <button *ngIf="searchQuery()" class="btn btn--clear" type="button" (click)="onClearSearch()">
@@ -25,7 +25,7 @@
 
   <div class="search-indicator" *ngIf="searchQuery()" role="status" aria-live="polite">
     <span class="search-indicator__text">
-      🔍 Buscando: <strong>{{ searchQuery() }}</strong>
+      {{ 'store.searching' | translate }} <strong>{{ searchQuery() }}</strong>
     </span>
     <span class="search-indicator__count">
       {{ list().length }} {{ list().length === 1 ? 'oferta' : 'ofertas' }}
@@ -36,7 +36,7 @@
   <div class="muted" *ngIf="loading()">{{ 'account.loading' | translate }}</div>
 
   <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
-  <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" aria-label="Listado de productos">
+  <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" [attr.aria-label]="'store.productList' | translate">
     <article class="store-card product-card" *ngFor="let offer of list()" [class.flash]="flashId() === offer.offerId"
       [class.unavailable]="!isOfferAvailable(offer.offerId)" [attr.data-cy]="'product-' + offer.offerId">
 
@@ -50,7 +50,7 @@
 
         <!-- Badge de "No disponible" -->
         <div class="unavailable-badge" *ngIf="!isOfferAvailable(offer.offerId)" aria-hidden="true">
-          <span>⚠️ No disponible</span>
+          <span>{{ 'store.unavailableBadge' | translate }}</span>
         </div>
       </div>
 
@@ -68,7 +68,7 @@
           <span class="zone-badge" *ngIf="offer.zone">
             <span class="zone-icon">📍</span>
             <span class="zone-name">{{ offer.zone.name }}</span>
-            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" title="Sede Central">⭐</span>
+            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" [title]="'zones.headquarters' | translate">⭐</span>
           </span>
         </div>
       </div>
@@ -95,7 +95,7 @@
     <p>{{ searchQuery() ? 'No se encontraron ofertas con ese término de búsqueda.' : ('store.noProducts.desc' |
       translate) }}</p>
     <button *ngIf="searchQuery()" class="btn btn--accent" type="button" (click)="onClearSearch()">
-      Limpiar búsqueda
+      {{ 'store.clearSearch' | translate }}
     </button>
   </div>
 
