@@ -18,15 +18,20 @@ import {
 } from '../../models/shelby-council/shelby-council.model';
 import { PartnerDTO } from '../../models/partner/partner.model';
 import { DecisionDTO } from '../../models/decision/decision.model';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-shelby-council',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './shelby-council.html',
   styleUrls: ['./shelby-council.scss'],
 })
 export class ShelbyCouncilComponent implements OnInit {
+  private confirmDialog = inject(ConfirmService);
   private fb  = inject(FormBuilder);
   private srv = inject(ShelbyCouncilService);
   private partnerSrv = inject(PartnerService);
@@ -233,13 +238,13 @@ export class ShelbyCouncilComponent implements OnInit {
     }
   }
 
-  delete(it: ShelbyCouncilDTO): void {
+  async delete(it: ShelbyCouncilDTO): Promise<void> {
     const msg = this.tr.instant('shelbyCouncil.confirmDelete', { 
       partner: it.partner?.name || it.partner?.dni,
       decision: it.decision?.description || `#${it.decision?.id}`
     }) || `¿Eliminar la relación entre ${it.partner?.name} y la decisión #${it.decision?.id}?`;
     
-    if (!confirm(msg)) return;
+    if (!(await this.confirmDialog.ask({ title: msg, danger: true }))) return;
 
     this.loading.set(true);
     this.clearMessages();

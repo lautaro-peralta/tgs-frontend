@@ -327,13 +327,12 @@
   color: #1a1308;
   box-shadow: 0 10px 22px rgba(195, 164, 98, .28);
   cursor: pointer;
-  z-index: 1001;
+  z-index: var(--z-fab);
   /* ↑ más alto que drawer/backdrop cerrados */
   pointer-events: auto;
   /* asegura clickeable */
   transition: transform .12s ease, box-shadow .22s ease;
 }
-
 
 .cart-fab:hover {
   transform: translateY(-1px);
@@ -384,9 +383,11 @@
   width: min(420px, 92vw);
   height: 100dvh;
   transform: translateX(100%);
-  transition: transform .28s ease;
-  z-index: 1200;
-
+  /* Cerrado también debe quedar fuera del orden de tabulación: con sólo
+     translate + pointer-events el teclado seguía entrando al carrito oculto. */
+  visibility: hidden;
+  transition: transform .28s ease, visibility 0s .28s;
+  z-index: var(--z-drawer);
 
   /* cuando está cerrado, que NO capture eventos */
   pointer-events: none;
@@ -406,6 +407,8 @@
 
 .cart-drawer.open {
   transform: translateX(0);
+  visibility: visible;
+  transition: transform .28s ease, visibility 0s 0s;
   pointer-events: auto;
   /* clickeable sólo cuando abre */
 }
@@ -415,7 +418,7 @@
   inset: 0;
   background: rgba(0, 0, 0, .45);
   backdrop-filter: blur(2px);
-  z-index: 1190;
+  z-index: var(--z-drawer-backdrop);
   /* bajo el drawer, sobre el resto */
 }
 
@@ -427,19 +430,6 @@
   margin-bottom: var(--sp-3);
 }
 
-.cart-drawer__list {
-  flex: 1 1 auto;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  scrollbar-gutter: stable;
-}
 
 .cart-drawer__item {
   display: grid;
@@ -955,7 +945,6 @@
   }
 }
 
-
 /* ============================================
    MODAL DE INCOMPATIBILIDAD DE PRODUCTOS
    ============================================ */
@@ -971,7 +960,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: var(--z-modal);
   padding: var(--sp-4);
   animation: fadeIn 0.2s ease-out;
 }

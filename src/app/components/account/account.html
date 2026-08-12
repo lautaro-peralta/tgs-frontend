@@ -58,16 +58,14 @@
             class="photo-edit-btn"
             (click)="photoInput.click()"
             [disabled]="photoUploading()"
-            [attr.title]="'Cambiar foto de perfil'"
-          >
+            [attr.title]="'Cambiar foto de perfil'">
             <span class="material-symbols-outlined">photo_camera</span>
           </button>
-          <input
+          <input class="u-hidden"
             #photoInput
             type="file"
             accept="image/*"
             (change)="uploadPhoto($event)"
-            style="display: none;"
           />
         </div>
       </div>
@@ -94,8 +92,7 @@
             <span
               class="status-badge"
               [class.verified]="me()?.emailVerified"
-              [title]="me()?.emailVerified ? ('account.infoSection.tooltips.emailVerified' | translate) : ('account.infoSection.tooltips.emailNotVerified' | translate)"
-            >
+              [title]="me()?.emailVerified ? ('account.infoSection.tooltips.emailVerified' | translate) : ('account.infoSection.tooltips.emailNotVerified' | translate)">
               <span class="material-symbols-outlined">
                 {{ me()?.emailVerified ? 'check_circle' : 'cancel' }}
               </span>
@@ -113,8 +110,7 @@
               class="info-edit-btn"
               (click)="editingPhone.set(true)"
               *ngIf="person()?.phone"
-              [attr.title]="'Editar teléfono'"
-            >
+              [attr.title]="'Editar teléfono'">
               <span class="material-symbols-outlined">edit</span>
             </button>
           </div>
@@ -130,8 +126,7 @@
               class="info-edit-btn"
               (click)="editingAddress.set(true)"
               *ngIf="person()?.address"
-              [attr.title]="'Editar dirección'"
-            >
+              [attr.title]="'Editar dirección'">
               <span class="material-symbols-outlined">edit</span>
             </button>
           </div>
@@ -215,7 +210,7 @@
                 required
                 autocomplete="name"
                 maxlength="100"
-                placeholder="Juan Pérez"
+                [placeholder]="'account.namePlaceholder' | translate"
                 class="field-input"
               />
             </div>
@@ -260,7 +255,7 @@
                 autocomplete="street-address"
                 required
                 maxlength="200"
-                placeholder="Av. Siempre Viva 123"
+                [placeholder]="'account.addressPlaceholder' | translate"
                 class="field-input"
               />
             </div>
@@ -283,9 +278,9 @@
 <!-- Modales de edición -->
 <!-- Modal de edición de teléfono -->
 <div class="edit-modal-overlay" *ngIf="editingPhone()" (click)="cancelEdit('phone')">
-  <div class="edit-modal" (click)="$event.stopPropagation()">
+  <div class="edit-modal" appDialog [dialogOpen]="editingPhone()" (dialogClose)="cancelEdit('phone')" (click)="$event.stopPropagation()">
     <div class="edit-modal-header">
-      <h3>Editar Teléfono</h3>
+      <h3>{{ 'account.editPhone' | translate }}</h3>
       <button type="button" class="close-btn" (click)="cancelEdit('phone')">
         <span class="material-symbols-outlined">close</span>
       </button>
@@ -302,7 +297,7 @@
       </label>
     </div>
     <div class="edit-modal-footer">
-      <button type="button" class="btn-cancel" (click)="cancelEdit('phone')">Cancelar</button>
+      <button type="button" class="btn-cancel" (click)="cancelEdit('phone')">{{ 'common.cancel' | translate }}</button>
       <button type="button" class="btn-save" (click)="savePhone()" [disabled]="savingEdit()">
         {{ savingEdit() ? 'Guardando...' : 'Guardar' }}
       </button>
@@ -312,9 +307,9 @@
 
 <!-- Modal de edición de dirección -->
 <div class="edit-modal-overlay" *ngIf="editingAddress()" (click)="cancelEdit('address')">
-  <div class="edit-modal" (click)="$event.stopPropagation()">
+  <div class="edit-modal" appDialog [dialogOpen]="editingAddress()" (dialogClose)="cancelEdit('address')" (click)="$event.stopPropagation()">
     <div class="edit-modal-header">
-      <h3>Editar Dirección</h3>
+      <h3>{{ 'account.editAddress' | translate }}</h3>
       <button type="button" class="close-btn" (click)="cancelEdit('address')">
         <span class="material-symbols-outlined">close</span>
       </button>
@@ -331,7 +326,7 @@
       </label>
     </div>
     <div class="edit-modal-footer">
-      <button type="button" class="btn-cancel" (click)="cancelEdit('address')">Cancelar</button>
+      <button type="button" class="btn-cancel" (click)="cancelEdit('address')">{{ 'common.cancel' | translate }}</button>
       <button type="button" class="btn-save" (click)="saveAddress()" [disabled]="savingEdit()">
         {{ savingEdit() ? 'Guardando...' : 'Guardar' }}
       </button>

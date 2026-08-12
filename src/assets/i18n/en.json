@@ -22,7 +22,16 @@
     "faqs": "FAQs",
     "contact": "Contact us",
     "language": "Language",
-    "home": "Home"
+    "home": "Home",
+    "closeMenu": "Close menu",
+    "profileComplete": "{{value}}% complete",
+    "profileTooltip": "Profile {{value}}% complete",
+    "verifyEmailWarning": "Verify your email",
+    "verifyNow": "Verify now",
+    "rolesLabel": "Roles:",
+    "ariaMain": "Main",
+    "ariaPages": "Pages",
+    "ariaUser": "User"
   },
   "store": {
     "title": "Store",
@@ -60,7 +69,11 @@
       "requestVerification": "Request verification",
       "completeProfile100": "Complete your profile to 100% to purchase.",
       "completeProfile": "Complete profile"
-    }
+    },
+    "searching": "🔍 Searching:",
+    "unavailableBadge": "⚠️ Unavailable",
+    "clearSearch": "Clear search",
+    "productList": "Product list"
   },
   "myPurchases": {
     "title": "My Purchases",
@@ -144,7 +157,11 @@
         "emailNotVerified": "Email not verified"
       }
     },
-    "readonlyNote": "ℹ️ Personal data cannot be modified once completed."
+    "readonlyNote": "ℹ️ Personal data cannot be modified once completed.",
+    "editPhone": "Edit phone",
+    "editAddress": "Edit address",
+    "namePlaceholder": "Jane Doe",
+    "addressPlaceholder": "742 Evergreen Terrace"
   },
   "product": {
     "title": "Products",
@@ -220,7 +237,12 @@
       "yes": "Yes",
       "no": "No"
     },
-    "imageFile": "Image (file)"
+    "imageFile": "Image (file)",
+    "confirmDelete": "Are you sure you want to delete this product?",
+    "distributors": "Distributor(s)",
+    "imageUrlPlaceholder": "https://…",
+    "councilLabel": "Advice:",
+    "firstProductHint": "Create your first product using “New product” above."
   },
   "auth": {
     "user": "user",
@@ -418,7 +440,10 @@
     "password": {
       "show": "Show password",
       "hide": "Hide password"
-    }
+    },
+    "ariaAuth": "Authentication",
+    "ariaAuthMobile": "Authentication options",
+    "ariaBranding": "Branding"
   },
   "common": {
     "close": "Close",
@@ -438,7 +463,14 @@
     "clear": "Clear",
     "applyFiltersTitle": "Apply filters",
     "clearFiltersTitle": "Clear filters",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "confirm": "Confirm",
+    "closeNotification": "Dismiss notification",
+    "required": "Required field",
+    "errorLabel": "Error:",
+    "sending": "Sending",
+    "sendingEllipsis": "⏳ Sending…",
+    "searchAction": "🔍 Search"
   },
   "clients": {
     "title": "Clients",
@@ -461,9 +493,6 @@
         "yes": "With purchases",
         "no": "Without purchases"
       },
-      "purchases_all": "All",
-      "purchases_yes": "With purchases",
-      "purchases_no": "No purchases",
       "purchaseFilterLabel": "Filter by purchases"
     },
     "table": {
@@ -559,7 +588,8 @@
       "total": "Total partners:",
       "withDecisions": "With decisions:",
       "filtered": "Filtered:"
-    }
+    },
+    "confirmMigration": "Run the role migration? The PARTNER role will be assigned to every user linked to a partner."
   },
   "sales": {
     "title": "Sales",
@@ -648,7 +678,11 @@
       "revenueLabel": "Total revenue:",
       "filteredLabel": "Filtered:"
     },
-    "empty": "No sales recorded"
+    "empty": "No sales recorded",
+    "lineItems": "📦 Items in this sale",
+    "quantity": "Quantity:",
+    "noClients": "No clients available",
+    "noProducts": "No products available"
   },
   "zones": {
     "title": "Zones",
@@ -798,7 +832,8 @@
     },
     "successCreate": "Authority created successfully",
     "successUpdate": "Authority updated successfully",
-    "successDelete": "Authority deleted successfully"
+    "successDelete": "Authority deleted successfully",
+    "range": "Rank"
   },
   "authority": {
     "fields": {
@@ -890,10 +925,12 @@
       "amount": "Total amount",
       "paid": "Paid",
       "pending": "Pending",
-      "pendingAmount": "Pending amount",
-      "filtered": "Filtered"
+      "pendingAmount": "Outstanding amount",
+      "filtered": "Filtered",
+      "totalAmount": "Total amount"
     },
-    "empty": "No bribes recorded"
+    "empty": "No bribes recorded",
+    "paid": "Paid"
   },
   "decisions": {
     "title": "Strategic decisions",
@@ -934,7 +971,10 @@
       "active": "Active:",
       "filtered": "Filtered:"
     },
-    "noResults": "No results for the applied filter"
+    "noResults": "No results for the applied filter",
+    "confirmDelete": "Delete this decision?",
+    "availableTopics": "📋 Available topics",
+    "searchTopic": "🔍 Search topics…"
   },
   "topics": {
     "title": "Topics",
@@ -1203,7 +1243,10 @@
     },
     "messages": {
       "errorSubmit": "Could not submit request"
-    }
+    },
+    "incompatible": "Incompatible roles",
+    "theRole": "The role",
+    "cannotCombine": "can't be combined with:"
   },
   "shelbyCouncil": {
     "title": "Shelby Council",
@@ -1244,7 +1287,17 @@
       "uniquePartners": "Unique partners",
       "uniqueDecisions": "Unique decisions",
       "filtered": "Filtered"
-    }
+    },
+    "pickPartner": "— Pick a partner —",
+    "noPartners": "No partners available. Create one first.",
+    "partnerLocked": "The partner can't be changed while editing",
+    "pickDecision": "— Pick a decision —",
+    "noDecisions": "No decisions available. Create one first.",
+    "decisionLocked": "The decision can't be changed while editing",
+    "roleHint": "Optional: describe the role or responsibility on this council",
+    "notesHint": "Optional: add any relevant note or comment",
+    "rolePlaceholder": "Financial advisor, strategic lead, etc.",
+    "notesPlaceholder": "Extra information about this council membership…"
   },
   "monthlyReview": {
     "title": "Monthly Reviews",
@@ -1352,19 +1405,13 @@
         "dateRequired": "Date required"
       }
     },
-    "buttons": {
-      "new": "+ New",
-      "close": "Close",
-      "create": "Create",
-      "save": "Save",
-      "clear": "Clear",
-      "cancel": "Cancel"
-    },
     "errorCreate": "Could not create review",
     "errorSave": "Could not save review",
-    "errorLoad": "Could not load reviews",
     "errorDelete": "Could not delete review",
-    "confirmDelete": "Delete this review?"
+    "confirmDelete": "Delete this review?",
+    "sampleData": "📋 Sample data",
+    "sampleDataAlt": "🧪 Sample data",
+    "placeholder": "Reserved space"
   },
   "clandestineAgreement": {
     "title": "Clandestine Agreements",
@@ -1411,14 +1458,13 @@
       "uniqueAdmins": "Unique admins",
       "uniqueAuthorities": "Unique authorities",
       "filtered": "Filtered"
-    }
-  },
-  "buttons": {
-    "new": "+ New",
-    "create": "Create",
-    "save": "Save",
-    "clear": "Clear",
-    "cancel": "Cancel"
+    },
+    "pickCouncil": "— Pick a council —",
+    "noCouncils": "No councils available. Create one first.",
+    "pickAdmin": "— Pick an administrator —",
+    "noAdmins": "No administrators available. Create one first.",
+    "pickAuthority": "— Pick an authority —",
+    "noAuthorities": "No authorities available. Create one first."
   },
   "inbox": {
     "title": "Inbox",
@@ -1967,7 +2013,8 @@
         "value": "thegarrisonsystem@gmail.com",
         "hint": "Direct email contact"
       }
-    }
+    },
+    "mapsIconAlt": "Google Maps icon"
   },
   "faqs": {
     "title": "Frequently Asked Questions",
@@ -1988,34 +2035,6 @@
       "systemIntegration": {
         "q": "Does it integrate with other systems?",
         "a": "We offer API and importers to connect your current stack."
-      }
-    },
-    "footer": {
-      "tagline": "The platform that takes your business to the next level",
-      "rights": "All rights reserved",
-      "sections": {
-        "company": "Company",
-        "legal": "Legal",
-        "resources": "Resources"
-      },
-      "links": {
-        "about": "About us",
-        "contact": "Contact",
-        "faqs": "FAQs",
-        "terms": "Terms and conditions",
-        "privacy": "Privacy policy",
-        "cookies": "Cookie policy",
-        "docs": "Documentation",
-        "api": "API",
-        "support": "Support"
-      },
-      "social": {
-        "github": "Visit GitHub",
-        "email": "Send email"
-      },
-      "university": {
-        "prefix": "Academic project by",
-        "name": "UTN Rosario"
       }
     }
   },
@@ -2301,6 +2320,63 @@
     "social": {
       "github": "Follow us on GitHub",
       "email": "Send us an email"
-    }
+    },
+    "ariaSocial": "Social media links"
+  },
+  "login": {
+    "title": "Log in",
+    "subtitle": "Enter your credentials to continue",
+    "emailUnverified": "Email not verified",
+    "mustVerify": "You need to verify your email before logging in.",
+    "verificationSent": "Verification email sent",
+    "checkInbox": "Check your inbox and click the link to verify your account.",
+    "noEmail": "Didn't get the email?",
+    "resendHint": "Use the button below to send it again.",
+    "resendAgain": "📧 Send again",
+    "sendVerification": "📧 Send verification email",
+    "waitingVerification": "Waiting for verification…",
+    "resendEmail": "📧 Resend email",
+    "emailOrUser": "Email or username",
+    "password": "Password",
+    "noAccount": "Don't have an account?",
+    "registerHere": "Sign up here",
+    "emailPlaceholder": "you@email.com or your_username",
+    "clickLinkHint": "Click the link we sent to your email. This page will refresh on its own once your account is verified."
+  },
+  "register": {
+    "title": "Create account",
+    "waitingVerification": "Waiting for email verification…",
+    "created": "Account created",
+    "verifyToContinue": "Verify your email to continue.",
+    "email": "Email",
+    "usernameOptional": "Username (optional)",
+    "emailSentHint": "We sent an email to your address. Click the link to verify your account and get signed in automatically."
+  },
+  "emailVerification": {
+    "verifying": "Verifying your email…",
+    "pleaseWait": "Hold on while we process your request.",
+    "done": "Email verified",
+    "redirecting": "Taking you home in a few seconds…",
+    "goHome": "Go home now",
+    "error": "Verification failed",
+    "resend": "Resend verification email",
+    "backToLogin": "Back to log in",
+    "title": "Email verification"
+  },
+  "verification": {
+    "lastAttempt": "Heads up: this is your last attempt",
+    "checkDni": "Check that your ID number matches your document",
+    "checkName": "Check that your full name is spelled correctly",
+    "checkContact": "Confirm your address and phone are valid",
+    "attemptsLeft": "Attempts left:",
+    "limitReached": "You've reached the attempt limit",
+    "lastWarning": "If your request is rejected again you won't be able to ask for verification anymore. Please double-check your details before sending it.",
+    "exhausted": "You've used up every verification attempt. If you think this is a mistake, get in touch with an administrator."
+  },
+  "users": {
+    "noneVerified": "No verified users available",
+    "mustBeVerified": "Users need an admin-verified account and a 100% complete profile to be selectable.",
+    "verifiedBadge": "✓ Verified",
+    "profileFull": "Profile 100%"
   }
 }

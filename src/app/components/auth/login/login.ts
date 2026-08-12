@@ -9,11 +9,12 @@ import { AuthService } from '../../../services/auth/auth.js';
 import { EmailVerificationService } from '../../../features/inbox/services/email.verification.js';
 import { EmailVerificationSyncService } from '../../../services/email-verification-sync.service.js';
 import { logger } from '../../../core/logger';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TranslateModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })

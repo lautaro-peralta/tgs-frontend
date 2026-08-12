@@ -6,18 +6,24 @@ import { ProductDTO, CreateProductDTO, UpdateProductDTO } from '../../models/pro
 import { ProductImageService } from '../../services/product-image/product-image';
 import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-product',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './product.html',
   styleUrls: ['./product.scss']
 })
 export class ProductComponent implements OnInit {
   // --- Inyección ---
+  private confirmDialog = inject(ConfirmService);
+  private t = inject(TranslateService);
   private fb  = inject(FormBuilder);
   private srv = inject(ProductService);
   private imgSvc = inject(ProductImageService);
@@ -467,8 +473,8 @@ export class ProductComponent implements OnInit {
   }
 
   // --- Borrado ---
-  delete(id: number) {
-    if (!confirm('¿Estás seguro de eliminar este producto?')) return;
+  async delete(id: number) {
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('product.confirmDelete'), danger: true }))) return;
     this.loading.set(true);
     this.error.set(null);
     this.success.set(null);

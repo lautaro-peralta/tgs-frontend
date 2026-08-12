@@ -28,7 +28,7 @@
       </strong>
       <p class="toast-message">{{ successKey | translate }}</p>
     </div>
-    <button class="toast-close" (click)="successKey = null" aria-label="Cerrar notificación">×</button>
+    <button class="toast-close" (click)="successKey = null" [attr.aria-label]="'common.closeNotification' | translate">×</button>
   </div>
 
   <div *ngIf="loading" class="loading">{{ 'userVerification.adminInbox.loading' | translate }}</div>

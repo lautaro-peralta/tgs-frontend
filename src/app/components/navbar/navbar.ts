@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -24,6 +25,9 @@ import { NotificationService } from '../../features/inbox/services/notification.
 import { LoggerService } from '../../services/logger/logger';
 
 interface MenuItem { label: string; path: string; }
+
+/** Identificadores de los menús desplegables de la navbar. */
+type DropdownId = 'lang' | 'mgmt' | 'user';
 
 @Component({
   selector: 'app-navbar',
@@ -66,6 +70,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   private transition = inject(AuthTransitionService);
   private notificationService = inject(NotificationService);
   private logger = inject(LoggerService);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   // Signal para el contador de notificaciones no leídas
   private unreadNotifications = signal<number>(0);
@@ -82,8 +87,16 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   // 📱 Menú móvil
   mobileMenuOpen = signal<boolean>(false);
 
-  // 🌐 Dropdown de idioma
-  langDropdownOpen = signal<boolean>(false);
+  /**
+   * Desplegable abierto por click/teclado (null = ninguno).
+   * El hover lo sigue manejando el CSS; esto existe para que los menús también
+   * se puedan abrir con click y con teclado, y para poder reflejar el estado
+   * real en aria-expanded.
+   */
+  readonly openDropdown = signal<DropdownId | null>(null);
+
+  // 🌐 Dropdown de idioma (mantiene la API previa sobre el nuevo estado)
+  langDropdownOpen = computed(() => this.openDropdown() === 'lang');
 
   // ✅ Señales reactivas del AuthService
   readonly isLoggedIn = computed(() => this.auth.isAuthenticated());
@@ -109,22 +122,64 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   lang(): 'en' | 'es' { return (this.i18n.current as 'en' | 'es') || 'en'; }
   setLang(l: 'en' | 'es') {
     this.i18n.use(l);
-    this.langDropdownOpen.set(false); // Cerrar dropdown después de seleccionar
+    this.closeDropdowns();
+    // Las etiquetas cambian de ancho al traducirse: hay que recolocar la
+    // píldora de vidrio o queda desalineada respecto del ítem activo.
+    setTimeout(() => this.updateIndicator(), 0);
   }
   flagClass(): string { return this.lang() === 'es' ? 'flag flag-es' : 'flag flag-en'; }
 
-  // Métodos para controlar el dropdown de idioma
-  toggleLangDropdown() {
-    this.langDropdownOpen.update(v => !v);
+  /** ¿Está abierto este desplegable? (para aria-expanded y la clase .open) */
+  isDropdownOpen(id: DropdownId): boolean {
+    return this.openDropdown() === id;
   }
 
-  openLangDropdown() {
-    this.langDropdownOpen.set(true);
+  /** Abre el desplegable pedido y cierra cualquier otro. */
+  toggleDropdown(id: DropdownId): void {
+    this.openDropdown.update(cur => (cur === id ? null : id));
   }
 
-  closeLangDropdown() {
-    this.langDropdownOpen.set(false);
+  openDropdownById(id: DropdownId): void {
+    this.openDropdown.set(id);
   }
+
+  closeDropdowns(): void {
+    this.openDropdown.set(null);
+  }
+
+  // Alias retrocompatibles del selector de idioma
+  toggleLangDropdown() { this.toggleDropdown('lang'); }
+  openLangDropdown() { this.openDropdownById('lang'); }
+  closeLangDropdown() { if (this.isDropdownOpen('lang')) this.closeDropdowns(); }
+
+  /** Escape cierra menús y el drawer móvil. */
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeDropdowns();
+    this.closeMobileMenu();
+  }
+
+  /** Un click fuera de la navbar cierra los desplegables abiertos por click. */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.openDropdown() === null) return;
+    const target = event.target as HTMLElement | null;
+    if (target && this.host.nativeElement.contains(target)) return;
+    this.closeDropdowns();
+  }
+
+  /**
+   * La píldora de vidrio se posiciona en px a partir de getBoundingClientRect,
+   * así que cualquier reflow (resize, zoom, cambio de orientación) la deja
+   * apuntando al lugar equivocado si no se recalcula.
+   */
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (this.resizeRaf) cancelAnimationFrame(this.resizeRaf);
+    this.resizeRaf = requestAnimationFrame(() => this.updateIndicator());
+  }
+
+  private resizeRaf?: number;
 
   // ✅ Items de gestión completos (para ADMIN, PARTNER, DISTRIBUTOR)
   readonly gestionItems: MenuItem[] = [
@@ -172,6 +227,8 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
         setTimeout(() => this.updateIndicator(), 0);
         // 📱 Cerrar menú móvil al navegar
         this.closeMobileMenu();
+        // Y cualquier desplegable que hubiera quedado abierto por click
+        this.closeDropdowns();
         // Actualizar contador de notificaciones al navegar
         if (this.isAuthenticated()) {
           this.loadUnreadCount();
@@ -378,15 +435,31 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
       this.loadUnreadCount();
     }
 
-    // Actualizar cada 30 segundos
+    // Actualizar cada 30 segundos, pero sólo con la pestaña visible: antes
+    // seguía consultando en todas las pestañas olvidadas de fondo, y cada vez
+    // que detectaba una notificación nueva hacía una segunda petición para
+    // traer la lista completa.
     this.pollingInterval = window.setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
       if (this.isAuthenticated()) {
         this.loadUnreadCount();
       } else {
         this.unreadNotifications.set(0);
       }
     }, 30000);
+
+    // Al volver a la pestaña, refrescar en el acto en vez de esperar al
+    // siguiente ciclo: si estuvo oculta un rato, el contador está viejo.
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', this.onVisibilityChange);
+    }
   }
+
+  private readonly onVisibilityChange = (): void => {
+    if (document.visibilityState === 'visible' && this.isAuthenticated()) {
+      this.loadUnreadCount();
+    }
+  };
 
   trackByPath(_i: number, it: MenuItem) { return it.path; }
 
@@ -493,11 +566,29 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Bloquea el scroll del documento mientras el drawer móvil está abierto.
+   * Sin esto la página de fondo sigue desplazándose bajo el menú y al cerrarlo
+   * el usuario aparece en otra parte del listado.
+   */
+  private readonly lockScrollOnMobileMenu = effect(() => {
+    const open = this.mobileMenuOpen();
+    if (typeof document === 'undefined') return;
+    document.body.classList.toggle('has-drawer-open', open);
+  });
+
+  /**
    * Limpia el polling al destruir el componente
    */
   ngOnDestroy(): void {
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
+    }
+    if (this.resizeRaf) {
+      cancelAnimationFrame(this.resizeRaf);
+    }
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('has-drawer-open');
+      document.removeEventListener('visibilitychange', this.onVisibilityChange);
     }
   }
 }

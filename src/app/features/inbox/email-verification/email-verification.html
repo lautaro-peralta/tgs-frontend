@@ -6,8 +6,8 @@
          ======================================== -->
     <div *ngIf="state() === 'verifying'" class="state-container verifying">
       <div class="spinner"></div>
-      <h2>Verificando tu email...</h2>
-      <p>Por favor espera mientras procesamos tu solicitud.</p>
+      <h2>{{ 'emailVerification.verifying' | translate }}</h2>
+      <p>{{ 'emailVerification.pleaseWait' | translate }}</p>
     </div>
 
     <!-- ========================================
@@ -15,12 +15,12 @@
          ======================================== -->
     <div *ngIf="state() === 'success'" class="state-container success">
       <div class="icon success-icon">✓</div>
-      <h2>¡Email verificado!</h2>
+      <h2>{{ 'emailVerification.done' | translate }}</h2>
       <p>{{ message() }}</p>
-      <p class="redirect-text">Serás redirigido al inicio en unos segundos...</p>
+      <p class="redirect-text">{{ 'emailVerification.redirecting' | translate }}</p>
       <div class="actions">
         <button (click)="goToHome()" class="btn-primary" type="button">
-          Ir al inicio ahora
+          {{ 'emailVerification.goHome' | translate }}
         </button>
       </div>
     </div>
@@ -30,7 +30,7 @@
          ======================================== -->
     <div *ngIf="state() === 'error'" class="state-container error">
       <div class="icon error-icon">✗</div>
-      <h2>Error de verificación</h2>
+      <h2>{{ 'emailVerification.error' | translate }}</h2>
       <p class="error-message">{{ message() }}</p>
 
       <div class="actions">
@@ -38,10 +38,10 @@
         <button *ngIf="canResend()" (click)="resend()" [disabled]="resending() || resendCooldown() > 0"
           class="btn-secondary" type="button">
           <span *ngIf="!resending() && resendCooldown() === 0">
-            Reenviar email de verificación
+            {{ 'emailVerification.resend' | translate }}
           </span>
           <span *ngIf="resending()" class="loading-dots">
-            Enviando<span>.</span><span>.</span><span>.</span>
+            {{ 'common.sending' | translate }}<span>.</span><span>.</span><span>.</span>
           </span>
           <span *ngIf="resendCooldown() > 0 && !resending()">
             Espera {{ getCooldownText() }}
@@ -55,7 +55,7 @@
 
         <!-- Botón de login -->
         <button (click)="goToLogin()" class="btn-link" type="button">
-          Volver al login
+          {{ 'emailVerification.backToLogin' | translate }}
         </button>
       </div>
     </div>
@@ -65,11 +65,11 @@
          ======================================== -->
     <div *ngIf="state() === 'idle'" class="state-container idle">
       <div class="icon idle-icon">📧</div>
-      <h2>Verificación de email</h2>
+      <h2>{{ 'emailVerification.title' | translate }}</h2>
       <p>{{ message() }}</p>
       <div class="actions">
         <button (click)="goToLogin()" class="btn-link" type="button">
-          Volver al login
+          {{ 'emailVerification.backToLogin' | translate }}
         </button>
       </div>
     </div>

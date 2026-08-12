@@ -22,7 +22,7 @@
 
     <!-- Filtros -->
     <div class="filters-section">
-      <label class="label" style="flex: 1;">
+      <label class="label u-grow">
         <span>{{ 'myPurchases.filters.search' | translate }}</span>
         <input
           type="text"
@@ -34,7 +34,7 @@
         />
       </label>
 
-      <div style="display: flex; gap: var(--sp-2); align-items: flex-end;">
+      <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="refresh()">
           🔍 {{ 'common.search' | translate }}
         </button>

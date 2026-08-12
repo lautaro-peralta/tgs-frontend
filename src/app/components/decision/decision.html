@@ -10,14 +10,12 @@
     </div>
 
     <!-- ✅ Success message -->
-    <div *ngIf="success()"
-      style="background: rgba(76, 175, 80, 0.15); color: #4caf50; border: 1px solid rgba(76, 175, 80, 0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-      <span style="font-size: 20px;">✓</span>
+    <div class="alert-inline alert-inline--success" *ngIf="success()">
+      <span class="alert-inline__icon">✓</span>
       <strong>{{ success() }}</strong>
     </div>
 
-    <div *ngIf="!loading() && decisions().length > 0"
-      style="display: flex; gap: var(--sp-4); padding: var(--sp-3); background: rgba(195, 164, 98, 0.08); border-radius: 8px; border: 1px solid rgba(195, 164, 98, 0.2); margin-bottom: var(--sp-3);">
+    <div class="stats-bar" *ngIf="!loading() && decisions().length > 0">
       <span class="muted">
         <strong>{{ 'decisions.stats.total' | translate }}</strong> {{ totalDecisions() }}
       </span>
@@ -30,20 +28,20 @@
     </div>
 
     <!-- Filtros -->
-    <div class="filters" style="align-items: flex-end;">
-      <label class="label" style="flex: 1;">
+    <div class="filters">
+      <label class="label u-grow">
         <span>{{ 'decisions.filters.search' | translate }}</span>
         <input class="input" [placeholder]="'decisions.filters.searchPh' | translate" [ngModel]="fTextInput()"
           (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
-      <label class="label" style="min-width: 200px;">
+      <label class="label u-minw-200">
         <span>{{ 'decisions.filters.topic' | translate }}</span>
         <input class="input" [placeholder]="'decisions.filters.topicPh' | translate" [ngModel]="topicFilterInput()"
           (ngModelChange)="topicFilterInput.set($event)" (keyup.enter)="applyFilters()" />
       </label>
 
-      <div style="display: flex; gap: var(--sp-2);">
+      <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
           🔍 {{ 'common.search' | translate }}
         </button>
@@ -56,12 +54,12 @@
     <div class="table-wrap">
       <table class="table" *ngIf="filteredDecisions().length; else emptyState">
         <colgroup>
-          <col style="width:90px" />
-          <col style="width:220px" />
+          <col class="u-w-90" />
+          <col class="u-w-220" />
           <col />
-          <col style="width:140px" />
-          <col style="width:140px" />
-          <col style="width:100px" *ngIf="canEdit() || canDelete()" />
+          <col class="u-w-140" />
+          <col class="u-w-140" />
+          <col class="u-w-100" *ngIf="canEdit() || canDelete()" />
         </colgroup>
 
         <thead>
@@ -115,15 +113,15 @@
 </section>
 
 <div class="decision-overlay" [class.is-open]="isFormOpen" [attr.aria-hidden]="!isFormOpen">
-  <button type="button" class="decision-overlay__backdrop" (click)="toggleForm()" aria-label="Cerrar"></button>
+  <button type="button" class="decision-overlay__backdrop" (click)="toggleForm()" [attr.aria-label]="'common.close' | translate"></button>
 
-  <div class="decision-overlay__panel glass-dark card" (click)="$event.stopPropagation()">
+  <div class="decision-overlay__panel glass-dark card" appDialog [dialogOpen]="isFormOpen" (dialogClose)="toggleForm()" (click)="$event.stopPropagation()">
     <div class="header compact">
       <h2 class="title">
         {{ isEdit() ? ('decisions.form.editTitle' | translate:{ id: form.controls.id.value })
         : ('decisions.form.newTitle' | translate) }}
       </h2>
-      <button type="button" class="btn-close" (click)="toggleForm()" aria-label="Cerrar">&times;</button>
+      <button type="button" class="btn-close" (click)="toggleForm()" [attr.aria-label]="'common.close' | translate">&times;</button>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
@@ -136,7 +134,7 @@
         <input
           class="input topic-search"
           type="text"
-          placeholder="🔍 Buscar temática..."
+          [placeholder]="'decisions.searchTopic' | translate"
           [ngModel]="topicSearch()"
           (ngModelChange)="topicSearch.set($event)"
           [ngModelOptions]="{standalone: true}"
@@ -146,7 +144,7 @@
         <div class="topics-toggle" (click)="toggleTopics()" [class.open]="topicsOpen()">
           <div class="topics-toggle-content">
             <span class="topics-toggle-icon">{{ topicsOpen() ? '▼' : '▶' }}</span>
-            <span class="topics-toggle-title">📋 Temáticas disponibles</span>
+            <span class="topics-toggle-title">{{ 'decisions.availableTopics' | translate }}</span>
             <span class="topics-toggle-count">({{ filteredTopics().length }})</span>
           </div>
         </div>
@@ -157,8 +155,7 @@
             *ngFor="let t of filteredTopics()"
             class="topic-card"
             [class.selected]="form.controls.topicId.value === t.id"
-            (click)="selectTopic(t.id)"
-          >
+            (click)="selectTopic(t.id)">
             <div class="topic-card-header">
               <span class="topic-id">#{{ t.id }}</span>
               <span class="topic-check" *ngIf="form.controls.topicId.value === t.id">✓</span>
@@ -177,7 +174,7 @@
         <input class="input" formControlName="description" [placeholder]="'decisions.form.descriptionPh' | translate" />
       </label>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); grid-column: 1 / -1;">
+      <div class="form-full-split">
         <label class="label">
           <span>{{ 'decisions.form.start' | translate }}</span>
           <input class="input" type="date" formControlName="startDate" [min]="today" />

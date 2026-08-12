@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
-import { ChartConfiguration } from 'chart.js';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 
@@ -23,8 +22,9 @@ import { PartnerDTO } from '../../models/partner/partner.model';
 import { SaleDTO } from '../../models/sale/sale.model';
 
 // ✅ IMPORTAR COMPONENTE DE CHART
-import { ChartComponent } from '../chart/chart';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 @Component({
   selector: 'app-monthly-review',
@@ -34,13 +34,12 @@ import { logger } from '../../core/logger';
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    ChartComponent,
-    NgxEchartsModule
-  ],
+    NgxEchartsModule, DialogDirective],
   templateUrl: './monthly-review.html',
   styleUrls: ['./monthly-review.scss'],
 })
 export class MonthlyReviewComponent implements OnInit {
+  private confirmDialog = inject(ConfirmService);
   private fb  = inject(FormBuilder);
   private srv = inject(MonthlyReviewService);
   private partnerSrv = inject(PartnerService);
@@ -70,9 +69,8 @@ export class MonthlyReviewComponent implements OnInit {
   fStatusApplied = signal<ReviewStatus | null>(null);
 
   // ✅ DATOS PARA GRÁFICOS
-  statusChartData = signal<ChartConfiguration['data'] | null>(null);
-  reviewsTrendChartData = signal<ChartConfiguration['data'] | null>(null);
-  productSalesChartData = signal<ChartConfiguration['data'] | null>(null);
+  statusChartOptions = signal<EChartsOption | null>(null);
+  productSalesChartOptions = signal<EChartsOption | null>(null);
   decisionsImpactChartOptions = signal<EChartsOption | null>(null);
   salesPredictionChartOptions = signal<EChartsOption | null>(null);
 
@@ -251,9 +249,9 @@ export class MonthlyReviewComponent implements OnInit {
     }
   }
 
-  delete(it: MonthlyReviewDTO): void {
+  async delete(it: MonthlyReviewDTO): Promise<void> {
     const msg = this.tr.instant('monthlyReview.confirmDelete') || '¿Eliminar revisión?';
-    if (!confirm(msg)) return;
+    if (!(await this.confirmDialog.ask({ title: msg, danger: true }))) return;
 
     this.loading.set(true);
     this.srv.delete(it.id).subscribe({
@@ -379,165 +377,118 @@ export class MonthlyReviewComponent implements OnInit {
     logger.debug('📊 Generando gráficos MOCK para demostración');
     
     // Mock: Distribución por estado
-    this.statusChartData.set({
-      labels: ['Pendiente', 'En Revisión', 'Completado', 'Aprobado', 'Rechazado'],
-      datasets: [{
-        label: 'Revisiones',
-        data: [12, 8, 15, 22, 5],
-        backgroundColor: [
-          'rgba(245, 158, 11, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(107, 114, 128, 0.8)',
-          'rgba(74, 141, 114, 0.8)',
-          'rgba(169, 69, 69, 0.8)'
-        ],
-        borderColor: [
-          'rgba(245, 158, 11, 1)',
-          'rgba(59, 130, 246, 1)',
-          'rgba(107, 114, 128, 1)',
-          'rgba(74, 141, 114, 1)',
-          'rgba(169, 69, 69, 1)'
-        ],
-        borderWidth: 2,
-        hoverOffset: 8
-      }]
-    });
-
-    // Mock: Tendencia por mes
-    this.reviewsTrendChartData.set({
-      labels: ['Enero 2025', 'Febrero 2025', 'Marzo 2025', 'Abril 2025', 'Mayo 2025', 'Junio 2025'],
-      datasets: [{
-        label: 'Revisiones por Mes',
-        data: [8, 12, 10, 15, 14, 18],
-        backgroundColor: 'rgba(195, 164, 98, 0.2)',
-        borderColor: 'rgba(195, 164, 98, 1)',
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: 'rgba(195, 164, 98, 1)',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7
-      }]
-    });
+    this.statusChartOptions.set(
+      this.buildStatusChart([12, 8, 15, 22, 5])
+    );
 
     // Mock: Productos top
-    this.productSalesChartData.set({
-      labels: ['Antiparras', 'Botella', 'Vaso', 'Papel', 'Teclado', 'Mouse', 'Monitor', 'Teclado RGB'],
-      datasets: [{
-        label: 'Monto de Ventas ($)',
-        data: [160000, 60000, 40000, 5000, 3000, 25000, 85000, 42000],
-        backgroundColor: 'rgba(195, 164, 98, 0.8)',
-        borderColor: 'rgba(195, 164, 98, 1)',
-        borderWidth: 2,
-        borderRadius: 8
-      }]
-    });
+    this.productSalesChartOptions.set(
+      this.buildProductSalesChart(
+        ['Antiparras', 'Botella', 'Vaso', 'Papel', 'Teclado', 'Mouse', 'Monitor', 'Teclado RGB'],
+        [160000, 60000, 40000, 5000, 3000, 25000, 85000, 42000]
+      )
+    );
   }
 
   // ✅ GENERAR DATOS REALES PARA GRÁFICOS
   private updateCharts(): void {
     this.updateStatusChart();
-    this.updateReviewsTrendChart();
     this.updateProductSalesChart();
   }
 
   private updateStatusChart(): void {
-    const statusData = this.reviewsByStatus();
-    
-    this.statusChartData.set({
-      labels: ['Pendiente', 'En Revisión', 'Completado', 'Aprobado', 'Rechazado'],
-      datasets: [{
-        label: 'Revisiones',
-        data: [
-          statusData.PENDING,
-          statusData.IN_REVIEW,
-          statusData.COMPLETED,
-          statusData.APPROVED,
-          statusData.REJECTED
-        ],
-        backgroundColor: [
-          'rgba(245, 158, 11, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(107, 114, 128, 0.8)',
-          'rgba(74, 141, 114, 0.8)',
-          'rgba(169, 69, 69, 0.8)'
-        ],
-        borderColor: [
-          'rgba(245, 158, 11, 1)',
-          'rgba(59, 130, 246, 1)',
-          'rgba(107, 114, 128, 1)',
-          'rgba(74, 141, 114, 1)',
-          'rgba(169, 69, 69, 1)'
-        ],
-        borderWidth: 2,
-        hoverOffset: 8
-      }]
-    });
+    const d = this.reviewsByStatus();
+    this.statusChartOptions.set(
+      this.buildStatusChart([d.PENDING, d.IN_REVIEW, d.COMPLETED, d.APPROVED, d.REJECTED])
+    );
   }
 
-  private updateReviewsTrendChart(): void {
-    const filtered = this.filtered();
-    
-    const byMonth = new Map<string, number>();
-    filtered.forEach(review => {
-      const key = `${review.year}-${String(review.month).padStart(2, '0')}`;
-      byMonth.set(key, (byMonth.get(key) || 0) + 1);
-    });
-
-    const sorted = Array.from(byMonth.entries()).sort((a, b) => a[0].localeCompare(b[0]));
-
-    this.reviewsTrendChartData.set({
-      labels: sorted.map(([key]) => {
-        const [year, month] = key.split('-');
-        return `${this.getMonthName(parseInt(month))} ${year}`;
-      }),
-      datasets: [{
-        label: 'Revisiones por Mes',
-        data: sorted.map(([, count]) => count),
-        backgroundColor: 'rgba(195, 164, 98, 0.2)',
-        borderColor: 'rgba(195, 164, 98, 1)',
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: 'rgba(195, 164, 98, 1)',
-        pointBorderColor: '#fff',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7
-      }]
-    });
-  }
 
   private updateProductSalesChart(): void {
     const stats = this.statistics();
-    
-    // ✅ Verificar si hay groupedData y si tiene elementos
+
     if (!stats || !stats.groupedData || stats.groupedData.length === 0) {
-      this.productSalesChartData.set(null);
+      this.productSalesChartOptions.set(null);
       return;
     }
 
-    // Tomar top 10 productos y ordenar por totalAmount
     const topProducts = [...stats.groupedData]
       .sort((a: any, b: any) => (b.totalAmount || 0) - (a.totalAmount || 0))
       .slice(0, 10);
 
-    this.productSalesChartData.set({
-      labels: topProducts.map((p: any) => {
-        // Prioridad: productName > nombre del producto > ID
-        return p.productName || p.name || `Producto ${p.productId || p.id}`;
-      }),
-      datasets: [{
-        label: 'Monto de Ventas ($)',
-        data: topProducts.map((p: any) => p.totalAmount || 0),
-        backgroundColor: 'rgba(195, 164, 98, 0.8)',
-        borderColor: 'rgba(195, 164, 98, 1)',
-        borderWidth: 2,
-        borderRadius: 8
-      }]
-    });
+    this.productSalesChartOptions.set(
+      this.buildProductSalesChart(
+        topProducts.map((p: any) => p.productName || p.name || `Producto ${p.productId || p.id}`),
+        topProducts.map((p: any) => p.totalAmount || 0)
+      )
+    );
+  }
+
+  // ── Constructores de opciones ECharts ────────────────────────────────────
+  // Antes estos dos gráficos usaban Chart.js, que entraba entero al bundle
+  // (Chart.register(...registerables)) para dibujar un anillo y unas barras.
+
+  /** Anillo con el reparto de revisiones por estado. */
+  private buildStatusChart(valores: number[]): EChartsOption {
+    const estados = ['Pendiente', 'En Revisión', 'Completado', 'Aprobado', 'Rechazado'];
+    const colores = ['#f59e0b', '#3b82f6', '#6b7280', '#4a8d72', '#a94545'];
+
+    return {
+      tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+      legend: {
+        bottom: 0,
+        textStyle: { color: '#d8cebc' },
+        icon: 'circle',
+      },
+      series: [{
+        name: 'Revisiones',
+        type: 'pie',
+        radius: ['55%', '80%'],
+        center: ['50%', '45%'],
+        avoidLabelOverlap: true,
+        itemStyle: { borderColor: 'rgba(20, 22, 28, .9)', borderWidth: 2 },
+        label: { show: false },
+        emphasis: { scale: true, scaleSize: 6 },
+        data: estados.map((name, i) => ({
+          name,
+          value: valores[i] ?? 0,
+          itemStyle: { color: colores[i] },
+        })),
+      }],
+    };
+  }
+
+  /** Barras con el monto vendido por producto. */
+  private buildProductSalesChart(etiquetas: string[], valores: number[]): EChartsOption {
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+        valueFormatter: (v) => `$${Number(v).toLocaleString('es-AR')}`,
+      },
+      grid: { left: 8, right: 16, bottom: 8, top: 16, containLabel: true },
+      xAxis: {
+        type: 'category',
+        data: etiquetas,
+        axisLabel: { color: '#d8cebc', interval: 0, rotate: etiquetas.length > 6 ? 30 : 0 },
+        axisLine: { lineStyle: { color: 'rgba(255,255,255,.18)' } },
+      },
+      yAxis: {
+        type: 'value',
+        axisLabel: {
+          color: '#d8cebc',
+          formatter: (v: number) => (v >= 1000 ? `$${v / 1000}k` : `$${v}`),
+        },
+        splitLine: { lineStyle: { color: 'rgba(255,255,255,.08)' } },
+      },
+      series: [{
+        name: 'Monto de Ventas',
+        type: 'bar',
+        data: valores,
+        itemStyle: { color: 'rgba(195, 164, 98, .85)', borderRadius: [8, 8, 0, 0] },
+        emphasis: { itemStyle: { color: '#c3a462' } },
+      }],
+    };
   }
 
   private todayISO(): string {

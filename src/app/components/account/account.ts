@@ -9,11 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth';
 import { EmailVerificationService } from '../../features/inbox/services/email.verification.js';
 import { ProductImageService } from '../../services/product-image/product-image';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
 
 @Component({
   selector: 'app-account',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule],
+  imports: [CommonModule, TranslateModule, FormsModule, DialogDirective],
   templateUrl: './account.html',
   styleUrls: ['./account.scss'],
 })

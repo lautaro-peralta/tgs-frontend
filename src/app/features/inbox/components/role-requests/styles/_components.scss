@@ -22,7 +22,7 @@
       font-size: 1.5rem;
       font-weight: 800;
       color: $text-strong;
-      font-family: 'Google Sans Code', '', monospace;
+      font-family: 'Google Sans Code', ui-monospace, monospace;
       letter-spacing: 0.2px;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
     }
@@ -142,7 +142,7 @@
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', '', monospace;
+      font-family: 'Google Sans Code', ui-monospace, monospace;
     }
 
     p {
@@ -618,7 +618,7 @@
   position: fixed;
   top: 24px;
   right: 24px;
-  z-index: 10000;
+  z-index: var(--z-toast);
   min-width: 380px;
   max-width: 480px;
   display: flex;

@@ -5,6 +5,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TopicService } from '../../services/topic/topic';
 import { TopicDTO, CreateTopicDTO, UpdateTopicDTO } from '../../models/topic/topic.model';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 /**
  * TopicComponent
@@ -17,13 +19,16 @@ type TopicForm = { id: FormControl<number | null>; description: FormControl<stri
 
 @Component({
   selector: 'app-topic',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './topic.html',
   styleUrls: ['./topic.scss'],
 })
 export class TopicComponent implements OnInit {
   // --- Inyección ---
+  private confirmDialog = inject(ConfirmService);
   private fb = inject(FormBuilder);
   private srv = inject(TopicService);
   private t = inject(TranslateService);
@@ -113,8 +118,8 @@ export class TopicComponent implements OnInit {
   }
 
   // --- Borrado ---
-  delete(id: number) {
-    if (!confirm(this.t.instant('topics.confirmDelete') || '¿Eliminar temática?')) {
+  async delete(id: number) {
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('topics.confirmDelete') || '¿Eliminar temática?', danger: true }))) {
       return;
     }
 

@@ -10,6 +10,8 @@ import { AuthService, User, Role } from '../../services/user/user';
 import { ZoneService } from '../../services/zone/zone';
 import { ZoneDTO } from '../../models/zone/zona.model';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 type Mode = 'fromUser' | 'manual';
 
@@ -39,13 +41,16 @@ type AuthorityForm = {
 
 @Component({
   selector: 'app-authority',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgxEchartsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, NgxEchartsModule, DialogDirective],
   templateUrl: './authority.html',
   styleUrls: ['./authority.scss']
 })
 export class AuthorityComponent implements OnInit {
   // --- Inyección ---
+  private confirmDialog = inject(ConfirmService);
   private fb = inject(FormBuilder);
   private srv = inject(AuthorityService);
   private zoneSrv = inject(ZoneService);
@@ -651,8 +656,8 @@ export class AuthorityComponent implements OnInit {
   }
 
   // --- Eliminar ---
-  delete(dni: string) {
-    if (!confirm(this.t.instant('authorities.confirmDelete'))) return;
+  async delete(dni: string) {
+    if (!(await this.confirmDialog.ask({ title: this.t.instant('authorities.confirmDelete'), danger: true }))) return;
     
     this.loading.set(true);
     this.error.set(null);

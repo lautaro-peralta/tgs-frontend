@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { UserVerification } from '../../models/user-verification.model';
 import { UserVerificationService } from '../../services/user-verification';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DialogDirective } from '../../../../shared/a11y/dialog.directive';
 
 @Component({
   selector: 'app-user-verification-review-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule,TranslateModule],
+  imports: [CommonModule, FormsModule,TranslateModule, DialogDirective],
   templateUrl: './user-verification-review-modal.html',
   styleUrls: ['./role-requests.scss']
 })

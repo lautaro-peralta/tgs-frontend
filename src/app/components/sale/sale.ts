@@ -24,6 +24,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
 
 type SaleForm = {
   id: FormControl<number | null>;
@@ -66,14 +67,15 @@ interface DistributorListResponse {
 
 @Component({
   selector: 'app-sale',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     TranslateModule,
-    NgxEchartsModule
-  ],
+    NgxEchartsModule, DialogDirective],
   templateUrl: './sale.html',
   styleUrls: ['./sale.scss'],
 })

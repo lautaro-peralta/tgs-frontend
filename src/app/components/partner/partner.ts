@@ -14,18 +14,23 @@ import {
   PartnerDecisionRefDTO
 } from '../../models/partner/partner.model';
 import { logger } from '../../core/logger';
+import { DialogDirective } from '../../shared/a11y/dialog.directive';
+import { ConfirmService } from '../../shared/confirm/confirm.service';
 
 type Mode = 'fromUser' | 'manual';
 
 @Component({
   selector: 'app-partner',
+  // Activa los estilos compartidos de pantalla de gestión (styles/_crud.scss)
+  host: { class: 'crud-page' },
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TranslateModule, DialogDirective],
   templateUrl: './partner.html',
   styleUrls: ['./partner.scss']
 })
 export class PartnerComponent implements OnInit {
   // Servicios
+  private confirmDialog = inject(ConfirmService);
   private tr = inject(TranslateService);
   private fb = inject(FormBuilder);
   private srv = inject(PartnerService);
@@ -372,14 +377,16 @@ export class PartnerComponent implements OnInit {
     }
   }
 
-  delete(p: PartnerDTO) {
+  async delete(p: PartnerDTO) {
     if (!p?.dni) return;
 
     // Confirmación antes de eliminar
-    const confirmed = confirm(
-      this.tr.instant('partner.confirmDelete', { name: p.name, dni: p.dni }) ||
-      `¿Estás seguro de eliminar al socio ${p.name} (DNI: ${p.dni})?`
-    );
+    const confirmed = await this.confirmDialog.ask({
+      title:
+        this.tr.instant('partner.confirmDelete', { name: p.name, dni: p.dni }) ||
+        `¿Estás seguro de eliminar al socio ${p.name} (DNI: ${p.dni})?`,
+      danger: true,
+    });
 
     if (!confirmed) return;
 
@@ -411,8 +418,11 @@ export class PartnerComponent implements OnInit {
   }
 
   // ✅ Migración: Asignar roles PARTNER a socios existentes
-  runMigration() {
-    if (!confirm('¿Estás seguro de ejecutar la migración de roles? Esto asignará el rol PARTNER a todos los usuarios que tienen un socio asociado.')) {
+  async runMigration() {
+    if (!(await this.confirmDialog.ask({
+      title: this.tr.instant('partner.confirmMigration'),
+      danger: true,
+    }))) {
       return;
     }
 

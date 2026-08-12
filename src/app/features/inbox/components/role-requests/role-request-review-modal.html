@@ -1,6 +1,6 @@
 <!-- role-request-review-modal.component.html (Diseño mejorado) -->
 <div class="modal-overlay" (click)="onOverlayClick($event)">
-  <div class="modal review-modal glass-modal" (click)="$event.stopPropagation()">
+  <div class="modal review-modal glass-modal" appDialog [dialogOpen]="true" (dialogClose)="close.emit()" (click)="$event.stopPropagation()">
 
     <!-- Header Mejorado -->
     <div class="modal-header">
