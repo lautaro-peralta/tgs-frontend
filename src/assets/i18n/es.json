@@ -179,7 +179,40 @@
     "editPhone": "Editar teléfono",
     "editAddress": "Editar dirección",
     "namePlaceholder": "Juan Pérez",
-    "addressPlaceholder": "Av. Siempre Viva 123"
+    "addressPlaceholder": "Av. Siempre Viva 123",
+    "errors": {
+      "loadProfile": "No pudimos cargar tu perfil.",
+      "userNotFound": "No encontramos el usuario.",
+      "profileAlreadyComplete": "Tu perfil ya está completo y no puede modificarse.",
+      "allFieldsRequired": "Completá todos los campos requeridos.",
+      "dniLength": "El DNI debe tener entre 7 y 10 dígitos.",
+      "completeProfile": "No pudimos completar tu perfil.",
+      "unauthorized": "Tu sesión expiró. Iniciá sesión de nuevo.",
+      "noPermissions": "No tenés permisos para realizar esta acción.",
+      "dniAlreadyRegistered": "Ese DNI ya está registrado.",
+      "recordAlreadyExists": "El registro ya existe.",
+      "selectValidImage": "Seleccioná un archivo de imagen válido.",
+      "imageSizeLimit": "La imagen no puede superar los 5 MB.",
+      "loadImage": "No pudimos cargar la imagen.",
+      "phoneRequired": "Ingresá un teléfono.",
+      "addressRequired": "Ingresá una dirección.",
+      "updatePhone": "No pudimos actualizar tu teléfono.",
+      "updateAddress": "No pudimos actualizar tu dirección."
+    },
+    "success": {
+      "profileCompleted": "Perfil completado correctamente.",
+      "emailSent": "Te enviamos un correo de verificación.",
+      "photoUpdated": "Foto de perfil actualizada.",
+      "phoneUpdated": "Teléfono actualizado.",
+      "addressUpdated": "Dirección actualizada."
+    },
+    "emailVerification": {
+      "emailSent": "correo de verificación",
+      "couldNotSend": "No pudimos enviar el correo de verificación.",
+      "cooldown": "Esperá unos minutos antes de pedir otro correo.",
+      "alreadyVerified": "Tu correo ya está verificado.",
+      "sendError": "Hubo un problema al enviar el correo de verificación."
+    }
   },
   "product": {
     "title": "Productos",
@@ -343,7 +376,8 @@
         "numberError": "La contraseña debe contener al menos un número",
         "specialError": "La contraseña debe contener al menos un carácter especial (@$!%*?&)",
         "resetFailed": "Error al restablecer la contraseña",
-        "requestNew": "El enlace ha expirado. Por favor solicita uno nuevo."
+        "requestNew": "El enlace ha expirado. Por favor solicita uno nuevo.",
+        "requestFailed": "No pudimos procesar tu solicitud. Intentá de nuevo."
       }
     },
     "errors": {
@@ -485,7 +519,9 @@
     "errorLabel": "Error:",
     "sending": "Enviando",
     "sendingEllipsis": "⏳ Enviando...",
-    "searchAction": "🔍 Buscar"
+    "searchAction": "🔍 Buscar",
+    "loading": "Cargando…",
+    "success": "Éxito"
   },
   "clients": {
     "toggle": {
@@ -542,7 +578,16 @@
       "withoutPurchasesLabel": "Sin compras:",
       "filteredLabel": "Filtrados:"
     },
-    "empty": "No hay clientes disponibles."
+    "empty": "No hay clientes disponibles.",
+    "errors": {
+      "dniRequired": "DNI requerido.",
+      "nameRequired": "Nombre requerido.",
+      "emailRequired": "Email requerido.",
+      "emailInvalid": "Ingresá un email válido.",
+      "minLength": "Debe tener al menos {{min}} caracteres.",
+      "maxLength": "No puede superar los {{max}} caracteres.",
+      "invalid": "El valor ingresado no es válido."
+    }
   },
   "partner": {
     "title": "Socios",
@@ -604,7 +649,8 @@
       "withDecisions": "Con decisiones:",
       "filtered": "Filtrados:"
     },
-    "confirmMigration": "¿Ejecutar la migración de roles? Se asignará el rol PARTNER a todos los usuarios que tengan un socio asociado."
+    "confirmMigration": "¿Ejecutar la migración de roles? Se asignará el rol PARTNER a todos los usuarios que tengan un socio asociado.",
+    "confirmDelete": "¿Eliminar al socio {{name}} (DNI {{dni}})?"
   },
   "sales": {
     "title": "Ventas",
@@ -848,7 +894,8 @@
     "successCreate": "Autoridad creada correctamente",
     "successUpdate": "Autoridad actualizada correctamente",
     "successDelete": "Autoridad eliminada correctamente",
-    "range": "Rango"
+    "range": "Rango",
+    "confirmDelete": "¿Eliminar esta autoridad?"
   },
   "authority": {
     "fields": {
@@ -906,7 +953,8 @@
     },
     "status": {
       "paid": "Pagado",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "alreadyPaid": "Este soborno ya fue pagado."
     },
     "actions": {
       "pay": "Marcar como pagado"
@@ -1026,7 +1074,8 @@
       "total": "Total temáticas:",
       "filtered": "Filtradas:"
     },
-    "noResults": "Sin resultados para el filtro aplicado"
+    "noResults": "Sin resultados para el filtro aplicado",
+    "confirmDelete": "¿Eliminar esta temática?"
   },
   "distributors": {
     "title": "Distribuidores",
@@ -1073,7 +1122,9 @@
         "phone": "Teléfono requerido.",
         "email": "Email válido requerido.",
         "zone": "Zona requerida.",
-        "fill": "Completá los campos requeridos."
+        "fill": "Completá los campos requeridos.",
+        "address": "Dirección requerida.",
+        "noChanges": "No hay cambios para guardar."
       },
       "noProducts": "No hay productos disponibles"
     },
@@ -1294,7 +1345,13 @@
     "roleHint": "Opcional: describí el rol o la responsabilidad en este consejo",
     "notesHint": "Opcional: agregá cualquier nota o comentario relevante",
     "rolePlaceholder": "Asesor financiero, líder estratégico, etc.",
-    "notesPlaceholder": "Información adicional sobre la participación en este consejo…"
+    "notesPlaceholder": "Información adicional sobre la participación en este consejo…",
+    "errors": {
+      "partnerDniRequired": "Socio requerido.",
+      "decisionIdRequired": "Decisión requerida.",
+      "joinDateRequired": "Fecha requerida."
+    },
+    "formInvalid": "Por favor completá los campos requeridos."
   },
   "monthlyReview": {
     "title": "Revisiones Mensuales",

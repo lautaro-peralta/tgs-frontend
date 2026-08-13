@@ -1,5 +1,5 @@
 /* ===== Variables ===== */
-:root {
+:host {
   --text: #e5e7eb;
   --muted: #cbd5e1;
   --text-strong: #ffffff;
@@ -18,7 +18,7 @@
   --blue-accent-rgb: 59, 130, 246;
 }
 
-:root {
+:host {
   --auth-width: 560px;
   /* ancho del "cuadrado" (columna izquierda) */
   --auth-min-h: 400px;
