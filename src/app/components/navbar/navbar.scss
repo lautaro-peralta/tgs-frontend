@@ -1,5 +1,5 @@
 /* ====== Base ====== */
-:root {
+:host {
   --text: #e5e7eb;
   --text-strong: #ffffff;
   --border: rgba(255, 255, 255, .22);
@@ -335,6 +335,27 @@
 .dropdown__item--sub {
   position: relative;
   padding-right: 1.2rem;
+}
+
+/* Puente invisible sobre el hueco que queda entre el título del subgrupo y su
+   panel (.dropdown--inner-diag abre a `top: calc(100% + .5rem)`). El submenú
+   sólo se muestra mientras el ítem está en :hover, así que al cruzar esos 8px
+   se perdía el hover y el panel se replegaba a mitad de camino: el mismo
+   problema que ya resolvía el puente de .menu__item--dropdown, pero un nivel
+   más abajo. */
+.dropdown__item--sub::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: .6rem;
+  pointer-events: none;
+}
+
+.dropdown__item--sub:hover::after,
+.dropdown__item--sub:focus-within::after {
+  pointer-events: auto;
 }
 
 .dropdown__subgroup {

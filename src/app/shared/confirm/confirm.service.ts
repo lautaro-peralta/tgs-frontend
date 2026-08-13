@@ -35,7 +35,7 @@ export interface ConfirmOptions {
  *
  * @example
  * if (!await this.confirm.ask({
- *   title: this.t.instant('products.confirmDelete'),
+ *   title: this.t.instant('product.confirmDelete'),
  *   danger: true,
  * })) return;
  */

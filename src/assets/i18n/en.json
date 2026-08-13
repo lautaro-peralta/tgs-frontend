@@ -161,7 +161,40 @@
     "editPhone": "Edit phone",
     "editAddress": "Edit address",
     "namePlaceholder": "Jane Doe",
-    "addressPlaceholder": "742 Evergreen Terrace"
+    "addressPlaceholder": "742 Evergreen Terrace",
+    "errors": {
+      "loadProfile": "We couldn't load your profile.",
+      "userNotFound": "User not found.",
+      "profileAlreadyComplete": "Your profile is already complete and can't be changed.",
+      "allFieldsRequired": "Please complete all required fields.",
+      "dniLength": "The DNI must be between 7 and 10 digits.",
+      "completeProfile": "We couldn't complete your profile.",
+      "unauthorized": "Your session expired. Please log in again.",
+      "noPermissions": "You don't have permission to perform this action.",
+      "dniAlreadyRegistered": "That DNI is already registered.",
+      "recordAlreadyExists": "The record already exists.",
+      "selectValidImage": "Please select a valid image file.",
+      "imageSizeLimit": "The image can't be larger than 5 MB.",
+      "loadImage": "We couldn't load the image.",
+      "phoneRequired": "Please enter a phone number.",
+      "addressRequired": "Please enter an address.",
+      "updatePhone": "We couldn't update your phone number.",
+      "updateAddress": "We couldn't update your address."
+    },
+    "success": {
+      "profileCompleted": "Profile completed successfully.",
+      "emailSent": "We sent you a verification email.",
+      "photoUpdated": "Profile photo updated.",
+      "phoneUpdated": "Phone number updated.",
+      "addressUpdated": "Address updated."
+    },
+    "emailVerification": {
+      "emailSent": "verification email",
+      "couldNotSend": "We couldn't send the verification email.",
+      "cooldown": "Please wait a few minutes before requesting another email.",
+      "alreadyVerified": "Your email is already verified.",
+      "sendError": "Something went wrong sending the verification email."
+    }
   },
   "product": {
     "title": "Products",
@@ -325,7 +358,8 @@
         "numberError": "Password must contain at least one number",
         "specialError": "Password must contain at least one special character (@$!%*?&)",
         "resetFailed": "Error resetting password",
-        "requestNew": "The link has expired. Please request a new one."
+        "requestNew": "The link has expired. Please request a new one.",
+        "requestFailed": "We couldn't process your request. Please try again."
       }
     },
     "errors": {
@@ -470,7 +504,9 @@
     "errorLabel": "Error:",
     "sending": "Sending",
     "sendingEllipsis": "⏳ Sending…",
-    "searchAction": "🔍 Search"
+    "searchAction": "🔍 Search",
+    "loading": "Loading…",
+    "success": "Success"
   },
   "clients": {
     "title": "Clients",
@@ -527,7 +563,16 @@
       "withoutPurchasesLabel": "Without purchases:",
       "filteredLabel": "Filtered:"
     },
-    "empty": "No clients available."
+    "empty": "No clients available.",
+    "errors": {
+      "dniRequired": "DNI required.",
+      "nameRequired": "Name required.",
+      "emailRequired": "Email required.",
+      "emailInvalid": "Please enter a valid email address.",
+      "minLength": "Must be at least {{min}} characters.",
+      "maxLength": "Can't be longer than {{max}} characters.",
+      "invalid": "The value entered isn't valid."
+    }
   },
   "partner": {
     "title": "Partners",
@@ -589,7 +634,8 @@
       "withDecisions": "With decisions:",
       "filtered": "Filtered:"
     },
-    "confirmMigration": "Run the role migration? The PARTNER role will be assigned to every user linked to a partner."
+    "confirmMigration": "Run the role migration? The PARTNER role will be assigned to every user linked to a partner.",
+    "confirmDelete": "Delete partner {{name}} (DNI {{dni}})?"
   },
   "sales": {
     "title": "Sales",
@@ -688,7 +734,7 @@
     "title": "Zones",
     "new": "New Zone",
     "close": "Close",
-    "loading": "Loading zonesâ€¦",
+    "loading": "Loading zones…",
     "headquarters": "Headquarters",
     "noHeadquarters": "No headquarters set.",
     "filters": {
@@ -833,7 +879,8 @@
     "successCreate": "Authority created successfully",
     "successUpdate": "Authority updated successfully",
     "successDelete": "Authority deleted successfully",
-    "range": "Rank"
+    "range": "Rank",
+    "confirmDelete": "Delete this authority?"
   },
   "authority": {
     "fields": {
@@ -891,7 +938,8 @@
     },
     "status": {
       "paid": "Paid",
-      "pending": "Pending"
+      "pending": "Pending",
+      "alreadyPaid": "This bribe has already been paid."
     },
     "actions": {
       "pay": "Mark as paid"
@@ -904,8 +952,8 @@
       "sale": "Sale ID",
       "salePh": "Enter sale ID",
       "editNote": "You can only edit the amount and payment status.",
-      "authority_placeholder": "â€” Select an authority â€”",
-      "sale_placeholder": "â€” Select a sale â€”"
+      "authority_placeholder": "— Select an authority —",
+      "sale_placeholder": "— Select a sale —"
     },
     "errors": {
       "amountRequired": "Amount is required",
@@ -1011,7 +1059,8 @@
       "total": "Total topics:",
       "filtered": "Filtered:"
     },
-    "noResults": "No results for the applied filter"
+    "noResults": "No results for the applied filter",
+    "confirmDelete": "Delete this topic?"
   },
   "distributors": {
     "title": "Distributors",
@@ -1058,7 +1107,9 @@
         "phone": "Phone required.",
         "email": "Valid email required.",
         "zone": "Zone required.",
-        "fill": "Please complete the required fields."
+        "fill": "Please complete the required fields.",
+        "address": "Address required.",
+        "noChanges": "There are no changes to save."
       },
       "noProducts": "No products available"
     },
@@ -1297,7 +1348,13 @@
     "roleHint": "Optional: describe the role or responsibility on this council",
     "notesHint": "Optional: add any relevant note or comment",
     "rolePlaceholder": "Financial advisor, strategic lead, etc.",
-    "notesPlaceholder": "Extra information about this council membership…"
+    "notesPlaceholder": "Extra information about this council membership…",
+    "errors": {
+      "partnerDniRequired": "Partner required.",
+      "decisionIdRequired": "Decision required.",
+      "joinDateRequired": "Date required."
+    },
+    "formInvalid": "Please complete the required fields."
   },
   "monthlyReview": {
     "title": "Monthly Reviews",
@@ -1638,7 +1695,7 @@
         },
         "infoBox": {
           "waitTitle": "Estimated time:",
-          "waitDesc": "Verifications are usually processed within 24â€“48 business hours."
+          "waitDesc": "Verifications are usually processed within 24–48 business hours."
         }
       },
       "rejected": {
@@ -1973,7 +2030,7 @@
       "phone": {
         "label": "Phone",
         "value": "+54 341 555-1234",
-        "hint": "Mon to Fri Â· 09â€“18 h"
+        "hint": "Mon to Fri · 09–18 h"
       },
       "whatsapp": {
         "label": "WhatsApp",
