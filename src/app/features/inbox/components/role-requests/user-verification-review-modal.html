@@ -18,7 +18,7 @@
       <!-- Verification Summary Card - Mejorado -->
       <div class="summary-card">
         <div class="summary-header">
-          <span class="summary-icon">✉️</span>
+          <span class="summary-icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></span>
           <h3>{{ 'userVerification.reviewModal.verificationInfo' | translate }}</h3>
         </div>
 
@@ -47,7 +47,7 @@
 
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'userVerification.reviewModal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -57,7 +57,7 @@
       <!-- Decision Section - Mejorado -->
       <div class="decision-section">
         <div class="section-header">
-          <span class="section-icon">⚖️</span>
+          <span class="section-icon"><span class="material-symbols-outlined" aria-hidden="true">balance</span></span>
           <label class="section-title">{{ 'userVerification.reviewModal.decision' | translate }}</label>
         </div>
 
@@ -65,7 +65,7 @@
           <label class="decision-card approve-card" [class.selected]="action === 'approve'">
             <input type="radio" name="action" value="approve" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✓</span>
+              <span class="decision-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
               <span class="decision-label">{{ 'userVerification.reviewModal.approve' | translate }}</span>
               <span class="decision-desc">{{ 'userVerification.reviewModal.approveDesc' | translate }}</span>
             </div>
@@ -75,7 +75,7 @@
           <label class="decision-card reject-card" [class.selected]="action === 'reject'">
             <input type="radio" name="action" value="reject" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✗</span>
+              <span class="decision-icon"><span class="material-symbols-outlined" aria-hidden="true">close</span></span>
               <span class="decision-label">{{ 'userVerification.reviewModal.reject' | translate }}</span>
               <span class="decision-desc">{{ 'userVerification.reviewModal.rejectDesc' | translate }}</span>
             </div>
@@ -87,7 +87,7 @@
       <!-- Comments Section - Mejorado -->
       <div class="comments-section">
         <div class="section-header">
-          <span class="section-icon">💬</span>
+          <span class="section-icon"><span class="material-symbols-outlined" aria-hidden="true">chat</span></span>
           <label for="reason" class="section-title">
             {{ 'userVerification.reviewModal.rejectReasonLabel' | translate }}
             <span *ngIf="action === 'reject'" class="recommended-tag">{{ 'userVerification.reviewModal.recommended' | translate }}</span>
@@ -113,7 +113,7 @@
       <!-- Action Buttons - Mejorado -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSubmitting">
-          <span class="btn-icon">←</span>
+          <span class="btn-icon"><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></span>
           {{ 'userVerification.reviewModal.actions.cancel' | translate }}
         </button>
 
@@ -121,7 +121,7 @@
           type="submit"
           [class]="action === 'approve' ? 'btn btn-success' : (action === 'reject' ? 'btn btn-danger' : 'btn btn-secondary')"
           [disabled]="isSubmitting || !action">
-          <span *ngIf="!isSubmitting && action" class="btn-icon">{{ action === 'approve' ? '✓' : '✗' }}</span>
+          <span *ngIf="!isSubmitting && action" class="btn-icon">{{ action === 'approve' ? '' : '' }}</span>
           <span *ngIf="isSubmitting" class="spinner-small"></span>
           {{ isSubmitting
             ? ('userVerification.reviewModal.actions.processing' | translate)

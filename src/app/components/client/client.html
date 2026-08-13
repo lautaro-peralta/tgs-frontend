@@ -13,7 +13,7 @@
 
     <!-- Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -60,18 +60,21 @@
       <!-- BOTONES DE FILTRO -->
       <div class="actions-row">
         <button class="btn btn-primary" (click)="applyFilters()" [attr.title]="'common.applyFiltersTitle' | translate">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
 
         <button class="btn ghost" (click)="clearFilters()" [attr.title]="'common.clearFiltersTitle' | translate"
           *ngIf="fTextApplied() || fPurchasesApplied() !== 'all'">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
 
     <!-- Loading state -->
-    <div *ngIf="loading()" class="loading">{{ 'clients.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'clients.loading' | translate }}</p>
+    </div>
 
     <!-- Table -->
     <div class="table-wrap" *ngIf="!loading()">
@@ -113,11 +116,11 @@
               <div class="row-inline--end">
                 <button class="btn ghost btn--icon" (click)="edit(c)"
                   [attr.title]="'common.edit' | translate">
-                  ✏️
+                  <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                 </button>
                 <button class="btn danger btn--icon" (click)="delete(c.dni)"
                   [attr.title]="'common.delete' | translate">
-                  🗑️
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
               </div>
             </td>

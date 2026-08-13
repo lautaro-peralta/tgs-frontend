@@ -14,15 +14,16 @@
 
     <!-- Mensajes -->
     <div class="success alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✔</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
     <div class="error" *ngIf="error() as err">
       <strong>{{ 'common.error' | translate: {} : 'Error' }}</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">
-      {{ 'product.loading' | translate : {} : 'Cargando productos...' }}
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'product.loading' | translate : {} : 'Cargando productos...' }}</p>
     </div>
 
 
@@ -63,11 +64,11 @@
       <!-- Botones -->
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()"
           *ngIf="fTextApplied() || fStockApplied() !== 'all'">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -119,12 +120,12 @@
               <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'product.table.actions' | translate">
                 <button class="btn ghost btn--icon" type="button" (click)="edit(p)" *ngIf="canEdit()"
                   [attr.title]="'common.edit' | translate">
-                  ✏️
+                  <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                 </button>
 
                 <button class="btn danger btn--icon" type="button" (click)="delete(p.id)" [disabled]="loading()" *ngIf="canDelete()"
                   [attr.title]="'common.delete' | translate">
-                  🗑️
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
               </td>
             </tr>
@@ -147,7 +148,7 @@
           </p>
           <!-- ✅ NUEVO: Mensaje especial para distribuidores sin productos -->
           <p class="u-mt-md" *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0">
-            💡 <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
+            <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span> <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
         </div>
       </ng-template>
     </section>

@@ -1,8 +1,9 @@
 ﻿<!-- account.html - Carnet/Credencial -->
 <section class="account stack-lg">
   <!-- Estado de carga -->
-  <div class="muted" *ngIf="loading()" role="status" aria-live="polite">
-    {{ 'account.loadingProfile' | translate }}
+  <div class="loading-state" role="status" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    <p class="loading-state__text">{{ 'account.loadingProfile' | translate }}</p>
   </div>
 
   <!-- Errores -->
@@ -18,7 +19,7 @@
   <!-- Banner de verificación de email -->
   <div class="verification-banner" *ngIf="!loading() && me() && !me()?.emailVerified" role="alert">
     <div class="banner-content">
-      <div class="banner-icon">⚠️</div>
+      <div class="banner-icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></div>
       <div class="banner-text">
         <strong>{{ 'account.verificationBanner.title' | translate }}</strong>
         <p>{{ 'account.verificationBanner.desc' | translate }}</p>
@@ -137,7 +138,7 @@
           <div class="meta-row">
             <span class="label">{{ 'account.infoSection.status' | translate }}</span>
             <span class="value status" [class.active]="me()?.isActive">
-              {{ me()?.isActive ? '✓ Activa' : '⊗ Inactiva' }}
+              {{ me()?.isActive ? 'Activa' : '⊗ Inactiva' }}
             </span>
           </div>
           <div class="meta-row">

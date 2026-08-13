@@ -811,7 +811,6 @@ textarea.input {
 
 /* Tooltip para mostrar texto al hover (opcional) */
 
-
 /* ===== EMPTY STATE ===== */
 .empty,
 .empty-state {
@@ -1081,13 +1080,6 @@ fieldset.group legend {
 
 /* ===== RESPONSIVE PARA LAYOUT DE 2 COLUMNAS ===== */
 @media (max-width: 1200px) {
-
-  /* En pantallas menores a 1200px, las columnas se apilan verticalmente */
-  .glass-dark.card>div[style*="grid-template-columns: 1fr 1fr"] {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: var(--sp-6) !important;
-  }
 }
 
 @media (max-width: 768px) {
@@ -1250,19 +1242,16 @@ button[title="Expandir gráfico"] {
     grid-area: charts;
   }
 
-  section.stack-lg > div[style*="grid-template-columns"] {
+  /* Antes esto apuntaba a `div[style*="grid-template-columns"]`. El panel dejó
+     de llevar estilo en línea y pasó a una clase, así que el selector dejó de
+     casar: el bloque de filtros y listado no recibía su área y quedaba
+     encajonado en media columna, con el hueco vacío al lado. */
+  section.stack-lg > .reviews-panel {
     grid-area: filters;
-    display: block !important;
-    grid-template-columns: unset !important;
+    display: block;
   }
 
-  /* Ocultar columna izquierda vacía del grid interno */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:first-child {
-    display: none !important;
-  }
-
-  /* Columna derecha ocupa todo el ancho */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:last-child {
+  section.stack-lg > .reviews-panel > .stack-md {
     width: 100%;
   }
 
@@ -1302,23 +1291,11 @@ button[title="Expandir gráfico"] {
   section.stack-lg > .glass-dark.card:first-child,
   section.stack-lg > .charts-toggle-mobile,
   section.stack-lg > .charts-container-mobile,
-  section.stack-lg > div[style*="grid-template-columns"] {
-    grid-area: unset !important;
+  section.stack-lg > .reviews-panel {
+    grid-area: unset;
   }
 
-  /* Convertir el grid interno en block y mostrar solo la columna derecha */
-  section.stack-lg > div[style*="grid-template-columns"] {
-    display: block !important;
-    grid-template-columns: unset !important;
-  }
-
-  /* Ocultar la columna izquierda vacía del grid interno */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:first-child {
-    display: none !important;
-  }
-
-  /* Columna derecha ocupa todo el ancho */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:last-child {
+  section.stack-lg > .reviews-panel > .stack-md {
     width: 100%;
   }
 
@@ -1572,7 +1549,6 @@ button[title="Expandir gráfico"] {
     height: 280px !important;
   }
 }
-
 
 /* ===========================================================================
    Clases que reemplazan a los estilos en línea de monthly-review.html.

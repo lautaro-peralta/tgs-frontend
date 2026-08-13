@@ -109,7 +109,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
           // Validar si hay compras sin detalles
           const purchasesWithoutDetails = sales.filter(s => !s.details || s.details.length === 0);
           if (purchasesWithoutDetails.length > 0) {
-            logger.warn('[MyPurchases] ⚠️ Encontradas compras sin detalles:', purchasesWithoutDetails.length);
+            logger.warn('[MyPurchases] Encontradas compras sin detalles:', purchasesWithoutDetails.length);
             logger.warn('[MyPurchases] 📋 Compras sin detalles:', purchasesWithoutDetails);
           }
         },
@@ -163,17 +163,17 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
     });
 
     if (error.status === 401) {
-      this.error.set('⚠️ No autorizado. Por favor, inicia sesión nuevamente.');
+      this.error.set('No autorizado. Por favor, inicia sesión nuevamente.');
     } else if (error.status === 403) {
       // Error de permisos - probablemente el usuario no tiene acceso al endpoint
-      logger.debug('[MyPurchases] ⚠️ Error 403 - Sin permisos para acceder al endpoint');
+      logger.debug('[MyPurchases] Error 403 - Sin permisos para acceder al endpoint');
       logger.debug('[MyPurchases] 📋 Detalle del error:', error.error);
 
       this.purchases.set([]);
       this.products.set([]);
 
       const errorMsg = error.error?.message || error.message || 'No tienes permisos para ver las compras';
-      this.error.set(`⚠️ ${errorMsg}. Si eres cliente, contacta al administrador.`);
+      this.error.set(`${errorMsg}. Si eres cliente, contacta al administrador.`);
     } else if (error.status === 404) {
       // No se encontraron compras o el endpoint no existe
       logger.debug('[MyPurchases] ℹ️ Error 404 - No se encontraron compras');
@@ -182,7 +182,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       // No mostrar error para 404 - simplemente mostrar lista vacía
     } else if (error.status === 400) {
       // Datos inválidos - probablemente perfil incompleto
-      logger.debug('[MyPurchases] ⚠️ Error 400 - Datos inválidos');
+      logger.debug('[MyPurchases] Error 400 - Datos inválidos');
       this.purchases.set([]);
       this.products.set([]);
 
@@ -190,19 +190,19 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
 
       // Mensaje más claro para perfil incompleto
       if (errorMsg.includes('profile') || errorMsg.includes('DNI') || errorMsg.includes('personal information')) {
-        this.error.set(`⚠️ Para ver tus compras, necesitas completar tu perfil con tu DNI. Ve a "Mi Cuenta" → "Editar perfil" y completa tu información personal.`);
+        this.error.set(`Para ver tus compras, necesitas completar tu perfil con tu DNI. Ve a "Mi Cuenta" → "Editar perfil" y completa tu información personal.`);
       } else {
-        this.error.set(`⚠️ ${errorMsg}. Verifica que tu perfil esté completo.`);
+        this.error.set(`${errorMsg}. Verifica que tu perfil esté completo.`);
       }
     } else if (error.status >= 500) {
       // Errores de servidor
-      this.error.set('⚠️ Error del servidor. Por favor, intenta más tarde.');
+      this.error.set('Error del servidor. Por favor, intenta más tarde.');
     } else {
       // Otros errores
-      logger.warn('[MyPurchases] ⚠️ Error no manejado:', error.status, error.error?.message || error.message);
+      logger.warn('[MyPurchases] Error no manejado:', error.status, error.error?.message || error.message);
       this.purchases.set([]);
       this.products.set([]);
-      this.error.set(`⚠️ Error ${error.status}: ${error.error?.message || error.message || fallbackMessage}`);
+      this.error.set(`Error ${error.status}: ${error.error?.message || error.message || fallbackMessage}`);
     }
   }
 
@@ -262,7 +262,7 @@ export class MyPurchasesComponent implements OnInit, OnDestroy {
       return calculated;
     }
 
-    logger.warn(`[MyPurchases] ⚠️ No se pudo obtener total para compra #${purchase.id}`, purchase);
+    logger.warn(`[MyPurchases] No se pudo obtener total para compra #${purchase.id}`, purchase);
     return 0;
   }
 }

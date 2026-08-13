@@ -35,7 +35,7 @@
       <nav class="inbox-tabs" role="tablist">
         <button role="tab" [attr.aria-selected]="activeSection() === 'notifications'"
           [class.active]="activeSection() === 'notifications'" (click)="setActiveSection('notifications')">
-          {{ 'inbox.tabs.notifications' | translate : {} : '🔔 Notificaciones' }}
+          {{ 'inbox.tabs.notifications' | translate : {} : 'Notificaciones' }}
         </button>
         <button role="tab" [attr.aria-selected]="activeSection() === 'user-verification'"
           [class.active]="activeSection() === 'user-verification'" (click)="setActiveSection('user-verification')">
@@ -74,7 +74,7 @@
       <nav class="inbox-tabs" role="tablist">
         <button role="tab" [attr.aria-selected]="activeSection() === 'notifications'"
           [class.active]="activeSection() === 'notifications'" (click)="setActiveSection('notifications')">
-          {{ 'inbox.tabs.notifications' | translate : {} : '🔔 Notificaciones' }}
+          {{ 'inbox.tabs.notifications' | translate : {} : 'Notificaciones' }}
         </button>
         <button role="tab" [attr.aria-selected]="activeSection() === 'user-verification'"
           [class.active]="activeSection() === 'user-verification'" (click)="setActiveSection('user-verification')">
@@ -84,7 +84,7 @@
           [class.active]="activeSection() === 'role-requests'" (click)="setActiveSection('role-requests')"
           [disabled]="!isVerified()" [title]="!isVerified() ? ('inbox.blocked.goVerify' | translate) : ''">
           {{ 'inbox.tabs.roleRequest' | translate }}
-          <span *ngIf="!isVerified()" class="locked-icon">🔒</span>
+          <span *ngIf="!isVerified()" class="locked-icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></span>
         </button>
       </nav>
 
@@ -106,11 +106,11 @@
         <div *ngIf="activeSection() === 'role-requests'" class="tab-panel">
           <!-- ✅ Mensaje si no está verificado -->
           <div *ngIf="!isVerified()" class="blocked-section">
-            <div class="blocked-icon">🔒</div>
+            <div class="blocked-icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></div>
             <h2>{{ 'inbox.blocked.title' | translate }}</h2>
             <p>{{ 'inbox.blocked.desc' | translate }}</p>
             <button class="btn btn-primary" (click)="setActiveSection('user-verification')">
-              <span class="icon">✅</span>
+              <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span>
               {{ 'inbox.blocked.goVerify' | translate }}
             </button>
           </div>
@@ -121,7 +121,7 @@
 
             <!-- ✅ Alerta si el perfil no está completo -->
             <div class="alert alert-warning" *ngIf="!hasCompleteProfile()">
-              <strong>⚠️ {{ 'account.completeProfileBanner.title' | translate }}</strong>
+              <strong><span class="material-symbols-outlined" aria-hidden="true">warning</span> {{ 'account.completeProfileBanner.title' | translate }}</strong>
               <p>
                 {{ 'account.completeProfileBanner.desc' | translate }}
                 <a routerLink="/mi-cuenta">{{ 'nav.myAccount' | translate }}</a>
@@ -154,7 +154,7 @@
          ======================================== -->
     <ng-container *ngIf="!user()">
       <div class="not-authenticated">
-        <div class="icon">🔒</div>
+        <div class="icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></div>
         <h2>{{ 'inbox.notAuth.title' | translate }}</h2>
         <p>{{ 'inbox.notAuth.desc' | translate }}</p>
         <a routerLink="/login" class="btn btn-primary">{{ 'inbox.notAuth.login' | translate }}</a>

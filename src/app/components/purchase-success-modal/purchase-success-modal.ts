@@ -53,7 +53,7 @@ export interface PurchaseSuccessData {
     <div class="modal-overlay" (click)="onClose()">
       <div class="modal purchase-success-modal" appDialog [dialogOpen]="true" (dialogClose)="onClose()" (click)="$event.stopPropagation()">
         <div class="modal-header">
-          <div class="success-icon">✅</div>
+          <div class="success-icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></div>
           <h2>
             {{ isMultipleSales() 
               ? '¡' + data.multipleSales!.length + ' Compras Realizadas!' 
@@ -84,7 +84,7 @@ export interface PurchaseSuccessData {
             </div>
 
             <div class="distributor-info" *ngIf="data.distributor as dist">
-              <h4>📍 Punto de Retiro</h4>
+              <h4><span class="material-symbols-outlined" aria-hidden="true">location_on</span> Punto de Retiro</h4>
               
               <div class="distributor-details">
                 <div class="detail-row">
@@ -123,7 +123,7 @@ export interface PurchaseSuccessData {
               </div>
 
               <div class="info-box">
-                <span class="info-icon">ℹ️</span>
+                <span class="info-icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
                 <p>Dirígete a esta sede para retirar tu compra. Recuerda llevar tu DNI.</p>
               </div>
             </div>
@@ -143,10 +143,10 @@ export interface PurchaseSuccessData {
                   <div class="sale-title">
                     <strong>Venta #{{ sale.saleId }}</strong>
                     <span class="sale-distributor">
-                      📍 {{ sale.distributor.name }}
+                      <span class="material-symbols-outlined" aria-hidden="true">location_on</span> {{ sale.distributor.name }}
                       <span class="zone-badge" *ngIf="sale.distributor.zone">
                         {{ sale.distributor.zone.name }}
-                        <span *ngIf="sale.distributor.zone.isHeadquarters">⭐</span>
+                        <span *ngIf="sale.distributor.zone.isHeadquarters"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
                       </span>
                     </span>
                   </div>
@@ -169,11 +169,11 @@ export interface PurchaseSuccessData {
 
                 <div class="sale-contact" *ngIf="sale.distributor.phone || sale.distributor.email">
                   <div class="contact-item" *ngIf="sale.distributor.phone">
-                    <span class="contact-icon">📞</span>
+                    <span class="contact-icon"><span class="material-symbols-outlined" aria-hidden="true">call</span></span>
                     <a [href]="'tel:' + sale.distributor.phone">{{ sale.distributor.phone }}</a>
                   </div>
                   <div class="contact-item" *ngIf="sale.distributor.email">
-                    <span class="contact-icon">✉️</span>
+                    <span class="contact-icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></span>
                     <a [href]="'mailto:' + sale.distributor.email">{{ sale.distributor.email }}</a>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ export interface PurchaseSuccessData {
             </div>
 
             <div class="info-box">
-              <span class="info-icon">ℹ️</span>
+              <span class="info-icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
               <p>
                 Deberás retirar tus productos en {{ data.multipleSales!.length }} ubicaciones diferentes.
                 Recuerda llevar tu DNI en cada retiro.

@@ -9,12 +9,12 @@
     <!-- Estadísticas -->
     <div class="stats">
       <div class="stat-badge unread">
-        <span class="icon">🔔</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">notifications</span></span>
         <span class="label">{{ 'notifications.stats.unread' | translate : {} : 'Sin leer' }}</span>
         <span class="count">{{ unreadCount }}</span>
       </div>
       <div class="stat-badge total">
-        <span class="icon">📋</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">content_paste</span></span>
         <span class="label">{{ 'notifications.stats.total' | translate : {} : 'Total' }}</span>
         <span class="count">{{ notifications.length }}</span>
       </div>
@@ -53,14 +53,14 @@
         class="btn btn-success"
         (click)="markAllAsRead()"
         [title]="'notifications.actions.markAllRead' | translate : {} : 'Marcar todas como leídas'">
-        <span class="icon">✅</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span>
         {{ 'notifications.actions.markAllRead' | translate : {} : 'Marcar todas como leídas' }}
       </button>
       <button
         class="btn btn-secondary btn-sm"
         (click)="loadNotifications()"
         [title]="'common.refresh' | translate : {} : 'Actualizar'">
-        <span class="icon">🔄</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></span>
         {{ 'common.refresh' | translate : {} : 'Actualizar' }}
       </button>
     </div>
@@ -74,7 +74,7 @@
 
   <!-- Estado de error -->
   <div *ngIf="error && !loading" class="error-state">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></div>
     <p class="error-message">{{ error }}</p>
     <button class="btn btn-primary" (click)="loadNotifications()">
       {{ 'notifications.retry' | translate : {} : 'Reintentar' }}
@@ -86,9 +86,9 @@
     <!-- Estado vacío -->
     <div *ngIf="filteredNotifications.length === 0" class="empty-state">
       <div class="empty-icon">
-        <span *ngIf="selectedFilter === 'unread'">📬</span>
-        <span *ngIf="selectedFilter === 'read'">📭</span>
-        <span *ngIf="selectedFilter === 'all'">🔔</span>
+        <span *ngIf="selectedFilter === 'unread'"><span class="material-symbols-outlined" aria-hidden="true">mark_email_unread</span></span>
+        <span *ngIf="selectedFilter === 'read'"><span class="material-symbols-outlined" aria-hidden="true">drafts</span></span>
+        <span *ngIf="selectedFilter === 'all'"><span class="material-symbols-outlined" aria-hidden="true">notifications</span></span>
       </div>
       <h3>{{ 'notifications.empty.title' | translate : {} : 'No hay notificaciones' }}</h3>
       <p *ngIf="selectedFilter === 'all'">

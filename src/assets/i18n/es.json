@@ -31,7 +31,8 @@
     "rolesLabel": "Roles:",
     "ariaMain": "Principal",
     "ariaPages": "Páginas",
-    "ariaUser": "Usuario"
+    "ariaUser": "Usuario",
+    "account": "Cuenta"
   },
   "mgmt": {
     "product": "Productos",
@@ -88,8 +89,8 @@
       "completeProfile100": "Completa tu perfil al 100% para comprar.",
       "completeProfile": "Completar perfil"
     },
-    "searching": "🔍 Buscando:",
-    "unavailableBadge": "⚠️ No disponible",
+    "searching": "Buscando:",
+    "unavailableBadge": "No disponible",
     "clearSearch": "Limpiar búsqueda",
     "productList": "Listado de productos"
   },
@@ -162,12 +163,12 @@
       "phone": "Teléfono",
       "address": "Dirección",
       "status": "Estado de la cuenta:",
-      "active": "✓ Activa",
-      "inactive": "✗ Inactiva",
+      "active": "Activa",
+      "inactive": "Inactiva",
       "emailVerified": "Email verificado:",
       "adminVerified": "Verificada por admin",
-      "emailVerifiedYes": "✓ Sí",
-      "emailVerifiedNo": "✗ No",
+      "emailVerifiedYes": "Sí",
+      "emailVerifiedNo": "No",
       "roles": "Roles:",
       "memberSince": "Miembro desde:",
       "tooltips": {
@@ -175,7 +176,7 @@
         "emailNotVerified": "Email no verificado"
       }
     },
-    "readonlyNote": "ℹ️ Los datos personales no pueden modificarse una vez completados.",
+    "readonlyNote": "Los datos personales no pueden modificarse una vez completados.",
     "editPhone": "Editar teléfono",
     "editAddress": "Editar dirección",
     "namePlaceholder": "Juan Pérez",
@@ -518,8 +519,8 @@
     "required": "Campo requerido",
     "errorLabel": "Error:",
     "sending": "Enviando",
-    "sendingEllipsis": "⏳ Enviando...",
-    "searchAction": "🔍 Buscar",
+    "sendingEllipsis": "Enviando...",
+    "searchAction": "Buscar",
     "loading": "Cargando…",
     "success": "Éxito"
   },
@@ -708,8 +709,8 @@
       "distributorRequired": "Distribuidor requerido",
       "clientRequired": "Cliente requerido",
       "noProductsAvailable": "No hay productos disponibles",
-      "noProductsLoaded": "⚠️ No se cargaron productos. Total: {{count}}",
-      "availableProductsCount": "✅ {{count}} productos disponibles",
+      "noProductsLoaded": "No se cargaron productos. Total: {{count}}",
+      "availableProductsCount": "{{count}} productos disponibles",
       "removeLineTitle": "Eliminar línea"
     },
     "err": {
@@ -740,7 +741,7 @@
       "filteredLabel": "Filtradas:"
     },
     "empty": "No hay ventas registradas",
-    "lineItems": "📦 Productos de la venta",
+    "lineItems": "Productos de la venta",
     "quantity": "Cantidad:",
     "noClients": "No hay clientes disponibles",
     "noProducts": "No hay productos disponibles"
@@ -895,7 +896,8 @@
     "successUpdate": "Autoridad actualizada correctamente",
     "successDelete": "Autoridad eliminada correctamente",
     "range": "Rango",
-    "confirmDelete": "¿Eliminar esta autoridad?"
+    "confirmDelete": "¿Eliminar esta autoridad?",
+    "chartLoading": "Cargando gráfico…"
   },
   "authority": {
     "fields": {
@@ -1036,8 +1038,8 @@
     },
     "noResults": "Sin resultados para el filtro aplicado",
     "confirmDelete": "¿Eliminar esta decisión?",
-    "availableTopics": "📋 Temáticas disponibles",
-    "searchTopic": "🔍 Buscar temática…"
+    "availableTopics": "Temáticas disponibles",
+    "searchTopic": "Buscar temática…"
   },
   "topics": {
     "title": "Temáticas",
@@ -1390,10 +1392,10 @@
       "topProducts": "Top Productos por Ventas",
       "decisionsImpact": "Impacto de Decisiones en Ventas",
       "decisionsImpactDesc": "Evolución de ventas y decisiones estratégicas a lo largo del tiempo",
-      "decisionsImpactNote": "Este gráfico muestra datos de ejemplo. Las líneas verticales azules (📌) representan decisiones estratégicas tomadas en diferentes momentos, y los pines rojos marcan el impacto en las ventas.",
+      "decisionsImpactNote": "Este gráfico muestra datos de ejemplo. Las líneas verticales azules () representan decisiones estratégicas tomadas en diferentes momentos, y los pines rojos marcan el impacto en las ventas.",
       "salesPrediction": "Predicción de Ventas Futuras",
       "salesPredictionDesc": "Proyección de ventas para los próximos 6 meses usando regresión lineal",
-      "salesPredictionNote": "Este gráfico muestra una proyección basada en regresión lineal. La línea dorada (📊) representa datos históricos, la azul (🔮) muestra la predicción y la roja punteada (📈) es la línea de tendencia calculada.",
+      "salesPredictionNote": "Este gráfico muestra una proyección basada en regresión lineal. La línea dorada () representa datos históricos, la azul () muestra la predicción y la roja punteada () es la línea de tendencia calculada.",
       "noteLabel": "Nota:",
       "prediction": {
         "title": "Predicción Científica Multi-Método",
@@ -1419,7 +1421,8 @@
           "predictionStart": "Inicio Predicción"
         },
         "sales": "Ventas ($)"
-      }
+      },
+      "loading": "Cargando gráficos…"
     },
     "list": "Listado de Revisiones",
     "emptyTitle": "No hay revisiones",
@@ -1459,8 +1462,8 @@
         "dateRequired": "Fecha requerida"
       }
     },
-    "sampleData": "📋 Datos de ejemplo",
-    "sampleDataAlt": "🧪 Datos de ejemplo",
+    "sampleData": "Datos de ejemplo",
+    "sampleDataAlt": "Datos de ejemplo",
     "placeholder": "Espacio reservado",
     "confirmDelete": "¿Eliminar esta revisión?",
     "errorCreate": "No se pudo crear la revisión",
@@ -1524,14 +1527,14 @@
     "title": "Bandeja de entrada",
     "loading": "Cargando bandeja...",
     "profileCompletenessSuffix": "% completo",
-    "verified": "✅ Verificado",
-    "notVerified": "⏳ No verificado",
+    "verified": "Verificado",
+    "notVerified": "No verificado",
     "tabs": {
-      "userVerificationPlural": "✅ Verificación de usuarios",
-      "roleRequestsPlural": "📋 Solicitudes de rol",
-      "userVerification": "✅ Verificación de usuario",
-      "roleRequest": "📋 Solicitud de rol",
-      "notifications": "🔔 Notificaciones"
+      "userVerificationPlural": "Verificación de usuarios",
+      "roleRequestsPlural": "Solicitudes de rol",
+      "userVerification": "Verificación de usuario",
+      "roleRequest": "Solicitud de rol",
+      "notifications": "Notificaciones"
     },
     "blocked": {
       "title": "Sección bloqueada",
@@ -1644,10 +1647,10 @@
         "desc": "Tu cuenta ha sido verificada exitosamente por un administrador.",
         "benefitsTitle": "Beneficios de la verificación:",
         "benefits": [
-          "✓ Acceso completo a funciones avanzadas",
-          "✓ Capacidad para realizar compras",
-          "✓ Capacidad para solicitar roles especiales",
-          "✓ Prioridad en soporte técnico"
+          "Acceso completo a funciones avanzadas",
+          "Capacidad para realizar compras",
+          "Capacidad para solicitar roles especiales",
+          "Prioridad en soporte técnico"
         ]
       },
       "request": {
@@ -1938,7 +1941,7 @@
       "justCounter": "{{n}}/500 caracteres",
       "justMinWarn": "(mínimo 20 si proporcionás justificación)",
       "minCharacters": "Mínimo 20 caracteres",
-      "valid": "Válido ✓",
+      "valid": "Válido",
       "continue": "Continuar",
       "incompatibleNote": "Nota: el rol {{role}} es incompatible con: {{list}}",
       "distributor": {
@@ -2389,10 +2392,10 @@
     "checkInbox": "Revisá tu bandeja de entrada y hacé clic en el enlace para verificar tu cuenta.",
     "noEmail": "¿No recibiste el email?",
     "resendHint": "Usá el botón de abajo para reenviarlo.",
-    "resendAgain": "📧 Reenviar nuevamente",
-    "sendVerification": "📧 Enviar email de verificación",
+    "resendAgain": "Reenviar nuevamente",
+    "sendVerification": "Enviar email de verificación",
     "waitingVerification": "Esperando verificación…",
-    "resendEmail": "📧 Reenviar email",
+    "resendEmail": "Reenviar email",
     "emailOrUser": "Email o usuario",
     "password": "Contraseña",
     "noAccount": "¿No tenés cuenta?",
@@ -2433,7 +2436,7 @@
   "users": {
     "noneVerified": "No hay usuarios verificados disponibles",
     "mustBeVerified": "Los usuarios deben tener su cuenta verificada por un administrador y perfil completo al 100% para poder ser seleccionados.",
-    "verifiedBadge": "✓ Verificado",
+    "verifiedBadge": "Verificado",
     "profileFull": "Perfil 100%"
   }
 }

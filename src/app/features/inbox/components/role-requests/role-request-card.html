@@ -10,7 +10,7 @@
       <div class="role-info">
         <div *ngIf="request.isRoleChange" class="role-change">
           <span class="role-badge from">{{ getRoleLabel(request.roleToRemove!) }}</span>
-          <span class="arrow">→</span>
+          <span class="arrow"><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></span>
           <span class="role-badge to">{{ getRoleLabel(request.requestedRole) }}</span>
           <span class="change-label">{{ 'roleRequests.card.changeLabel' | translate }}</span>
         </div>
@@ -24,7 +24,7 @@
 
     <div class="card-actions">
       <span [class]="getStatusBadgeClass(request.status)">
-        <span class="icon">{{ getStatusIcon(request.status) }}</span>
+        <span class="icon material-symbols-outlined" aria-hidden="true">{{ getStatusIcon(request.status) }}</span>
         {{ getStatusText(request.status) }}
       </span>
       <button class="expand-btn" type="button" [attr.aria-label]="isExpanded ? 'Contraer' : 'Expandir'">
@@ -66,7 +66,7 @@
 
     <div *ngIf="isAdmin && request.status === RequestStatus.PENDING" class="action-buttons">
       <button class="btn btn-evaluate" (click)="onReview('approve', $event)">
-        <span class="icon">⚖️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">balance</span></span>
         {{ 'roleRequests.card.actions.evaluate' | translate : {} : 'Evaluar Solicitud' }}
       </button>
     </div>

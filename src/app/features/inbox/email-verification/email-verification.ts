@@ -24,7 +24,7 @@ import { logger } from '../../../core/logger';
 
       <!-- Estado: Éxito -->
       <div *ngIf="state() === 'ok'" class="state-box">
-        <div class="success-icon">✓</div>
+        <div class="success-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></div>
         <h2 class="state-title">¡Email verificado!</h2>
         <div style="margin: 0; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; color: #e5e7eb; font-size: 0.95rem; line-height: 1.5; text-align: center;">
           Tu dirección de email ha sido verificada correctamente.
@@ -41,11 +41,11 @@ import { logger } from '../../../core/logger';
 
       <!-- Estado: Error -->
       <div *ngIf="state() === 'error'" class="state-box">
-        <div class="error-icon">✕</div>
+        <div class="error-icon"><span class="material-symbols-outlined" aria-hidden="true">close</span></div>
         <h2 class="state-title">Error de verificación</h2>
         <div class="error-message">{{ message() }}</div>
         <button class="btn btn-primary" (click)="goHome()">
-          🏠 Ir al inicio
+          <span class="material-symbols-outlined" aria-hidden="true">home</span> Ir al inicio
         </button>
       </div>
 

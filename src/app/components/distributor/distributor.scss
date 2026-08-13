@@ -317,13 +317,6 @@
     gap: var(--sp-2);
   }
 
-  /* Estadísticas - hacer responsive */
-  .glass-dark > div[style*="display: flex"] {
-    flex-direction: column !important;
-    gap: var(--sp-2) !important;
-    align-items: flex-start !important;
-  }
-
   /* Filtros - hacer responsive */
   .filters {
     flex-direction: column;

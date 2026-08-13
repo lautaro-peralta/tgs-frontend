@@ -19,8 +19,8 @@
        role="status"
        aria-live="polite">
     <div class="toast-icon">
-      <span *ngIf="successKey === 'notifications.userVerificationApproved'">✓</span>
-      <span *ngIf="successKey === 'notifications.userVerificationRejected'">ℹ</span>
+      <span *ngIf="successKey === 'notifications.userVerificationApproved'"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
+      <span *ngIf="successKey === 'notifications.userVerificationRejected'"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
     </div>
     <div class="toast-content">
       <strong class="toast-title">
@@ -34,7 +34,7 @@
   <div *ngIf="loading" class="loading">{{ 'userVerification.adminInbox.loading' | translate }}</div>
 
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">❌</span>
+    <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">cancel</span></span>
     {{ error }}
     <button class="btn-link" (click)="loadVerifications()">{{ 'userVerification.adminInbox.errorRetry' | translate
       }}</button>
@@ -57,13 +57,13 @@
     </div>
 
     <button class="btn btn-secondary btn-sm" (click)="loadVerifications()">
-      <span class="icon">🔄</span>
+      <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></span>
       {{ 'userVerification.adminInbox.refresh' | translate }}
     </button>
   </div>
 
   <div *ngIf="!loading && !error && filteredVerifications.length === 0" class="empty-state">
-    <div class="empty-icon">🔍</div>
+    <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">search</span></div>
     <h3>{{ 'userVerification.adminInbox.empty.title' | translate }}</h3>
     <p>{{ 'userVerification.adminInbox.empty.desc' | translate }}</p>
   </div>

@@ -362,3 +362,98 @@
 .scroll-list--spaced   { margin-top: var(--sp-2); }
 .pick-box--spaced      { margin-top: var(--sp-2); }
 .tag--inline           { margin-left: 4px; }
+
+// ── Estados de carga ────────────────────────────────────────────────────────
+// Casi todas las pantallas anunciaban la carga con un simple "Cargando…" en
+// texto plano, y los gráficos no anunciaban nada: entre que se pedían los
+// datos y aparecía la primera línea el panel se veía vacío, sin señal de que
+// algo estuviera pasando. Estas clases dan la misma señal en todas.
+
+@keyframes tgs-spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(255, 255, 255, .12);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: tgs-spin .9s linear infinite;
+  flex-shrink: 0;
+}
+
+.spinner--sm {
+  width: 22px;
+  height: 22px;
+  border-width: 2px;
+}
+
+// Bloque de carga a nivel de sección/página.
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-6) var(--sp-4);
+  color: var(--muted);
+  text-align: center;
+}
+
+.loading-state__text {
+  margin: 0;
+  font-size: .95rem;
+}
+
+// Carga de un gráfico: ocupa la misma caja que ocupará el gráfico, así el
+// panel no da un salto de altura cuando termina de cargar.
+.chart-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  width: 100%;
+  height: 320px;
+  color: var(--muted);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, .02);
+  border: 1px dashed rgba(255, 255, 255, .10);
+}
+
+.chart-loading--tall { height: 420px; }
+.chart-loading--md   { height: 280px; }
+.chart-loading--sm   { height: 220px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2.4s; }
+}
+
+// ── Iconos ──────────────────────────────────────────────────────────────────
+// La hoja de Google define la familia y las ligaduras de .material-symbols-outlined;
+// aquí sólo se ajusta cómo se sientan junto al texto. Antes los iconos aparecían
+// sueltos en la navbar y el resto de la interfaz usaba emojis, que cada sistema
+// dibuja a su manera y no heredan el color del texto.
+.material-symbols-outlined {
+  font-size: 1.15em;
+  line-height: 1;
+  vertical-align: -.18em;
+  // El icono acompaña al texto: hereda su color en vez de traer el suyo.
+  color: inherit;
+  // Que no se estire ni se encoja dentro de un contenedor flex.
+  flex-shrink: 0;
+  user-select: none;
+}
+
+// Cuando el icono es el único contenido de un contenedor que ya define su
+// tamaño (tarjetas de estadística, estados vacíos), manda el contenedor.
+.stat-icon .material-symbols-outlined,
+.empty-icon .material-symbols-outlined,
+.blocked-icon .material-symbols-outlined,
+.toast-floating-icon .material-symbols-outlined,
+.success-icon .material-symbols-outlined,
+.error-icon .material-symbols-outlined {
+  font-size: 1em;
+  vertical-align: baseline;
+}

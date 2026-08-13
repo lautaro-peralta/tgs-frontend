@@ -30,11 +30,11 @@ export class NotificationCardComponent {
 
   getTypeIcon(type: NotificationType): string {
     const icons: Record<NotificationType, string> = {
-      [NotificationType.USER_VERIFICATION_APPROVED]: '✅',
-      [NotificationType.USER_VERIFICATION_REJECTED]: '❌',
-      [NotificationType.ROLE_REQUEST_APPROVED]: '🎉',
-      [NotificationType.ROLE_REQUEST_REJECTED]: '⚠️',
-      [NotificationType.SYSTEM]: 'ℹ️',
+      [NotificationType.USER_VERIFICATION_APPROVED]: 'check_circle',
+      [NotificationType.USER_VERIFICATION_REJECTED]: 'cancel',
+      [NotificationType.ROLE_REQUEST_APPROVED]: 'celebration',
+      [NotificationType.ROLE_REQUEST_REJECTED]: 'warning',
+      [NotificationType.SYSTEM]: 'info',
     };
     return icons[type];
   }

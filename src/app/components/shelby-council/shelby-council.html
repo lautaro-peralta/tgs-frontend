@@ -39,19 +39,20 @@
 
     <!-- MENSAJES DE ESTADO -->
     <div class="success-banner" *ngIf="success() as msg">
-      <strong>✓ {{ 'common.success' | translate : {} : 'Éxito' }}</strong> {{ msg }}
+      <strong><span class="material-symbols-outlined" aria-hidden="true">check</span> {{ 'common.success' | translate : {} : 'Éxito' }}</strong> {{ msg }}
     </div>
     <div class="error" *ngIf="error() as err">
-      <strong>✗ {{ 'common.error' | translate : {} : 'Error' }}</strong> {{ err }}
+      <strong><span class="material-symbols-outlined" aria-hidden="true">close</span> {{ 'common.error' | translate : {} : 'Error' }}</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">
-      🔄 {{ 'shelbyCouncil.loading' | translate : {} : 'Cargando...' }}
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text"><span class="material-symbols-outlined" aria-hidden="true">refresh</span> {{ 'shelbyCouncil.loading' | translate : {} : 'Cargando...' }}</p>
     </div>
 
     <!-- FILTROS -->
     <section class="filters">
       <label class="label u-grow">
-        <span class="label-text">🔍 {{ 'shelbyCouncil.filters.search' | translate : {} : 'Buscar' }}</span>
+        <span class="label-text"><span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'shelbyCouncil.filters.search' | translate : {} : 'Buscar' }}</span>
         <input class="input" type="text" [value]="fTextInput()" (input)="fTextInput.set($any($event.target).value)"
           (keyup.enter)="applyFilters()"
           [placeholder]="'shelbyCouncil.filters.searchPlaceholder' | translate : {} : 'Socio, decisión, rol, notas...'"
@@ -66,27 +67,27 @@
         </div>
 
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
 
     <!-- LISTADO -->
     <section class="subsection">
-      <h3 class="sub-title">📋 {{ 'shelbyCouncil.list' | translate : {} : 'Listado' }}</h3>
+      <h3 class="sub-title"><span class="material-symbols-outlined" aria-hidden="true">content_paste</span> {{ 'shelbyCouncil.list' | translate : {} : 'Listado' }}</h3>
 
       <div class="table-wrap" *ngIf="filtered().length; else emptyState">
         <table class="table">
           <thead>
             <tr>
               <th class="u-w-80">ID</th>
-              <th>{{ 'shelbyCouncil.fields.partner' | translate : {} : '👤 Socio' }}</th>
-              <th>{{ 'shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión' }}</th>
-              <th class="u-w-130">{{ 'shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso' }}</th>
-              <th>{{ 'shelbyCouncil.fields.role' | translate : {} : '🎯 Rol' }}</th>
+              <th>{{ 'shelbyCouncil.fields.partner' | translate : {} : 'Socio' }}</th>
+              <th>{{ 'shelbyCouncil.fields.decision' | translate : {} : 'Decisión' }}</th>
+              <th class="u-w-130">{{ 'shelbyCouncil.fields.joinDate' | translate : {} : 'Ingreso' }}</th>
+              <th>{{ 'shelbyCouncil.fields.role' | translate : {} : 'Rol' }}</th>
               <th *ngIf="canEdit() || canDelete()" class="right u-w-160">
                 {{ 'common.actions' | translate : {} : 'Acciones' }}
               </th>
@@ -95,31 +96,31 @@
           <tbody>
             <tr *ngFor="let it of filtered(); trackBy: trackById">
               <td [attr.data-label]="'ID'"><span class="badge badge-neutral">#{{ it.id }}</span></td>
-              <td [attr.data-label]="('shelbyCouncil.fields.partner' | translate : {} : '👤 Socio')">
+              <td [attr.data-label]="('shelbyCouncil.fields.partner' | translate : {} : 'Socio')">
                 <div class="cell-content">
                   <strong>{{ it.partner?.name || '—' }}</strong>
                   <small class="muted">DNI: {{ it.partner?.dni }}</small>
                 </div>
               </td>
-              <td [attr.data-label]="('shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión')">
+              <td [attr.data-label]="('shelbyCouncil.fields.decision' | translate : {} : 'Decisión')">
                 <div class="cell-content">
                   <strong>#{{ it.decision?.id }}</strong>
                   <small class="muted">{{ it.decision?.description || '—' }}</small>
                 </div>
               </td>
-              <td [attr.data-label]="('shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso')">{{ it.joinDate | date:'dd/MM/yyyy' }}</td>
-              <td [attr.data-label]="('shelbyCouncil.fields.role' | translate : {} : '🎯 Rol')">
+              <td [attr.data-label]="('shelbyCouncil.fields.joinDate' | translate : {} : 'Ingreso')">{{ it.joinDate | date:'dd/MM/yyyy' }}</td>
+              <td [attr.data-label]="('shelbyCouncil.fields.role' | translate : {} : 'Rol')">
                 <span class="badge badge-role" *ngIf="it.role">{{ it.role }}</span>
                 <span class="muted" *ngIf="!it.role">—</span>
               </td>
               <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="('common.actions' | translate : {} : 'Acciones')">
                 <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
                   [attr.title]="'common.edit' | translate : {} : 'Editar'">
-                  ✏️
+                  <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                 </button>
                 <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
                   [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
-                  🗑️
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
               </td>
             </tr>
@@ -130,7 +131,7 @@
       <!-- Empty state -->
       <ng-template #emptyState>
         <div class="empty">
-          <div class="empty-icon">🔭</div>
+          <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">explore</span></div>
           <h3>{{ fTextApplied() ? 'Sin resultados' : ('shelbyCouncil.emptyTitle' | translate : {} : 'No hay registros')
             }}
           </h3>
@@ -167,7 +168,7 @@
       <!-- PARTNER -->
       <label class="label" [class.error]="partnerDniInvalid">
         <span class="label-text">
-          👤 {{ 'shelbyCouncil.fields.partner' | translate : {} : 'Socio' }}
+          <span class="material-symbols-outlined" aria-hidden="true">person</span> {{ 'shelbyCouncil.fields.partner' | translate : {} : 'Socio' }}
           <span class="required">*</span>
         </span>
         <select class="input" formControlName="partnerDni" [disabled]="isEdit()">
@@ -190,7 +191,7 @@
       <!-- DECISION -->
       <label class="label" [class.error]="decisionIdInvalid">
         <span class="label-text">
-          📊 {{ 'shelbyCouncil.fields.decision' | translate : {} : 'Decisión' }}
+          <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span> {{ 'shelbyCouncil.fields.decision' | translate : {} : 'Decisión' }}
           <span class="required">*</span>
         </span>
         <select class="input" formControlName="decisionId" [disabled]="isEdit()">
@@ -213,7 +214,7 @@
       <!-- Fecha de Ingreso -->
       <label class="label" [class.error]="joinDateInvalid">
         <span class="label-text">
-          📅 {{ 'shelbyCouncil.fields.joinDate' | translate : {} : 'Fecha de ingreso' }}
+          <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span> {{ 'shelbyCouncil.fields.joinDate' | translate : {} : 'Fecha de ingreso' }}
           <span class="required">*</span>
         </span>
         <input class="input" type="date" formControlName="joinDate" [attr.aria-invalid]="joinDateInvalid" />
@@ -225,7 +226,7 @@
       <!-- Rol -->
       <label class="label">
         <span class="label-text">
-          🎯 {{ 'shelbyCouncil.fields.role' | translate : {} : 'Rol / Responsabilidad' }}
+          <span class="material-symbols-outlined" aria-hidden="true">track_changes</span> {{ 'shelbyCouncil.fields.role' | translate : {} : 'Rol / Responsabilidad' }}
         </span>
         <input class="input" type="text" formControlName="role"
           [placeholder]="'shelbyCouncil.rolePlaceholder' | translate" />
@@ -237,7 +238,7 @@
       <!-- Notas -->
       <label class="label col-2">
         <span class="label-text">
-          📝 {{ 'shelbyCouncil.fields.notes' | translate : {} : 'Notas adicionales' }}
+          <span class="material-symbols-outlined" aria-hidden="true">edit_note</span> {{ 'shelbyCouncil.fields.notes' | translate : {} : 'Notas adicionales' }}
         </span>
         <textarea class="input" rows="3" formControlName="notes"
           [placeholder]="'shelbyCouncil.notesPlaceholder' | translate"></textarea>

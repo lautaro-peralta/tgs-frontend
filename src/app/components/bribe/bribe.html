@@ -96,11 +96,11 @@
     <!-- Botones -->
     <div class="actions-row">
       <button class="btn btn-primary" type="button" (click)="applyFilters()">
-        🔍 {{ 'common.search' | translate }}
+        <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
       </button>
       <button class="btn ghost" type="button" (click)="clearFilters()"
         *ngIf="fTextApplied() || fAmountApplied() || fAuthorityApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all'">
-        🗑️ {{ 'common.clear' | translate }}
+        <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
       </button>
     </div>
   </div>
@@ -109,7 +109,10 @@
     <div *ngIf="error()" class="error">{{ error() }}</div>
 
     <!-- Loading state -->
-    <div *ngIf="loading()" class="loading">{{ 'bribes.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'bribes.loading' | translate }}</p>
+    </div>
 
   <!-- Table -->
   <div class="table-wrap" *ngIf="!loading()">
@@ -159,18 +162,18 @@
               <!-- Si NO está pagado: Botón activo (solo Admin y Socio) -->
               <button *ngIf="!b.paid && canPay()" class="btn success btn--icon" (click)="markAsPaid(b)"
                 [attr.title]="'bribes.actions.pay' | translate">
-                ✅
+                <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
               </button>
 
               <!-- Si YA está pagado: Badge indicador -->
               <div *ngIf="b.paid && canPay()" class="paid-status" [attr.title]="'bribes.status.alreadyPaid' | translate">
-                <span class="paid-icon">🔒</span>
+                <span class="paid-icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></span>
                 <span class="paid-text">{{ 'bribes.paid' | translate }}</span>
               </div>
 
               <!-- Botón eliminar (solo Admin) -->
               <button *ngIf="canDelete()" class="btn danger btn--icon" (click)="delete(b.id)" [attr.title]="'common.delete' | translate">
-                🗑️
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </div>
           </td>

@@ -163,19 +163,15 @@
   gap: .25rem;
 }
 
-/* ✅ CORREGIDO: Grid flexible sin sobreposiciones */
+/* Etiqueta arriba y valor debajo, ocupando el ancho completo de la tarjeta.
+   Con la etiqueta y el valor en columnas (100px + resto) al valor le quedaban
+   ~250px dentro de una tarjeta de 369px, y thegarrisonsystem@gmail.com necesita
+   algo más de 300px con su icono: se partía en dos renglones y el correo se
+   leía cortado. Es la misma disposición que ya se usaba en móvil. */
 .item-line {
   display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: .8rem;
-  align-items: baseline;
-}
-
-@media (max-width: 640px) {
-  .item-line {
-    grid-template-columns: 1fr;
-    gap: .3rem;
-  }
+  grid-template-columns: 1fr;
+  gap: .2rem;
 }
 
 .label {
@@ -188,26 +184,18 @@
 .value {
   color: var(--text-strong);
   font-weight: 800;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .hint {
   margin-top: .15rem;
   font-size: 0.85rem;
-  padding-left: 108px;
-}
-
-@media (max-width: 640px) {
-  .hint {
-    padding-left: 0;
-  }
 }
 
 /* Enlaces con íconos */
 .with-icon {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: .45rem;
 }
 
@@ -367,11 +355,14 @@
 
 .link {
   color: var(--text-strong);
-  text-decoration: none;
-  border-bottom: 1px dashed rgba(255, 255, 255, .28);
-  transition: border-color .2s ease;
+  /* Subrayado con text-decoration y no con border-bottom: el borde se dibuja
+     bajo la caja entera, así que en un enlace de dos renglones aparecía una
+     raya cruzando el segundo y el correo se veía cortado. */
+  text-decoration: underline dashed rgba(255, 255, 255, .28);
+  text-underline-offset: 4px;
+  transition: text-decoration-color .2s ease;
 }
 
 .link:hover {
-  border-bottom-color: rgba(255, 255, 255, .45);
+  text-decoration-color: rgba(255, 255, 255, .45);
 }

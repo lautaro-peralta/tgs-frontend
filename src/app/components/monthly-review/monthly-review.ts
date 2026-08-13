@@ -696,7 +696,7 @@ export class MonthlyReviewComponent implements OnInit {
             name: decision.name,
             xAxis: decision.monthIndex,
             label: {
-              formatter: `{b}\n📌`,
+ formatter: `{b}\n`,
               fontSize: 10,
               fontWeight: 'bold'
             }
@@ -983,7 +983,7 @@ export class MonthlyReviewComponent implements OnInit {
 
           let content = `<div style="min-width: 200px;">`;
           content += `<div style="font-size: 14px; font-weight: bold; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(195, 164, 98, 0.3);">`;
-          content += `📅 ${month}`;
+ content += `${month}`;
           if (!isHistorical) {
             content += ` <span style="background: rgba(96, 165, 250, 0.3); color: #60a5fa; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">${this.tr.instant('monthlyReview.charts.prediction.tooltip.prediction')}</span>`;
           }
@@ -995,7 +995,7 @@ export class MonthlyReviewComponent implements OnInit {
             if (p.seriesName === seriesNames.historical) {
               const val = Math.round(p.value);
               content += `<div style="margin: 6px 0; display: flex; align-items: center; justify-content: space-between;">`;
-              content += `<span style="color: rgba(195, 164, 98, 1);"><b>📊 ${this.tr.instant('monthlyReview.charts.prediction.tooltip.real')}</b></span>`;
+ content += `<span style="color: rgba(195, 164, 98, 1);"><b> ${this.tr.instant('monthlyReview.charts.prediction.tooltip.real')}</b></span>`;
               content += `<span style="color: #c3a462; font-weight: bold; font-size: 16px;">$${val.toLocaleString('es-AR')}</span>`;
               content += `</div>`;
             }
@@ -1003,7 +1003,7 @@ export class MonthlyReviewComponent implements OnInit {
             if (p.seriesName === seriesNames.prediction) {
               const val = Math.round(p.value);
               content += `<div style="margin: 6px 0; display: flex; align-items: center; justify-content: space-between;">`;
-              content += `<span style="color: rgba(96, 165, 250, 1);"><b>🔮 ${this.tr.instant('monthlyReview.charts.prediction.tooltip.projected')}</b></span>`;
+ content += `<span style="color: rgba(96, 165, 250, 1);"><b> ${this.tr.instant('monthlyReview.charts.prediction.tooltip.projected')}</b></span>`;
               content += `<span style="color: #60a5fa; font-weight: bold; font-size: 16px;">$${val.toLocaleString('es-AR')}</span>`;
               content += `</div>`;
             }
@@ -1011,7 +1011,7 @@ export class MonthlyReviewComponent implements OnInit {
             if (p.seriesName === seriesNames.trend) {
               const val = Math.round(p.value);
               content += `<div style="margin: 6px 0; display: flex; align-items: center; justify-content: space-between;">`;
-              content += `<span style="color: #ef4444;"><b>📈 ${this.tr.instant('monthlyReview.charts.prediction.tooltip.trend')}</b></span>`;
+ content += `<span style="color: #ef4444;"><b> ${this.tr.instant('monthlyReview.charts.prediction.tooltip.trend')}</b></span>`;
               content += `<span style="color: #ef4444; font-weight: bold;">$${val.toLocaleString('es-AR')}</span>`;
               content += `</div>`;
             }
@@ -1023,7 +1023,7 @@ export class MonthlyReviewComponent implements OnInit {
             const lower = lowerBounds[dataIndex];
             if (upper && lower) {
               content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(195, 164, 98, 0.2); font-size: 11px; color: rgba(147, 197, 253, 0.8);">`;
-              content += `<div style="margin: 2px 0;">📊 <b>${this.tr.instant('monthlyReview.charts.prediction.tooltip.confidence')}:</b></div>`;
+ content += `<div style="margin: 2px 0;"><b>${this.tr.instant('monthlyReview.charts.prediction.tooltip.confidence')}:</b></div>`;
               content += `<div style="margin-left: 16px;">${this.tr.instant('monthlyReview.charts.prediction.tooltip.max')}: $${upper.toLocaleString('es-AR')}</div>`;
               content += `<div style="margin-left: 16px;">${this.tr.instant('monthlyReview.charts.prediction.tooltip.min')}: $${lower.toLocaleString('es-AR')}</div>`;
               content += `</div>`;

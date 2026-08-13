@@ -11,7 +11,7 @@
 
     <!-- ✅ Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -43,10 +43,10 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied() || topicFilterApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
@@ -88,9 +88,9 @@
             <td [attr.data-label]="'decisions.table.end' | translate">{{ formatDateDDMMYYYY(d.endDate) }}</td>
             <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'decisions.table.actions' | translate">
               <button *ngIf="canEdit()" class="btn ghost btn--icon" (click)="edit(d); isFormOpen = true"
-                [attr.title]="'common.edit' | translate">✏️</button>
+                [attr.title]="'common.edit' | translate"><span class="material-symbols-outlined" aria-hidden="true">edit</span></button>
               <button *ngIf="canDelete()" class="btn danger btn--icon" (click)="delete(d.id)"
-                [attr.title]="'common.delete' | translate">🗑️</button>
+                [attr.title]="'common.delete' | translate"><span class="material-symbols-outlined" aria-hidden="true">delete</span></button>
             </td>
           </tr>
         </tbody>
@@ -143,7 +143,7 @@
         <!-- Header del menú desplegable -->
         <div class="topics-toggle" (click)="toggleTopics()" [class.open]="topicsOpen()">
           <div class="topics-toggle-content">
-            <span class="topics-toggle-icon">{{ topicsOpen() ? '▼' : '▶' }}</span>
+            <span class="topics-toggle-icon">{{ topicsOpen() ? '' : '▶' }}</span>
             <span class="topics-toggle-title">{{ 'decisions.availableTopics' | translate }}</span>
             <span class="topics-toggle-count">({{ filteredTopics().length }})</span>
           </div>
@@ -158,7 +158,7 @@
             (click)="selectTopic(t.id)">
             <div class="topic-card-header">
               <span class="topic-id">#{{ t.id }}</span>
-              <span class="topic-check" *ngIf="form.controls.topicId.value === t.id">✓</span>
+              <span class="topic-check" *ngIf="form.controls.topicId.value === t.id"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
             </div>
             <div class="topic-description">{{ t.description }}</div>
           </div>

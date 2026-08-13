@@ -274,25 +274,6 @@
     display: none;
   }
 
-  /* Estadísticas - hacer responsive */
-  .glass-dark > div[style*="grid-template-columns"] {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: var(--sp-2) !important;
-    padding: var(--sp-2) !important;
-  }
-
-  .glass-dark > div[style*="grid-template-columns"] > div {
-    padding: var(--sp-2);
-  }
-
-  .glass-dark > div[style*="grid-template-columns"] > div > div:first-child {
-    font-size: 10px !important;
-  }
-
-  .glass-dark > div[style*="grid-template-columns"] > div > div:last-child {
-    font-size: 1.2rem !important;
-  }
-
   /* Filtros - hacer responsive */
   .filters {
     flex-direction: column;

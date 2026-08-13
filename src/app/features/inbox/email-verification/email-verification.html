@@ -14,7 +14,7 @@
          ESTADO: ÉXITO
          ======================================== -->
     <div *ngIf="state() === 'success'" class="state-container success">
-      <div class="icon success-icon">✓</div>
+      <div class="icon success-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></div>
       <h2>{{ 'emailVerification.done' | translate }}</h2>
       <p>{{ message() }}</p>
       <p class="redirect-text">{{ 'emailVerification.redirecting' | translate }}</p>
@@ -29,7 +29,7 @@
          ESTADO: ERROR
          ======================================== -->
     <div *ngIf="state() === 'error'" class="state-container error">
-      <div class="icon error-icon">✗</div>
+      <div class="icon error-icon"><span class="material-symbols-outlined" aria-hidden="true">close</span></div>
       <h2>{{ 'emailVerification.error' | translate }}</h2>
       <p class="error-message">{{ message() }}</p>
 
@@ -64,7 +64,7 @@
          ESTADO: IDLE (esperando o procesando)
          ======================================== -->
     <div *ngIf="state() === 'idle'" class="state-container idle">
-      <div class="icon idle-icon">📧</div>
+      <div class="icon idle-icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></div>
       <h2>{{ 'emailVerification.title' | translate }}</h2>
       <p>{{ message() }}</p>
       <div class="actions">

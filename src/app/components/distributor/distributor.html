@@ -12,7 +12,7 @@
 
     <!-- ✅ Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -31,7 +31,10 @@
     <div class="error" *ngIf="error() as err">
       <strong>{{ 'common.error' | translate }}:</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">{{ 'distributors.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'distributors.loading' | translate }}</p>
+    </div>
 
     <section class="filters">
       <label class="label u-grow">
@@ -42,10 +45,10 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -87,11 +90,11 @@
               <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'distributors.table.actions' | translate">
                 <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(d)"
                   [attr.title]="'common.edit' | translate">
-                  ✏️
+                  <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                 </button>
                 <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(d.dni)" [disabled]="loading()"
                   [attr.title]="'common.delete' | translate">
-                  🗑️
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
               </td>
             </tr>
@@ -268,7 +271,7 @@
                   <button class="input-action-btn" type="button"
                     (click)="togglePasswordVisibility()"
                     [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
-                    {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+                    {{ showPassword() ? '' : '‍' }}
                   </button>
                 </div>
                 <small class="hint" *ngIf="form.controls.password.invalid && form.controls.password.touched">

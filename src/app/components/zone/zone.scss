@@ -304,8 +304,7 @@
   }
 
   /* Estadísticas en móvil */
-  .sede-summary,
-  div[style*="display: flex"] {
+  .sede-summary {
     flex-direction: column !important;
     gap: var(--sp-2) !important;
   }

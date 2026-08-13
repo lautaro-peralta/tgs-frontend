@@ -419,9 +419,9 @@ export class SaleComponent implements OnInit {
 
     // 🏆 ECharts: Top productos (Podio de ranking)
     const podiumColors = [
-      { gradient: ['rgba(255, 215, 0, 1)', 'rgba(255, 193, 7, 0.7)'], medal: '🥇', glow: 'rgba(255, 215, 0, 0.6)' },
-      { gradient: ['rgba(192, 192, 192, 1)', 'rgba(169, 169, 169, 0.7)'], medal: '🥈', glow: 'rgba(192, 192, 192, 0.6)' },
-      { gradient: ['rgba(205, 127, 50, 1)', 'rgba(184, 115, 51, 0.7)'], medal: '🥉', glow: 'rgba(205, 127, 50, 0.6)' },
+      { gradient: ['rgba(255, 215, 0, 1)', 'rgba(255, 193, 7, 0.7)'], medal: '①', glow: 'rgba(255, 215, 0, 0.6)' },
+      { gradient: ['rgba(192, 192, 192, 1)', 'rgba(169, 169, 169, 0.7)'], medal: '②', glow: 'rgba(192, 192, 192, 0.6)' },
+      { gradient: ['rgba(205, 127, 50, 1)', 'rgba(184, 115, 51, 0.7)'], medal: '③', glow: 'rgba(205, 127, 50, 0.6)' },
       { gradient: ['rgba(59, 130, 246, 0.9)', 'rgba(59, 130, 246, 0.6)'], medal: '④', glow: 'rgba(59, 130, 246, 0.5)' },
       { gradient: ['rgba(156, 163, 175, 0.8)', 'rgba(156, 163, 175, 0.5)'], medal: '⑤', glow: 'rgba(156, 163, 175, 0.4)' }
     ];

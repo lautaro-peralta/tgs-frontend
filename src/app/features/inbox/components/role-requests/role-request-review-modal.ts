@@ -77,13 +77,13 @@ export class RoleRequestReviewModalComponent {
 
       if (role === 'DISTRIBUTOR') {
         if (!data || !data.zoneId || !data.address) {
-          this.error = '❌ Esta solicitud no tiene los datos adicionales requeridos (zona y dirección). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
+          this.error = 'Esta solicitud no tiene los datos adicionales requeridos (zona y dirección). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
           logger.error('❌ Cannot approve DISTRIBUTOR without additionalData:', data);
           return;
         }
       } else if (role === 'AUTHORITY') {
         if (!data || !data.rank || !data.zoneId) {
-          this.error = '❌ Esta solicitud no tiene los datos adicionales requeridos (rango y zona). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
+          this.error = 'Esta solicitud no tiene los datos adicionales requeridos (rango y zona). No se puede aprobar. Por favor, pide al usuario que cree una nueva solicitud.';
           logger.error('❌ Cannot approve AUTHORITY without additionalData:', data);
           return;
         }

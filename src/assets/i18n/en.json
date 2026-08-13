@@ -31,7 +31,8 @@
     "rolesLabel": "Roles:",
     "ariaMain": "Main",
     "ariaPages": "Pages",
-    "ariaUser": "User"
+    "ariaUser": "User",
+    "account": "Account"
   },
   "store": {
     "title": "Store",
@@ -70,8 +71,8 @@
       "completeProfile100": "Complete your profile to 100% to purchase.",
       "completeProfile": "Complete profile"
     },
-    "searching": "🔍 Searching:",
-    "unavailableBadge": "⚠️ Unavailable",
+    "searching": "Searching:",
+    "unavailableBadge": "Unavailable",
     "clearSearch": "Clear search",
     "productList": "Product list"
   },
@@ -144,7 +145,7 @@
       "phone": "Phone",
       "address": "Address",
       "status": "Account status:",
-      "active": "✓ Active",
+      "active": "Active",
       "inactive": "Inactive",
       "emailVerified": "Email verified:",
       "adminVerified": "Admin verified",
@@ -157,7 +158,7 @@
         "emailNotVerified": "Email not verified"
       }
     },
-    "readonlyNote": "ℹ️ Personal data cannot be modified once completed.",
+    "readonlyNote": "Personal data cannot be modified once completed.",
     "editPhone": "Edit phone",
     "editAddress": "Edit address",
     "namePlaceholder": "Jane Doe",
@@ -503,8 +504,8 @@
     "required": "Required field",
     "errorLabel": "Error:",
     "sending": "Sending",
-    "sendingEllipsis": "⏳ Sending…",
-    "searchAction": "🔍 Search",
+    "sendingEllipsis": "Sending…",
+    "searchAction": "Search",
     "loading": "Loading…",
     "success": "Success"
   },
@@ -693,8 +694,8 @@
       "distributorRequired": "Distributor is required",
       "clientRequired": "Client required",
       "noProductsAvailable": "No products available",
-      "noProductsLoaded": "⚠️No products loaded. Total: {{count}}",
-      "availableProductsCount": "✅ {{count}} products available",
+      "noProductsLoaded": "No products loaded. Total: {{count}}",
+      "availableProductsCount": "{{count}} products available",
       "removeLineTitle": "Remove line"
     },
     "err": {
@@ -725,7 +726,7 @@
       "filteredLabel": "Filtered:"
     },
     "empty": "No sales recorded",
-    "lineItems": "📦 Items in this sale",
+    "lineItems": "Items in this sale",
     "quantity": "Quantity:",
     "noClients": "No clients available",
     "noProducts": "No products available"
@@ -880,7 +881,8 @@
     "successUpdate": "Authority updated successfully",
     "successDelete": "Authority deleted successfully",
     "range": "Rank",
-    "confirmDelete": "Delete this authority?"
+    "confirmDelete": "Delete this authority?",
+    "chartLoading": "Loading chart…"
   },
   "authority": {
     "fields": {
@@ -1021,8 +1023,8 @@
     },
     "noResults": "No results for the applied filter",
     "confirmDelete": "Delete this decision?",
-    "availableTopics": "📋 Available topics",
-    "searchTopic": "🔍 Search topics…"
+    "availableTopics": "Available topics",
+    "searchTopic": "Search topics…"
   },
   "topics": {
     "title": "Topics",
@@ -1393,10 +1395,10 @@
       "topProducts": "Top products by sales",
       "decisionsImpact": "Impact of Decisions on Sales",
       "decisionsImpactDesc": "Sales evolution and strategic decisions over time",
-      "decisionsImpactNote": "This chart shows sample data. The blue vertical lines (📌) represent strategic decisions made at different times, and the red pins mark the impact on sales.",
+      "decisionsImpactNote": "This chart shows sample data. The blue vertical lines () represent strategic decisions made at different times, and the red pins mark the impact on sales.",
       "salesPrediction": "Future Sales Prediction",
       "salesPredictionDesc": "Sales projection for the next 6 months using linear regression",
-      "salesPredictionNote": "This chart shows a projection based on linear regression. The golden line (📊) represents historical data, the blue (🔮) shows the prediction, and the red dotted line (📈) is the calculated trend line.",
+      "salesPredictionNote": "This chart shows a projection based on linear regression. The golden line () represents historical data, the blue () shows the prediction, and the red dotted line () is the calculated trend line.",
       "noteLabel": "Note:",
       "prediction": {
         "title": "Multi-Method Scientific Prediction",
@@ -1422,7 +1424,8 @@
           "predictionStart": "Prediction Start"
         },
         "sales": "Sales ($)"
-      }
+      },
+      "loading": "Loading charts…"
     },
     "list": "List of Reviews",
     "emptyTitle": "No reviews",
@@ -1466,8 +1469,8 @@
     "errorSave": "Could not save review",
     "errorDelete": "Could not delete review",
     "confirmDelete": "Delete this review?",
-    "sampleData": "📋 Sample data",
-    "sampleDataAlt": "🧪 Sample data",
+    "sampleData": "Sample data",
+    "sampleDataAlt": "Sample data",
     "placeholder": "Reserved space"
   },
   "clandestineAgreement": {
@@ -1527,14 +1530,14 @@
     "title": "Inbox",
     "loading": "Loading inbox...",
     "profileCompletenessSuffix": "% complete",
-    "verified": "✅ Verified",
-    "notVerified": "⏳ Not Verified",
+    "verified": "Verified",
+    "notVerified": "Not Verified",
     "tabs": {
-      "userVerificationPlural": "✅ User verification",
-      "roleRequestsPlural": "📋 Role requests",
-      "userVerification": "✅ User verification",
-      "roleRequest": "📋 Role request",
-      "notifications": "🔔 Notifications"
+      "userVerificationPlural": "User verification",
+      "roleRequestsPlural": "Role requests",
+      "userVerification": "User verification",
+      "roleRequest": "Role request",
+      "notifications": "Notifications"
     },
     "blocked": {
       "title": "Blocked section",
@@ -1647,10 +1650,10 @@
         "desc": "Your account has been verified successfully by an administrator.",
         "benefitsTitle": "Benefits of verification:",
         "benefits": [
-          "✓ Full access to advanced features",
-          "✓ Ability to make purchases",
-          "✓ Ability to request special roles",
-          "✓ Priority technical support"
+          "Full access to advanced features",
+          "Ability to make purchases",
+          "Ability to request special roles",
+          "Priority technical support"
         ]
       },
       "request": {
@@ -1941,7 +1944,7 @@
       "justCounter": "{{n}}/500 characters",
       "justMinWarn": "(minimum 20 if you provide justification)",
       "minCharacters": "Minimum 20 characters",
-      "valid": "Valid ✓",
+      "valid": "Valid",
       "continue": "Continue",
       "incompatibleNote": "Note: the role {{role}} is incompatible with: {{list}}",
       "distributor": {
@@ -2389,10 +2392,10 @@
     "checkInbox": "Check your inbox and click the link to verify your account.",
     "noEmail": "Didn't get the email?",
     "resendHint": "Use the button below to send it again.",
-    "resendAgain": "📧 Send again",
-    "sendVerification": "📧 Send verification email",
+    "resendAgain": "Send again",
+    "sendVerification": "Send verification email",
     "waitingVerification": "Waiting for verification…",
-    "resendEmail": "📧 Resend email",
+    "resendEmail": "Resend email",
     "emailOrUser": "Email or username",
     "password": "Password",
     "noAccount": "Don't have an account?",
@@ -2433,7 +2436,7 @@
   "users": {
     "noneVerified": "No verified users available",
     "mustBeVerified": "Users need an admin-verified account and a 100% complete profile to be selectable.",
-    "verifiedBadge": "✓ Verified",
+    "verifiedBadge": "Verified",
     "profileFull": "Profile 100%"
   }
 }

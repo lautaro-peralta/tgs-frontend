@@ -11,13 +11,13 @@
       <!-- Botón de información -->
       <div class="info-button-wrapper">
         <button class="btn btn-info" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false" type="button">
-          <span class="icon">ℹ️</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
         </button>
 
         <!-- Tooltip flotante -->
         <div class="info-tooltip" [class.visible]="showTooltip">
           <div class="tooltip-header">
-            <span class="tooltip-icon">ℹ️</span>
+            <span class="tooltip-icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
             <h3>{{ 'roleRequest.info.title' | translate }}</h3>
           </div>
           <div class="tooltip-content">
@@ -25,7 +25,7 @@
 
             <div class="role-rules">
               <div class="rule-item">
-                <span class="rule-icon">🔹</span>
+                <span class="rule-icon"><span class="material-symbols-outlined" aria-hidden="true">fiber_manual_record</span></span>
                 <div class="rule-text">
                   <strong>{{ 'roleRequest.info.rule1.title' | translate }}</strong>
                   <p>{{ 'roleRequest.info.rule1.desc' | translate }}</p>
@@ -33,7 +33,7 @@
               </div>
 
               <div class="rule-item">
-                <span class="rule-icon">🔹</span>
+                <span class="rule-icon"><span class="material-symbols-outlined" aria-hidden="true">fiber_manual_record</span></span>
                 <div class="rule-text">
                   <strong>{{ 'roleRequest.info.rule2.title' | translate }}</strong>
                   <p>{{ 'roleRequest.info.rule2.desc' | translate }}</p>
@@ -41,7 +41,7 @@
               </div>
 
               <div class="rule-item">
-                <span class="rule-icon">🔹</span>
+                <span class="rule-icon"><span class="material-symbols-outlined" aria-hidden="true">fiber_manual_record</span></span>
                 <div class="rule-text">
                   <strong>{{ 'roleRequest.info.rule3.title' | translate }}</strong>
                   <p>{{ 'roleRequest.info.rule3.desc' | translate }}</p>
@@ -49,7 +49,7 @@
               </div>
 
               <div class="rule-item">
-                <span class="rule-icon">🔹</span>
+                <span class="rule-icon"><span class="material-symbols-outlined" aria-hidden="true">fiber_manual_record</span></span>
                 <div class="rule-text">
                   <strong>{{ 'roleRequest.info.rule4.title' | translate }}</strong>
                   <p>{{ 'roleRequest.info.rule4.desc' | translate }}</p>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="tooltip-footer">
-              <span class="info-icon">💡</span>
+              <span class="info-icon"><span class="material-symbols-outlined" aria-hidden="true">lightbulb</span></span>
               <p>{{ 'roleRequest.info.footer' | translate }}</p>
             </div>
           </div>
@@ -73,12 +73,12 @@
 
       <!-- Badge verificación requerida -->
       <div *ngIf="!isVerified" class="verification-required-warning">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <span>{{ 'roleRequests.inbox.verifyRequiredBadge' | translate }}</span>
       </div>
 
       <div *ngIf="!hasCompleteProfile && isVerified" class="incomplete-profile-warning">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <span>{{ 'roleRequests.inbox.completeProfileRequired' | translate }}</span>
       </div>
     </div>
@@ -86,7 +86,7 @@
 
   <!-- Mensaje si no está verificado -->
   <div *ngIf="!loading && !error && !isVerified" class="verification-required-state">
-    <div class="warning-icon">🔒</div>
+    <div class="warning-icon"><span class="material-symbols-outlined" aria-hidden="true">lock</span></div>
     <h3>{{ 'roleRequests.inbox.verifyRequiredTitle' | translate }}</h3>
     <p>{{ 'roleRequests.inbox.verifyRequiredDesc' | translate }}</p>
   </div>
@@ -94,14 +94,14 @@
   <div *ngIf="loading" class="loading">{{ 'roleRequests.inbox.loading' | translate }}</div>
 
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">❌</span>
+    <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">cancel</span></span>
     {{ error }}
     <button class="btn-link" (click)="loadRequests()">{{ 'roleRequests.inbox.errorRetry' | translate }}</button>
   </div>
 
   <!-- Empty state (verificado) -->
   <div *ngIf="isVerified && !loading && !error && requests.length === 0" class="empty-state">
-    <div class="empty-icon">📋</div>
+    <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">content_paste</span></div>
     <h3>{{ 'roleRequests.inbox.emptyTitle' | translate }}</h3>
     <p>
       {{ hasCompleteProfile

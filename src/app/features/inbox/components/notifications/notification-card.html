@@ -9,7 +9,7 @@
 
     <!-- Ícono de tipo de notificación -->
     <div class="notification-icon" [class]="'icon-' + getTypeColor(notification.type)">
-      <span class="icon">{{ getTypeIcon(notification.type) }}</span>
+      <span class="icon material-symbols-outlined" aria-hidden="true">{{ getTypeIcon(notification.type) }}</span>
     </div>
 
     <!-- Contenido principal -->
@@ -26,16 +26,16 @@
         class="action-btn mark-read"
         (click)="onMarkAsRead($event)"
         [title]="'notifications.markAsRead' | translate : {} : 'Marcar como leída'">
-        <span class="icon">👁️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">visibility</span></span>
       </button>
       <button
         class="action-btn delete"
         (click)="onDelete($event)"
         [title]="'notifications.delete' | translate : {} : 'Eliminar'">
-        <span class="icon">🗑️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">delete</span></span>
       </button>
       <button class="expand-btn" type="button">
-        <span class="icon" [class.expanded]="isExpanded">▼</span>
+        <span class="icon" [class.expanded]="isExpanded"><span class="material-symbols-outlined" aria-hidden="true">arrow_drop_down</span></span>
       </button>
     </div>
   </div>
@@ -84,7 +84,7 @@
               <span class="metadata-value role-badge role-remove">{{ notification.metadata['roleToRemove'] }}</span>
             </div>
 
-            <span *ngIf="notification.metadata['roleToRemove']" class="role-arrow">→</span>
+            <span *ngIf="notification.metadata['roleToRemove']" class="role-arrow"><span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></span>
 
             <div class="role-badge-container to-role">
               <span class="role-label">{{ notification.metadata['roleToRemove'] ? ('notifications.labels.newRole' | translate : {} : 'Rol nuevo') : '' }}</span>

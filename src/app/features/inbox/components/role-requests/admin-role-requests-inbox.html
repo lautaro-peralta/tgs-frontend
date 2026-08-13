@@ -19,8 +19,8 @@
        role="status"
        aria-live="polite">
     <div class="toast-icon">
-      <span *ngIf="successKey === 'notifications.roleRequestApproved'">✓</span>
-      <span *ngIf="successKey === 'notifications.roleRequestRejected'">ℹ</span>
+      <span *ngIf="successKey === 'notifications.roleRequestApproved'"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
+      <span *ngIf="successKey === 'notifications.roleRequestRejected'"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
     </div>
     <div class="toast-content">
       <strong class="toast-title">
@@ -34,7 +34,7 @@
   <div *ngIf="loading" class="loading">{{ 'roleRequests.adminInbox.loading' | translate }}</div>
 
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">❌</span>
+    <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">cancel</span></span>
     {{ error }}
     <button class="btn-link" (click)="loadRequests()">{{ 'roleRequests.adminInbox.errorRetry' | translate }}</button>
   </div>
@@ -64,13 +64,13 @@
     </div>
 
     <button class="btn btn-secondary btn-sm" (click)="loadRequests()">
-      <span class="icon">🔄</span>
+      <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></span>
       {{ 'roleRequests.adminInbox.refresh' | translate }}
     </button>
   </div>
 
   <div *ngIf="!loading && !error && filteredRequests.length === 0" class="empty-state">
-    <div class="empty-icon">🔭</div>
+    <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">explore</span></div>
     <h3>{{ 'roleRequests.adminInbox.empty.title' | translate }}</h3>
     <p>{{ 'roleRequests.adminInbox.empty.desc' | translate }}</p>
   </div>

@@ -74,19 +74,19 @@ export class RoleRequestModalComponent implements OnChanges, OnInit {
       value: Role.PARTNER,
       label: 'Socio',
       description: 'Participa activamente en el negocio como socio de la organización',
-      icon: '🤝',
+      icon: 'handshake',
     },
     {
       value: Role.DISTRIBUTOR,
       label: 'Distributor',
       description: 'Gestiona la distribución de productos en tu zona',
-      icon: '📦',
+      icon: 'inventory_2',
     },
     {
       value: Role.AUTHORITY,
       label: 'Autoridad',
       description: 'Figura de autoridad que facilita operaciones gubernamentales',
-      icon: '⚖️',
+      icon: 'balance',
     },
   ];
 

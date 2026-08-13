@@ -21,7 +21,7 @@
           [attr.tabindex]="mode()==='login' ? 0 : -1"
           aria-controls="login-panel"
           (click)="setMode('login')">
-          <span class="tab-icon" aria-hidden="true">🔐</span>
+          <span class="tab-icon" aria-hidden="true"><span class="material-symbols-outlined" aria-hidden="true">lock</span></span>
           <span class="tab-text">{{ 'auth.login.title' | translate }}</span>
         </button>
         <button
@@ -33,7 +33,7 @@
           [attr.tabindex]="mode()==='register' ? 0 : -1"
           aria-controls="register-panel"
           (click)="setMode('register')">
-          <span class="tab-icon" aria-hidden="true">✨</span>
+          <span class="tab-icon" aria-hidden="true"><span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span></span>
           <span class="tab-text">{{ 'auth.register.title' | translate }}</span>
         </button>
       </div>
@@ -61,13 +61,13 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">hourglass_top</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
-                    📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
                   </span>
                   <span *ngIf="!resendingEmail() && canResend()">
-                    📧 {{ 'home.verification.resend.button' | translate }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.button' | translate }}
                   </span>
                 </button>
               </div>
@@ -78,14 +78,14 @@
           <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='login' && !waitingForVerification()"
             (click)="$event.stopPropagation()">
             <div class="verification-banner-large" role="alert">
-              <div class="banner-icon-large">⚠️</div>
+              <div class="banner-icon-large"><span class="material-symbols-outlined" aria-hidden="true">warning</span></div>
               <div class="banner-content-large">
                 <div class="banner-header-large">
                   <strong>{{ 'home.verification.unverified.title' | translate }}</strong>
                   <button type="button" class="banner-close" (click)="needsEmailVerification.set(false)"
                     [attr.aria-label]="'home.verification.unverified.close' | translate"
                     [attr.title]="'home.verification.unverified.close' | translate">
-                    ✕
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
                   </button>
                 </div>
                 <p class="banner-text-large">
@@ -94,7 +94,7 @@
 
                 <!-- Mensaje de email enviado -->
                 <div class="banner-success-large" *ngIf="emailSent()">
-                  <span class="success-icon">✓</span>
+                  <span class="success-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
                   <strong>{{ 'home.verification.sent.title' | translate }}</strong>
                   <p>{{ 'home.verification.sent.message' | translate }}</p>
                 </div>
@@ -108,16 +108,16 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">hourglass_top</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
-                    📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
                   </span>
                   <span *ngIf="!resendingEmail() && canResend() && emailSent()">
-                    📧 {{ 'home.verification.resend.buttonAgain' | translate }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.buttonAgain' | translate }}
                   </span>
                   <span *ngIf="!resendingEmail() && canResend() && !emailSent()">
-                    📧 {{ 'home.verification.resend.buttonSend' | translate }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.buttonSend' | translate }}
                   </span>
                 </button>
               </div>
@@ -197,13 +197,13 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined" aria-hidden="true">hourglass_top</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
-                    📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
                   </span>
                   <span *ngIf="!resendingEmail() && canResend()">
-                    📧 {{ 'home.verification.resend.button' | translate }}
+                    <span class="material-symbols-outlined" aria-hidden="true">mail</span> {{ 'home.verification.resend.button' | translate }}
                   </span>
                 </button>
               </div>
@@ -214,14 +214,14 @@
           <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='register' && !waitingForVerification()"
             (click)="$event.stopPropagation()">
             <div class="verification-banner-large" role="alert">
-              <div class="banner-icon-large">✅</div>
+              <div class="banner-icon-large"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></div>
               <div class="banner-content-large">
                 <div class="banner-header-large">
                   <strong>{{ 'home.verification.success.title' | translate }}</strong>
                   <button type="button" class="banner-close" (click)="needsEmailVerification.set(false)"
                     [attr.aria-label]="'home.verification.unverified.close' | translate"
                     [attr.title]="'home.verification.unverified.close' | translate">
-                    ✕
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
                   </button>
                 </div>
                 <p class="banner-text-large">
@@ -229,7 +229,7 @@
                 </p>
 
                 <div class="banner-success-large" *ngIf="emailSent()">
-                  <span class="success-icon">✓</span>
+                  <span class="success-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
                   {{ 'home.verification.success.sent' | translate }}
                 </div>
 
@@ -305,7 +305,7 @@
     <!-- DERECHA: Brand / Bienvenida -->
     <section class="brand-plain" [class.is-logged]="isLoggedIn() && !showAuthPanel" [attr.aria-label]="'home.ariaBranding' | translate">
       <div class="welcome-badge" *ngIf="isLoggedIn() && !showAuthPanel">
-        <span class="wave" aria-hidden="true">👋</span>
+        <span class="wave" aria-hidden="true"><span class="material-symbols-outlined" aria-hidden="true">waving_hand</span></span>
         <span>{{ 'home.welcome' | translate }} <strong>{{ user()?.username || ('auth.user' | translate)
             }}</strong></span>
       </div>

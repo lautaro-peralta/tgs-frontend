@@ -15,7 +15,7 @@
             </button>
 
             <button *ngIf="searchQuery()" class="btn btn--clear" type="button" (click)="onClearSearch()">
-              ✕
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
             </button>
           </div>
         </div>
@@ -33,7 +33,10 @@
   </div>
 
   <div class="error" *ngIf="error() as e">{{ e }}</div>
-  <div class="muted" *ngIf="loading()">{{ 'account.loading' | translate }}</div>
+  <div class="loading-state" role="status" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    <p class="loading-state__text">{{ 'account.loading' | translate }}</p>
+  </div>
 
   <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
   <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" [attr.aria-label]="'store.productList' | translate">
@@ -60,15 +63,15 @@
         <!-- ✅ NUEVO: Información del distribuidor -->
         <div class="store-card__distributor">
           <span class="distributor-badge">
-            <span class="distributor-icon">🏢</span>
+            <span class="distributor-icon"><span class="material-symbols-outlined" aria-hidden="true">apartment</span></span>
             <span class="distributor-name">{{ offer.distributorName }}</span>
           </span>
 
           <!-- Badge de zona -->
           <span class="zone-badge" *ngIf="offer.zone">
-            <span class="zone-icon">📍</span>
+            <span class="zone-icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span>
             <span class="zone-name">{{ offer.zone.name }}</span>
-            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" [title]="'zones.headquarters' | translate">⭐</span>
+            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" [title]="'zones.headquarters' | translate"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
           </span>
         </div>
       </div>
@@ -84,7 +87,7 @@
           [attr.aria-label]="'Agregar ' + (offer.description || 'producto') + ' al carrito'"
           [attr.data-cy]="'add-cart-' + offer.offerId"
           [title]="!isOfferAvailable(offer.offerId) ? 'Producto no disponible - Sin stock' : ''">
-          {{ !isOfferAvailable(offer.offerId) ? '🚫 Sin stock' : ('store.add' | translate) }}
+          {{ !isOfferAvailable(offer.offerId) ? 'Sin stock' : ('store.add' | translate) }}
         </button>
       </div>
     </article>
@@ -102,7 +105,7 @@
   <!-- FAB Carrito -->
   <button id="cartAnchor" class="cart-fab" type="button" (click)="toggleCartDrawer()" [class.bump]="bumpCart()"
     [attr.aria-label]="'store.cart.open' | translate">
-    <span class="cart-fab__icon">🛒</span>
+    <span class="cart-fab__icon"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span></span>
     <span class="cart-fab__count">{{ cart.count() }}</span>
   </button>
 
@@ -121,7 +124,7 @@
         <!-- Alertas de compra -->
         <div class="cart-purchase-alert" *ngIf="!canPurchase()">
           <div class="alert alert--warning">
-            <span class="alert__icon">⚠️</span>
+            <span class="alert__icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
             <div class="alert__content">
               <strong>{{ 'store.cart.cannotPurchase' | translate }}</strong>
               <p *ngIf="!isVerified()">
@@ -139,7 +142,7 @@
         <!-- 📍 Información de distribuidores (uno o varios) -->
         <div class="multiple-distributors-info" *ngIf="cart.count() > 0">
           <div class="alert-header" *ngIf="selectedDistributors().length > 1">
-            <span class="alert-icon">📦</span>
+            <span class="alert-icon"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span></span>
             <div class="alert-content">
               <strong>{{ 'store.cart.orderSplit' | translate:{ count: selectedDistributors().length } }}</strong>
               <p>{{ 'store.cart.orderSplitDesc' | translate:{ count: selectedDistributors().length } }}</p>
@@ -153,9 +156,9 @@
                 <div class="card-title">
                   <strong>{{ dist.name }}</strong>
                   <span class="zone-badge" *ngIf="dist.zone">
-                    <span class="zone-icon">📍</span>
+                    <span class="zone-icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span>
                     {{ dist.zone.name }}
-                    <span class="hq-star" *ngIf="dist.zone.isHeadquarters">⭐</span>
+                    <span class="hq-star" *ngIf="dist.zone.isHeadquarters"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
                   </span>
                 </div>
               </div>
@@ -196,7 +199,7 @@
         <!-- ⚠️ Mensaje cuando NO hay distribuidor disponible -->
         <div class="distributor-warning" *ngIf="selectedDistributors().length === 0 && cart.count() > 0">
           <div class="alert alert--error">
-            <span class="alert__icon">⚠️</span>
+            <span class="alert__icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
             <div class="alert__content">
               <strong>{{ 'store.cart.unavailable' | translate }}</strong>
               <p>{{ 'store.cart.unavailableDesc' | translate }}</p>
@@ -216,8 +219,8 @@
           [disabled]="!canPurchase() || cart.count() === 0 || processing() || selectedDistributors().length === 0"
           [class.btn--disabled]="!canPurchase() || cart.count() === 0 || selectedDistributors().length === 0"
           (click)="goToCheckout()">
-          <span class="icon" *ngIf="!processing()">🛒</span>
-          <span *ngIf="processing()">⏳</span>
+          <span class="icon" *ngIf="!processing()"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span></span>
+          <span *ngIf="processing()"><span class="material-symbols-outlined" aria-hidden="true">hourglass_top</span></span>
           <span *ngIf="!processing()">
             {{ 'store.cart.checkout' | translate }}
           </span>

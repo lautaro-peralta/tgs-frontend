@@ -28,10 +28,10 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="filterTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -59,12 +59,12 @@
             <td class="right" [attr.data-label]="('topics.table.actions' | translate)">
               <button class="btn ghost btn--icon" type="button" (click)="edit(t)"
                 [attr.title]="'common.edit' | translate">
-                ✏️
+                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
               </button>
 
               <button class="btn danger btn--icon" type="button" (click)="delete(t.id)"
                 [attr.title]="'common.delete' | translate">
-                🗑️
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </td>
           </tr>

@@ -19,10 +19,10 @@
     class="charts-toggle-mobile u-hidden"
     [class.collapsed]="chartsCollapsed()"
     (click)="toggleCharts()">
-    <span>📊 {{ chartsCollapsed()
+    <span><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span> {{ chartsCollapsed()
       ? ('monthlyReview.charts.showCharts' | translate : {} : 'Mostrar Gráficos')
       : ('monthlyReview.charts.hideCharts' | translate : {} : 'Ocultar Gráficos') }}</span>
-    <span class="charts-toggle-icon">▼</span>
+    <span class="charts-toggle-icon"><span class="material-symbols-outlined" aria-hidden="true">arrow_drop_down</span></span>
   </button>
 
   <!-- CONTENEDOR COLAPSABLE DE GRÁFICOS (FUERA DEL GRID) -->
@@ -65,6 +65,15 @@
 
         <!-- GRÁFICOS -->
         <section>
+          <!-- Mientras se piden los datos los gráficos todavía no se montan;
+               sin esto el panel quedaba en blanco, sin señal de actividad. -->
+          <div class="chart-loading chart-loading--tall" *ngIf="loading()" role="status" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            <p class="loading-state__text">
+              {{ 'monthlyReview.charts.loading' | translate : {} : 'Cargando gráficos…' }}
+            </p>
+          </div>
+
           <!-- 📊 NUEVO: Gráfico de Impacto de Decisiones (DESTACADO) -->
           <div class="chart-card chart-card--highlight-blue" *ngIf="showDecisionsChart() && decisionsImpactChartOptions()">
             <!-- Botón expandir -->
@@ -77,7 +86,7 @@
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  📊 {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
+                  <span class="material-symbols-outlined" aria-hidden="true">bar_chart</span> {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
@@ -91,7 +100,7 @@
             </div>
             <div class="chart-note chart-note--tight chart-note--blue-strong" *ngIf="!sales() || sales().length === 0">
               <p class="chart-note__text">
-                💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
+                <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.decisionsImpactNote' | translate : {} : 'Este gráfico muestra datos de ejemplo.' }}
               </p>
             </div>
@@ -109,7 +118,7 @@
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  🔮 {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
+                  <span class="material-symbols-outlined" aria-hidden="true">insights</span> {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
@@ -123,7 +132,7 @@
             </div>
             <div class="chart-note chart-note--tight chart-note--sky-strong" *ngIf="!sales() || sales().length === 0">
               <p class="chart-note__text">
-                💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
+                <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.salesPredictionNote' | translate : {} : 'Este gráfico muestra una proyección basada en regresión lineal.' }}
               </p>
             </div>
@@ -135,7 +144,7 @@
             <div class="chart-panel chart-panel--spaced"
              >
               <h4 class="chart-heading">
-                📌 {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
+                <span class="material-symbols-outlined" aria-hidden="true">push_pin</span> {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
               </h4>
               <div class="chart-box chart-box--sm" echarts *ngIf="statusChartOptions()" [options]="statusChartOptions()!" [theme]="'dark'"
                   ></div>
@@ -145,7 +154,7 @@
             <div class="chart-panel"
               *ngIf="productSalesChartOptions()">
               <h4 class="chart-heading">
-                🏆 {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
+                <span class="material-symbols-outlined" aria-hidden="true">emoji_events</span> {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
               </h4>
               <div class="chart-box chart-box--md" echarts [options]="productSalesChartOptions()!" [theme]="'dark'"
                   ></div>
@@ -159,15 +168,10 @@
   </div>
   <!-- FIN CONTENEDOR COLAPSABLE DE GRÁFICOS -->
 
-  <!-- ✅ GRID DE 2 COLUMNAS: IZQUIERDA (VACÍA) | DERECHA (FILTROS + TABLA) -->
-  <div class="charts-grid">
+  <!-- FILTROS + LISTADO. Ocupa una sola columna: la mitad izquierda la llena
+       el panel de gráficos vía grid-template-areas. -->
+  <div class="reviews-panel">
 
-    <!-- ========== COLUMNA IZQUIERDA: VACÍA ========== -->
-    <div class="stack-md">
-      <!-- Espacio reservado para futuras estadísticas -->
-    </div>
-
-    <!-- ========== COLUMNA DERECHA: FILTROS + LISTADO ========== -->
     <div class="stack-md">
       <div class="glass-dark card stack-md">
 
@@ -206,11 +210,11 @@
 
             <div class="actions-row">
               <button class="btn btn-primary u-grow" type="button" (click)="applyFilters()">
-                🔍 {{ 'common.search' | translate }}
+                <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
               </button>
               <button class="btn ghost" type="button" (click)="clearFilters()"
                 *ngIf="fMonthApplied() || fStatusApplied()">
-                🗑️
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </div>
           </div>
@@ -220,15 +224,16 @@
         <div class="error" *ngIf="error() as err">
           <strong>{{ 'common.error' | translate : {} : 'Error' }}</strong>: {{ err }}
         </div>
-        <div class="muted" *ngIf="loading()">
-          {{ 'monthlyReview.loading' | translate : {} : 'Cargando...' }}
+        <div class="loading-state" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <p class="loading-state__text">{{ 'monthlyReview.loading' | translate : {} : 'Cargando...' }}</p>
         </div>
 
         <!-- LISTADO DE REVISIONES -->
         <section>
           <h3 class="section-heading"
            >
-            📋 {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
+            <span class="material-symbols-outlined" aria-hidden="true">content_paste</span> {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
           </h3>
 
           <div class="table-wrap" *ngIf="filtered().length; else emptyState">
@@ -257,11 +262,11 @@
                   <td class="right" [attr.data-label]="('common.actions' | translate : {} : 'Acciones')">
                     <button class="btn ghost btn--icon" type="button" (click)="edit(it)"
                       [attr.title]="'common.edit' | translate : {} : 'Editar'">
-                      ✏️
+                      <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                     </button>
                     <button class="btn danger btn--icon" type="button" (click)="delete(it)"
                       [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
-                      🗑️
+                      <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                     </button>
                   </td>
                 </tr>
@@ -309,7 +314,7 @@
     <form [formGroup]="form" class="form-grid" (ngSubmit)="save()">
       <!-- DNI del Socio Revisor -->
       <label class="label col-2">
-        <span>👤 {{ 'monthlyReview.form.fields.partnerDni' | translate : {} : 'Socio Revisor' }} *</span>
+        <span><span class="material-symbols-outlined" aria-hidden="true">person</span> {{ 'monthlyReview.form.fields.partnerDni' | translate : {} : 'Socio Revisor' }} *</span>
         <select class="input" formControlName="partnerDni">
           <option value="" disabled>{{ 'monthlyReview.form.hints.selectPartner' | translate : {} : '— Seleccioná un socio —' }}</option>
           <option *ngFor="let p of partners()" [value]="p.dni">
@@ -317,10 +322,10 @@
           </option>
         </select>
         <small class="muted" *ngIf="!partners().length && !loading()">
-          ⚠️ {{ 'monthlyReview.form.hints.noPartnersAvailable' | translate : {} : 'No hay socios disponibles. Creá uno primero.' }}
+          <span class="material-symbols-outlined" aria-hidden="true">warning</span> {{ 'monthlyReview.form.hints.noPartnersAvailable' | translate : {} : 'No hay socios disponibles. Creá uno primero.' }}
         </small>
         <small class="error" *ngIf="form.controls.partnerDni.invalid && form.controls.partnerDni.touched">
-          ❌ {{ 'monthlyReview.form.errors.partnerDni' | translate : {} : 'Socio requerido' }}
+          <span class="material-symbols-outlined" aria-hidden="true">cancel</span> {{ 'monthlyReview.form.errors.partnerDni' | translate : {} : 'Socio requerido' }}
         </small>
       </label>
 
@@ -328,26 +333,26 @@
       <div class="form-full-split">
         <!-- Fecha de Revisión (extrae automáticamente año y mes) -->
         <label class="label">
-          <span>📅 {{ 'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión' }} *</span>
+          <span><span class="material-symbols-outlined" aria-hidden="true">calendar_month</span> {{ 'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión' }} *</span>
           <input class="input" type="date" formControlName="reviewDate"
             [attr.aria-label]="'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión'" />
           <small class="muted">
-            💡 {{ 'monthlyReview.form.hints.dateExtraction' | translate : {} : 'El año y mes se extraerán automáticamente de esta fecha' }}
+            <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span> {{ 'monthlyReview.form.hints.dateExtraction' | translate : {} : 'El año y mes se extraerán automáticamente de esta fecha' }}
           </small>
           <small class="error" *ngIf="form.controls.reviewDate.invalid && form.controls.reviewDate.touched">
-            ❌ {{ 'monthlyReview.form.errors.dateRequired' | translate : {} : 'Fecha requerida' }}
+            <span class="material-symbols-outlined" aria-hidden="true">cancel</span> {{ 'monthlyReview.form.errors.dateRequired' | translate : {} : 'Fecha requerida' }}
           </small>
         </label>
 
         <!-- Estado -->
         <label class="label">
-          <span>🏷️ {{ 'monthlyReview.form.fields.status' | translate : {} : 'Estado' }}</span>
+          <span><span class="material-symbols-outlined" aria-hidden="true">label</span> {{ 'monthlyReview.form.fields.status' | translate : {} : 'Estado' }}</span>
           <select class="input" formControlName="status">
-            <option value="PENDING">⏳ {{ 'status.PENDING' | translate : {} : 'Pendiente' }}</option>
-            <option value="IN_REVIEW">🔍 {{ 'status.IN_REVIEW' | translate : {} : 'En Revisión' }}</option>
-            <option value="COMPLETED">✅ {{ 'status.COMPLETED' | translate : {} : 'Completado' }}</option>
-            <option value="APPROVED">👍 {{ 'status.APPROVED' | translate : {} : 'Aprobado' }}</option>
-            <option value="REJECTED">❌ {{ 'status.REJECTED' | translate : {} : 'Rechazado' }}</option>
+            <option value="PENDING"><span class="material-symbols-outlined" aria-hidden="true">hourglass_top</span> {{ 'status.PENDING' | translate : {} : 'Pendiente' }}</option>
+            <option value="IN_REVIEW"><span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'status.IN_REVIEW' | translate : {} : 'En Revisión' }}</option>
+            <option value="COMPLETED"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> {{ 'status.COMPLETED' | translate : {} : 'Completado' }}</option>
+            <option value="APPROVED"><span class="material-symbols-outlined" aria-hidden="true">thumb_up</span> {{ 'status.APPROVED' | translate : {} : 'Aprobado' }}</option>
+            <option value="REJECTED"><span class="material-symbols-outlined" aria-hidden="true">cancel</span> {{ 'status.REJECTED' | translate : {} : 'Rechazado' }}</option>
           </select>
           <small class="muted u-invisible">{{ 'monthlyReview.placeholder' | translate }}</small>
         </label>
@@ -355,16 +360,16 @@
 
       <!-- Observaciones -->
       <label class="label col-2">
-        <span>📝 {{ 'monthlyReview.form.fields.observations' | translate : {} : 'Observaciones' }}</span>
+        <span><span class="material-symbols-outlined" aria-hidden="true">edit_note</span> {{ 'monthlyReview.form.fields.observations' | translate : {} : 'Observaciones' }}</span>
         <textarea class="input" rows="3" formControlName="observations"
-          [placeholder]="'monthlyReview.form.placeholders.observations' | translate : {} : '💭 Observaciones sobre las ventas del período...'"></textarea>
+          [placeholder]="'monthlyReview.form.placeholders.observations' | translate : {} : 'Observaciones sobre las ventas del período...'"></textarea>
       </label>
 
       <!-- Recomendaciones -->
       <label class="label col-2">
-        <span>💡 {{ 'monthlyReview.form.fields.recommendations' | translate : {} : 'Recomendaciones' }}</span>
+        <span><span class="material-symbols-outlined" aria-hidden="true">lightbulb</span> {{ 'monthlyReview.form.fields.recommendations' | translate : {} : 'Recomendaciones' }}</span>
         <textarea class="input" rows="3" formControlName="recommendations"
-          [placeholder]="'monthlyReview.form.placeholders.recommendations' | translate : {} : '💡 Recomendaciones o acciones a tomar...'"></textarea>
+          [placeholder]="'monthlyReview.form.placeholders.recommendations' | translate : {} : 'Recomendaciones o acciones a tomar...'"></textarea>
       </label>
 
       <!-- Botones de acci�n -->

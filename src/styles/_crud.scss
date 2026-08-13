@@ -962,6 +962,24 @@
       flex-direction: column;
     }
 
+    // Cada pantalla de gestión traía su propia copia de esto, colgada de un
+    // selector de estilo en línea (`div[style*="display: flex"]`) que dejó de
+    // casar cuando las plantillas pasaron a usar clases: en pantallas
+    // estrechas el título y su botón volvieron a pelearse el mismo renglón.
+    // Ahora vive una sola vez, junto al resto de .header.
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .header .right {
+      width: 100%;
+    }
+
+    .actions-row {
+      width: 100%;
+    }
+
     .input {
       min-width: 100%;
     }

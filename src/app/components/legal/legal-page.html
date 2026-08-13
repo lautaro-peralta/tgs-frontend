@@ -3,7 +3,7 @@
     <!-- Header -->
     <header class="legal-header">
       <a routerLink="/" class="back-link">
-        ← {{ 'legal.backHome' | translate }}
+        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span> {{ 'legal.backHome' | translate }}
       </a>
       <h1 class="legal-title">{{ title }}</h1>
       <p class="legal-updated" *ngIf="lastUpdated">

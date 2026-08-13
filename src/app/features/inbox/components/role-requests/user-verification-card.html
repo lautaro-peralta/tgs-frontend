@@ -15,7 +15,7 @@
 
     <div class="card-actions">
       <span [class]="getStatusBadgeClass(verification.status)">
-        <span class="icon">{{ getStatusIcon(verification.status) }}</span>
+        <span class="icon material-symbols-outlined" aria-hidden="true">{{ getStatusIcon(verification.status) }}</span>
         {{ getStatusText(verification.status) }}
       </span>
       <button class="expand-btn" type="button" [attr.aria-label]="isExpanded ? 'Contraer' : 'Expandir'">
@@ -57,7 +57,7 @@
 
     <div *ngIf="isAdmin && verification.status === UserVerificationStatus.PENDING" class="action-buttons">
       <button class="btn btn-evaluate" (click)="onReview($event)">
-        <span class="icon">⚖️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">balance</span></span>
         {{ 'userVerification.card.reviewBtn' | translate : {} : 'Review Verification' }}
       </button>
     </div>

@@ -16,7 +16,7 @@
           (click)="resendVerificationEmail()"
           [disabled]="!canResend() || resendingEmail()">
           <span *ngIf="resendingEmail()">{{ 'common.sendingEllipsis' | translate }}</span>
-          <span *ngIf="!resendingEmail() && !canResend()">📧 Reenviar email ({{ resendCooldown() }}s)</span>
+          <span *ngIf="!resendingEmail() && !canResend()"><span class="material-symbols-outlined" aria-hidden="true">mail</span> Reenviar email ({{ resendCooldown() }}s)</span>
           <span *ngIf="!resendingEmail() && canResend()">{{ 'login.resendEmail' | translate }}</span>
         </button>
       </div>
@@ -25,7 +25,7 @@
 
   <!-- ✅ Banner de éxito de registro -->
   <div class="success-message" *ngIf="registrationSuccess() && needsEmailVerification()" role="alert">
-    <div class="success-icon">✓</div>
+    <div class="success-icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></div>
     <div class="success-content">
       <strong>{{ 'register.created' | translate }}</strong>
       <p>{{ 'register.verifyToContinue' | translate }}</p>

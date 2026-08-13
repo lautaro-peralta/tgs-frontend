@@ -33,7 +33,7 @@
 
       <!-- Error message con diseño mejorado -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'roleRequests.modal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -45,7 +45,7 @@
       <!-- Roles Grid - Diseño de tarjetas mejorado -->
       <div class="form-section">
         <label class="section-label">
-          <span class="icon">🎯</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">track_changes</span></span>
           {{ 'roleRequests.modal.requestedRole' | translate }}
           <span class="required">*</span>
         </label>
@@ -66,13 +66,13 @@
               class="sr-only"
             />
             <div class="role-card-content">
-              <div class="role-icon">{{ role.icon }}</div>
+              <div class="role-icon material-symbols-outlined" aria-hidden="true">{{ role.icon }}</div>
               <div class="role-info">
                 <h3 class="role-title">{{ role.label }}</h3>
                 <p class="role-description">{{ role.description }}</p>
               </div>
               <div class="role-check">
-                <span class="checkmark">✓</span>
+                <span class="checkmark"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
               </div>
             </div>
           </label>
@@ -80,7 +80,7 @@
 
         <!-- Empty state cuando no hay roles disponibles -->
         <div *ngIf="availableRoles.length === 0" class="empty-state-small">
-          <span class="icon">ℹ️</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
           <p>
             {{ isRoleChange
               ? ('roleRequests.modal.selectRoleFirst' | translate)
@@ -94,7 +94,7 @@
       <!-- ✅ NO mostrar para AUTHORITY ya que remueve TODOS los roles automáticamente -->
       <div *ngIf="isRoleChange && removableRoles.length > 0 && requestedRole !== 'AUTHORITY'" class="form-section">
         <label class="section-label">
-          <span class="icon">🔻</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">arrow_drop_down</span></span>
           {{ 'roleRequests.modal.roleToRemoveRequired' | translate }}
           <span class="required">*</span>
         </label>
@@ -114,12 +114,12 @@
               class="sr-only"
             />
             <div class="role-card-content">
-              <div class="role-icon-small">{{ getRoleInfo(role)?.icon }}</div>
+              <div class="role-icon-small material-symbols-outlined" aria-hidden="true">{{ getRoleInfo(role)?.icon }}</div>
               <div class="role-info">
                 <h4 class="role-title-small">{{ getRoleInfo(role)?.label || role }}</h4>
               </div>
               <div class="role-check">
-                <span class="checkmark">✓</span>
+                <span class="checkmark"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
               </div>
             </div>
           </label>
@@ -147,7 +147,7 @@
       <!-- Justificación -->
       <div class="form-section">
         <label class="section-label">
-          <span class="icon">💭</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">mode_comment</span></span>
           {{ 'roleRequests.modal.justification' | translate }}
           <span class="optional">{{ 'roleRequests.modal.justificationOptional' | translate }}</span>
         </label>
@@ -196,7 +196,7 @@
           class="btn btn-cancel"
           (click)="onClose()"
           [disabled]="isSubmitting">
-          <span class="btn-icon">✕</span>
+          <span class="btn-icon"><span class="material-symbols-outlined" aria-hidden="true">close</span></span>
           {{ 'roleRequests.modal.actions.cancel' | translate }}
         </button>
 
@@ -206,7 +206,7 @@
           [disabled]="isSubmitting || !requestedRole || (isRoleChange && !roleToRemove) ||
                       (justification.length >  0 && justification.length < 20)">
           <span class="btn-icon" *ngIf="!isSubmitting">
-            {{ requiresAdditionalData ? '→' : '✓' }}
+            {{ requiresAdditionalData ? '' : '' }}
           </span>
           <span class="spinner-small" *ngIf="isSubmitting"></span>
           {{ requiresAdditionalData
@@ -224,7 +224,7 @@
 
       <!-- Error message -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'roleRequests.modal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -237,7 +237,7 @@
       <ng-container *ngIf="requestedRole === 'DISTRIBUTOR'">
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">📍</span>
+            <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span>
             {{ 'roleRequests.modal.distributor.zone' | translate }}
             <span class="required">*</span>
           </label>
@@ -259,7 +259,7 @@
 
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">🏠</span>
+            <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">home</span></span>
             {{ 'roleRequests.modal.distributor.address' | translate }}
             <span class="required">*</span>
           </label>
@@ -284,7 +284,7 @@
       <ng-container *ngIf="requestedRole === 'AUTHORITY'">
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">⭐</span>
+            <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">star</span></span>
             {{ 'roleRequests.modal.authority.rank' | translate }}
             <span class="required">*</span>
           </label>
@@ -306,7 +306,7 @@
 
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">📍</span>
+            <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">location_on</span></span>
             {{ 'roleRequests.modal.authority.zone' | translate }}
             <span class="required">*</span>
           </label>
@@ -334,7 +334,7 @@
           class="btn btn-secondary"
           (click)="backToStep1()"
           [disabled]="isSubmitting">
-          <span class="btn-icon">←</span>
+          <span class="btn-icon"><span class="material-symbols-outlined" aria-hidden="true">arrow_back</span></span>
           {{ 'roleRequests.modal.actions.back' | translate }}
         </button>
 
@@ -342,7 +342,7 @@
           type="submit"
           class="btn btn-submit"
           [disabled]="isSubmitting || !additionalDataValid">
-          <span class="btn-icon" *ngIf="!isSubmitting">✓</span>
+          <span class="btn-icon" *ngIf="!isSubmitting"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
           <span class="spinner-small" *ngIf="isSubmitting"></span>
           {{ isSubmitting
             ? ('roleRequests.modal.actions.sending' | translate)

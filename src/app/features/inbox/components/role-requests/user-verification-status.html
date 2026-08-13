@@ -16,7 +16,7 @@
 
   <!-- Error Message -->
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">⚠️</span>
+    <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
     <div class="error-content">
       <strong>{{ 'userVerification.status.error.title' | translate }}</strong>
       <p>{{ error }}</p>
@@ -26,7 +26,7 @@
 
   <!-- Verified -->
   <div *ngIf="isVerified && !loading" class="verified-card">
-    <div class="verified-icon">✅</div>
+    <div class="verified-icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></div>
     <h3>{{ 'userVerification.status.verified.title' | translate }}</h3>
     <p>{{ 'userVerification.status.verified.desc' | translate }}</p>
 
@@ -40,18 +40,18 @@
 
   <!-- Not Verified - No Request -->
   <div *ngIf="!isVerified && !verificationStatus && !loading" class="no-verification-card">
-    <div class="info-icon">📋</div>
+    <div class="info-icon"><span class="material-symbols-outlined" aria-hidden="true">content_paste</span></div>
     <h3>{{ 'userVerification.status.request.title' | translate }}</h3>
     <p>{{ 'userVerification.status.request.desc' | translate }}</p>
 
     <!-- Warning si NO tiene perfil completo -->
     <div *ngIf="!hasCompleteProfile" class="alert alert-warning">
-      <span class="icon">⚠️</span>
+      <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
       <div>
         <strong>{{ 'userVerification.status.profileIncomplete.title' | translate }}</strong>
         <p>{{ 'userVerification.status.profileIncomplete.desc' | translate }}</p>
         <a routerLink="/mi-cuenta" class="btn btn-secondary btn-sm">
-          <span class="icon">📝</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">edit_note</span></span>
           {{ 'userVerification.status.profileIncomplete.completeNow' | translate }}
         </a>
       </div>
@@ -62,21 +62,21 @@
       <h4>{{ 'userVerification.status.progress.title' | translate }}</h4>
       <div class="progress-items">
         <div class="progress-item completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span>
           <span class="text">{{ 'userVerification.status.progress.created' | translate }}</span>
         </div>
         <div class="progress-item completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span>
           <span class="text">{{ 'userVerification.status.progress.emailVerified' | translate }}</span>
         </div>
         <div class="progress-item" [class.completed]="hasCompleteProfile">
-          <span class="icon">{{ hasCompleteProfile ? '✅' : '⏳' }}</span>
+          <span class="icon">{{ hasCompleteProfile ? '' : '' }}</span>
           <span class="text">
             {{ 'userVerification.status.progress.profileCompleted' | translate:{ percent: hasCompleteProfile ? 100 : '<
               100' } }} </span>
         </div>
         <div class="progress-item" [class.completed]="isVerified">
-          <span class="icon">{{ isVerified ? '✅' : '⏳' }}</span>
+          <span class="icon">{{ isVerified ? '' : '' }}</span>
           <span class="text">{{ 'userVerification.status.progress.adminVerification' | translate }}</span>
         </div>
       </div>
@@ -87,15 +87,15 @@
       <h4>{{ 'userVerification.status.requirements.title' | translate }}</h4>
       <ul>
         <li [class.completed]="hasCompleteProfile">
-          <span class="icon">{{ hasCompleteProfile ? '✅' : '⭕' }}</span>
+          <span class="icon">{{ hasCompleteProfile ? '' : '' }}</span>
           {{ 'userVerification.status.requirements.profile100' | translate }}
         </li>
         <li class="completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">check_circle</span></span>
           {{ 'userVerification.status.requirements.emailVerified' | translate }}
         </li>
         <li [class.completed]="hasCompleteProfile">
-          <span class="icon">{{ hasCompleteProfile ? '✅' : '⭕' }}</span>
+          <span class="icon">{{ hasCompleteProfile ? '' : '' }}</span>
           {{ 'userVerification.status.requirements.personalData' | translate }}
         </li>
       </ul>
@@ -104,14 +104,14 @@
     <!-- Button - Solo si tiene perfil completo -->
     <button *ngIf="hasCompleteProfile" class="btn btn-primary btn-large" (click)="requestVerification()"
       [disabled]="requesting">
-      <span class="icon">📨</span>
+      <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></span>
       {{ requesting ? ('userVerification.status.buttons.sending' | translate)
       : ('userVerification.status.buttons.request' | translate) }}
     </button>
 
     <!-- Help text si no tiene perfil completo -->
     <div *ngIf="!hasCompleteProfile" class="help-box">
-      <span class="icon">ℹ️</span>
+      <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
       <p>{{ 'userVerification.status.help.completeProfile' | translate }}</p>
     </div>
   </div>
@@ -122,7 +122,7 @@
     class="pending-card">
     <div class="pending-header">
       <span [class]="getStatusBadgeClass(verificationStatus.status)">
-        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        <span class="icon material-symbols-outlined" aria-hidden="true">{{ getStatusIcon(verificationStatus.status) }}</span>
         {{ getStatusText(verificationStatus.status) }}
       </span>
     </div>
@@ -145,14 +145,14 @@
 
       <div class="pending-actions">
         <button class="btn btn-secondary" (click)="resendVerification()" [disabled]="resending">
-          <span class="icon">🔄</span>
+          <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></span>
           {{ resending ? ('userVerification.status.buttons.resending' | translate)
           : ('userVerification.status.buttons.resend' | translate) }}
         </button>
       </div>
 
       <div class="info-box">
-        <span class="icon">ℹ️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">info</span></span>
         <p>
           <strong>{{ 'userVerification.status.pending.infoBox.waitTitle' | translate }}</strong>
           {{ 'userVerification.status.pending.infoBox.waitDesc' | translate }}
@@ -167,7 +167,7 @@
     class="cancelled-card">
     <div class="cancelled-header">
       <span [class]="getStatusBadgeClass(verificationStatus.status)">
-        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        <span class="icon material-symbols-outlined" aria-hidden="true">{{ getStatusIcon(verificationStatus.status) }}</span>
         {{ getStatusText(verificationStatus.status) }}
       </span>
     </div>
@@ -178,7 +178,7 @@
 
       <!-- Advertencia de último intento -->
       <div *ngIf="isLastAttempt && !hasNoAttemptsLeft" class="alert alert-danger">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">warning</span></span>
         <div>
           <strong>{{ 'verification.lastAttempt' | translate }}</strong>
           <p>{{ 'verification.lastWarning' | translate }}</p>
@@ -192,7 +192,7 @@
 
       <!-- Información de intentos -->
       <div *ngIf="verificationStatus" class="info-box" [class.warning]="isLastAttempt">
-        <span class="icon">{{ isLastAttempt ? '⚠️' : 'ℹ️' }}</span>
+        <span class="icon">{{ isLastAttempt ? '' : '' }}</span>
         <p>
           <strong>{{ 'verification.attemptsLeft' | translate }}</strong> {{ attemptsLeft }} de {{ verificationStatus.maxAttempts }}
         </p>
@@ -200,7 +200,7 @@
 
       <!-- Mensaje si ya no tiene intentos -->
       <div *ngIf="hasNoAttemptsLeft" class="alert alert-danger">
-        <span class="icon">🚫</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">block</span></span>
         <div>
           <strong>{{ 'verification.limitReached' | translate }}</strong>
           <p>{{ 'verification.exhausted' | translate }}</p>
@@ -208,7 +208,7 @@
       </div>
 
       <button *ngIf="!hasNoAttemptsLeft" class="btn btn-primary" (click)="requestVerification()" [disabled]="requesting || !hasCompleteProfile">
-        <span class="icon">🔄</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">refresh</span></span>
         {{ requesting ? ('userVerification.status.buttons.sending' | translate)
         : ('userVerification.status.buttons.requestAgain' | translate) }}
       </button>
@@ -221,7 +221,7 @@
     class="expired-card">
     <div class="expired-header">
       <span [class]="getStatusBadgeClass(verificationStatus.status)">
-        <span class="icon">{{ getStatusIcon(verificationStatus.status) }}</span>
+        <span class="icon material-symbols-outlined" aria-hidden="true">{{ getStatusIcon(verificationStatus.status) }}</span>
         {{ getStatusText(verificationStatus.status) }}
       </span>
     </div>
@@ -231,7 +231,7 @@
       <p>{{ 'userVerification.status.expired.desc' | translate }}</p>
 
       <button class="btn btn-primary" (click)="requestVerification()" [disabled]="requesting || !hasCompleteProfile">
-        <span class="icon">📨</span>
+        <span class="icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></span>
         {{ requesting ? ('userVerification.status.buttons.sending' | translate)
         : ('userVerification.status.buttons.requestAgain' | translate) }}
       </button>

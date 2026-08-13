@@ -27,17 +27,20 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
 
     <!-- MENSAJES -->
     <div class="error" *ngIf="error() as err"><strong>{{ 'common.error' | translate }}</strong>: {{ err }}</div>
-    <div class="muted" *ngIf="loading()">{{ 'admin.messages.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'admin.messages.loading' | translate }}</p>
+    </div>
 
     <!-- LISTADO -->
     <section class="subsection">
@@ -64,11 +67,11 @@
                 <div>
                   <button class="btn ghost btn--icon u-mr-sm" type="button" (click)="edit(it)"
                     [title]="'common.edit' | translate">
-                    ✏️
+                    <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                   </button>
                   <button class="btn danger btn--icon" type="button" (click)="delete(it)"
                     [title]="'common.delete' | translate">
-                    🗑️
+                    <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                   </button>
                 </div>
               </td>
@@ -109,7 +112,7 @@
       <!-- Selector de usuario verificado (solo al crear) -->
       <ng-container *ngIf="!isEdit() && users().length > 0">
         <label class="label col-2 form-full">
-          <span class="text-accent">👤 {{ 'admin.form.selectUser' | translate }}</span>
+          <span class="text-accent"><span class="material-symbols-outlined" aria-hidden="true">person</span> {{ 'admin.form.selectUser' | translate }}</span>
           <input
             class="input"
             type="text"
@@ -134,7 +137,7 @@
                 </div>
                 <div class="hint-sm">
                   <span class="tag tag--ok">
-                    ✓ {{ 'admin.form.verified' | translate }}
+                    <span class="material-symbols-outlined" aria-hidden="true">check</span> {{ 'admin.form.verified' | translate }}
                   </span>
                   <span class="tag tag--info">
                     {{ 'admin.form.profileComplete' | translate }}

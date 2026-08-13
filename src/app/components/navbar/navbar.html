@@ -309,12 +309,29 @@
 
       <!-- Acceso para visitantes. Antes sólo existía en el menú móvil: en
            escritorio un usuario sin sesión no tenía ninguna llamada a la acción. -->
-      <li class="menu__item menu__item--auth" role="none" *ngIf="!isAuthenticated()">
-        <a role="menuitem" routerLink="/login" routerLinkActive="active" class="auth-link">
-          <span class="material-symbols-outlined" aria-hidden="true">login</span>
-          {{ 'nav.login' | translate }}
+      <li class="menu__item menu__item--dropdown menu__item--auth" role="none"
+        [class.open]="isDropdownOpen('guest')" *ngIf="!isAuthenticated()">
+        <button class="dropdown__toggle icon-only" type="button" role="menuitem" aria-haspopup="true"
+          [attr.aria-expanded]="isDropdownOpen('guest')"
+          (click)="toggleDropdown('guest')"
+          [attr.aria-label]="'nav.account' | translate" data-cy="guest-menu">
+          <span class="material-symbols-outlined account-icon" aria-hidden="true">account_circle</span>
           <span class="underline"></span>
-        </a>
+        </button>
+        <ul class="dropdown" role="menu" [attr.aria-label]="'nav.account' | translate">
+          <li class="dropdown__item" role="none">
+            <a role="menuitem" routerLink="/login" routerLinkActive="active" (click)="closeDropdowns()">
+              <span class="material-symbols-outlined" aria-hidden="true">login</span>
+              {{ 'nav.login' | translate }}
+            </a>
+          </li>
+          <li class="dropdown__item" role="none">
+            <a role="menuitem" routerLink="/register" routerLinkActive="active" (click)="closeDropdowns()">
+              <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+              {{ 'nav.register' | translate }}
+            </a>
+          </li>
+        </ul>
       </li>
 
       <!-- ✅ INBOX - Visible para TODOS los usuarios autenticados -->
@@ -365,7 +382,7 @@
           <!-- ✅ Alerta de email no verificado -->
           <li class="dropdown__item dropdown__item--warning" role="none" *ngIf="!isEmailVerified()">
             <div class="warning-message">
-              ⚠️ {{ 'nav.verifyEmailWarning' | translate }}
+              <span class="material-symbols-outlined" aria-hidden="true">warning</span> {{ 'nav.verifyEmailWarning' | translate }}
               <a routerLink="/verify-email" class="verify-link">{{ 'nav.verifyNow' | translate }}</a>
             </div>
           </li>
@@ -405,7 +422,7 @@
   <!-- Toast flotante para nuevas notificaciones -->
   <div *ngIf="newNotificationToast()" class="notification-toast-floating">
     <div class="toast-floating-icon">
-      <span>{{ newNotificationToast()!.type }}</span>
+      <span class="material-symbols-outlined" aria-hidden="true">{{ newNotificationToast()!.type }}</span>
     </div>
     <div class="toast-floating-content">
       <strong class="toast-floating-title">{{ newNotificationToast()!.title }}</strong>

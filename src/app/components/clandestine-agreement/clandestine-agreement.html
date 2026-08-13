@@ -59,17 +59,20 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
 
     <!-- MENSAJES -->
     <div class="error" *ngIf="error() as err"><strong>{{ 'common.errorLabel' | translate }}</strong> {{ err }}</div>
-    <div class="muted" *ngIf="loading()">{{ 'common.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'common.loading' | translate }}</p>
+    </div>
 
     <!-- LISTADO -->
     <section class="subsection">
@@ -128,11 +131,11 @@
               <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="('common.actions' | translate)">
                 <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
                   [attr.title]="'common.edit' | translate">
-                  ✏️
+                  <span class="material-symbols-outlined" aria-hidden="true">edit</span>
                 </button>
                 <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
                   [attr.title]="'common.delete' | translate">
-                  🗑️
+                  <span class="material-symbols-outlined" aria-hidden="true">delete</span>
                 </button>
               </td>
             </tr>

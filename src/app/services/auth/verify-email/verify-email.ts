@@ -11,7 +11,7 @@ import { AuthService } from '../../../services/auth/auth';
   template: `
     <div class="verify-email-container">
       <div class="card">
-        <div class="icon">📧</div>
+        <div class="icon"><span class="material-symbols-outlined" aria-hidden="true">mail</span></div>
         <h1>Verifica tu email</h1>
         
         <p class="message">
@@ -203,7 +203,7 @@ export class VerifyEmailComponent {
     // Simular reenvío de email (implementa esto en tu backend)
     setTimeout(() => {
       this.loading = false;
-      this.success = '✓ Email reenviado exitosamente. Por favor, revisa tu bandeja.';
+      this.success = 'Email reenviado exitosamente. Por favor, revisa tu bandeja.';
       
       setTimeout(() => {
         this.success = null;
@@ -214,7 +214,7 @@ export class VerifyEmailComponent {
     // this.http.post('/api/auth/resend-verification', {}).subscribe({
     //   next: () => {
     //     this.loading = false;
-    //     this.success = '✓ Email reenviado exitosamente';
+    //     this.success = 'Email reenviado exitosamente';
     //   },
     //   error: (err) => {
     //     this.loading = false;

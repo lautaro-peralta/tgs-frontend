@@ -7,14 +7,15 @@
     <aside class="stats-panel" *ngIf="!isAuthority() || isAdmin()">
       <!-- Botón para expandir/colapsar gráficos (solo móvil) -->
       <button class="btn btn-primary mobile-charts-toggle" type="button" (click)="toggleCharts()">
-        {{ chartsExpanded() ? '📊 Ocultar Gráficos' : '📊 Ver Gráficos y Estadísticas' }}
+        {{ chartsExpanded() ? 'Ocultar Gráficos' : 'Ver Gráficos y Estadísticas' }}
       </button>
 
       <div class="glass-dark card" [class.charts-collapsed]="!chartsExpanded()">
 
         @if (loadingStats()) {
-        <div class="loading">
-          <p>{{ 'sales.stats.loading' | translate : {} : 'Cargando estadísticas...' }}</p>
+        <div class="loading-state" role="status" aria-live="polite">
+          <span class="spinner" aria-hidden="true"></span>
+          <p class="loading-state__text">{{ 'sales.stats.loading' | translate : {} : 'Cargando estadísticas...' }}</p>
         </div>
 
         } @else if (stats()) {
@@ -22,7 +23,7 @@
         <!-- KPIs principales -->
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon">💰</div>
+            <div class="stat-icon"><span class="material-symbols-outlined" aria-hidden="true">payments</span></div>
             <div class="stat-content">
               <span class="stat-label">{{ 'sales.stats.totalRevenue' | translate : {} : 'Ingresos Totales' }}</span>
               <span class="stat-value">{{ stats()!.totalRevenue | currency:'ARS' }}</span>
@@ -30,7 +31,7 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">🛒</div>
+            <div class="stat-icon"><span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span></div>
             <div class="stat-content">
               <span class="stat-label">{{ 'sales.stats.totalSales' | translate : {} : 'Total de Ventas' }}</span>
               <span class="stat-value">{{ stats()!.totalSales }}</span>
@@ -38,7 +39,7 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">📊</div>
+            <div class="stat-icon"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span></div>
             <div class="stat-content">
               <span class="stat-label">{{ 'sales.stats.averageTicket' | translate : {} : 'Importe promedio por venta' }}</span>
               <span class="stat-value">{{ stats()!.averageTicket | currency:'ARS' }}</span>
@@ -50,7 +51,7 @@
         <div class="charts-grid">
           <!-- Ventas por Mes -->
           <div class="chart-card">
-            <h3 class="chart-title">📈 {{ 'sales.stats.salesByMonth' | translate : {} : 'Ventas por Mes' }}</h3>
+            <h3 class="chart-title"><span class="material-symbols-outlined" aria-hidden="true">trending_up</span> {{ 'sales.stats.salesByMonth' | translate : {} : 'Ventas por Mes' }}</h3>
             @if (salesChartOptions()) {
             <div echarts [options]="salesChartOptions()!" [theme]="'dark'" class="chart-container chart-box"></div>
             }
@@ -58,7 +59,7 @@
 
           <!-- Top Productos -->
           <div class="chart-card">
-            <h3 class="chart-title">🏆 {{ 'sales.stats.topProducts' | translate : {} : 'Productos Más Vendidos' }}</h3>
+            <h3 class="chart-title"><span class="material-symbols-outlined" aria-hidden="true">emoji_events</span> {{ 'sales.stats.topProducts' | translate : {} : 'Productos Más Vendidos' }}</h3>
             @if (topProductsChartOptions()) {
             <div echarts [options]="topProductsChartOptions()!" [theme]="'dark'" class="chart-container chart-box"></div>
             }
@@ -66,7 +67,7 @@
 
           <!-- Ventas por Distribuidor (solo para Admin y Authority) -->
           <div class="chart-card span-full" *ngIf="isAdmin() || isAuthority()">
-            <h3 class="chart-title">🚚 {{ 'sales.stats.salesByDistributor' | translate : {} : 'Ventas por Distribuidor'
+            <h3 class="chart-title"><span class="material-symbols-outlined" aria-hidden="true">local_shipping</span> {{ 'sales.stats.salesByDistributor' | translate : {} : 'Ventas por Distribuidor'
               }}</h3>
             @if (distributorsChartOptions()) {
             <div echarts [options]="distributorsChartOptions()!" [theme]="'dark'" class="chart-container chart-box"></div>
@@ -76,7 +77,7 @@
 
         } @else {
         <div class="empty-state">
-          <div class="empty-icon">📊</div>
+          <div class="empty-icon"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span></div>
           <h3>{{ 'sales.stats.noData' | translate : {} : 'No hay estadísticas disponibles' }}</h3>
           <p>{{ 'sales.stats.noDataDesc' | translate : {} : 'Las estadísticas aparecerán aquí una vez que haya datos
             disponibles.' }}</p>
@@ -123,11 +124,11 @@
 
         <div class="actions-row">
           <button class="btn btn-primary" type="button" (click)="applyFilters()">
-            🔍 {{ 'common.search' | translate }}
+            <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
           </button>
           <button class="btn ghost" type="button" (click)="clearFilters()"
             *ngIf="fTextApplied() || fClientDniApplied()">
-            🗑️ {{ 'common.clear' | translate }}
+            <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
           </button>
         </div>
       </div>
@@ -185,7 +186,7 @@
                       <div class="u-grow">
                         <div class="detail-line__name">{{ detailDescription(d) }}</div>
                         <div class="muted detail-line__meta">
-                          💰 {{ detailPrice(d) | currency:'$' }} c/u
+                          <span class="material-symbols-outlined" aria-hidden="true">payments</span> {{ detailPrice(d) | currency:'$' }} c/u
                         </div>
                       </div>
                       <div class="detail-qty detail-qty--tight">
@@ -233,7 +234,7 @@
         <!-- Client Selector con diseño de tarjetas -->
         <div class="form-full">
           <label class="label">
-            <span class="text-accent">👤 {{ 'sales.form.client' | translate }} *</span>
+            <span class="text-accent"><span class="material-symbols-outlined" aria-hidden="true">person</span> {{ 'sales.form.client' | translate }} *</span>
             <input
               class="input"
               type="text"
@@ -255,7 +256,7 @@
                 [class.selected]="selectedClientDni() === c.dni">
                 <div class="row-between">
                   <div class="pick-selected">{{ c.name }}</div>
-                  <span class="pick-check" *ngIf="selectedClientDni() === c.dni">✓</span>
+                  <span class="pick-check" *ngIf="selectedClientDni() === c.dni"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
                 </div>
                 <div class="mono-hint">
                   DNI: {{ c.dni }}
@@ -276,13 +277,13 @@
             <h4 class="line-card__title">Producto {{ i + 1 }}</h4>
             <button class="btn danger btn--icon" type="button" (click)="removeLine(i)"
               [attr.title]="'sales.form.removeLineTitle' | translate">
-              🗑️
+              <span class="material-symbols-outlined" aria-hidden="true">delete</span>
             </button>
           </div>
 
           <!-- Búsqueda de productos -->
           <label class="label">
-            <span class="text-accent">📦 {{ 'sales.form.product' | translate }}</span>
+            <span class="text-accent"><span class="material-symbols-outlined" aria-hidden="true">inventory_2</span> {{ 'sales.form.product' | translate }}</span>
             <input
               class="input"
               type="text"
@@ -305,7 +306,7 @@
                 [class.selected]="l.productId === offer.productId && l.distributorDni === offer.distributorDni">
                 <div class="row-between">
                   <div class="pick-selected pick-selected--info">{{ offer.description }}</div>
-                  <span class="pick-check pick-check--info" *ngIf="l.productId === offer.productId && l.distributorDni === offer.distributorDni">✓</span>
+                  <span class="pick-check pick-check--info" *ngIf="l.productId === offer.productId && l.distributorDni === offer.distributorDni"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
                 </div>
                 <div class="pick-hint">
                   <span class="u-mono">ID: {{ offer.productId }}</span> •
@@ -314,10 +315,10 @@
                 </div>
                 <div class="hint-xs">
                   <span class="tag tag--info">
-                    🚚 {{ offer.distributorName }}
+                    <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span> {{ offer.distributorName }}
                   </span>
                   <span class="tag tag--special tag--inline" *ngIf="offer.zoneName">
-                    📍 {{ offer.zoneName }}
+                    <span class="material-symbols-outlined" aria-hidden="true">location_on</span> {{ offer.zoneName }}
                   </span>
                 </div>
               </div>

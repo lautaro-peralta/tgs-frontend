@@ -12,7 +12,7 @@
 
     <!-- ✅ Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -20,7 +20,7 @@
     <div *ngIf="authorities().length > 0" class="chart-section">
       <button type="button" class="chart-toggle" (click)="toggleChart()" [attr.aria-expanded]="showChart()">
         <span class="chart-toggle-icon" [class.expanded]="showChart()">▶</span>
-        <span class="chart-toggle-text">📊 {{ 'authorities.stats.chartDistributionTitle' | translate }}</span>
+        <span class="chart-toggle-text"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span> {{ 'authorities.stats.chartDistributionTitle' | translate }}</span>
         <span class="chart-toggle-badge">{{ authorities().length }} {{ authorities().length === 1 ? ('authorities.stats.authoritySingular' | translate) : ('authorities.stats.authorityPlural' | translate) }}</span>
       </button>
 
@@ -49,14 +49,14 @@
               </div>
               <div class="stats-summary">
                 <div class="summary-item">
-                  <span class="summary-icon">📊</span>
+                  <span class="summary-icon"><span class="material-symbols-outlined" aria-hidden="true">bar_chart</span></span>
                   <div>
                     <div class="summary-value">{{ rankStats()!.total }}</div>
                     <div class="summary-label">{{ 'authorities.stats.totalAuthorities' | translate }}</div>
                   </div>
                 </div>
                 <div class="summary-item">
-                  <span class="summary-icon">🏆</span>
+                  <span class="summary-icon"><span class="material-symbols-outlined" aria-hidden="true">emoji_events</span></span>
                   <div>
                     <div class="summary-value">{{ 'common.rank' | translate }} {{ rankStats()!.mostCommon.rank }}</div>
                     <div class="summary-label">{{ 'authorities.stats.mostCommon' | translate }}</div>
@@ -66,13 +66,21 @@
             </div>
 
             <!-- Gráfico -->
-            <div class="chart-wrapper" *ngIf="rankChartOptions()">
+            <div class="chart-wrapper" *ngIf="rankChartOptions(); else chartLoading">
               <div echarts
                 [options]="rankChartOptions()!"
                 [theme]="'dark'"
                 class="chart chart-box u-w-450">
               </div>
             </div>
+            <ng-template #chartLoading>
+              <div class="chart-loading chart-loading--md" role="status" aria-live="polite">
+                <span class="spinner" aria-hidden="true"></span>
+                <p class="loading-state__text">
+                  {{ 'authorities.chartLoading' | translate : {} : 'Cargando gráfico…' }}
+                </p>
+              </div>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -106,11 +114,11 @@
       <!-- Botones -->
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()"
           *ngIf="fTextApplied() || fDniApplied() || fZoneIdApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
@@ -125,7 +133,7 @@
         </div>
         <span class="rank-order-text">{{ 'authorities.range' | translate }}</span>
         <span class="rank-order-badge">
-          {{ rankOrder() === 'asc' ? '0→3' : '3→0' }}
+          {{ rankOrder() === 'asc' ? '03' : '30' }}
         </span>
       </button>
     </div>
@@ -158,10 +166,10 @@
             <td class="right" *ngIf="canEdit() || canDelete()" [attr.data-label]="'authorities.table.actions' | translate">
               <button class="btn ghost btn--icon" (click)="edit(a); isFormOpen = true" *ngIf="canEdit()"
                 [attr.title]="'common.edit' | translate">
-                ✏️
+                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
               </button>
               <button class="btn danger btn--icon" (click)="delete(a.dni)" *ngIf="canDelete()" [attr.title]="'common.delete' | translate">
-                🗑️
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </td>
           </tr>
@@ -239,13 +247,13 @@
                   <div class="u-grow">
                     <div class="row-between">
                       <div class="text-accent">{{ getUserPerson(u)?.name }}</div>
-                      <span class="pick-check pick-check--accent" *ngIf="selectedUserDni() === getUserPersonDni(u)">✓</span>
+                      <span class="pick-check pick-check--accent" *ngIf="selectedUserDni() === getUserPersonDni(u)"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
                     </div>
                     <div class="mono-hint">
                       {{ 'authorities.user.dniLabel' | translate : {} : 'DNI' }}: {{ getUserPerson(u)?.dni }} • {{ u.email }}
                     </div>
                     <div class="hint-sm">
-                      <span class="tag tag--ok">✓
+                      <span class="tag tag--ok"><span class="material-symbols-outlined" aria-hidden="true">check</span>
                         {{ 'authorities.user.verified' | translate : {} : 'Verificado' }}</span>
                       <span class="tag tag--info">
                         {{ 'authorities.user.profileComplete' | translate : {} : 'Perfil 100%' }}</span>
@@ -341,7 +349,7 @@
                 <button class="input-action-btn" type="button"
                   (click)="togglePasswordVisibility()"
                   [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
-                  {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+                  {{ showPassword() ? '' : '‍' }}
                 </button>
               </div>
               <small class="hint" *ngIf="form.controls.password.invalid && form.controls.password.touched">

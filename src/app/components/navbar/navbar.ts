@@ -27,7 +27,7 @@ import { LoggerService } from '../../services/logger/logger';
 interface MenuItem { label: string; path: string; }
 
 /** Identificadores de los menús desplegables de la navbar. */
-type DropdownId = 'lang' | 'mgmt' | 'user';
+type DropdownId = 'lang' | 'mgmt' | 'user' | 'guest';
 
 @Component({
   selector: 'app-navbar',
@@ -394,18 +394,20 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
 
       if (latestNotification) {
+        // Ligaduras de Material Symbols: la plantilla las pinta dentro de un
+        // <span class="material-symbols-outlined">, igual que el resto de la app.
         const typeIcons: Record<string, string> = {
-          'USER_VERIFICATION_APPROVED': '✅',
-          'USER_VERIFICATION_REJECTED': '❌',
-          'ROLE_REQUEST_APPROVED': '🎉',
-          'ROLE_REQUEST_REJECTED': '⚠️',
-          'SYSTEM': 'ℹ️',
+          'USER_VERIFICATION_APPROVED': 'check_circle',
+          'USER_VERIFICATION_REJECTED': 'cancel',
+          'ROLE_REQUEST_APPROVED': 'celebration',
+          'ROLE_REQUEST_REJECTED': 'warning',
+          'SYSTEM': 'info',
         };
 
         this.newNotificationToast.set({
           title: latestNotification.title,
           message: latestNotification.message,
-          type: typeIcons[latestNotification.type] || 'ℹ️',
+          type: typeIcons[latestNotification.type] || 'info',
           show: true
         });
 

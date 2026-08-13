@@ -1,7 +1,7 @@
 /**
  * Servicio de autenticación con soporte completo para refresh token
  * 
- * ✅ CARACTERÍSTICAS:
+ *  CARACTERÍSTICAS:
  * - Señales reactivas mejoradas para roles
  * - Refresh automático de tokens via interceptor
  * - Sincronización correcta de estado
@@ -139,7 +139,7 @@ export class AuthService {
    * Intenta restaurar la sesión usando el refresh token existente
    */
   public initialize(): void {
-    // ✅ Intentar restaurar token desde localStorage
+    //  Intentar restaurar token desde localStorage
     const storedToken = localStorage.getItem('auth_token');
     const storedUser = localStorage.getItem('auth_user');
 
@@ -180,12 +180,12 @@ export class AuthService {
       { withCredentials: true }
     ).pipe(
       tap(response => {
-        // ✅ Guardar token en localStorage si está presente en la respuesta
+        //  Guardar token en localStorage si está presente en la respuesta
         if (response.meta && (response.meta as any).token) {
           localStorage.setItem('auth_token', (response.meta as any).token);
         }
 
-        // ✅ Guardar usuario en localStorage
+        //  Guardar usuario en localStorage
         localStorage.setItem('auth_user', JSON.stringify(response.data));
       }),
       map(response => response.data),
@@ -218,20 +218,20 @@ export class AuthService {
    * OPTIMIZADO: Limpia el estado local inmediatamente sin esperar al backend
    */
   logout(): Observable<void> {
-    // ✅ OPTIMIZACIÓN 1: Cancelar el timer de refresh
+    //  OPTIMIZACIÓN 1: Cancelar el timer de refresh
     this.cancelTokenRefresh();
 
-    // ✅ OPTIMIZACIÓN 2: Limpiar estado local INMEDIATAMENTE (sin esperar backend)
+    //  OPTIMIZACIÓN 2: Limpiar estado local INMEDIATAMENTE (sin esperar backend)
     this.clearUser();
 
-    // ✅ LIMPIEZA DE LOCALSTORAGE
+    //  LIMPIEZA DE LOCALSTORAGE
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
 
-    // ✅ OPTIMIZACIÓN 3: Redirigir inmediatamente
+    //  OPTIMIZACIÓN 3: Redirigir inmediatamente
     this.router.navigate(['/']);
 
-    // ✅ OPTIMIZACIÓN 4: Notificar al backend en segundo plano (con timeout)
+    //  OPTIMIZACIÓN 4: Notificar al backend en segundo plano (con timeout)
     // Si el backend no responde en 5 segundos, ignorar el error
     this.http.post<void>(
       `${API_URL}/api/auth/logout`,
@@ -398,11 +398,11 @@ export class AuthService {
     if (!user) return requirements;
 
     if (!(user as any).isVerified) {
-      requirements.push('✅ Verificar tu cuenta con un administrador');
+      requirements.push('Verificar tu cuenta con un administrador');
     }
 
     if (!(user as any).hasPersonalInfo) {
-      requirements.push('📝 Completar tu información personal (DNI, nombre, teléfono, dirección)');
+      requirements.push('Completar tu información personal (DNI, nombre, teléfono, dirección)');
     }
 
     return requirements;
@@ -415,19 +415,19 @@ export class AuthService {
     if (!user) return suggestions;
 
     if (!user.emailVerified) {
-      suggestions.push('✉️ Verifica tu email haciendo clic en el enlace que te enviamos');
+      suggestions.push('Verifica tu email haciendo clic en el enlace que te enviamos');
     }
 
     if (!(user as any).hasPersonalInfo) {
-      suggestions.push('📝 Completa tu información personal (DNI, nombre, teléfono, dirección)');
+      suggestions.push('Completa tu información personal (DNI, nombre, teléfono, dirección)');
     }
 
     if (!(user as any).isVerified && !(user.roles ?? []).includes(Role.ADMIN)) {
-      suggestions.push('ℹ️ Solicita verificación de cuenta para habilitar todas las funciones');
+      suggestions.push('Solicita verificación de cuenta para habilitar todas las funciones');
     }
 
     if (!(user as any).isActive) {
-      suggestions.push('⚠️ Tu cuenta está inactiva. Contacta al soporte');
+      suggestions.push('Tu cuenta está inactiva. Contacta al soporte');
     }
 
     return suggestions;
@@ -529,12 +529,12 @@ export class AuthService {
       message: errorMessage
     };
 
-    // ✅ Preservar el email del backend cuando está presente (importante para verificación)
+    //  Preservar el email del backend cuando está presente (importante para verificación)
     if (error.error?.email) {
       normalized.email = error.error.email;
     }
 
-    // ✅ Preservar la estructura completa del error para casos especiales
+    //  Preservar la estructura completa del error para casos especiales
     normalized.error = {
       ...error.error,
       code: normalized.code,

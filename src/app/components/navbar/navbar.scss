@@ -295,20 +295,24 @@
   left: auto;
 }
 
-/* Acceso para visitantes: acentuado para que destaque sobre las páginas
-   informativas, sin llegar a competir con la marca. */
-.menu__item--auth .auth-link {
+/* Acceso para visitantes: el mismo botón de cuenta que ve un usuario con
+   sesión, acentuado para que destaque sobre las páginas informativas sin
+   llegar a competir con la marca. "Iniciar sesión" y "Registrarse" cuelgan
+   del desplegable. */
+.menu__item--auth .dropdown__toggle {
   border-color: rgba(96, 165, 250, .45);
   background: rgba(96, 165, 250, .12);
   color: var(--text-strong);
 }
 
-.menu__item--auth .auth-link:hover {
+.menu__item--auth .dropdown__toggle:hover,
+.menu__item--auth:hover .dropdown__toggle,
+.menu__item--auth:focus-within .dropdown__toggle {
   background: rgba(96, 165, 250, .2);
   border-color: rgba(96, 165, 250, .65);
 }
 
-.menu__item--auth .material-symbols-outlined {
+.menu__item--auth .dropdown__item .material-symbols-outlined {
   font-size: 1.1rem;
 }
 

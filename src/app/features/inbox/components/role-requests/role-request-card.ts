@@ -34,9 +34,9 @@ export class RoleRequestCardComponent {
 
   getStatusIcon(status: RequestStatus): string {
     const icons: Record<RequestStatus, string> = {
-      [RequestStatus.PENDING]: '⏳',
-      [RequestStatus.APPROVED]: '✅',
-      [RequestStatus.REJECTED]: '❌',
+      [RequestStatus.PENDING]: 'hourglass_top',
+      [RequestStatus.APPROVED]: 'check_circle',
+      [RequestStatus.REJECTED]: 'cancel',
     };
     return icons[status];
   }

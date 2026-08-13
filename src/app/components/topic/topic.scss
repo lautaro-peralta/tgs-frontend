@@ -297,12 +297,6 @@
     gap: var(--sp-2);
   }
 
-  /* Ajustar estadísticas en mobile */
-  .glass-dark > div[style*="display: flex"]:first-of-type {
-    flex-direction: column;
-    gap: var(--sp-2) !important;
-  }
-
   /* Ajustar filtros en mobile */
   .filters {
     flex-direction: column;
@@ -315,12 +309,6 @@
 
   .filters > div {
     width: 100%;
-  }
-
-  .filters > div[style*="display: flex"] {
-    width: 100%;
-    flex-direction: column;
-    gap: var(--sp-2);
   }
 
   .filters button {

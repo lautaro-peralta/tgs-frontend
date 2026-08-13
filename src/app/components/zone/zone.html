@@ -12,7 +12,7 @@
 
     <!-- Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined" aria-hidden="true">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -45,16 +45,19 @@
       <!-- Botones -->
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined" aria-hidden="true">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
 
     <!-- Status -->
-    <div *ngIf="loading()" class="muted">{{ 'zones.loading' | translate }}</div>
+    <div class="loading-state" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <p class="loading-state__text">{{ 'zones.loading' | translate }}</p>
+    </div>
 
     <!-- Table -->
     <div class="table-wrap" *ngIf="!loading()">
@@ -83,11 +86,11 @@
             <td *ngIf="isAdmin()" class="right" [attr.data-label]="'zones.table.actions' | translate">
               <button class="btn ghost btn--icon" (click)="edit(z); isFormOpen = true"
                 [attr.title]="'common.edit' | translate">
-                ✏️
+                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
               </button>
               <button class="btn danger btn--icon" (click)="delete(z)"
                 [attr.title]="'common.delete' | translate">
-                🗑️
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </td>
 

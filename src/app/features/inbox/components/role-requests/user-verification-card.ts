@@ -35,10 +35,10 @@ export class UserVerificationCardComponent {
 
   getStatusIcon(status: UserVerificationStatus): string {
     const icons: Record<UserVerificationStatus, string> = {
-      [UserVerificationStatus.PENDING]: '⏳',
-      [UserVerificationStatus.VERIFIED]: '✅',
+      [UserVerificationStatus.PENDING]: 'hourglass_top',
+      [UserVerificationStatus.VERIFIED]: 'check_circle',
       [UserVerificationStatus.EXPIRED]: '⏰',
-      [UserVerificationStatus.CANCELLED]: '❌',
+      [UserVerificationStatus.CANCELLED]: 'cancel',
     };
     return icons[status];
   }
