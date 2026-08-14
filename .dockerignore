@@ -1,0 +1,25 @@
+# Se instala dentro de la imagen a partir del lockfile; copiar el node_modules
+# del host manda cientos de MB al daemon y arrastra binarios compilados para
+# otra plataforma.
+node_modules
+dist
+.angular
+
+# Nada de esto interviene en el build
+.git
+.github
+.vscode
+cypress
+tests
+performance-tests
+coverage
+*.log
+.env
+.env.*
+Dockerfile
+Dockerfile.test
+docker-compose*.yml
+.dockerignore
+README.md
+TESTING-STRATEGY.md
+docs
