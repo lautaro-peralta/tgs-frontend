@@ -19,43 +19,46 @@ Todos los servicios del dominio siguen un conjunto de convenciones consistentes:
 ## Servicios de Dominio
 
 ### AuthService
+
 **Archivo**: `src/app/services/auth/auth.ts`
 
 Servicio central de autenticación. Gestiona el estado de sesión con Angular Signals y expone las operaciones del ciclo de vida de autenticación. Documentado en profundidad en [04-AUTH-FLOW.md](04-AUTH-FLOW.md).
 
-| Método | Endpoint | Descripción |
-|--------|---------|-------------|
-| `login(credentials)` | `POST /api/auth/login` | Inicia sesión |
-| `register(data)` | `POST /api/auth/register` | Registra y autentica al usuario |
-| `logout()` | `DELETE /api/auth/logout` | Cierra sesión e invalida cookies |
-| `refresh()` | `POST /api/auth/refresh` | Renueva el access token |
-| `refreshIfStale(ms)` | — | Refresh condicional por antigüedad del estado |
+| Método               | Endpoint                  | Descripción                                   |
+| -------------------- | ------------------------- | --------------------------------------------- |
+| `login(credentials)` | `POST /api/auth/login`    | Inicia sesión                                 |
+| `register(data)`     | `POST /api/auth/register` | Registra y autentica al usuario               |
+| `logout()`           | `DELETE /api/auth/logout` | Cierra sesión e invalida cookies              |
+| `refresh()`          | `POST /api/auth/refresh`  | Renueva el access token                       |
+| `refreshIfStale(ms)` | —                         | Refresh condicional por antigüedad del estado |
 
 ---
 
 ### ProductService
+
 **Archivo**: `src/app/services/product/product.ts`  
 **Base URL**: `/api/products`
 
-| Método | Verbo + Ruta | Descripción |
-|--------|-------------|-------------|
-| `getAllProducts()` | `GET /api/products` | Lista completa de productos |
-| `getProduct(id)` | `GET /api/products/:id` | Producto por ID |
-| `createProduct(payload)` | `POST /api/products` | Alta de producto |
-| `updateProduct(id, payload)` | `PATCH /api/products/:id` | Actualización parcial |
-| `deleteProduct(id)` | `DELETE /api/products/:id` | Baja de producto |
-| `searchProducts(params)` | `GET /api/products/search` | Búsqueda con filtros |
+| Método                       | Verbo + Ruta               | Descripción                 |
+| ---------------------------- | -------------------------- | --------------------------- |
+| `getAllProducts()`           | `GET /api/products`        | Lista completa de productos |
+| `getProduct(id)`             | `GET /api/products/:id`    | Producto por ID             |
+| `createProduct(payload)`     | `POST /api/products`       | Alta de producto            |
+| `updateProduct(id, payload)` | `PATCH /api/products/:id`  | Actualización parcial       |
+| `deleteProduct(id)`          | `DELETE /api/products/:id` | Baja de producto            |
+| `searchProducts(params)`     | `GET /api/products/search` | Búsqueda con filtros        |
 
 Las peticiones de listado incluyen un timestamp y un string aleatorio como query params (`?_t=...&_r=...`) y headers `Cache-Control: no-cache` para prevenir respuestas cacheadas en todos los niveles de la cadena (browser, CDN, proxy).
 
 **Parámetros de búsqueda**:
+
 ```typescript
 interface ProductSearchParams {
-  q?:     string;                    // Término libre
-  by?:    'description' | 'legal';  // Campo de búsqueda
-  min?:   number;                    // Precio mínimo
-  max?:   number;                    // Precio máximo
-  page?:  number;
+  q?: string; // Término libre
+  by?: "description" | "legal"; // Campo de búsqueda
+  min?: number; // Precio mínimo
+  max?: number; // Precio máximo
+  page?: number;
   limit?: number;
 }
 ```
@@ -63,25 +66,26 @@ interface ProductSearchParams {
 ---
 
 ### SaleService
+
 **Archivo**: `src/app/services/sale/sale.ts`  
 **Base URL**: `/api/sales`
 
-| Método | Verbo + Ruta | Descripción |
-|--------|-------------|-------------|
-| `getAllSales()` | `GET /api/sales` | Todas las ventas del sistema |
-| `getMyPurchases()` | `GET /api/sales/my-purchases` | Compras del usuario autenticado |
-| `createSale(payload)` | `POST /api/sales` | Registra una nueva venta |
-| `getSaleById(id)` | `GET /api/sales/:id` | Detalle de una venta |
+| Método                | Verbo + Ruta                  | Descripción                     |
+| --------------------- | ----------------------------- | ------------------------------- |
+| `getAllSales()`       | `GET /api/sales`              | Todas las ventas del sistema    |
+| `getMyPurchases()`    | `GET /api/sales/my-purchases` | Compras del usuario autenticado |
+| `createSale(payload)` | `POST /api/sales`             | Registra una nueva venta        |
+| `getSaleById(id)`     | `GET /api/sales/:id`          | Detalle de una venta            |
 
 Al crear una venta, el backend puede actualizar el rol del comprador (e.g., `USER → CLIENT` en la primera compra). La respuesta extiende la estructura estándar:
 
 ```typescript
 interface CreateSaleResponse {
-  saleId:          number;
-  total:           number;
-  userRoleUpdated: boolean;         // true si el rol del usuario cambió
+  saleId: number;
+  total: number;
+  userRoleUpdated: boolean; // true si el rol del usuario cambió
   distributor?: {
-    name:  string;
+    name: string;
     phone: string;
     email: string;
     zone?: { id: number; name: string; isHeadquarters: boolean };
@@ -92,6 +96,7 @@ interface CreateSaleResponse {
 ---
 
 ### CartService
+
 **Archivo**: `src/app/services/cart/cart.ts`
 
 El `CartService` es el único servicio **sin comunicación HTTP**. Gestiona el estado del carrito de compras en memoria y lo persiste en `localStorage` bajo la clave `cart.v1`.
@@ -104,13 +109,13 @@ readonly count = computed(() => items().reduce((n, it) => n + it.qty, 0));
 readonly total = computed(() => items().reduce((s, it) => s + it.price * it.qty, 0));
 ```
 
-| Método | Descripción |
-|--------|-------------|
-| `add(product)` | Agrega al carrito. Si ya existe, incrementa la cantidad. |
-| `inc(id)` | Incrementa en 1 la cantidad de un ítem. |
-| `dec(id)` | Decrementa en 1. Elimina el ítem si la cantidad llega a 0. |
-| `remove(id)` | Elimina un ítem directamente. |
-| `clear()` | Vacía el carrito completo. |
+| Método         | Descripción                                                |
+| -------------- | ---------------------------------------------------------- |
+| `add(product)` | Agrega al carrito. Si ya existe, incrementa la cantidad.   |
+| `inc(id)`      | Incrementa en 1 la cantidad de un ítem.                    |
+| `dec(id)`      | Decrementa en 1. Elimina el ítem si la cantidad llega a 0. |
+| `remove(id)`   | Elimina un ítem directamente.                              |
+| `clear()`      | Vacía el carrito completo.                                 |
 
 Toda mutación llama internamente a `persist()`, que serializa el estado actual a `localStorage`.
 
@@ -120,23 +125,24 @@ Toda mutación llama internamente a `persist()`, que serializa el estado actual 
 
 Los siguientes servicios implementan operaciones CRUD estándar sobre sus respectivos recursos. Todos siguen el mismo patrón de `ProductService`.
 
-| Servicio | Archivo | Base URL |
-|---------|---------|---------|
-| `ClientService` | `services/client/client.ts` | `/api/clients` |
-| `DistributorService` | `services/distributor/distributor.ts` | `/api/distributors` |
-| `AuthorityService` | `services/authority/authority.ts` | `/api/authorities` |
-| `BribeService` | `services/bribe/bribe.ts` | `/api/bribes` |
-| `ZoneService` | `services/zone/zone.ts` | `/api/zones` |
-| `PartnerService` | `services/partner/partner.ts` | `/api/partners` |
-| `MonthlyReviewService` | `services/monthly-review/monthly-review.ts` | `/api/monthly-reviews` |
+| Servicio                      | Archivo                                                   | Base URL                      |
+| ----------------------------- | --------------------------------------------------------- | ----------------------------- |
+| `ClientService`               | `services/client/client.ts`                               | `/api/clients`                |
+| `DistributorService`          | `services/distributor/distributor.ts`                     | `/api/distributors`           |
+| `AuthorityService`            | `services/authority/authority.ts`                         | `/api/authorities`            |
+| `BribeService`                | `services/bribe/bribe.ts`                                 | `/api/bribes`                 |
+| `ZoneService`                 | `services/zone/zone.ts`                                   | `/api/zones`                  |
+| `PartnerService`              | `services/partner/partner.ts`                             | `/api/partners`               |
+| `MonthlyReviewService`        | `services/monthly-review/monthly-review.ts`               | `/api/monthly-reviews`        |
 | `ClandestineAgreementService` | `services/clandestine-agreement/clandestine-agreement.ts` | `/api/clandestine-agreements` |
-| `DecisionService` | `services/decision/decision.ts` | `/api/decisions` |
-| `ShelbyCouncilService` | `services/shelby-council/shelby-council.ts` | `/api/shelby-council` |
-| `TopicService` | `services/topic/topic.ts` | `/api/topics` |
+| `DecisionService`             | `services/decision/decision.ts`                           | `/api/decisions`              |
+| `ShelbyCouncilService`        | `services/shelby-council/shelby-council.ts`               | `/api/shelby-council`         |
+| `TopicService`                | `services/topic/topic.ts`                                 | `/api/topics`                 |
 
 ---
 
 ### StatsService
+
 **Archivo**: `src/app/services/stats/stats.ts`  
 **Base URL**: `/api/stats`
 
@@ -144,12 +150,12 @@ Provee los datos para los gráficos del panel de administración. Actualmente op
 
 ```typescript
 interface SalesStats {
-  totalSales:          number;
-  totalRevenue:        number;
-  averageTicket:       number;
-  salesByMonth:        { month: string; amount: number }[];
-  topProducts:         { productId: number; productName: string; quantity: number }[];
-  salesByDistributor:  { distributorName: string; totalSales: number }[];
+  totalSales: number;
+  totalRevenue: number;
+  averageTicket: number;
+  salesByMonth: { month: string; amount: number }[];
+  topProducts: { productId: number; productName: string; quantity: number }[];
+  salesByDistributor: { distributorName: string; totalSales: number }[];
 }
 ```
 
@@ -157,15 +163,15 @@ interface SalesStats {
 
 ### Servicios Auxiliares
 
-| Servicio | Archivo | Responsabilidad |
-|---------|---------|----------------|
-| `AdminService` | `services/admin/admin.ts` | Operaciones exclusivas del rol ADMIN |
-| `UserService` | `services/user/user.ts` | Perfil de usuario y actualización de datos personales |
-| `ProductImageService` | `services/product-image/product-image.ts` | Upload y gestión de imágenes de productos |
-| `PasswordResetService` | `services/password-reset/password-reset.service.ts` | Flujo de recuperación de contraseña |
-| `I18nService` | `services/i18n/i18n.ts` | Wrapper de `TranslateService` con persistencia en `localStorage` |
-| `AuthTransitionService` | `services/ui/auth-transition.ts` | Animaciones de transición en login/logout via GSAP |
-| `EmailVerificationSyncService` | `services/email-verification-sync.service.ts` | Sincronización del estado de verificación entre pestañas del navegador |
+| Servicio                       | Archivo                                             | Responsabilidad                                                                |
+| ------------------------------ | --------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `AdminService`                 | `services/admin/admin.ts`                           | Operaciones exclusivas del rol ADMIN                                           |
+| `UserService`                  | `services/user/user.ts`                             | Perfil de usuario y actualización de datos personales                          |
+| `ProductImageService`          | `services/product-image/product-image.ts`           | Upload y gestión de imágenes de productos                                      |
+| `PasswordResetService`         | `services/password-reset/password-reset.service.ts` | Flujo de recuperación de contraseña                                            |
+| `I18nService`                  | `services/i18n/i18n.ts`                             | Wrapper de `TranslateService` con persistencia en `localStorage`               |
+| `AuthTransitionService`        | `services/ui/auth-transition.ts`                    | Coordinación de estados de transición en login/logout mediante Angular Signals |
+| `EmailVerificationSyncService` | `services/email-verification-sync.service.ts`       | Sincronización del estado de verificación entre pestañas del navegador         |
 
 ---
 
@@ -175,36 +181,36 @@ interface SalesStats {
 
 ```typescript
 interface User {
-  id:                   string;
-  username:             string;
-  email:                string;
-  roles:                Role[];
-  isActive:             boolean;
-  isVerified:           boolean;      // Verificado por administrador
-  emailVerified:        boolean;      // Email confirmado por el usuario
-  profileCompleteness:  number;       // 0–100
-  hasPersonalInfo:      boolean;
-  createdAt:            string;
-  updatedAt:            string;
-  lastLoginAt?:         string;
-  person?:              PersonInfo | null;
+  id: string;
+  username: string;
+  email: string;
+  roles: Role[];
+  isActive: boolean;
+  isVerified: boolean; // Verificado por administrador
+  emailVerified: boolean; // Email confirmado por el usuario
+  profileCompleteness: number; // 0–100
+  hasPersonalInfo: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt?: string;
+  person?: PersonInfo | null;
 }
 
 interface PersonInfo {
-  dni:      string;
-  name:     string;
-  email:    string;
-  phone:    string;
-  address:  string;
+  dni: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
 }
 
 enum Role {
-  ADMIN       = 'ADMIN',
-  PARTNER     = 'PARTNER',
-  DISTRIBUTOR = 'DISTRIBUTOR',
-  CLIENT      = 'CLIENT',
-  USER        = 'USER',
-  AUTHORITY   = 'AUTHORITY',
+  ADMIN = "ADMIN",
+  PARTNER = "PARTNER",
+  DISTRIBUTOR = "DISTRIBUTOR",
+  CLIENT = "CLIENT",
+  USER = "USER",
+  AUTHORITY = "AUTHORITY",
 }
 ```
 
@@ -212,13 +218,13 @@ enum Role {
 
 ```typescript
 interface ProductDTO {
-  id:               number;
-  description:      string;
+  id: number;
+  description: string;
   legalDescription?: string;
-  price:            number;
-  stock?:           number;
-  imageUrl?:        string | null;
-  distributorId?:   number;
+  price: number;
+  stock?: number;
+  imageUrl?: string | null;
+  distributorId?: number;
 }
 ```
 
@@ -226,11 +232,11 @@ interface ProductDTO {
 
 ```typescript
 interface CartItem {
-  id:          number;
+  id: number;
   description: string;
-  price:       number;
-  imageUrl?:   string | null;
-  qty:         number;
+  price: number;
+  imageUrl?: string | null;
+  qty: number;
 }
 ```
 
@@ -240,9 +246,9 @@ interface CartItem {
 interface ApiResponse<T> {
   success: boolean;
   message: string;
-  data:    T;
+  data: T;
   meta: {
-    timestamp:  string;
+    timestamp: string;
     statusCode: number;
   };
 }

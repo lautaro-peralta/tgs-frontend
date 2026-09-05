@@ -28,7 +28,6 @@ src/
 │   │   ├── account/               # Perfil y configuración del usuario
 │   │   ├── admin/                 # Panel de administración del sistema
 │   │   ├── store/                 # Catálogo de productos (tienda)
-│   │   ├── checkout/              # Proceso de compra
 │   │   ├── my-purchases/          # Historial de compras
 │   │   ├── product/               # CRUD de productos (roles internos)
 │   │   ├── client/                # Gestión de clientes
@@ -43,7 +42,7 @@ src/
 │   │   ├── monthly-review/        # Revisiones mensuales
 │   │   ├── decision/              # Decisiones del consejo
 │   │   ├── topic/                 # Temáticas
-│   │   ├── chart/                 # Componente de visualización de datos
+│   │   ├── purchase-success-modal/ # Modal compra exitosa
 │   │   ├── pages/                 # Páginas informativas (about, faqs, contacto)
 │   │   ├── legal/                 # Páginas legales (términos, privacidad, cookies)
 │   │   └── errors/                # Páginas de error (forbidden)
@@ -134,15 +133,15 @@ La aplicación se organiza en capas con responsabilidades bien definidas:
 └─────────────────────────────────────────────┘
 ```
 
-| Capa | Responsabilidad | Patrón |
-|------|----------------|--------|
-| **Componentes** | Presentación, manejo de eventos, estado local de UI | Standalone, OnPush |
-| **Servicios** | Comunicación con la API REST, transformación de datos, estado global | `providedIn: 'root'`, Signals |
-| **Guards** | Protección de rutas según estado de autenticación y roles | `CanActivateFn` funcional |
-| **Interceptores** | Comportamiento transversal a todas las peticiones HTTP | `HttpInterceptorFn` funcional |
-| **Modelos** | Contratos de datos compartidos entre servicios y componentes | Interfaces TypeScript |
-| **Shared** | Componentes visuales reutilizables sin lógica de dominio | Standalone puro |
-| **Features** | Funcionalidad vertical autocontenida (inbox) con sus propios servicios y modelos | Feature module sin NgModule |
+| Capa              | Responsabilidad                                                                  | Patrón                        |
+| ----------------- | -------------------------------------------------------------------------------- | ----------------------------- |
+| **Componentes**   | Presentación, manejo de eventos, estado local de UI                              | Standalone, OnPush            |
+| **Servicios**     | Comunicación con la API REST, transformación de datos, estado global             | `providedIn: 'root'`, Signals |
+| **Guards**        | Protección de rutas según estado de autenticación y roles                        | `CanActivateFn` funcional     |
+| **Interceptores** | Comportamiento transversal a todas las peticiones HTTP                           | `HttpInterceptorFn` funcional |
+| **Modelos**       | Contratos de datos compartidos entre servicios y componentes                     | Interfaces TypeScript         |
+| **Shared**        | Componentes visuales reutilizables sin lógica de dominio                         | Standalone puro               |
+| **Features**      | Funcionalidad vertical autocontenida (inbox) con sus propios servicios y modelos | Feature module sin NgModule   |
 
 ---
 
@@ -160,9 +159,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     // HttpClient con interceptor funcional de autenticación
-    provideHttpClient(
-      withInterceptors([authInterceptor])
-    ),
+    provideHttpClient(withInterceptors([authInterceptor])),
 
     // ECharts registrado con solo los módulos necesarios (tree-shaking)
     provideEchartsCore({ echarts }),
@@ -170,11 +167,11 @@ export const appConfig: ApplicationConfig = {
     // ngx-translate con español como idioma por defecto
     importProvidersFrom(
       TranslateModule.forRoot({
-        defaultLanguage: 'es',
-        loader: { provide: TranslateLoader, useFactory: createTranslateLoader, deps: [HttpClient] }
-      })
-    )
-  ]
+        defaultLanguage: "es",
+        loader: { provide: TranslateLoader, useFactory: createTranslateLoader, deps: [HttpClient] },
+      }),
+    ),
+  ],
 };
 ```
 
@@ -225,11 +222,11 @@ if (this.authService.isAuthenticated()) { ... }
 Todos los servicios siguen el patrón moderno de inyección con `inject()` en lugar del constructor:
 
 ```typescript
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ProductService {
-  private readonly http   = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly auth   = inject(AuthService);
+  private readonly auth = inject(AuthService);
 }
 ```
 

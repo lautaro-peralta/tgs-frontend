@@ -57,8 +57,7 @@ Este es el frontend de **The Garrison System** (GarrSYS), una aplicación Angula
 - **Reactive Forms** para formularios complejos
 - **Guards** para protección de rutas
 - **Interceptors** para manejo de tokens JWT
-- **Chart.js** y **ECharts** para visualizaciones
-- **GSAP** para animaciones
+- **ECharts** para visualizaciones
 - **SCSS** con diseño glass-dark personalizado
 - **Karma + Jasmine** para testing
 
@@ -91,8 +90,8 @@ TGS-Frontend/
 │   │   │   ├── account/         # Gestión de cuenta
 │   │   │   ├── admin/           # Panel de administración
 │   │   │   ├── my-purchases/    # Historial de compras
-│   │   │   ├── checkout/        # Proceso de compra
-│   │   │   ├── chart/           # Componentes de gráficos
+│   │   │   ├── pages/           # About, contact, FAQs
+│   │   │   ├── purchase-success-modal/ # Modal de compra exitosa
 │   │   │   ├── legal/           # Páginas legales
 │   │   │   └── errors/          # Páginas de error
 │   │   │
@@ -126,8 +125,7 @@ TGS-Frontend/
 │   │   │   └── ...              # Uno por cada entidad
 │   │   │
 │   │   ├── guards/               # Guards de rutas
-│   │   │   ├── auth.guard.ts
-│   │   │   └── role.guard.ts
+│   │   │   └── auth.guard.ts     # Protecciones de vistas y roles
 │   │   │
 │   │   ├── interceptors/         # Interceptors HTTP
 │   │   │   └── auth.interceptor.ts
@@ -155,7 +153,6 @@ TGS-Frontend/
 ├── tsconfig.json                 # Configuración de TypeScript
 └── package.json                  # Dependencias y scripts
 ```
-
 
 ## 🌍 Internacionalización (i18n)
 
@@ -186,8 +183,8 @@ this.translate.get('messages.success').subscribe(text => {
 El idioma se puede cambiar desde la UI o programáticamente:
 
 ```typescript
-this.translate.use('en'); // Cambiar a inglés
-this.translate.use('es'); // Cambiar a español
+this.translate.use("en"); // Cambiar a inglés
+this.translate.use("es"); // Cambiar a español
 ```
 
 ---
@@ -251,6 +248,7 @@ El proyecto está configurado para desplegarse en **Vercel**:
 ```
 
 Variables de entorno en Vercel (si aplica):
+
 - `BACKEND_URL` (opcional, ya configurado en vercel.json)
 
 ### Build manual para otros servicios
@@ -273,6 +271,7 @@ Puedes servir estos archivos con cualquier servidor estático (nginx, Apache, et
 **Problema**: El navegador bloquea las peticiones al backend.
 
 **Solución**:
+
 1. Verifica que el backend tenga configurado CORS correctamente
 2. En desarrollo local, usa el proxy: `npm start` (ya incluye `--proxy-config`)
 3. Verifica que `proxy.conf.json` apunte al backend correcto
@@ -282,6 +281,7 @@ Puedes servir estos archivos con cualquier servidor estático (nginx, Apache, et
 **Problema**: El token JWT no se está enviando o es inválido.
 
 **Solución**:
+
 1. Verifica que el token esté en `localStorage`: `localStorage.getItem('token')`
 2. Cierra sesión y vuelve a iniciar sesión
 3. Verifica que el interceptor esté configurado en `app.config.ts`
@@ -292,6 +292,7 @@ Puedes servir estos archivos con cualquier servidor estático (nginx, Apache, et
 **Problema**: El navegador está cacheando la versión anterior.
 
 **Solución**:
+
 1. Limpia el cache del navegador (Ctrl + Shift + Delete)
 2. Prueba en modo incógnito
 3. Verifica que `outputHashing: 'all'` esté en `angular.json` (producción)
@@ -301,6 +302,7 @@ Puedes servir estos archivos con cualquier servidor estático (nginx, Apache, et
 **Problema**: Dependencias no instaladas.
 
 **Solución**:
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -311,6 +313,7 @@ npm install
 **Problema**: El frontend no está recibiendo los roles correctos del backend.
 
 **Solución**:
+
 1. Verifica el token JWT: `jwt.io` y pega tu token para ver el payload
 2. Asegúrate de que el backend incluya `roles` en el payload del JWT
 3. Revisa el `AuthService` para ver cómo se extraen los roles
@@ -321,6 +324,7 @@ npm install
 **Problema**: Archivos de traducción no cargados o `TranslateModule` mal configurado.
 
 **Solución**:
+
 1. Verifica que existan `src/app/i18n/es.json` y `src/app/i18n/en.json`
 2. Verifica que `TranslateModule` esté importado en `app.config.ts`
 3. Revisa la configuración de `TranslateHttpLoader`
@@ -331,6 +335,7 @@ npm install
 **Problema**: Las peticiones `/api/*` no se redirigen al backend.
 
 **Solución**:
+
 1. Verifica que estés usando `npm start` (no `ng serve` solo)
 2. Revisa `proxy.conf.json` - debe apuntar al backend correcto
 3. Si el backend está en HTTPS, ajusta `"secure": true`
@@ -341,6 +346,7 @@ npm install
 **Problema**: Datos llegando con estructura diferente a la esperada.
 
 **Solución**:
+
 1. Verifica los DTOs en el backend
 2. Usa optional chaining: `data?.property`
 3. Revisa la respuesta en Network tab (DevTools)
@@ -382,8 +388,6 @@ npm run ng -- <comando>
    ```
 6. **Push** y crear **Pull Request**
 7. **Code Review** → Merge a `main`
-
-
 
 ## 📄 Licencia
 
