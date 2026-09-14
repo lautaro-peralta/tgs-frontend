@@ -211,6 +211,12 @@
   gap: .45rem;
 }
 
+.email-text {
+  white-space: nowrap;
+  word-break: normal;
+  font-size: max(0.75rem, min(0.85rem, 2.5vw));
+}
+
 .channel-icon {
   width: 18px;
   height: 18px;

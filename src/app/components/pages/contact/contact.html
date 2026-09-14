@@ -26,7 +26,7 @@
             <div class="item-line">
               <span class="label">{{ 'contact.channels.' + key + '.label' | translate }}</span>
               <span class="value">
-                <a class="link with-icon" [href]="getChannelHref(key)" target="_self" rel="noopener">
+                <a class="link with-icon" [class.email-text]="key === 'email'" [href]="getChannelHref(key)" target="_self" rel="noopener">
                   <img [src]="channelIcons[key]" [alt]="('contact.channels.' + key + '.label' | translate) + ' icon'"
                     class="channel-icon">
                   {{ 'contact.channels.' + key + '.value' | translate }}
