@@ -184,6 +184,34 @@ h3 {
   font-size: var(--h3);
 }
 
+/* Iconos Material Symbols */
+.material-symbols-outlined {
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.icon-sm {
+  font-size: 18px;
+}
+.icon-md {
+  font-size: 24px;
+}
+.icon-lg {
+  font-size: 32px;
+}
+
+.btn .material-symbols-outlined {
+  font-size: 1.25em; /* relative to button text */
+  margin-right: 4px;
+}
+.btn--icon .material-symbols-outlined {
+  margin-right: 0;
+}
+.right .material-symbols-outlined {
+  margin-right: 0;
+  margin-left: 4px;
+}
+
 /* Utilidades */
 .container {
   max-width: var(--container-max);

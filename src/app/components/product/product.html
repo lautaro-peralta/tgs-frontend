@@ -57,11 +57,11 @@
       <!-- Botones -->
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()"
           *ngIf="fTextApplied() || fStockApplied() !== 'all'">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -71,38 +71,38 @@
       <h3 class="sub-title">{{ 'product.list' | translate }}</h3>
 
       <!-- Skeleton mientras carga -->
-      <div class="table-wrap" *ngIf="loading()">
-        <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
-          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-          <div class="skeleton-cell"></div>
-          <div class="skeleton-cell"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 18%" *ngIf="isAdmin() || isPartner()"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 12%" *ngIf="canEdit() || canDelete()"></div>
-        </div>
-      </div>
-
-      <ng-container *ngIf="!loading()">
-        <div class="table-wrap" *ngIf="filteredList().length; else emptyState">
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="u-w-80">{{ 'product.table.id' | translate }}</th>
-                <th>{{ 'product.fields.description' | translate }}</th>
-                <th>{{ 'product.fields.detail' | translate }}</th>
-                <th class="u-w-120">{{ 'product.fields.imageUrl' | translate }}</th>
-                <th class="u-w-140">{{ 'product.fields.price' | translate }}</th>
-                <th class="u-w-120">{{ 'product.fields.stock' | translate }}</th>
-                <th class="u-w-120">{{ 'product.fields.illegal' | translate }}</th>
-                <!-- ✅ NUEVA COLUMNA: Distribuidor (visible para admin y socio) -->
-                <th class="u-w-180" *ngIf="isAdmin() || isPartner()">{{ 'product.distributors' | translate }}</th>
-                <th *ngIf="canEdit() || canDelete()" class="right u-w-140">{{ 'product.table.actions' | translate }}</th>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="u-w-80">{{ 'product.table.id' | translate }}</th>
+              <th>{{ 'product.fields.description' | translate }}</th>
+              <th>{{ 'product.fields.detail' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.imageUrl' | translate }}</th>
+              <th class="u-w-140">{{ 'product.fields.price' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.stock' | translate }}</th>
+              <th class="u-w-120">{{ 'product.fields.illegal' | translate }}</th>
+              <th class="u-w-180" *ngIf="isAdmin() || isPartner()">{{ 'product.distributors' | translate }}</th>
+              <th *ngIf="canEdit() || canDelete()" class="right u-w-140">{{ 'product.table.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- SKELETOS -->
+            <ng-container *ngIf="loading()">
+              <tr *ngFor="let i of [1,2,3,4,5]">
+                <td><div class="skeleton-line" style="--skeleton-w: 30%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 20%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 30%"></div></td>
+                <td *ngIf="isAdmin() || isPartner()"><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td *ngIf="canEdit() || canDelete()" class="right"><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
               </tr>
-            </thead>
-            <tbody>
+            </ng-container>
+
+            <ng-container *ngIf="!loading()">
               <tr *ngFor="let p of filteredList()">
                 <td [attr.data-label]="'product.table.id' | translate">#{{ p.id }}</td>
                 <td [attr.data-label]="'product.fields.description' | translate">{{ p.description }}</td>
@@ -120,7 +120,7 @@
                     {{ p.isIllegal ? ('product.badges.yes' | translate) : ('product.badges.no' | translate) }}
                   </span>
                 </td>
-                <!-- ✅ NUEVA CELDA: Mostrar distribuidores (admins y socios) -->
+                <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> NUEVA CELDA: Mostrar distribuidores (admins y socios) -->
                 <td *ngIf="isAdmin() || isPartner()" data-label="Distribuidor(es)">
                   <span class="truncate u-maxw-160" [title]="getDistributorNames(p)">
                     {{ getDistributorNames(p) }}
@@ -129,17 +129,22 @@
                 <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'product.table.actions' | translate">
                   <button class="btn ghost btn--icon" type="button" (click)="edit(p)" *ngIf="canEdit()"
                     [attr.title]="'common.edit' | translate">
-                    ✏️
+                    <span class="material-symbols-outlined icon-sm">edit</span>
                   </button>
 
                   <button class="btn danger btn--icon" type="button" (click)="delete(p.id)" [disabled]="loading()" *ngIf="canDelete()"
                     [attr.title]="'common.delete' | translate">
-                    🗑️
+                    <span class="material-symbols-outlined icon-sm">delete</span>
                   </button>
                 </td>
               </tr>
+            </ng-container>
             </tbody>
           </table>
+        </div>
+
+        <div *ngIf="!loading() && !filteredList().length">
+          <ng-container *ngTemplateOutlet="emptyState"></ng-container>
         </div>
 
         <!-- Empty state -->
@@ -155,12 +160,11 @@
               ? ('product.noResults.desc' | translate)
               : ('product.empty.desc' | translate) }}
             </p>
-            <!-- ✅ NUEVO: Mensaje especial para distribuidores sin productos -->
+            <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> NUEVO: Mensaje especial para distribuidores sin productos -->
             <p class="u-mt-md" *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0">
-              💡 <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
+              <span class="material-symbols-outlined icon-sm">lightbulb</span> <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
           </div>
         </ng-template>
-      </ng-container>
     </section>
   </div>
 

@@ -14,10 +14,6 @@
 //                        alto vía --skeleton-h, default 160px; ancho 100%).
 //   .skeleton-chart     Rectángulo grande para placeholder de gráficos ECharts.
 //                        Alto vía --skeleton-h (default 280px); ancho 100%.
-//   .skeleton-table-row Fila de tabla con N celdas .skeleton-cell (display: flex).
-//                        Cada .skeleton-cell es una .skeleton-line que crece
-//                        parejo (flex: 1); pasarle --skeleton-w a una celda
-//                        puntual para que no crezca (ej. columna de acciones).
 //
 // Todas comparten la animación `skeleton-shimmer`, que corre de IZQUIERDA A
 // DERECHA sobre un gradiente con los tokens --bg-panel / --border.
@@ -79,29 +75,10 @@
   @include skeleton-shimmer-bg;
 }
 
-.skeleton-table-row {
-  display: flex;
-  gap: var(--sp-3, 12px);
-  padding-block: var(--sp-2, 8px);
-  width: 100%;
-}
-
-.skeleton-cell {
-  --skeleton-w: 100%;
-  --skeleton-h: 1em;
-  flex: 1 1 0%;
-  width: var(--skeleton-w);
-  height: var(--skeleton-h);
-  min-width: 0;
-  border-radius: 4px;
-  @include skeleton-shimmer-bg;
-}
 
 @media (prefers-reduced-motion: reduce) {
 
   .skeleton-line,
-  .skeleton-table-row,
-  .skeleton-cell,
   .skeleton-card,
   .skeleton-avatar,
   .skeleton-chart {

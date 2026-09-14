@@ -8,7 +8,7 @@
       <span class="profile-badge" [class.complete]="hasCompleteProfile()">
         {{ profileCompleteness() }}{{ 'inbox.profileCompletenessSuffix' | translate }}
       </span>
-      <!-- ✅ Badge de verificación -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Badge de verificación -->
       <span class="verification-badge" [class.verified]="isVerified()">
         {{ isVerified() ? ('inbox.verified' | translate) : ('inbox.notVerified' | translate) }}
       </span>
@@ -104,24 +104,24 @@
 
         <!-- Tab: Solicitud de Rol -->
         <div *ngIf="activeSection() === 'role-requests'" class="tab-panel">
-          <!-- ✅ Mensaje si no está verificado -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Mensaje si no está verificado -->
           <div *ngIf="!isVerified()" class="blocked-section">
             <div class="blocked-icon">🔒</div>
             <h2>{{ 'inbox.blocked.title' | translate }}</h2>
             <p>{{ 'inbox.blocked.desc' | translate }}</p>
             <button class="btn btn-primary" (click)="setActiveSection('user-verification')">
-              <span class="icon">✅</span>
+              <span class="icon"><span class="material-symbols-outlined icon-sm">check_circle</span></span>
               {{ 'inbox.blocked.goVerify' | translate }}
             </button>
           </div>
 
-          <!-- ✅ Contenido si está verificado -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Contenido si está verificado -->
           <div *ngIf="isVerified()">
           <!-- Se elimina el encabezado duplicado; el componente interno ya muestra su propio título/subtítulo -->
 
-            <!-- ✅ Alerta si el perfil no está completo -->
+            <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Alerta si el perfil no está completo -->
             <div class="alert alert-warning" *ngIf="!hasCompleteProfile()">
-              <strong>⚠️ {{ 'account.completeProfileBanner.title' | translate }}</strong>
+              <strong><span class="material-symbols-outlined icon-sm">warning</span> {{ 'account.completeProfileBanner.title' | translate }}</strong>
               <p>
                 {{ 'account.completeProfileBanner.desc' | translate }}
                 <a routerLink="/mi-cuenta">{{ 'nav.myAccount' | translate }}</a>
@@ -136,7 +136,7 @@
               </div>
             </div>
 
-            <!-- ✅ Componente de solicitud -->
+            <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Componente de solicitud -->
             <app-user-role-requests-inbox
               [currentRoles]="currentRoles()"
               [hasCompleteProfile]="hasCompleteProfile()"

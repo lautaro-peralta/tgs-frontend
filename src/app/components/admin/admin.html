@@ -27,10 +27,10 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -42,20 +42,8 @@
     <section class="subsection">
       <h3 class="sub-title">{{ 'admin.list' | translate }}</h3>
 
-      <!-- Skeleton mientras carga -->
-      <div class="table-wrap" *ngIf="loading()">
-        <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
-          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 30%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-        </div>
-      </div>
-
-      <ng-container *ngIf="!loading()">
-        <div class="table-wrap" *ngIf="filtered().length; else emptyState">
-          <table class="table">
+      <div class="table-wrap">
+        <table class="table">
             <thead>
               <tr>
                 <th class="u-w-120 u-minw-120">{{ 'admin.fields.dni' | translate }}</th>
@@ -66,7 +54,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let it of filtered(); trackBy: trackByDni">
+              <!-- SKELETON -->
+              <ng-container *ngIf="loading()">
+                <tr *ngFor="let i of [1,2,3,4,5]">
+                  <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+                  <td><div class="skeleton-line" style="--skeleton-w: 80%"></div></td>
+                  <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                  <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+                  <td class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+                </tr>
+              </ng-container>
+
+              <!-- REAL DATA -->
+              <ng-container *ngIf="!loading()">
+                <tr *ngFor="let it of filtered(); trackBy: trackByDni">
                 <td class="mono u-nowrap" [attr.data-label]="'admin.fields.dni' | translate">{{ it.dni }}</td>
                 <td class="cell-truncate u-maxw-200" [attr.data-label]="'admin.fields.name' | translate">{{ it.name }}</td>
                 <td class="cell-truncate u-maxw-250" [attr.data-label]="'admin.fields.email' | translate">{{ it.email }}</td>
@@ -75,17 +76,22 @@
                   <div>
                     <button class="btn ghost btn--icon u-mr-sm" type="button" (click)="edit(it)"
                       [title]="'common.edit' | translate">
-                      ✏️
+                      <span class="material-symbols-outlined icon-sm">edit</span>
                     </button>
                     <button class="btn danger btn--icon" type="button" (click)="delete(it)"
                       [title]="'common.delete' | translate">
-                      🗑️
+                      <span class="material-symbols-outlined icon-sm">delete</span>
                     </button>
                   </div>
                 </td>
-              </tr>
+                </tr>
+              </ng-container>
             </tbody>
           </table>
+        </div>
+
+        <div *ngIf="!loading() && !filtered().length">
+          <ng-container *ngTemplateOutlet="emptyState"></ng-container>
         </div>
 
         <!-- Empty state -->
@@ -97,7 +103,6 @@
               translate) }}</p>
           </div>
         </ng-template>
-      </ng-container>
     </section>
   </div>
 
@@ -121,7 +126,7 @@
       <!-- Selector de usuario verificado (solo al crear) -->
       <ng-container *ngIf="!isEdit() && users().length > 0">
         <label class="label col-2 form-full">
-          <span class="text-accent">👤 {{ 'admin.form.selectUser' | translate }}</span>
+          <span class="text-accent"><span class="material-symbols-outlined icon-sm">person</span> {{ 'admin.form.selectUser' | translate }}</span>
           <input
             class="input"
             type="text"
@@ -146,7 +151,7 @@
                 </div>
                 <div class="hint-sm">
                   <span class="tag tag--ok">
-                    ✓ {{ 'admin.form.verified' | translate }}
+                    <span class="material-symbols-outlined icon-sm">check</span> {{ 'admin.form.verified' | translate }}
                   </span>
                   <span class="tag tag--info">
                     {{ 'admin.form.profileComplete' | translate }}

@@ -26,13 +26,13 @@
         class="action-btn mark-read"
         (click)="onMarkAsRead($event)"
         [title]="'notifications.markAsRead' | translate : {} : 'Marcar como leída'">
-        <span class="icon">👁️</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">visibility</span></span>
       </button>
       <button
         class="action-btn delete"
         (click)="onDelete($event)"
         [title]="'notifications.delete' | translate : {} : 'Eliminar'">
-        <span class="icon">🗑️</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">delete</span></span>
       </button>
       <button class="expand-btn" type="button">
         <span class="icon" [class.expanded]="isExpanded">▼</span>

@@ -33,7 +33,7 @@
   <!-- Banner de verificación de email -->
   <div class="verification-banner" *ngIf="!loading() && me() && !me()?.emailVerified" role="alert">
     <div class="banner-content">
-      <div class="banner-icon">⚠️</div>
+      <div class="banner-icon"><span class="material-symbols-outlined icon-sm">warning</span></div>
       <div class="banner-text">
         <strong>{{ 'account.verificationBanner.title' | translate }}</strong>
         <p>{{ 'account.verificationBanner.desc' | translate }}</p>

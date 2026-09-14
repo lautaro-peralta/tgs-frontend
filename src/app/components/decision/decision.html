@@ -9,9 +9,9 @@
       </div>
     </div>
 
-    <!-- ✅ Success message -->
+    <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined icon-sm">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -43,27 +43,16 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied() || topicFilterApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
 
     <div class="table-wrap">
-      <div class="skeleton-list" *ngIf="loading()">
-        <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
-          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-          <div class="skeleton-cell"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canEdit() || canDelete()"></div>
-        </div>
-      </div>
-
-      <table class="table" *ngIf="!loading() && filteredDecisions().length; else emptyState">
+      <table class="table">
         <colgroup>
           <col class="u-w-90" />
           <col class="u-w-220" />
@@ -85,7 +74,21 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let d of filteredDecisions()">
+          <!-- SKELETON -->
+          <ng-container *ngIf="loading()">
+            <tr *ngFor="let i of [1,2,3,4,5]">
+              <td><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+              <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+              <td><div class="skeleton-line" style="--skeleton-w: 80%"></div></td>
+              <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+              <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+              <td *ngIf="canEdit() || canDelete()" class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+            </tr>
+          </ng-container>
+
+          <!-- REAL DATA -->
+          <ng-container *ngIf="!loading()">
+            <tr *ngFor="let d of filteredDecisions()">
             <td [attr.data-label]="'decisions.table.id' | translate">#{{ d.id }}</td>
             <td [attr.data-label]="'decisions.table.topic' | translate">
               <ng-container *ngIf="d.topic?.id != null; else noThematic">
@@ -99,13 +102,18 @@
             <td [attr.data-label]="'decisions.table.end' | translate">{{ formatDateDDMMYYYY(d.endDate) }}</td>
             <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'decisions.table.actions' | translate">
               <button *ngIf="canEdit()" class="btn ghost btn--icon" (click)="edit(d); isFormOpen = true"
-                [attr.title]="'common.edit' | translate">✏️</button>
+                [attr.title]="'common.edit' | translate"><span class="material-symbols-outlined icon-sm">edit</span></button>
               <button *ngIf="canDelete()" class="btn danger btn--icon" (click)="delete(d.id)"
-                [attr.title]="'common.delete' | translate">🗑️</button>
+                [attr.title]="'common.delete' | translate"><span class="material-symbols-outlined icon-sm">delete</span></button>
             </td>
           </tr>
+          </ng-container>
         </tbody>
       </table>
+
+      <div *ngIf="!loading() && filteredDecisions().length === 0">
+        <ng-container *ngTemplateOutlet="emptyState"></ng-container>
+      </div>
 
       <ng-template #emptyState>
         <div class="empty-state" *ngIf="!loading()">
@@ -169,7 +177,7 @@
             (click)="selectTopic(t.id)">
             <div class="topic-card-header">
               <span class="topic-id">#{{ t.id }}</span>
-              <span class="topic-check" *ngIf="form.controls.topicId.value === t.id">✓</span>
+              <span class="topic-check" *ngIf="form.controls.topicId.value === t.id"><span class="material-symbols-outlined icon-sm">check</span></span>
             </div>
             <div class="topic-description">{{ t.description }}</div>
           </div>

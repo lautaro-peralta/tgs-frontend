@@ -5,16 +5,16 @@
       <p>{{ 'login.subtitle' | translate }}</p>
     </header>
 
-    <!-- ⚠️ Banner de verificación de email requerida -->
+    <!-- <span class="material-symbols-outlined icon-sm">warning</span> Banner de verificación de email requerida -->
     <div class="verification-alert" *ngIf="needsEmailVerification()" role="alert">
-      <div class="alert-icon">⚠️</div>
+      <div class="alert-icon"><span class="material-symbols-outlined icon-sm">warning</span></div>
       <div class="alert-content">
         <strong>{{ 'login.emailUnverified' | translate }}</strong>
         <p>{{ 'login.mustVerify' | translate }}</p>
 
         <!-- Mensaje de email enviado -->
         <div class="email-sent-message" *ngIf="emailSent()">
-          <span class="success-icon">✓</span>
+          <span class="success-icon"><span class="material-symbols-outlined icon-sm">check</span></span>
           <strong>{{ 'login.verificationSent' | translate }}</strong>
           <p>{{ 'login.checkInbox' | translate }}</p>
         </div>

@@ -24,7 +24,7 @@
 
   <!-- Error Message -->
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">⚠️</span>
+    <span class="icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
     <div class="error-content">
       <strong>{{ 'userVerification.status.error.title' | translate }}</strong>
       <p>{{ error }}</p>
@@ -34,7 +34,7 @@
 
   <!-- Verified -->
   <div *ngIf="isVerified && !loading" class="verified-card">
-    <div class="verified-icon">✅</div>
+    <div class="verified-icon"><span class="material-symbols-outlined icon-sm">check_circle</span></div>
     <h3>{{ 'userVerification.status.verified.title' | translate }}</h3>
     <p>{{ 'userVerification.status.verified.desc' | translate }}</p>
 
@@ -48,13 +48,13 @@
 
   <!-- Not Verified - No Request -->
   <div *ngIf="!isVerified && !verificationStatus && !loading" class="no-verification-card">
-    <div class="info-icon">📋</div>
+    <div class="info-icon"><span class="material-symbols-outlined icon-sm">content_paste</span></div>
     <h3>{{ 'userVerification.status.request.title' | translate }}</h3>
     <p>{{ 'userVerification.status.request.desc' | translate }}</p>
 
     <!-- Warning si NO tiene perfil completo -->
     <div *ngIf="!hasCompleteProfile" class="alert alert-warning">
-      <span class="icon">⚠️</span>
+      <span class="icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
       <div>
         <strong>{{ 'userVerification.status.profileIncomplete.title' | translate }}</strong>
         <p>{{ 'userVerification.status.profileIncomplete.desc' | translate }}</p>
@@ -70,11 +70,11 @@
       <h4>{{ 'userVerification.status.progress.title' | translate }}</h4>
       <div class="progress-items">
         <div class="progress-item completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined icon-sm">check_circle</span></span>
           <span class="text">{{ 'userVerification.status.progress.created' | translate }}</span>
         </div>
         <div class="progress-item completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined icon-sm">check_circle</span></span>
           <span class="text">{{ 'userVerification.status.progress.emailVerified' | translate }}</span>
         </div>
         <div class="progress-item" [class.completed]="hasCompleteProfile">
@@ -99,7 +99,7 @@
           {{ 'userVerification.status.requirements.profile100' | translate }}
         </li>
         <li class="completed">
-          <span class="icon">✅</span>
+          <span class="icon"><span class="material-symbols-outlined icon-sm">check_circle</span></span>
           {{ 'userVerification.status.requirements.emailVerified' | translate }}
         </li>
         <li [class.completed]="hasCompleteProfile">
@@ -186,7 +186,7 @@
 
       <!-- Advertencia de último intento -->
       <div *ngIf="isLastAttempt && !hasNoAttemptsLeft" class="alert alert-danger">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div>
           <strong>{{ 'verification.lastAttempt' | translate }}</strong>
           <p>{{ 'verification.lastWarning' | translate }}</p>
@@ -208,7 +208,7 @@
 
       <!-- Mensaje si ya no tiene intentos -->
       <div *ngIf="hasNoAttemptsLeft" class="alert alert-danger">
-        <span class="icon">🚫</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">block</span></span>
         <div>
           <strong>{{ 'verification.limitReached' | translate }}</strong>
           <p>{{ 'verification.exhausted' | translate }}</p>

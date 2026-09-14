@@ -47,7 +47,7 @@
 
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'userVerification.reviewModal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -65,7 +65,7 @@
           <label class="decision-card approve-card" [class.selected]="action === 'approve'">
             <input type="radio" name="action" value="approve" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✓</span>
+              <span class="decision-icon"><span class="material-symbols-outlined icon-sm">check</span></span>
               <span class="decision-label">{{ 'userVerification.reviewModal.approve' | translate }}</span>
               <span class="decision-desc">{{ 'userVerification.reviewModal.approveDesc' | translate }}</span>
             </div>
@@ -75,7 +75,7 @@
           <label class="decision-card reject-card" [class.selected]="action === 'reject'">
             <input type="radio" name="action" value="reject" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✗</span>
+              <span class="decision-icon"><span class="material-symbols-outlined icon-sm">close</span></span>
               <span class="decision-label">{{ 'userVerification.reviewModal.reject' | translate }}</span>
               <span class="decision-desc">{{ 'userVerification.reviewModal.rejectDesc' | translate }}</span>
             </div>

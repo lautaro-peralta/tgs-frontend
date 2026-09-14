@@ -19,7 +19,7 @@
        role="status"
        aria-live="polite">
     <div class="toast-icon">
-      <span *ngIf="successKey === 'notifications.userVerificationApproved'">✓</span>
+      <span *ngIf="successKey === 'notifications.userVerificationApproved'"><span class="material-symbols-outlined icon-sm">check</span></span>
       <span *ngIf="successKey === 'notifications.userVerificationRejected'">ℹ</span>
     </div>
     <div class="toast-content">
@@ -36,7 +36,7 @@
   </div>
 
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">❌</span>
+    <span class="icon"><span class="material-symbols-outlined icon-sm">cancel</span></span>
     {{ error }}
     <button class="btn-link" (click)="loadVerifications()">{{ 'userVerification.adminInbox.errorRetry' | translate
       }}</button>
@@ -65,7 +65,7 @@
   </div>
 
   <div *ngIf="!loading && !error && filteredVerifications.length === 0" class="empty-state">
-    <div class="empty-icon">🔍</div>
+    <div class="empty-icon"><span class="material-symbols-outlined icon-sm">search</span></div>
     <h3>{{ 'userVerification.adminInbox.empty.title' | translate }}</h3>
     <p>{{ 'userVerification.adminInbox.empty.desc' | translate }}</p>
   </div>

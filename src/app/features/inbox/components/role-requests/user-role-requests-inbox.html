@@ -58,7 +58,7 @@
             </div>
 
             <div class="tooltip-footer">
-              <span class="info-icon">💡</span>
+              <span class="info-icon"><span class="material-symbols-outlined icon-sm">lightbulb</span></span>
               <p>{{ 'roleRequest.info.footer' | translate }}</p>
             </div>
           </div>
@@ -73,12 +73,12 @@
 
       <!-- Badge verificación requerida -->
       <div *ngIf="!isVerified" class="verification-required-warning">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <span>{{ 'roleRequests.inbox.verifyRequiredBadge' | translate }}</span>
       </div>
 
       <div *ngIf="!hasCompleteProfile && isVerified" class="incomplete-profile-warning">
-        <span class="icon">⚠️</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <span>{{ 'roleRequests.inbox.completeProfileRequired' | translate }}</span>
       </div>
     </div>
@@ -96,14 +96,14 @@
   </div>
 
   <div *ngIf="error && !loading" class="error-message">
-    <span class="icon">❌</span>
+    <span class="icon"><span class="material-symbols-outlined icon-sm">cancel</span></span>
     {{ error }}
     <button class="btn-link" (click)="loadRequests()">{{ 'roleRequests.inbox.errorRetry' | translate }}</button>
   </div>
 
   <!-- Empty state (verificado) -->
   <div *ngIf="isVerified && !loading && !error && requests.length === 0" class="empty-state">
-    <div class="empty-icon">📋</div>
+    <div class="empty-icon"><span class="material-symbols-outlined icon-sm">content_paste</span></div>
     <h3>{{ 'roleRequests.inbox.emptyTitle' | translate }}</h3>
     <p>
       {{ hasCompleteProfile

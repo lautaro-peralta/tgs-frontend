@@ -61,7 +61,7 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined icon-sm">hourglass_empty</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
                     📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
@@ -74,11 +74,11 @@
             </div>
           </div>
 
-          <!-- ✅ Banner de verificación STANDALONE (reemplaza el formulario cuando está activo) -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Banner de verificación STANDALONE (reemplaza el formulario cuando está activo) -->
           <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='login' && !waitingForVerification()"
             (click)="$event.stopPropagation()">
             <div class="verification-banner-large" role="alert">
-              <div class="banner-icon-large">⚠️</div>
+              <div class="banner-icon-large"><span class="material-symbols-outlined icon-sm">warning</span></div>
               <div class="banner-content-large">
                 <div class="banner-header-large">
                   <strong>{{ 'home.verification.unverified.title' | translate }}</strong>
@@ -94,7 +94,7 @@
 
                 <!-- Mensaje de email enviado -->
                 <div class="banner-success-large" *ngIf="emailSent()">
-                  <span class="success-icon">✓</span>
+                  <span class="success-icon"><span class="material-symbols-outlined icon-sm">check</span></span>
                   <strong>{{ 'home.verification.sent.title' | translate }}</strong>
                   <p>{{ 'home.verification.sent.message' | translate }}</p>
                 </div>
@@ -108,7 +108,7 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined icon-sm">hourglass_empty</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
                     📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
@@ -197,7 +197,7 @@
                 <button type="button" class="btn-resend-large" (click)="resendVerificationEmailFromHome()"
                   [disabled]="resendingEmail() || !canResend()">
                   <span *ngIf="resendingEmail()">
-                    ⏳ {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
+                    <span class="material-symbols-outlined icon-sm">hourglass_empty</span> {{ 'home.verification.resend.sending' | translate }}<span class="dots">...</span>
                   </span>
                   <span *ngIf="!resendingEmail() && !canResend()">
                     📧 {{ 'home.verification.resend.buttonWithTimer' | translate:{ seconds: resendCooldown() } }}
@@ -210,11 +210,11 @@
             </div>
           </div>
 
-          <!-- ✅ Banner de verificación STANDALONE en REGISTRO -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Banner de verificación STANDALONE en REGISTRO -->
           <div class="verification-standalone" *ngIf="needsEmailVerification() && mode()==='register' && !waitingForVerification()"
             (click)="$event.stopPropagation()">
             <div class="verification-banner-large" role="alert">
-              <div class="banner-icon-large">✅</div>
+              <div class="banner-icon-large"><span class="material-symbols-outlined icon-sm">check_circle</span></div>
               <div class="banner-content-large">
                 <div class="banner-header-large">
                   <strong>{{ 'home.verification.success.title' | translate }}</strong>
@@ -229,7 +229,7 @@
                 </p>
 
                 <div class="banner-success-large" *ngIf="emailSent()">
-                  <span class="success-icon">✓</span>
+                  <span class="success-icon"><span class="material-symbols-outlined icon-sm">check</span></span>
                   {{ 'home.verification.success.sent' | translate }}
                 </div>
 
@@ -320,7 +320,7 @@
     </section>
   </div>
 
-  <!-- ✅ INTRODUCCIÓN con CARDS EXPANDIBLES - DISEÑO ORIGINAL RESTAURADO -->
+  <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> INTRODUCCIÓN con CARDS EXPANDIBLES - DISEÑO ORIGINAL RESTAURADO -->
   <section class="intro-v2" id="intro-panel" aria-labelledby="intro-title">
     <div class="intro-shell">
       <div class="intro-header">

@@ -51,7 +51,7 @@
     </article>
   </div>
 
-  <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
+  <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> GRID DE OFERTAS (anteriormente productos) -->
   <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" [attr.aria-label]="'store.productList' | translate">
     <article class="store-card product-card" *ngFor="let offer of list()" [class.flash]="flashId() === offer.offerId"
       [class.unavailable]="!isOfferAvailable(offer.offerId)" [attr.data-cy]="'product-' + offer.offerId">
@@ -73,18 +73,18 @@
       <div class="store-card__body">
         <h2 class="store-card__title">{{ offer.description || ('Producto ' + offer.productId) }}</h2>
 
-        <!-- ✅ NUEVO: Información del distribuidor -->
+        <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> NUEVO: Información del distribuidor -->
         <div class="store-card__distributor">
           <span class="distributor-badge">
-            <span class="distributor-icon">🏢</span>
+            <span class="distributor-icon"><span class="material-symbols-outlined icon-sm">business</span></span>
             <span class="distributor-name">{{ offer.distributorName }}</span>
           </span>
 
           <!-- Badge de zona -->
           <span class="zone-badge" *ngIf="offer.zone">
-            <span class="zone-icon">📍</span>
+            <span class="zone-icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
             <span class="zone-name">{{ offer.zone.name }}</span>
-            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" [title]="'zones.headquarters' | translate">⭐</span>
+            <span class="hq-star" *ngIf="offer.zone.isHeadquarters" [title]="'zones.headquarters' | translate"><span class="material-symbols-outlined icon-sm">star</span></span>
           </span>
         </div>
       </div>
@@ -118,7 +118,7 @@
   <!-- FAB Carrito -->
   <button id="cartAnchor" class="cart-fab" type="button" (click)="toggleCartDrawer()" [class.bump]="bumpCart()"
     [attr.aria-label]="'store.cart.open' | translate">
-    <span class="cart-fab__icon">🛒</span>
+    <span class="cart-fab__icon"><span class="material-symbols-outlined icon-sm">shopping_cart</span></span>
     <span class="cart-fab__count">{{ cart.count() }}</span>
   </button>
 
@@ -137,7 +137,7 @@
         <!-- Alertas de compra -->
         <div class="cart-purchase-alert" *ngIf="!canPurchase()">
           <div class="alert alert--warning">
-            <span class="alert__icon">⚠️</span>
+            <span class="alert__icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
             <div class="alert__content">
               <strong>{{ 'store.cart.cannotPurchase' | translate }}</strong>
               <p *ngIf="!isVerified()">
@@ -152,10 +152,10 @@
           </div>
         </div>
 
-        <!-- 📍 Información de distribuidores (uno o varios) -->
+        <!-- <span class="material-symbols-outlined icon-sm">location_on</span> Información de distribuidores (uno o varios) -->
         <div class="multiple-distributors-info" *ngIf="cart.count() > 0">
           <div class="alert-header" *ngIf="selectedDistributors().length > 1">
-            <span class="alert-icon">📦</span>
+            <span class="alert-icon"><span class="material-symbols-outlined icon-sm">inventory_2</span></span>
             <div class="alert-content">
               <strong>{{ 'store.cart.orderSplit' | translate:{ count: selectedDistributors().length } }}</strong>
               <p>{{ 'store.cart.orderSplitDesc' | translate:{ count: selectedDistributors().length } }}</p>
@@ -169,9 +169,9 @@
                 <div class="card-title">
                   <strong>{{ dist.name }}</strong>
                   <span class="zone-badge" *ngIf="dist.zone">
-                    <span class="zone-icon">📍</span>
+                    <span class="zone-icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
                     {{ dist.zone.name }}
-                    <span class="hq-star" *ngIf="dist.zone.isHeadquarters">⭐</span>
+                    <span class="hq-star" *ngIf="dist.zone.isHeadquarters"><span class="material-symbols-outlined icon-sm">star</span></span>
                   </span>
                 </div>
               </div>
@@ -209,10 +209,10 @@
 
         </div>
 
-        <!-- ⚠️ Mensaje cuando NO hay distribuidor disponible -->
+        <!-- <span class="material-symbols-outlined icon-sm">warning</span> Mensaje cuando NO hay distribuidor disponible -->
         <div class="distributor-warning" *ngIf="selectedDistributors().length === 0 && cart.count() > 0">
           <div class="alert alert--error">
-            <span class="alert__icon">⚠️</span>
+            <span class="alert__icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
             <div class="alert__content">
               <strong>{{ 'store.cart.unavailable' | translate }}</strong>
               <p>{{ 'store.cart.unavailableDesc' | translate }}</p>
@@ -232,8 +232,8 @@
           [disabled]="!canPurchase() || cart.count() === 0 || processing() || selectedDistributors().length === 0"
           [class.btn--disabled]="!canPurchase() || cart.count() === 0 || selectedDistributors().length === 0"
           (click)="goToCheckout()">
-          <span class="icon" *ngIf="!processing()">🛒</span>
-          <span *ngIf="processing()">⏳</span>
+          <span class="icon" *ngIf="!processing()"><span class="material-symbols-outlined icon-sm">shopping_cart</span></span>
+          <span *ngIf="processing()"><span class="material-symbols-outlined icon-sm">hourglass_empty</span></span>
           <span *ngIf="!processing()">
             {{ 'store.cart.checkout' | translate }}
           </span>

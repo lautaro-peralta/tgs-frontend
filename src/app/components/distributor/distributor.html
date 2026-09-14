@@ -10,9 +10,9 @@
       </div>
     </header>
 
-    <!-- ✅ Success message -->
+    <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Success message -->
     <div class="alert-inline alert-inline--success" *ngIf="success()">
-      <span class="alert-inline__icon">✓</span>
+      <span class="alert-inline__icon"><span class="material-symbols-outlined icon-sm">check</span></span>
       <strong>{{ success() }}</strong>
     </div>
 
@@ -41,10 +41,10 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="fTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
@@ -53,19 +53,7 @@
       <h3 class="sub-title">{{ 'distributors.list' | translate }}</h3>
 
       <div class="table-wrap">
-        <div class="skeleton-list" *ngIf="loading()">
-          <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-            <div class="skeleton-cell"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 10%" *ngIf="canEdit() || canDelete()"></div>
-          </div>
-        </div>
-
-        <table class="table" *ngIf="!loading() && filtered().length; else empty">
+        <table class="table">
           <colgroup>
             <col class="u-w-120" /> <!-- DNI -->
             <col class="u-w-180" /> <!-- Name -->
@@ -88,7 +76,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let d of filtered()">
+            <!-- SKELETON -->
+            <ng-container *ngIf="loading()">
+              <tr *ngFor="let i of [1,2,3,4,5]">
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 80%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+                <td class="center"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+                <td *ngIf="canEdit() || canDelete()" class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+              </tr>
+            </ng-container>
+
+            <!-- REAL DATA -->
+            <ng-container *ngIf="!loading()">
+              <tr *ngFor="let d of filtered()">
               <td [attr.data-label]="'distributors.table.dni' | translate">{{ d.dni }}</td>
               <td [attr.data-label]="'distributors.table.name' | translate">{{ d.name }}</td>
               <td [attr.data-label]="'distributors.table.phone' | translate">{{ d.phone }}</td>
@@ -98,16 +101,21 @@
               <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'distributors.table.actions' | translate">
                 <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(d)"
                   [attr.title]="'common.edit' | translate">
-                  ✏️
+                  <span class="material-symbols-outlined icon-sm">edit</span>
                 </button>
                 <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(d.dni)" [disabled]="loading()"
                   [attr.title]="'common.delete' | translate">
-                  🗑️
+                  <span class="material-symbols-outlined icon-sm">delete</span>
                 </button>
               </td>
-            </tr>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
+
+        <div *ngIf="!loading() && filtered().length === 0">
+          <ng-container *ngTemplateOutlet="empty"></ng-container>
+        </div>
 
         <ng-template #empty>
           <div class="empty" *ngIf="!loading()">

@@ -28,24 +28,16 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="applyFilters()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button class="btn ghost" type="button" (click)="clearFilters()" *ngIf="filterTextApplied()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </section>
 
     <div class="table-wrap">
-      <div class="skeleton-list" *ngIf="loading()">
-        <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
-          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          <div class="skeleton-cell"></div>
-          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-        </div>
-      </div>
-
-      <table class="table" *ngIf="!loading() && filtered().length; else emptyTopics">
+      <table class="table">
         <colgroup>
           <col class="u-w-100" />
           <col />
@@ -61,23 +53,38 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let t of filtered()">
-            <td [attr.data-label]="('topics.table.id' | translate)">#{{ t.id }}</td>
-            <td [attr.data-label]="('topics.table.description' | translate)"><span class="truncate">{{ t.description }}</span></td>
-            <td class="right" [attr.data-label]="('topics.table.actions' | translate)">
-              <button class="btn ghost btn--icon" type="button" (click)="edit(t)"
-                [attr.title]="'common.edit' | translate">
-                ✏️
-              </button>
+          <!-- SKELETON -->
+          <ng-container *ngIf="loading()">
+            <tr *ngFor="let i of [0,1,2,3,4]">
+              <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+              <td><div class="skeleton-line" style="--skeleton-w: 100%"></div></td>
+              <td class="right"><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+            </tr>
+          </ng-container>
 
-              <button class="btn danger btn--icon" type="button" (click)="delete(t.id)"
-                [attr.title]="'common.delete' | translate">
-                🗑️
-              </button>
-            </td>
-          </tr>
+          <ng-container *ngIf="!loading()">
+            <tr *ngFor="let t of filtered()">
+              <td [attr.data-label]="('topics.table.id' | translate)">#{{ t.id }}</td>
+              <td [attr.data-label]="('topics.table.description' | translate)"><span class="truncate">{{ t.description }}</span></td>
+              <td class="right" [attr.data-label]="('topics.table.actions' | translate)">
+                <button class="btn ghost btn--icon" type="button" (click)="edit(t)"
+                  [attr.title]="'common.edit' | translate">
+                  <span class="material-symbols-outlined icon-sm">edit</span>
+                </button>
+
+                <button class="btn danger btn--icon" type="button" (click)="delete(t.id)"
+                  [attr.title]="'common.delete' | translate">
+                  <span class="material-symbols-outlined icon-sm">delete</span>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
+
+      <div *ngIf="!loading() && filtered().length === 0">
+        <ng-container *ngTemplateOutlet="emptyTopics"></ng-container>
+      </div>
 
       <ng-template #emptyTopics>
         <div class="center muted" *ngIf="!loading()">

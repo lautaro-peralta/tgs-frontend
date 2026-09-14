@@ -33,7 +33,7 @@
 
       <!-- Error message con diseño mejorado -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'roleRequests.modal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -45,7 +45,7 @@
       <!-- Roles Grid - Diseño de tarjetas mejorado -->
       <div class="form-section">
         <label class="section-label">
-          <span class="icon">🎯</span>
+          <span class="icon"><span class="material-symbols-outlined icon-sm">target</span></span>
           {{ 'roleRequests.modal.requestedRole' | translate }}
           <span class="required">*</span>
         </label>
@@ -72,7 +72,7 @@
                 <p class="role-description">{{ role.description }}</p>
               </div>
               <div class="role-check">
-                <span class="checkmark">✓</span>
+                <span class="checkmark"><span class="material-symbols-outlined icon-sm">check</span></span>
               </div>
             </div>
           </label>
@@ -91,7 +91,7 @@
       </div>
 
       <!-- Role to Remove - Solo si se detectó incompatibilidad o el usuario activó el toggle -->
-      <!-- ✅ NO mostrar para AUTHORITY ya que remueve TODOS los roles automáticamente -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> NO mostrar para AUTHORITY ya que remueve TODOS los roles automáticamente -->
       <div *ngIf="isRoleChange && removableRoles.length > 0 && requestedRole !== 'AUTHORITY'" class="form-section">
         <label class="section-label">
           <span class="icon">🔻</span>
@@ -119,7 +119,7 @@
                 <h4 class="role-title-small">{{ getRoleInfo(role)?.label || role }}</h4>
               </div>
               <div class="role-check">
-                <span class="checkmark">✓</span>
+                <span class="checkmark"><span class="material-symbols-outlined icon-sm">check</span></span>
               </div>
             </div>
           </label>
@@ -179,7 +179,7 @@
 
       <!-- Info box - Incompatibilidades
       <div *ngIf="incompatibleRolesText && requestedRole" class="info-box warning">
-        <span class="info-icon">⚠️</span>
+        <span class="info-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div class="info-content">
           <strong>{{ 'roleRequest.incompatible' | translate }}</strong>
           <p>
@@ -224,7 +224,7 @@
 
       <!-- Error message -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'roleRequests.modal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -237,7 +237,7 @@
       <ng-container *ngIf="requestedRole === 'DISTRIBUTOR'">
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">📍</span>
+            <span class="icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
             {{ 'roleRequests.modal.distributor.zone' | translate }}
             <span class="required">*</span>
           </label>
@@ -284,7 +284,7 @@
       <ng-container *ngIf="requestedRole === 'AUTHORITY'">
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">⭐</span>
+            <span class="icon"><span class="material-symbols-outlined icon-sm">star</span></span>
             {{ 'roleRequests.modal.authority.rank' | translate }}
             <span class="required">*</span>
           </label>
@@ -306,7 +306,7 @@
 
         <div class="form-section">
           <label class="section-label">
-            <span class="icon">📍</span>
+            <span class="icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
             {{ 'roleRequests.modal.authority.zone' | translate }}
             <span class="required">*</span>
           </label>
@@ -342,7 +342,7 @@
           type="submit"
           class="btn btn-submit"
           [disabled]="isSubmitting || !additionalDataValid">
-          <span class="btn-icon" *ngIf="!isSubmitting">✓</span>
+          <span class="btn-icon" *ngIf="!isSubmitting"><span class="material-symbols-outlined icon-sm">check</span></span>
           <span class="spinner-small" *ngIf="isSubmitting"></span>
           {{ isSubmitting
             ? ('roleRequests.modal.actions.sending' | translate)

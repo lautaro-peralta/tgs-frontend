@@ -6,19 +6,31 @@
 
   <!-- Mensaje de error -->
   <div class="error-banner" *ngIf="error()">
-    <span class="error-icon">⚠️</span>
+    <span class="error-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
     <span class="error-message">{{ error() }}</span>
     <button class="btn-close-error" (click)="clearError()">✕</button>
   </div>
 
   <!-- Estado de carga -->
   <div class="table-container skeleton-loading" *ngIf="loading()" aria-hidden="true">
-    <div class="skeleton-table-row" *ngFor="let row of [1,2,3,4,5]">
-      <div class="skeleton-cell" style="--skeleton-w: 45%"></div>
-      <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-      <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
-      <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-    </div>
+    <table class="purchases-table">
+      <thead>
+        <tr>
+          <th>{{ 'myPurchases.table.products' | translate }}</th>
+          <th>{{ 'myPurchases.table.date' | translate }}</th>
+          <th>{{ 'myPurchases.table.distributor' | translate }}</th>
+          <th>{{ 'myPurchases.table.total' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of [1,2,3,4,5]">
+          <td><div class="skeleton-line" style="--skeleton-w: 45%"></div></td>
+          <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+          <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+          <td><div class="skeleton-line" style="--skeleton-w: 30%"></div></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Contenido principal -->
@@ -40,21 +52,21 @@
 
       <div class="actions-row">
         <button class="btn btn-primary" type="button" (click)="refresh()">
-          🔍 {{ 'common.search' | translate }}
+          <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
         </button>
         <button
           class="btn ghost"
           type="button"
           *ngIf="searchTerm()"
           (click)="clearSearch()">
-          🗑️ {{ 'common.clear' | translate }}
+          <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
         </button>
       </div>
     </div>
 
     <!-- Lista de compras vacía -->
     <div class="empty-state" *ngIf="purchases().length === 0 && !loading()">
-      <div class="empty-icon">🛒</div>
+      <div class="empty-icon"><span class="material-symbols-outlined icon-sm">shopping_cart</span></div>
       <h2 class="empty-title">{{ 'myPurchases.empty.title' | translate }}</h2>
       <p class="empty-desc">{{ 'myPurchases.empty.desc' | translate }}</p>
     </div>
@@ -85,7 +97,7 @@
               <div class="distributor-info">
                 <span class="distributor-name">{{ purchase.distributor?.name || 'N/A' }}</span>
                 <span class="distributor-zone" *ngIf="purchase.distributor?.zone">
-                  📍 {{ purchase.distributor?.zone?.name }}
+                  <span class="material-symbols-outlined icon-sm">location_on</span> {{ purchase.distributor?.zone?.name }}
                 </span>
               </div>
             </td>
@@ -104,7 +116,7 @@
 
     <!-- Sin resultados de búsqueda -->
     <div class="no-results" *ngIf="filteredPurchases().length === 0 && purchases().length > 0">
-      <div class="no-results-icon">🔍</div>
+      <div class="no-results-icon"><span class="material-symbols-outlined icon-sm">search</span></div>
       <h3 class="no-results-title">{{ 'myPurchases.noResults.title' | translate }}</h3>
       <p class="no-results-desc">{{ 'myPurchases.noResults.desc' | translate }}</p>
       <button class="btn-clear-filters" (click)="clearSearch()">

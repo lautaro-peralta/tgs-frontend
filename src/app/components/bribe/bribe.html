@@ -38,14 +38,14 @@
 
   <!-- Filters -->
   <div class="filters filters--wrap">
-    <!-- ✅ Filtro por ID - Cambiar a type="text" -->
+    <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Filtro por ID - Cambiar a type="text" -->
     <label class="label u-minw-140">
       <span>{{ 'bribes.filters.id' | translate }}</span>
       <input class="input" type="text" [placeholder]="'bribes.filters.idPh' | translate" [ngModel]="fTextInput()"
         (ngModelChange)="fTextInput.set($event)" (keyup.enter)="applyFilters()" />
     </label>
 
-    <!-- ✅ Filtro por Monto - También cambiar a type="text" -->
+    <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Filtro por Monto - También cambiar a type="text" -->
     <label class="label u-minw-140">
       <span>{{ 'bribes.filters.amount' | translate }}</span>
       <input class="input" type="text" [placeholder]="'bribes.filters.amountPh' | translate" [ngModel]="fAmountInput()"
@@ -96,11 +96,11 @@
     <!-- Botones -->
     <div class="actions-row">
       <button class="btn btn-primary" type="button" (click)="applyFilters()">
-        🔍 {{ 'common.search' | translate }}
+        <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
       </button>
       <button class="btn ghost" type="button" (click)="clearFilters()"
         *ngIf="fTextApplied() || fAmountApplied() || fAuthorityApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all'">
-        🗑️ {{ 'common.clear' | translate }}
+        <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
       </button>
     </div>
   </div>
@@ -108,21 +108,8 @@
     <!-- Error message -->
     <div *ngIf="error()" class="error">{{ error() }}</div>
 
-    <!-- Skeleton mientras carga -->
-    <div class="table-wrap" *ngIf="loading()">
-      <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
-        <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 22%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 18%"></div>
-        <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canPay() || canDelete()"></div>
-      </div>
-    </div>
-
   <!-- Table -->
-  <div class="table-wrap" *ngIf="!loading()">
+  <div class="table-wrap">
     <table class="table">
       <colgroup>
         <col class="u-w-80" /> <!-- ID -->
@@ -146,7 +133,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let b of filteredBribes(); trackBy: trackById">
+        <!-- SKELETON -->
+        <ng-container *ngIf="loading()">
+          <tr *ngFor="let i of [1,2,3,4,5]">
+            <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+            <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+            <td><div class="skeleton-line" style="--skeleton-w: 80%"></div></td>
+            <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+            <td class="center"><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+            <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+            <td *ngIf="canPay() || canDelete()" class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+          </tr>
+        </ng-container>
+
+        <!-- REAL DATA -->
+        <ng-container *ngIf="!loading()">
+          <tr *ngFor="let b of filteredBribes(); trackBy: trackById">
           <td [attr.data-label]="'bribes.table.id' | translate">#{{ b.id }}</td>
           <td [attr.data-label]="'bribes.table.amount' | translate"><strong>{{ b.totalAmount | currency:'ARS':'symbol':'1.2-2' }}</strong></td>
           <td [attr.data-label]="'bribes.table.authority' | translate">
@@ -163,13 +165,13 @@
           </td>
           <td [attr.data-label]="'bribes.table.date' | translate">{{ b.creationDate | date:'dd/MM/yyyy HH:mm' }}</td>
 
-          <!-- ✅ ACCIONES CON PERMISOS -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> ACCIONES CON PERMISOS -->
           <td class="u-right" *ngIf="canPay() || canDelete()" [attr.data-label]="'bribes.table.actions' | translate">
             <div class="actions-group">
               <!-- Si NO está pagado: Botón activo (solo Admin y Socio) -->
               <button *ngIf="!b.paid && canPay()" class="btn success btn--icon" (click)="markAsPaid(b)"
                 [attr.title]="'bribes.actions.pay' | translate">
-                ✅
+                <span class="material-symbols-outlined icon-sm">check_circle</span>
               </button>
 
               <!-- Si YA está pagado: Badge indicador -->
@@ -180,23 +182,25 @@
 
               <!-- Botón eliminar (solo Admin) -->
               <button *ngIf="canDelete()" class="btn danger btn--icon" (click)="delete(b.id)" [attr.title]="'common.delete' | translate">
-                🗑️
+                <span class="material-symbols-outlined icon-sm">delete</span>
               </button>
             </div>
           </td>
         </tr>
-        <tr *ngIf="filteredBribes().length === 0">
-          <td [attr.colspan]="(canPay() || canDelete()) ? 7 : 6" class="muted center">
-            {{ (fTextApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all')
-            ? ('bribes.noResults' | translate)
-            : ('bribes.empty' | translate) }}
-          </td>
-        </tr>
+          <!-- Si no hay data o filtro -->
+          <tr *ngIf="filteredBribes().length === 0">
+            <td [attr.colspan]="(canPay() || canDelete()) ? 7 : 6" class="muted center">
+              {{ (fTextApplied() || fPaidApplied() !== 'all' || fDateTypeApplied() !== 'all')
+              ? ('bribes.noResults' | translate)
+              : ('bribes.empty' | translate) }}
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>
 
-  <!-- ✅ ESTILOS ADICIONALES PARA EL BADGE DE PAGADO -->
+  <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> ESTILOS ADICIONALES PARA EL BADGE DE PAGADO -->
   <style>
     /* Celda de acciones */
     .actions-group {

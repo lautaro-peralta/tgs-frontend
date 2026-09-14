@@ -14,7 +14,7 @@
         <span class="count">{{ unreadCount }}</span>
       </div>
       <div class="stat-badge total">
-        <span class="icon">📋</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">content_paste</span></span>
         <span class="label">{{ 'notifications.stats.total' | translate : {} : 'Total' }}</span>
         <span class="count">{{ notifications.length }}</span>
       </div>
@@ -53,7 +53,7 @@
         class="btn btn-success"
         (click)="markAllAsRead()"
         [title]="'notifications.actions.markAllRead' | translate : {} : 'Marcar todas como leídas'">
-        <span class="icon">✅</span>
+        <span class="icon"><span class="material-symbols-outlined icon-sm">check_circle</span></span>
         {{ 'notifications.actions.markAllRead' | translate : {} : 'Marcar todas como leídas' }}
       </button>
       <button
@@ -73,7 +73,7 @@
 
   <!-- Estado de error -->
   <div *ngIf="error && !loading" class="error-state">
-    <div class="error-icon">⚠️</div>
+    <div class="error-icon"><span class="material-symbols-outlined icon-sm">warning</span></div>
     <p class="error-message">{{ error }}</p>
     <button class="btn btn-primary" (click)="loadNotifications()">
       {{ 'notifications.retry' | translate : {} : 'Reintentar' }}

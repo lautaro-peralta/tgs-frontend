@@ -30,7 +30,7 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">🛒</div>
+            <div class="stat-icon"><span class="material-symbols-outlined icon-sm">shopping_cart</span></div>
             <div class="stat-content">
               <span class="stat-label">{{ 'sales.stats.totalSales' | translate : {} : 'Total de Ventas' }}</span>
               <span class="stat-value">{{ stats()!.totalSales }}</span>
@@ -38,7 +38,7 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">📊</div>
+            <div class="stat-icon"><span class="material-symbols-outlined icon-sm">bar_chart</span></div>
             <div class="stat-content">
               <span class="stat-label">{{ 'sales.stats.averageTicket' | translate : {} : 'Importe promedio por venta' }}</span>
               <span class="stat-value">{{ stats()!.averageTicket | currency:'ARS' }}</span>
@@ -58,7 +58,7 @@
 
           <!-- Top Productos -->
           <div class="chart-card">
-            <h3 class="chart-title">🏆 {{ 'sales.stats.topProducts' | translate : {} : 'Productos Más Vendidos' }}</h3>
+            <h3 class="chart-title"><span class="material-symbols-outlined icon-sm">emoji_events</span> {{ 'sales.stats.topProducts' | translate : {} : 'Productos Más Vendidos' }}</h3>
             @if (topProductsChartOptions()) {
             <div echarts [options]="topProductsChartOptions()!" [theme]="'dark'" class="chart-container chart-box"></div>
             }
@@ -76,7 +76,7 @@
 
         } @else {
         <div class="empty-state">
-          <div class="empty-icon">📊</div>
+          <div class="empty-icon"><span class="material-symbols-outlined icon-sm">bar_chart</span></div>
           <h3>{{ 'sales.stats.noData' | translate : {} : 'No hay estadísticas disponibles' }}</h3>
           <p>{{ 'sales.stats.noDataDesc' | translate : {} : 'Las estadísticas aparecerán aquí una vez que haya datos
             disponibles.' }}</p>
@@ -123,29 +123,18 @@
 
         <div class="actions-row">
           <button class="btn btn-primary" type="button" (click)="applyFilters()">
-            🔍 {{ 'common.search' | translate }}
+            <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
           </button>
           <button class="btn ghost" type="button" (click)="clearFilters()"
             *ngIf="fTextApplied() || fClientDniApplied()">
-            🗑️ {{ 'common.clear' | translate }}
+            <span class="material-symbols-outlined icon-sm">delete</span> {{ 'common.clear' | translate }}
           </button>
         </div>
       </div>
 
       <!-- Tabla -->
       <div class="table-wrap">
-        <div class="skeleton-list" *ngIf="loading()">
-          <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
-            <div class="skeleton-cell" style="--skeleton-w: 5%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
-            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-          </div>
-        </div>
-
-        <table class="table" *ngIf="!loading()">
+        <table class="table">
           <thead>
             <tr>
               <th class="u-w-40"></th>
@@ -157,6 +146,20 @@
             </tr>
           </thead>
           <tbody>
+            <!-- SKELETON -->
+            <ng-container *ngIf="loading()">
+              <tr *ngFor="let i of [0,1,2,3,4]">
+                <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 30%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                <td class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+              </tr>
+            </ng-container>
+
+            <!-- ROW DATA -->
+            <ng-container *ngIf="!loading()">
             @for (v of filteredSales(); track v.id) {
             <!-- Fila principal (clickeable) -->
             <tr class="clickable-row" [class.expanded]="isSaleExpanded(v.id)">
@@ -220,6 +223,7 @@
               </td>
             </tr>
             }
+            </ng-container>
           </tbody>
         </table>
       </div>
@@ -245,7 +249,7 @@
         <!-- Client Selector con diseño de tarjetas -->
         <div class="form-full">
           <label class="label">
-            <span class="text-accent">👤 {{ 'sales.form.client' | translate }} *</span>
+            <span class="text-accent"><span class="material-symbols-outlined icon-sm">person</span> {{ 'sales.form.client' | translate }} *</span>
             <input
               class="input"
               type="text"
@@ -267,7 +271,7 @@
                 [class.selected]="selectedClientDni() === c.dni">
                 <div class="row-between">
                   <div class="pick-selected">{{ c.name }}</div>
-                  <span class="pick-check" *ngIf="selectedClientDni() === c.dni">✓</span>
+                  <span class="pick-check" *ngIf="selectedClientDni() === c.dni"><span class="material-symbols-outlined icon-sm">check</span></span>
                 </div>
                 <div class="mono-hint">
                   DNI: {{ c.dni }}
@@ -288,13 +292,13 @@
             <h4 class="line-card__title">Producto {{ i + 1 }}</h4>
             <button class="btn danger btn--icon" type="button" (click)="removeLine(i)"
               [attr.title]="'sales.form.removeLineTitle' | translate">
-              🗑️
+              <span class="material-symbols-outlined icon-sm">delete</span>
             </button>
           </div>
 
           <!-- Búsqueda de productos -->
           <label class="label">
-            <span class="text-accent">📦 {{ 'sales.form.product' | translate }}</span>
+            <span class="text-accent"><span class="material-symbols-outlined icon-sm">inventory_2</span> {{ 'sales.form.product' | translate }}</span>
             <input
               class="input"
               type="text"
@@ -317,7 +321,7 @@
                 [class.selected]="l.productId === offer.productId && l.distributorDni === offer.distributorDni">
                 <div class="row-between">
                   <div class="pick-selected pick-selected--info">{{ offer.description }}</div>
-                  <span class="pick-check pick-check--info" *ngIf="l.productId === offer.productId && l.distributorDni === offer.distributorDni">✓</span>
+                  <span class="pick-check pick-check--info" *ngIf="l.productId === offer.productId && l.distributorDni === offer.distributorDni"><span class="material-symbols-outlined icon-sm">check</span></span>
                 </div>
                 <div class="pick-hint">
                   <span class="u-mono">ID: {{ offer.productId }}</span> •
@@ -329,7 +333,7 @@
                     🚚 {{ offer.distributorName }}
                   </span>
                   <span class="tag tag--special tag--inline" *ngIf="offer.zoneName">
-                    📍 {{ offer.zoneName }}
+                    <span class="material-symbols-outlined icon-sm">location_on</span> {{ offer.zoneName }}
                   </span>
                 </div>
               </div>

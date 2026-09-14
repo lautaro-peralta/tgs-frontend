@@ -29,7 +29,7 @@
              height: indicator.h + 'px'
            }" aria-hidden="true"></div>
 
-      <!-- ✅ Ítems cliente: Tienda (visible para USER, CLIENT y ADMIN) -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Ítems cliente: Tienda (visible para USER, CLIENT y ADMIN) -->
       <ng-container *ngIf="isAuthenticated() && canAccessStore()">
         <li class="menu__item" role="none" *ngFor="let it of clientItems; trackBy: trackByPath">
           <a #mainBtn role="menuitem" [routerLink]="it.path" routerLinkActive="active">
@@ -39,7 +39,7 @@
         </li>
       </ng-container>
 
-      <!-- ✅ Mis compras (visible para todos los usuarios autenticados) -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Mis compras (visible para todos los usuarios autenticados) -->
       <li class="menu__item menu__item--purchases" role="none" *ngIf="isAuthenticated()" [@slideIn]>
         <a #mainBtn role="menuitem" routerLink="/mis-compras" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           {{ 'nav.myPurchases' | translate }}
@@ -317,7 +317,7 @@
         </a>
       </li>
 
-      <!-- ✅ INBOX - Visible para TODOS los usuarios autenticados -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> INBOX - Visible para TODOS los usuarios autenticados -->
       <li class="menu__item" role="none" *ngIf="isAuthenticated()">
         <a #mainBtn role="menuitem" routerLink="/inbox" routerLinkActive="active" class="inbox-link"
           [attr.aria-label]="'nav.inbox' | translate">
@@ -329,7 +329,7 @@
         </a>
       </li>
 
-      <!-- ✅ Usuario (SIMPLIFICADO) -->
+      <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Usuario (SIMPLIFICADO) -->
       <li class="menu__item menu__item--dropdown" role="none" [class.open]="isDropdownOpen('user')" *ngIf="isAuthenticated()">
         <button class="dropdown__toggle icon-only" type="button" role="menuitem" aria-haspopup="true"
           [attr.aria-expanded]="isDropdownOpen('user')"
@@ -344,14 +344,14 @@
         </button>
 
         <ul class="dropdown dropdown--user" role="menu" [attr.aria-label]="'nav.ariaUser' | translate">
-          <!-- ✅ Cabecera simple: solo nombre -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Cabecera simple: solo nombre -->
           <li class="dropdown__item dropdown__item--header" role="none" aria-disabled="true">
             <div class="dropdown__header">
               <strong class="user-name">{{ displayName() }}</strong>
             </div>
           </li>
 
-          <!-- ✅ Barra de progreso del perfil -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Barra de progreso del perfil -->
           <li class="dropdown__item dropdown__item--progress" role="none" aria-disabled="true">
             <div class="profile-status">
               <span class="status-bar">
@@ -362,17 +362,17 @@
             </div>
           </li>
 
-          <!-- ✅ Alerta de email no verificado -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Alerta de email no verificado -->
           <li class="dropdown__item dropdown__item--warning" role="none" *ngIf="!isEmailVerified()">
             <div class="warning-message">
-              ⚠️ {{ 'nav.verifyEmailWarning' | translate }}
+              <span class="material-symbols-outlined icon-sm">warning</span> {{ 'nav.verifyEmailWarning' | translate }}
               <a routerLink="/verify-email" class="verify-link">{{ 'nav.verifyNow' | translate }}</a>
             </div>
           </li>
 
           <li class="dropdown__divider" role="separator"></li>
 
-          <!-- ✅ Roles del usuario -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Roles del usuario -->
           <li class="dropdown__item dropdown__item--info" role="none" aria-disabled="true">
             <div class="user-roles">
               <span class="roles-label">{{ 'nav.rolesLabel' | translate }}</span>
@@ -382,7 +382,7 @@
 
           <li class="dropdown__divider" role="separator"></li>
 
-          <!-- ✅ Mi cuenta -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Mi cuenta -->
           <li class="dropdown__item" role="none">
             <a role="menuitem" routerLink="/mi-cuenta" routerLinkActive="active">
               <span class="material-symbols-outlined">manage_accounts</span>
@@ -390,7 +390,7 @@
             </a>
           </li>
 
-          <!-- ✅ Logout -->
+          <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Logout -->
           <li class="dropdown__item" role="none">
             <button type="button" role="menuitem" class="btn-logout" (click)="logout()" data-cy="logout-button">
               <span class="material-symbols-outlined">logout</span>

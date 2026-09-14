@@ -23,9 +23,9 @@
     </div>
   </div>
 
-  <!-- ✅ Banner de éxito de registro -->
+  <!-- <span class="material-symbols-outlined icon-sm">check_circle</span> Banner de éxito de registro -->
   <div class="success-message" *ngIf="registrationSuccess() && needsEmailVerification()" role="alert">
-    <div class="success-icon">✓</div>
+    <div class="success-icon"><span class="material-symbols-outlined icon-sm">check</span></div>
     <div class="success-content">
       <strong>{{ 'register.created' | translate }}</strong>
       <p>{{ 'register.verifyToContinue' | translate }}</p>

@@ -19,7 +19,7 @@
     class="charts-toggle-mobile u-hidden"
     [class.collapsed]="chartsCollapsed()"
     (click)="toggleCharts()">
-    <span>📊 {{ chartsCollapsed()
+    <span><span class="material-symbols-outlined icon-sm">bar_chart</span> {{ chartsCollapsed()
       ? ('monthlyReview.charts.showCharts' | translate : {} : 'Mostrar Gráficos')
       : ('monthlyReview.charts.hideCharts' | translate : {} : 'Ocultar Gráficos') }}</span>
     <span class="charts-toggle-icon">▼</span>
@@ -65,13 +65,13 @@
 
         <!-- GRÁFICOS -->
         <section>
-          <!-- 📊 NUEVO: Gráfico de Impacto de Decisiones (DESTACADO) -->
+          <!-- <span class="material-symbols-outlined icon-sm">bar_chart</span> NUEVO: Gráfico de Impacto de Decisiones (DESTACADO) -->
           <!-- Skeleton mientras decisionsImpactChartOptions() todavía es null -->
           <div class="chart-card chart-card--highlight-blue" *ngIf="!decisionsImpactChartOptions()" aria-hidden="true">
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  📊 {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
+                  <span class="material-symbols-outlined icon-sm">bar_chart</span> {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
@@ -92,7 +92,7 @@
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  📊 {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
+                  <span class="material-symbols-outlined icon-sm">bar_chart</span> {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
@@ -106,19 +106,19 @@
             </div>
             <div class="chart-note chart-note--tight chart-note--blue-strong" *ngIf="!sales() || sales().length === 0">
               <p class="chart-note__text">
-                💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
+                <span class="material-symbols-outlined icon-sm">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.decisionsImpactNote' | translate : {} : 'Este gráfico muestra datos de ejemplo.' }}
               </p>
             </div>
           </div>
 
-          <!-- 🔮 NUEVO: Gráfico de Predicción de Ventas (DESTACADO) -->
+          <!-- <span class="material-symbols-outlined icon-sm">magic_button</span> NUEVO: Gráfico de Predicción de Ventas (DESTACADO) -->
           <!-- Skeleton mientras salesPredictionChartOptions() todavía es null -->
           <div class="chart-card chart-card--highlight-sky" *ngIf="showDecisionsChart() && !salesPredictionChartOptions()" aria-hidden="true">
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  🔮 {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
+                  <span class="material-symbols-outlined icon-sm">magic_button</span> {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
@@ -139,7 +139,7 @@
             <div class="row-between row-between--top">
               <div>
                 <h4 class="chart-card__title">
-                  🔮 {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
+                  <span class="material-symbols-outlined icon-sm">magic_button</span> {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
                 </h4>
                 <p class="hint-muted">
                   {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
@@ -153,7 +153,7 @@
             </div>
             <div class="chart-note chart-note--tight chart-note--sky-strong" *ngIf="!sales() || sales().length === 0">
               <p class="chart-note__text">
-                💡 <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
+                <span class="material-symbols-outlined icon-sm">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.salesPredictionNote' | translate : {} : 'Este gráfico muestra una proyección basada en regresión lineal.' }}
               </p>
             </div>
@@ -165,7 +165,7 @@
             <div class="chart-panel chart-panel--spaced"
              >
               <h4 class="chart-heading">
-                📌 {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
+                <span class="material-symbols-outlined icon-sm">push_pin</span> {{ 'monthlyReview.charts.statusDistribution' | translate : {} : 'Distribución por Estado' }}
               </h4>
               <div class="chart-box chart-box--sm" echarts *ngIf="statusChartOptions()" [options]="statusChartOptions()!" [theme]="'dark'"
                   ></div>
@@ -175,7 +175,7 @@
             <div class="chart-panel"
               *ngIf="productSalesChartOptions()">
               <h4 class="chart-heading">
-                🏆 {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
+                <span class="material-symbols-outlined icon-sm">emoji_events</span> {{ 'monthlyReview.charts.topProducts' | translate : {} : 'Top Productos por Ventas' }}
               </h4>
               <div class="chart-box chart-box--md" echarts [options]="productSalesChartOptions()!" [theme]="'dark'"
                   ></div>
@@ -189,17 +189,8 @@
   </div>
   <!-- FIN CONTENEDOR COLAPSABLE DE GRÁFICOS -->
 
-  <!-- ✅ GRID DE 2 COLUMNAS: IZQUIERDA (VACÍA) | DERECHA (FILTROS + TABLA) -->
-  <div class="charts-grid">
-
-    <!-- ========== COLUMNA IZQUIERDA: VACÍA ========== -->
-    <div class="stack-md">
-      <!-- Espacio reservado para futuras estadísticas -->
-    </div>
-
-    <!-- ========== COLUMNA DERECHA: FILTROS + LISTADO ========== -->
-    <div class="stack-md">
-      <div class="glass-dark card stack-md">
+  <!-- ========== FILTROS + LISTADO ========== -->
+  <div class="glass-dark card stack-md">
 
         <!-- FILTROS -->
         <section>
@@ -236,11 +227,11 @@
 
             <div class="actions-row">
               <button class="btn btn-primary u-grow" type="button" (click)="applyFilters()">
-                🔍 {{ 'common.search' | translate }}
+                <span class="material-symbols-outlined icon-sm">search</span> {{ 'common.search' | translate }}
               </button>
               <button class="btn ghost" type="button" (click)="clearFilters()"
                 *ngIf="fMonthApplied() || fStatusApplied()">
-                🗑️
+                <span class="material-symbols-outlined icon-sm">delete</span>
               </button>
             </div>
           </div>
@@ -254,23 +245,11 @@
         <section>
           <h3 class="section-heading"
            >
-            📋 {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
+            <span class="material-symbols-outlined icon-sm">content_paste</span> {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
           </h3>
 
           <div class="table-wrap">
-            <div class="skeleton-list" *ngIf="loading()">
-              <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
-                <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
-                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-                <div class="skeleton-cell"></div>
-                <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
-                <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
-                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
-              </div>
-            </div>
-
-            <table class="table" *ngIf="!loading() && filtered().length; else emptyState">
+            <table class="table">
               <thead>
                 <tr>
                   <th class="u-w-50">{{ 'monthlyReview.table.id' | translate : {} : 'ID' }}</th>
@@ -280,10 +259,25 @@
                   <th class="right">{{ 'monthlyReview.table.totalAmount' | translate : {} : 'MONTO' }}</th>
                   <th class="right">{{ 'monthlyReview.table.totalCount' | translate : {} : 'VENTAS' }}</th>
                   <th class="right u-w-100">{{ 'common.actions' | translate : {} : 'ACCIONES' }}</th>
-                </tr>
+                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let it of filtered(); trackBy: trackById">
+                <!-- SKELETON -->
+                <ng-container *ngIf="loading()">
+                  <tr *ngFor="let i of [0,1,2,3,4]">
+                    <td><div class="skeleton-line" style="--skeleton-w: 80%"></div></td>
+                    <td><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                    <td><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+                    <td><div class="skeleton-line" style="--skeleton-w: 70%"></div></td>
+                    <td class="right"><div class="skeleton-line" style="--skeleton-w: 60%"></div></td>
+                    <td class="right"><div class="skeleton-line" style="--skeleton-w: 40%"></div></td>
+                    <td class="right"><div class="skeleton-line" style="--skeleton-w: 50%"></div></td>
+                  </tr>
+                </ng-container>
+
+                <!-- REAL DATA -->
+                <ng-container *ngIf="!loading()">
+                  <tr *ngFor="let it of filtered(); trackBy: trackById">
                   <td [attr.data-label]="('monthlyReview.table.id' | translate : {} : 'ID')">#{{ it.id }}</td>
                   <td [attr.data-label]="('monthlyReview.table.period' | translate : {} : 'Período')">{{ it.period || (it.month + '/' + it.year) }}</td>
                   <td [attr.data-label]="('monthlyReview.table.status' | translate : {} : 'Estado')">
@@ -295,16 +289,21 @@
                   <td class="right" [attr.data-label]="('common.actions' | translate : {} : 'Acciones')">
                     <button class="btn ghost btn--icon" type="button" (click)="edit(it)"
                       [attr.title]="'common.edit' | translate : {} : 'Editar'">
-                      ✏️
+                      <span class="material-symbols-outlined icon-sm">edit</span>
                     </button>
                     <button class="btn danger btn--icon" type="button" (click)="delete(it)"
                       [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
-                      🗑️
+                      <span class="material-symbols-outlined icon-sm">delete</span>
                     </button>
                   </td>
-                </tr>
+                 </tr>
+                </ng-container>
               </tbody>
             </table>
+          </div>
+
+          <div *ngIf="!loading() && !filtered().length">
+            <ng-container *ngTemplateOutlet="emptyState"></ng-container>
           </div>
 
           <!-- Empty state -->
@@ -319,10 +318,7 @@
             </div>
           </ng-template>
         </section>
-      </div>
-    </div>
   </div>
-
 </section>
 
 <!-- Overlay flotante para crear/editar revisi�n -->
@@ -347,7 +343,7 @@
     <form [formGroup]="form" class="form-grid" (ngSubmit)="save()">
       <!-- DNI del Socio Revisor -->
       <label class="label col-2">
-        <span>👤 {{ 'monthlyReview.form.fields.partnerDni' | translate : {} : 'Socio Revisor' }} *</span>
+        <span><span class="material-symbols-outlined icon-sm">person</span> {{ 'monthlyReview.form.fields.partnerDni' | translate : {} : 'Socio Revisor' }} *</span>
         <select class="input" formControlName="partnerDni">
           <option value="" disabled>{{ 'monthlyReview.form.hints.selectPartner' | translate : {} : '— Seleccioná un socio —' }}</option>
           <option *ngFor="let p of partners()" [value]="p.dni">
@@ -355,10 +351,10 @@
           </option>
         </select>
         <small class="muted" *ngIf="!partners().length && !loading()">
-          ⚠️ {{ 'monthlyReview.form.hints.noPartnersAvailable' | translate : {} : 'No hay socios disponibles. Creá uno primero.' }}
+          <span class="material-symbols-outlined icon-sm">warning</span> {{ 'monthlyReview.form.hints.noPartnersAvailable' | translate : {} : 'No hay socios disponibles. Creá uno primero.' }}
         </small>
         <small class="error" *ngIf="form.controls.partnerDni.invalid && form.controls.partnerDni.touched">
-          ❌ {{ 'monthlyReview.form.errors.partnerDni' | translate : {} : 'Socio requerido' }}
+          <span class="material-symbols-outlined icon-sm">cancel</span> {{ 'monthlyReview.form.errors.partnerDni' | translate : {} : 'Socio requerido' }}
         </small>
       </label>
 
@@ -366,14 +362,14 @@
       <div class="form-full-split">
         <!-- Fecha de Revisión (extrae automáticamente año y mes) -->
         <label class="label">
-          <span>📅 {{ 'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión' }} *</span>
+          <span><span class="material-symbols-outlined icon-sm">calendar_month</span> {{ 'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión' }} *</span>
           <input class="input" type="date" formControlName="reviewDate"
             [attr.aria-label]="'monthlyReview.form.fields.reviewDate' | translate : {} : 'Fecha de Revisión'" />
           <small class="muted">
-            💡 {{ 'monthlyReview.form.hints.dateExtraction' | translate : {} : 'El año y mes se extraerán automáticamente de esta fecha' }}
+            <span class="material-symbols-outlined icon-sm">lightbulb</span> {{ 'monthlyReview.form.hints.dateExtraction' | translate : {} : 'El año y mes se extraerán automáticamente de esta fecha' }}
           </small>
           <small class="error" *ngIf="form.controls.reviewDate.invalid && form.controls.reviewDate.touched">
-            ❌ {{ 'monthlyReview.form.errors.dateRequired' | translate : {} : 'Fecha requerida' }}
+            <span class="material-symbols-outlined icon-sm">cancel</span> {{ 'monthlyReview.form.errors.dateRequired' | translate : {} : 'Fecha requerida' }}
           </small>
         </label>
 
@@ -381,11 +377,11 @@
         <label class="label">
           <span>🏷️ {{ 'monthlyReview.form.fields.status' | translate : {} : 'Estado' }}</span>
           <select class="input" formControlName="status">
-            <option value="PENDING">⏳ {{ 'status.PENDING' | translate : {} : 'Pendiente' }}</option>
-            <option value="IN_REVIEW">🔍 {{ 'status.IN_REVIEW' | translate : {} : 'En Revisión' }}</option>
-            <option value="COMPLETED">✅ {{ 'status.COMPLETED' | translate : {} : 'Completado' }}</option>
-            <option value="APPROVED">👍 {{ 'status.APPROVED' | translate : {} : 'Aprobado' }}</option>
-            <option value="REJECTED">❌ {{ 'status.REJECTED' | translate : {} : 'Rechazado' }}</option>
+            <option value="PENDING"><span class="material-symbols-outlined icon-sm">hourglass_empty</span> {{ 'status.PENDING' | translate : {} : 'Pendiente' }}</option>
+            <option value="IN_REVIEW"><span class="material-symbols-outlined icon-sm">search</span> {{ 'status.IN_REVIEW' | translate : {} : 'En Revisión' }}</option>
+            <option value="COMPLETED"><span class="material-symbols-outlined icon-sm">check_circle</span> {{ 'status.COMPLETED' | translate : {} : 'Completado' }}</option>
+            <option value="APPROVED"><span class="material-symbols-outlined icon-sm">thumb_up</span> {{ 'status.APPROVED' | translate : {} : 'Aprobado' }}</option>
+            <option value="REJECTED"><span class="material-symbols-outlined icon-sm">cancel</span> {{ 'status.REJECTED' | translate : {} : 'Rechazado' }}</option>
           </select>
           <small class="muted u-invisible">{{ 'monthlyReview.placeholder' | translate }}</small>
         </label>
@@ -400,7 +396,7 @@
 
       <!-- Recomendaciones -->
       <label class="label col-2">
-        <span>💡 {{ 'monthlyReview.form.fields.recommendations' | translate : {} : 'Recomendaciones' }}</span>
+        <span><span class="material-symbols-outlined icon-sm">lightbulb</span> {{ 'monthlyReview.form.fields.recommendations' | translate : {} : 'Recomendaciones' }}</span>
         <textarea class="input" rows="3" formControlName="recommendations"
           [placeholder]="'monthlyReview.form.placeholders.recommendations' | translate : {} : '💡 Recomendaciones o acciones a tomar...'"></textarea>
       </label>

@@ -18,7 +18,7 @@
       <!-- Request Summary Card - Mejorado -->
       <div class="summary-card">
         <div class="summary-header">
-          <span class="summary-icon">👤</span>
+          <span class="summary-icon"><span class="material-symbols-outlined icon-sm">person</span></span>
           <h3>{{ 'roleRequests.reviewModal.requestInfo' | translate }}</h3>
         </div>
 
@@ -69,7 +69,7 @@
               <!-- Datos para DISTRIBUTOR -->
               <ng-container *ngIf="request.requestedRole === 'DISTRIBUTOR'">
                 <div class="data-item">
-                  <span class="data-icon">📍</span>
+                  <span class="data-icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
                   <div class="data-content">
                     <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.assignedZone' | translate }}</span>
                     <span class="data-value">{{ 'roleRequests.reviewModal.requestInfoLabels.zone' | translate }} {{ request.additionalData.zoneId }}</span>
@@ -84,7 +84,7 @@
                 </div>
                 <div *ngIf="request.additionalData.productsIds && request.additionalData.productsIds.length > 0"
                   class="data-item">
-                  <span class="data-icon">📦</span>
+                  <span class="data-icon"><span class="material-symbols-outlined icon-sm">inventory_2</span></span>
                   <div class="data-content">
                     <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.products' | translate }}</span>
                     <div class="products-tags">
@@ -99,14 +99,14 @@
               <!-- Datos para AUTHORITY -->
               <ng-container *ngIf="request.requestedRole === 'AUTHORITY'">
                 <div class="data-item">
-                  <span class="data-icon">⭐</span>
+                  <span class="data-icon"><span class="material-symbols-outlined icon-sm">star</span></span>
                   <div class="data-content">
                     <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.rank' | translate }}</span>
                     <span class="data-value">{{ getRankLabel(request.additionalData.rank!) }}</span>
                   </div>
                 </div>
                 <div class="data-item">
-                  <span class="data-icon">📍</span>
+                  <span class="data-icon"><span class="material-symbols-outlined icon-sm">location_on</span></span>
                   <div class="data-content">
                     <span class="data-label">{{ 'roleRequests.reviewModal.requestInfoLabels.assignedZone' | translate }}</span>
                     <span class="data-value">{{ 'roleRequests.reviewModal.requestInfoLabels.zone' | translate }} {{ request.additionalData.zoneId }}</span>
@@ -121,7 +121,7 @@
 
       <!-- Error Message -->
       <div *ngIf="error" class="alert alert-error">
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><span class="material-symbols-outlined icon-sm">warning</span></span>
         <div class="alert-content">
           <strong>{{ 'roleRequests.reviewModal.error' | translate }}</strong>
           <p>{{ error }}</p>
@@ -139,7 +139,7 @@
           <label class="decision-card approve-card" [class.selected]="action === 'approve'">
             <input type="radio" name="action" value="approve" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✓</span>
+              <span class="decision-icon"><span class="material-symbols-outlined icon-sm">check</span></span>
               <span class="decision-label">{{ 'roleRequests.reviewModal.approve' | translate }}</span>
               <span class="decision-desc">{{ 'roleRequests.reviewModal.approveDesc' | translate }}</span>
             </div>
@@ -149,7 +149,7 @@
           <label class="decision-card reject-card" [class.selected]="action === 'reject'">
             <input type="radio" name="action" value="reject" [(ngModel)]="action" [disabled]="isSubmitting" />
             <div class="card-content">
-              <span class="decision-icon">✗</span>
+              <span class="decision-icon"><span class="material-symbols-outlined icon-sm">close</span></span>
               <span class="decision-label">{{ 'roleRequests.reviewModal.reject' | translate }}</span>
               <span class="decision-desc">{{ 'roleRequests.reviewModal.rejectDesc' | translate }}</span>
             </div>

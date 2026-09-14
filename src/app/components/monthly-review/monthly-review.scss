@@ -1228,99 +1228,10 @@ button[title="Expandir gráfico"] {
 
 /* ===== DISEÑO MÓVIL PARA MONTHLY REVIEW ===== */
 
-/* En desktop, reorganizar usando grid para que los gráficos aparezcan a la izquierda */
-@media (min-width: 769px) {
-  /* Convertir la sección en grid container */
-  section.stack-lg {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "header header"
-      "charts filters";
-    gap: var(--sp-6);
-    align-items: start;
-  }
 
-  /* Asignar áreas del grid */
-  section.stack-lg > .glass-dark.card:first-child {
-    grid-area: header;
-  }
-
-  section.stack-lg > .charts-container-mobile {
-    grid-area: charts;
-  }
-
-  section.stack-lg > div[style*="grid-template-columns"] {
-    grid-area: filters;
-    display: block !important;
-    grid-template-columns: unset !important;
-  }
-
-  /* Ocultar columna izquierda vacía del grid interno */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:first-child {
-    display: none !important;
-  }
-
-  /* Columna derecha ocupa todo el ancho */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:last-child {
-    width: 100%;
-  }
-
-  /* Botón toggle oculto en desktop */
-  .charts-toggle-mobile {
-    display: none !important;
-  }
-
-  /* Gráficos siempre visibles en desktop */
-  .charts-container-mobile {
-    max-height: none !important;
-    opacity: 1 !important;
-    overflow: visible !important;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  /* En tablet, convertir a 1 columna */
-  section.stack-lg {
-    grid-template-columns: 1fr !important;
-    grid-template-areas:
-      "header"
-      "filters"
-      "charts" !important;
-  }
-}
 
 @media (max-width: 768px) {
-  /* Desactivar el grid de desktop y volver al flujo normal */
-  section.stack-lg {
-    display: block !important;
-    grid-template-columns: unset !important;
-    grid-template-areas: unset !important;
-  }
 
-  /* Resetear grid areas */
-  section.stack-lg > .glass-dark.card:first-child,
-  section.stack-lg > .charts-toggle-mobile,
-  section.stack-lg > .charts-container-mobile,
-  section.stack-lg > div[style*="grid-template-columns"] {
-    grid-area: unset !important;
-  }
-
-  /* Convertir el grid interno en block y mostrar solo la columna derecha */
-  section.stack-lg > div[style*="grid-template-columns"] {
-    display: block !important;
-    grid-template-columns: unset !important;
-  }
-
-  /* Ocultar la columna izquierda vacía del grid interno */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:first-child {
-    display: none !important;
-  }
-
-  /* Columna derecha ocupa todo el ancho */
-  section.stack-lg > div[style*="grid-template-columns"] > .stack-md:last-child {
-    width: 100%;
-  }
 
   /* Mostrar botón de toggle en mobile */
   .charts-toggle-mobile {
