@@ -40,7 +40,7 @@ $spacing-xl: 32px;
         font-size: 1.5rem;
         font-weight: 800;
         color: $text-strong;
-        font-family: 'Google Sans Code', 'Montserrat', monospace;
+        font-family: var(--font-mono);
         letter-spacing: 0.2px;
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
       }
@@ -139,7 +139,7 @@ $spacing-xl: 32px;
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', 'Montserrat', monospace;
+      font-family: var(--font-mono);
     }
 
     p {
@@ -162,7 +162,7 @@ $spacing-xl: 32px;
         color: $text-strong;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-family: 'Google Sans Code', ui-monospace, monospace;
+        font-family: var(--font-mono);
       }
 
       ul {
@@ -204,7 +204,7 @@ $spacing-xl: 32px;
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', 'Montserrat', monospace;
+      font-family: var(--font-mono);
     }
 
     >p {
@@ -348,7 +348,7 @@ $spacing-xl: 32px;
         color: $text-strong;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        font-family: 'Google Sans Code', ui-monospace, monospace;
+        font-family: var(--font-mono);
       }
 
       ul {
@@ -434,7 +434,7 @@ $spacing-xl: 32px;
         font-size: 1.3rem;
         font-weight: 800;
         color: $text-strong;
-        font-family: 'Google Sans Code', 'Montserrat', monospace;
+        font-family: var(--font-mono);
         text-align: center;
       }
 
@@ -546,7 +546,7 @@ $spacing-xl: 32px;
         font-size: 1.3rem;
         font-weight: 800;
         color: $text-strong;
-        font-family: 'Google Sans Code', 'Montserrat', monospace;
+        font-family: var(--font-mono);
       }
 
       p {
@@ -584,7 +584,7 @@ $spacing-xl: 32px;
       font-size: 1.5rem;
       font-weight: 800;
       color: $text-strong;
-      font-family: 'Google Sans Code', 'Montserrat', monospace;
+      font-family: var(--font-mono);
       letter-spacing: 0.2px;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
     }
@@ -734,7 +734,7 @@ $spacing-xl: 32px;
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', ui-monospace, monospace;
+      font-family: var(--font-mono);
     }
 
     p {
@@ -994,7 +994,7 @@ $spacing-xl: 32px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Google Sans Code', 'Montserrat', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.2px;
 
   &:disabled {
@@ -1293,7 +1293,7 @@ verified-card {
       font-weight: 800;
       color: #ffffff;
       margin-bottom: 4px;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-mono);
       letter-spacing: 0.3px;
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
@@ -1461,7 +1461,7 @@ verified-card {
     color: white;
     font-size: 0.95rem;
     font-weight: 800;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
     letter-spacing: 0.3px;
     cursor: pointer;
     transition: all 0.2s ease;

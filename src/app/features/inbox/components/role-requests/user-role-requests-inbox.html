@@ -91,7 +91,9 @@
     <p>{{ 'roleRequests.inbox.verifyRequiredDesc' | translate }}</p>
   </div>
 
-  <div *ngIf="loading" class="loading">{{ 'roleRequests.inbox.loading' | translate }}</div>
+  <div *ngIf="loading" class="requests-list skeleton-loading" aria-hidden="true">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3]"></div>
+  </div>
 
   <div *ngIf="error && !loading" class="error-message">
     <span class="icon">❌</span>

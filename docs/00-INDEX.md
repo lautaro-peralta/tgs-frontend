@@ -54,6 +54,6 @@ Esta documentación cubre la arquitectura, patrones de diseño y decisiones téc
 
 ## Repositorio y Recursos
 
-- **Repositorio**: [github.com/Lau-prog/GarrSYS](https://github.com/Lau-prog/GarrSYS)
+- **Repositorio (paraguas)**: [github.com/lautaro-peralta/garrsys](https://github.com/lautaro-peralta/garrsys) — monorepo académico con submodules `apps/frontend` ([TGS-Frontend](https://github.com/Tsplivalo/TGS-Frontend.git)) y `apps/backend` ([TGS-Backend](https://github.com/lautaro-peralta/TGS-Backend.git))
 - **Backend (producción)**: `https://tgs-backend-u5xz.onrender.com`
 - **Documentación del Backend**: ver carpeta `/docs` del backend

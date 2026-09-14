@@ -137,6 +137,13 @@
   }
 }
 
+/* Accesibilidad: respeta la preferencia de movimiento reducido del sistema */
+@media (prefers-reduced-motion: reduce) {
+  .particle {
+    animation: none;
+  }
+}
+
 @keyframes fall {
   0% {
     transform: translateY(-20px) rotate(0deg);
@@ -271,7 +278,7 @@
   }
 
   .tab-text {
-    font-family: 'Google Sans Code', sans-serif;
+    font-family: var(--font-body);
   }
 
   &:hover:not(.active) {
@@ -382,7 +389,7 @@
   color: var(--text-strong);
   font-weight: 800;
   letter-spacing: .2px;
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 .auth-form label {
@@ -730,7 +737,7 @@
   color: var(--text-strong);
   font-weight: 900;
   letter-spacing: 1px;
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   text-shadow:
     0 4px 12px rgba(0, 0, 0, 0.5),
     0 0 40px rgba(195, 164, 98, 0.3);
@@ -1366,8 +1373,8 @@
   transform: translateZ(0);
   contain: paint;
   backface-visibility: hidden;
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   /* El anillo 1px externo se mueve a outline para evitar cortes verticales */
   box-shadow:
     0 20px 60px rgba(0, 0, 0, .6),
@@ -1456,7 +1463,7 @@
   font-size: clamp(1.5rem, 2vw + 1rem, 2.2rem);
   font-weight: 900;
   color: var(--intro-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   letter-spacing: .5px;
   text-shadow:
     0 2px 8px rgba(0, 0, 0, .5),
@@ -1631,7 +1638,7 @@
   font-weight: 900;
   color: white;
   letter-spacing: .3px;
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   text-shadow:
     0 2px 6px rgba(0, 0, 0, .5),
     0 0 20px rgba(59, 130, 246, .15);
@@ -2509,7 +2516,7 @@
       font-weight: 800;
       margin-bottom: 0.6rem;
       color: #e5e7eb;
-      font-family: 'Google Sans Code', sans-serif;
+      font-family: var(--font-body);
     }
 
     p {

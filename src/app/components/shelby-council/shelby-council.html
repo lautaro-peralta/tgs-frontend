@@ -44,10 +44,6 @@
     <div class="error" *ngIf="error() as err">
       <strong>✗ {{ 'common.error' | translate : {} : 'Error' }}</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">
-      🔄 {{ 'shelbyCouncil.loading' | translate : {} : 'Cargando...' }}
-    </div>
-
     <!-- FILTROS -->
     <section class="filters">
       <label class="label u-grow">
@@ -78,69 +74,83 @@
     <section class="subsection">
       <h3 class="sub-title">📋 {{ 'shelbyCouncil.list' | translate : {} : 'Listado' }}</h3>
 
-      <div class="table-wrap" *ngIf="filtered().length; else emptyState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="u-w-80">ID</th>
-              <th>{{ 'shelbyCouncil.fields.partner' | translate : {} : '👤 Socio' }}</th>
-              <th>{{ 'shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión' }}</th>
-              <th class="u-w-130">{{ 'shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso' }}</th>
-              <th>{{ 'shelbyCouncil.fields.role' | translate : {} : '🎯 Rol' }}</th>
-              <th *ngIf="canEdit() || canDelete()" class="right u-w-160">
-                {{ 'common.actions' | translate : {} : 'Acciones' }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let it of filtered(); trackBy: trackById">
-              <td [attr.data-label]="'ID'"><span class="badge badge-neutral">#{{ it.id }}</span></td>
-              <td [attr.data-label]="('shelbyCouncil.fields.partner' | translate : {} : '👤 Socio')">
-                <div class="cell-content">
-                  <strong>{{ it.partner?.name || '—' }}</strong>
-                  <small class="muted">DNI: {{ it.partner?.dni }}</small>
-                </div>
-              </td>
-              <td [attr.data-label]="('shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión')">
-                <div class="cell-content">
-                  <strong>#{{ it.decision?.id }}</strong>
-                  <small class="muted">{{ it.decision?.description || '—' }}</small>
-                </div>
-              </td>
-              <td [attr.data-label]="('shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso')">{{ it.joinDate | date:'dd/MM/yyyy' }}</td>
-              <td [attr.data-label]="('shelbyCouncil.fields.role' | translate : {} : '🎯 Rol')">
-                <span class="badge badge-role" *ngIf="it.role">{{ it.role }}</span>
-                <span class="muted" *ngIf="!it.role">—</span>
-              </td>
-              <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="('common.actions' | translate : {} : 'Acciones')">
-                <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
-                  [attr.title]="'common.edit' | translate : {} : 'Editar'">
-                  ✏️
-                </button>
-                <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
-                  [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
-                  🗑️
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Skeleton mientras carga -->
+      <div class="table-wrap" *ngIf="loading()">
+        <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 30%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canEdit() || canDelete()"></div>
+        </div>
       </div>
 
-      <!-- Empty state -->
-      <ng-template #emptyState>
-        <div class="empty">
-          <div class="empty-icon">🔭</div>
-          <h3>{{ fTextApplied() ? 'Sin resultados' : ('shelbyCouncil.emptyTitle' | translate : {} : 'No hay registros')
-            }}
-          </h3>
-          <p class="muted">
-            {{ fTextApplied()
-            ? 'Probá ajustar el filtro o hacer clic en "Limpiar"'
-            : ('shelbyCouncil.emptyHint' | translate : {} : 'Probá ajustar la búsqueda o creá un nuevo registro.') }}
-          </p>
+      <ng-container *ngIf="!loading()">
+        <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="u-w-80">ID</th>
+                <th>{{ 'shelbyCouncil.fields.partner' | translate : {} : '👤 Socio' }}</th>
+                <th>{{ 'shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión' }}</th>
+                <th class="u-w-130">{{ 'shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso' }}</th>
+                <th>{{ 'shelbyCouncil.fields.role' | translate : {} : '🎯 Rol' }}</th>
+                <th *ngIf="canEdit() || canDelete()" class="right u-w-160">
+                  {{ 'common.actions' | translate : {} : 'Acciones' }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let it of filtered(); trackBy: trackById">
+                <td [attr.data-label]="'ID'"><span class="badge badge-neutral">#{{ it.id }}</span></td>
+                <td [attr.data-label]="('shelbyCouncil.fields.partner' | translate : {} : '👤 Socio')">
+                  <div class="cell-content">
+                    <strong>{{ it.partner?.name || '—' }}</strong>
+                    <small class="muted">DNI: {{ it.partner?.dni }}</small>
+                  </div>
+                </td>
+                <td [attr.data-label]="('shelbyCouncil.fields.decision' | translate : {} : '📊 Decisión')">
+                  <div class="cell-content">
+                    <strong>#{{ it.decision?.id }}</strong>
+                    <small class="muted">{{ it.decision?.description || '—' }}</small>
+                  </div>
+                </td>
+                <td [attr.data-label]="('shelbyCouncil.fields.joinDate' | translate : {} : '📅 Ingreso')">{{ it.joinDate | date:'dd/MM/yyyy' }}</td>
+                <td [attr.data-label]="('shelbyCouncil.fields.role' | translate : {} : '🎯 Rol')">
+                  <span class="badge badge-role" *ngIf="it.role">{{ it.role }}</span>
+                  <span class="muted" *ngIf="!it.role">—</span>
+                </td>
+                <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="('common.actions' | translate : {} : 'Acciones')">
+                  <button *ngIf="canEdit()" class="btn ghost btn--icon" type="button" (click)="edit(it)"
+                    [attr.title]="'common.edit' | translate : {} : 'Editar'">
+                    ✏️
+                  </button>
+                  <button *ngIf="canDelete()" class="btn danger btn--icon" type="button" (click)="delete(it)"
+                    [attr.title]="'common.delete' | translate : {} : 'Eliminar'">
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </ng-template>
+
+        <!-- Empty state -->
+        <ng-template #emptyState>
+          <div class="empty">
+            <div class="empty-icon">🔭</div>
+            <h3>{{ fTextApplied() ? 'Sin resultados' : ('shelbyCouncil.emptyTitle' | translate : {} : 'No hay registros')
+              }}
+            </h3>
+            <p class="muted">
+              {{ fTextApplied()
+              ? 'Probá ajustar el filtro o hacer clic en "Limpiar"'
+              : ('shelbyCouncil.emptyHint' | translate : {} : 'Probá ajustar la búsqueda o creá un nuevo registro.') }}
+            </p>
+          </div>
+        </ng-template>
+      </ng-container>
     </section>
   </div>
 

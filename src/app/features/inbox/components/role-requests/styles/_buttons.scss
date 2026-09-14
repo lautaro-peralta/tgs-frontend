@@ -12,7 +12,7 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: 'Google Sans Code', 'Montserrat', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.2px;
 
   &:disabled {

@@ -2,7 +2,6 @@
    Mis Compras - Diseño unificado glassmorphism
    ========================================= */
 
-$ff-brand: 'Google Sans Code';
 $radius-card: 18px;
 $radius-inner: 14px;
 $radius-input: 12px;
@@ -49,7 +48,7 @@ $shadow-input-focus: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 3px rgba(195,
   margin: 0;
   font-size: var(--h3, 1.25rem);
   font-weight: 700;
-  font-family: $ff-brand;
+  font-family: var(--font-heading);
   color: var(--text-strong, #ffffff);
   letter-spacing: .4px;
 }
@@ -239,7 +238,7 @@ $shadow-input-focus: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 3px rgba(195,
     font-weight: 600;
     color: var(--text-strong, #ffffff);
     margin-bottom: 0.5rem;
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
   }
 
   .empty-desc,
@@ -325,7 +324,7 @@ $shadow-input-focus: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 3px rgba(195,
         .cell-id {
           font-weight: 600;
           color: var(--accent, #c3a462);
-          font-family: $ff-brand;
+          font-family: var(--font-body);
         }
 
         .cell-date {
@@ -385,7 +384,7 @@ $shadow-input-focus: inset 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 3px rgba(195,
             font-weight: 700;
             color: var(--accent, #c3a462);
             font-size: 1.1rem;
-            font-family: $ff-brand;
+            font-family: var(--font-body);
           }
         }
       }

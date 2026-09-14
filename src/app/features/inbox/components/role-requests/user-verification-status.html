@@ -8,10 +8,18 @@
     </div>
   </div>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading">
-    <div class="spinner"></div>
-    <p>{{ 'userVerification.status.loading' | translate }}</p>
+  <!-- Loading State: skeleton de card (imita las 3 variantes: pending/cancelled/expired) -->
+  <div *ngIf="loading" class="pending-card" role="status" aria-live="polite" [attr.aria-label]="'userVerification.status.loading' | translate">
+    <div class="pending-header">
+      <div class="skeleton-line" style="--skeleton-w: 40%; --skeleton-h: 1.6rem"></div>
+    </div>
+    <div class="pending-content">
+      <div class="skeleton-line" style="--skeleton-w: 55%; --skeleton-h: 1.3rem"></div>
+      <div class="skeleton-line" style="--skeleton-w: 90%"></div>
+      <div class="skeleton-line" style="--skeleton-w: 70%"></div>
+      <div class="skeleton-card" style="--skeleton-h: 80px"></div>
+      <div class="skeleton-line" style="--skeleton-w: 35%; --skeleton-h: 2.2rem"></div>
+    </div>
   </div>
 
   <!-- Error Message -->

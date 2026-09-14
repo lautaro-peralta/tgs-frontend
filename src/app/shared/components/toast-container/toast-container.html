@@ -1,0 +1,25 @@
+<div class="toast-container" aria-atomic="false">
+  <div
+    *ngFor="let toast of toasts(); trackBy: trackById"
+    class="toast-floating"
+    [class.toast-floating--error]="toast.type === 'error'"
+    [class.toast-floating--success]="toast.type === 'success'"
+    [class.toast-floating--warning]="toast.type === 'warning'"
+    [attr.role]="roleFor(toast.type)"
+    [attr.aria-live]="ariaLiveFor(toast.type)"
+  >
+    <div class="toast-floating-icon">
+      <span>{{ toast.icon }}</span>
+    </div>
+    <div class="toast-floating-content">
+      <strong class="toast-floating-title" *ngIf="toast.title">{{ toast.title }}</strong>
+      <p class="toast-floating-message">{{ toast.message }}</p>
+    </div>
+    <button
+      type="button"
+      class="toast-floating-close"
+      (click)="dismiss(toast.id)"
+      [attr.aria-label]="'common.close' | translate"
+    >×</button>
+  </div>
+</div>

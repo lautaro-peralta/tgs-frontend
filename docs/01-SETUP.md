@@ -5,20 +5,31 @@
 | Herramienta | Versión requerida | Notas |
 |-------------|------------------|-------|
 | Node.js | ≥ 20 | Motor de ejecución |
-| pnpm | ≥ 9 | Gestor de paquetes preferido |
+| npm | ≥ 10 | Gestor de paquetes canónico |
 | Angular CLI | ≥ 20 | Toolchain de build y desarrollo |
 
-El proyecto define un `pnpm-workspace.yaml` en la raíz, por lo que **pnpm** es el gestor estándar. `npm` también es compatible pero puede generar diferencias en el lockfile.
+> **Gestor de paquetes**: el repo **no** define un `pnpm-workspace.yaml` (no es un workspace pnpm), y conviven un `package-lock.json` y un `pnpm-lock.yaml`. El lockfile activamente mantenido es `package-lock.json` — todos los scripts internos del `package.json` invocan `npm run ...` — por lo que **npm** es el gestor canónico real. `pnpm-lock.yaml` es un artefacto residual de una instalación anterior y no debería usarse como fuente de verdad; se recomienda no generar instalaciones nuevas con `pnpm` para evitar reintroducir divergencias entre lockfiles.
 
 ---
 
 ## Instalación
 
-```bash
-git clone https://github.com/Lau-prog/GarrSYS
-cd GarrSYS/frontend
+Este repositorio se clona como submodule del monorepo paraguas **garrsys** (ver [00-INDEX.md](00-INDEX.md)):
 
-pnpm install
+```bash
+git clone --recurse-submodules https://github.com/lautaro-peralta/garrsys.git
+cd garrsys/apps/frontend
+
+npm install
+```
+
+También puede clonarse standalone desde su propio repositorio:
+
+```bash
+git clone https://github.com/Tsplivalo/TGS-Frontend.git
+cd TGS-Frontend
+
+npm install
 ```
 
 ---

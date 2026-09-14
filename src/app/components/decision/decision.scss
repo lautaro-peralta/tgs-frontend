@@ -294,7 +294,7 @@
   font-size: 12px;
   font-weight: 700;
   color: #93c5fd;
-  font-family: 'Google Sans Code', monospace;
+  font-family: var(--font-mono);
 }
 
 .topic-card.selected .topic-id {

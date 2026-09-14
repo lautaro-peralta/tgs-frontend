@@ -1,8 +1,23 @@
 ﻿<!-- account.html - Carnet/Credencial -->
 <section class="account stack-lg">
-  <!-- Estado de carga -->
-  <div class="muted" *ngIf="loading()" role="status" aria-live="polite">
-    {{ 'account.loadingProfile' | translate }}
+  <!-- Estado de carga: skeleton del carnet -->
+  <div class="credential-card" *ngIf="loading()" role="status" aria-live="polite" [attr.aria-label]="'account.loadingProfile' | translate">
+    <div class="card-header">
+      <div class="skeleton-line" style="--skeleton-w: 45%; --skeleton-h: 1.4rem"></div>
+      <div class="skeleton-line" style="--skeleton-w: 18%; --skeleton-h: 1.4rem"></div>
+    </div>
+    <div class="card-body">
+      <div class="photo-section">
+        <div class="skeleton-card" style="width: 170px; height: 220px"></div>
+      </div>
+      <div class="info-section">
+        <div class="skeleton-line" style="--skeleton-w: 55%; --skeleton-h: 1.5rem"></div>
+        <div class="skeleton-line" style="--skeleton-w: 30%"></div>
+        <div class="skeleton-line" style="--skeleton-w: 90%"></div>
+        <div class="skeleton-line" style="--skeleton-w: 75%"></div>
+        <div class="skeleton-line" style="--skeleton-w: 60%"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Errores -->

@@ -35,45 +35,6 @@ function expectToMatchSnapshot(element: HTMLElement, snapshotName: string) {
 describe('Regression: Component Snapshots', () => {
 
   /**
-   * SNAPSHOT 1: GlassPanelComponent - Initial state
-   */
-  describe('GlassPanelComponent', () => {
-    let fixture: ComponentFixture<any>;
-
-    beforeEach(async () => {
-      const { GlassPanelComponent } = await import(
-        '../../src/app/shared/ui/glass-panel/glass-panel.component'
-      );
-
-      await TestBed.configureTestingModule({
-        imports: [GlassPanelComponent, BrowserAnimationsModule]
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(GlassPanelComponent);
-    });
-
-    it('should match snapshot - initial state', () => {
-      fixture.detectChanges();
-      const compiled = fixture.nativeElement as HTMLElement;
-
-      // Verify basic structure
-      expect(compiled).toBeDefined();
-      expect(compiled.children.length).toBeGreaterThan(0);
-
-      // Snapshot assertion
-      expectToMatchSnapshot(compiled, 'glass-panel-initial');
-    });
-
-    it('should match snapshot - with content projection', () => {
-      fixture.componentInstance.class = 'custom-class';
-      fixture.detectChanges();
-
-      const compiled = fixture.nativeElement as HTMLElement;
-      expectToMatchSnapshot(compiled, 'glass-panel-with-class');
-    });
-  });
-
-  /**
    * SNAPSHOT 2: HomeComponent - Complete view
    */
   describe('HomeComponent', () => {

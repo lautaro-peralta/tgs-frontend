@@ -33,7 +33,23 @@
   </div>
 
   <div class="error" *ngIf="error() as e">{{ e }}</div>
-  <div class="muted" *ngIf="loading()">{{ 'account.loading' | translate }}</div>
+
+  <!-- Skeleton loader: mismo grid/proporciones que store-card real para evitar salto de layout -->
+  <div class="store__grid" *ngIf="loading()" aria-hidden="true">
+    <article class="store-card" *ngFor="let _ of skeletonPlaceholders">
+      <div class="store-card__media">
+        <div class="skeleton-card" style="--skeleton-h: 100%; border-radius: 0;"></div>
+      </div>
+      <div class="store-card__body">
+        <div class="skeleton-line" style="--skeleton-w: 75%; --skeleton-h: 1.1em;"></div>
+        <div class="skeleton-line" style="--skeleton-w: 45%; --skeleton-h: .85em;"></div>
+      </div>
+      <div class="store-card__footer">
+        <div class="skeleton-line" style="--skeleton-w: 56px; --skeleton-h: 1.2em;"></div>
+        <div class="skeleton-line" style="--skeleton-w: 92px; --skeleton-h: 2.2em; border-radius: 10px;"></div>
+      </div>
+    </article>
+  </div>
 
   <!-- ✅ GRID DE OFERTAS (anteriormente productos) -->
   <div class="store__grid" *ngIf="!loading() && list().length > 0" role="region" [attr.aria-label]="'store.productList' | translate">

@@ -256,7 +256,7 @@ export interface PurchaseSuccessData {
         font-weight: 800;
         color: #fff;
         text-align: center;
-        font-family: 'Google Sans Code', monospace;
+        font-family: var(--font-heading);
       }
 
       .close-btn {
@@ -669,7 +669,7 @@ export interface PurchaseSuccessData {
       cursor: pointer;
       border: 1px solid transparent;
       font-weight: 700;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-body);
       transition: all 0.2s ease;
     }
 

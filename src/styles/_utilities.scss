@@ -116,7 +116,7 @@
 .mono-hint {
   font-size: 0.813rem;
   color: rgba(255, 255, 255, 0.8);
-  font-family: 'Google Sans Code', ui-monospace, monospace;
+  font-family: var(--font-mono);
 }
 
 .hint-sm {
@@ -272,7 +272,7 @@
 .u-block-gap { display: block; margin-top: var(--sp-1); }
 .u-mt-sm   { margin-top: var(--sp-2); }
 .u-invisible { visibility: hidden; }
-.u-mono    { font-family: 'Google Sans Code', ui-monospace, monospace; }
+.u-mono    { font-family: var(--font-mono); }
 .u-text-ok { color: #81c784; }
 
 .hint-xs {

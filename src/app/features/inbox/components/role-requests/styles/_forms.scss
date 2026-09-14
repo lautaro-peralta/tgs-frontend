@@ -80,7 +80,7 @@ select {
   font-weight: 700;
   font-size: 0.9375rem;
   color: $text-strong;
-  font-family: 'Google Sans Code', monospace;
+  font-family: var(--font-mono);
 
   .icon {
     font-size: 1.25rem;

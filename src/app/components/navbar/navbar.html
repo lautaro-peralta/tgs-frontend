@@ -402,17 +402,7 @@
     </ul>
   </div>
 
-  <!-- Toast flotante para nuevas notificaciones -->
-  <div *ngIf="newNotificationToast()" class="notification-toast-floating">
-    <div class="toast-floating-icon">
-      <span>{{ newNotificationToast()!.type }}</span>
-    </div>
-    <div class="toast-floating-content">
-      <strong class="toast-floating-title">{{ newNotificationToast()!.title }}</strong>
-      <p class="toast-floating-message">{{ newNotificationToast()!.message }}</p>
-    </div>
-    <button class="toast-floating-close" (click)="closeNotificationToast()" [attr.aria-label]="'common.close' | translate">×</button>
-  </div>
+
 </nav>
 
 <!-- 📱 Overlay del menú móvil -->

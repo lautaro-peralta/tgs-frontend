@@ -12,9 +12,13 @@
   </div>
 
   <!-- Estado de carga -->
-  <div class="loading-state" *ngIf="loading()">
-    <div class="spinner"></div>
-    <p>{{ 'myPurchases.loading' | translate }}</p>
+  <div class="table-container skeleton-loading" *ngIf="loading()" aria-hidden="true">
+    <div class="skeleton-table-row" *ngFor="let row of [1,2,3,4,5]">
+      <div class="skeleton-cell" style="--skeleton-w: 45%"></div>
+      <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+      <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
+      <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+    </div>
   </div>
 
   <!-- Contenido principal -->

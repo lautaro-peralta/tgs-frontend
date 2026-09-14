@@ -1,6 +1,5 @@
 /* account.scss - Diseño profesional de carnet/credencial */
 
-$ff-brand: 'Google Sans Code';
 $radius-card: 18px;
 $radius-inner: 14px;
 $radius-input: 12px;
@@ -54,14 +53,14 @@ $shadow-btn-hover: 0 10px 22px rgba(195, 164, 98, .30);
   padding-bottom: var(--sp-4, 1.5rem);
   margin-bottom: var(--sp-4, 1.5rem);
   border-bottom: 1px solid var(--border, #333);
-  font-family: $ff-brand;
+  font-family: var(--font-heading);
 }
 
 .account>header h2 {
   margin: 0;
   font-size: var(--h3, 1.75rem);
   font-weight: 700;
-  font-family: $ff-brand;
+  font-family: var(--font-heading);
 }
 
 /* ===== PROFILE STATS ===== */
@@ -106,7 +105,7 @@ $shadow-btn-hover: 0 10px 22px rgba(195, 164, 98, .30);
     display: block;
     margin-bottom: 0.5rem;
     color: var(--accent);
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
   }
 
   p {
@@ -424,7 +423,7 @@ form.profile-form {
   }
 
   .org-logo {
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
     font-size: 1.4rem;
     font-weight: 800;
     letter-spacing: 2.5px;
@@ -451,7 +450,7 @@ form.profile-form {
   }
 
   .card-type {
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
     font-size: 0.7rem;
     font-weight: 700;
     margin-left: 1rem;
@@ -684,7 +683,7 @@ form.profile-form {
   }
 
   .full-name {
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--text);
@@ -710,7 +709,7 @@ form.profile-form {
     .label {
       color: rgba(195, 164, 98, 1);
       font-weight: 700;
-      font-family: $ff-brand;
+      font-family: var(--font-heading);
       letter-spacing: 0.8px;
     }
 
@@ -1025,7 +1024,7 @@ form.profile-form {
 
   h3 {
     margin: 0;
-    font-family: $ff-brand;
+    font-family: var(--font-heading);
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--text);

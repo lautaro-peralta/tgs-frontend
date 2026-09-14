@@ -1,0 +1,13 @@
+<div class="cookie-banner" *ngIf="visible()" role="dialog" aria-live="polite" aria-label="{{ 'legal.cookies.title' | translate }}">
+  <p class="cookie-banner__message">{{ 'legal.cookieBanner.message' | translate }}</p>
+
+  <div class="cookie-banner__actions">
+    <a class="cookie-banner__link" routerLink="/cookies">{{ 'legal.cookieBanner.moreInfo' | translate }}</a>
+    <button type="button" class="cookie-banner__btn cookie-banner__btn--ghost" (click)="decline()">
+      {{ 'legal.cookieBanner.decline' | translate }}
+    </button>
+    <button type="button" class="cookie-banner__btn cookie-banner__btn--accent" (click)="accept()">
+      {{ 'legal.cookieBanner.accept' | translate }}
+    </button>
+  </div>
+</div>

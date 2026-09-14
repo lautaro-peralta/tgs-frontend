@@ -131,7 +131,17 @@
     </div>
 
     <div class="table-wrap">
-      <table class="table" *ngIf="filteredAuthorities().length; else empty">
+      <div class="skeleton-list" *ngIf="loading()">
+        <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 20%" *ngIf="canEdit() || canDelete()"></div>
+        </div>
+      </div>
+
+      <table class="table" *ngIf="!loading() && filteredAuthorities().length; else empty">
         <colgroup>
           <col class="u-w-120" />
           <col />
@@ -169,7 +179,7 @@
       </table>
 
       <ng-template #empty>
-        <div class="center muted">
+        <div class="center muted" *ngIf="!loading()">
           {{ (fTextApplied() || fDniApplied() || fZoneIdApplied())
           ? ('authorities.noResults' | translate)
           : ('authorities.empty' | translate) }}

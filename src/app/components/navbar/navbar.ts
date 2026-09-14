@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   HostListener,
@@ -23,6 +24,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthTransitionService } from '../../services/ui/auth-transition';
 import { NotificationService } from '../../features/inbox/services/notification.service';
 import { LoggerService } from '../../services/logger/logger';
+import { ToastService, ToastType } from '../../shared/services/toast.service';
 
 interface MenuItem { label: string; path: string; }
 
@@ -35,6 +37,7 @@ type DropdownId = 'lang' | 'mgmt' | 'user';
   imports: [CommonModule, RouterModule, TranslateModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('slideIn', [
       transition(':enter', [
@@ -70,19 +73,12 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
   private transition = inject(AuthTransitionService);
   private notificationService = inject(NotificationService);
   private logger = inject(LoggerService);
+  private toastService = inject(ToastService);
   private host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   // Signal para el contador de notificaciones no leídas
   private unreadNotifications = signal<number>(0);
   private pollingInterval?: number;
-
-  // Toast para nuevas notificaciones
-  newNotificationToast = signal<{
-    title: string;
-    message: string;
-    type: string;
-    show: boolean;
-  } | null>(null);
 
   // 📱 Menú móvil
   mobileMenuOpen = signal<boolean>(false);
@@ -381,6 +377,24 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  // Ícono por defecto según el tipo de notificación del backend
+  private static readonly NOTIFICATION_ICONS: Record<string, string> = {
+    'USER_VERIFICATION_APPROVED': '✅',
+    'USER_VERIFICATION_REJECTED': '❌',
+    'ROLE_REQUEST_APPROVED': '🎉',
+    'ROLE_REQUEST_REJECTED': '⚠️',
+    'SYSTEM': 'ℹ️',
+  };
+
+  // Severidad (para role/aria-live del toast) según el tipo de notificación del backend
+  private static readonly NOTIFICATION_SEVERITY: Record<string, ToastType> = {
+    'USER_VERIFICATION_APPROVED': 'success',
+    'USER_VERIFICATION_REJECTED': 'error',
+    'ROLE_REQUEST_APPROVED': 'success',
+    'ROLE_REQUEST_REJECTED': 'error',
+    'SYSTEM': 'info',
+  };
+
   /**
    * Muestra un toast con la última notificación recibida
    */
@@ -394,36 +408,16 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
 
       if (latestNotification) {
-        const typeIcons: Record<string, string> = {
-          'USER_VERIFICATION_APPROVED': '✅',
-          'USER_VERIFICATION_REJECTED': '❌',
-          'ROLE_REQUEST_APPROVED': '🎉',
-          'ROLE_REQUEST_REJECTED': '⚠️',
-          'SYSTEM': 'ℹ️',
-        };
-
-        this.newNotificationToast.set({
+        this.toastService.show({
           title: latestNotification.title,
           message: latestNotification.message,
-          type: typeIcons[latestNotification.type] || 'ℹ️',
-          show: true
+          icon: NavbarComponent.NOTIFICATION_ICONS[latestNotification.type] || 'ℹ️',
+          type: NavbarComponent.NOTIFICATION_SEVERITY[latestNotification.type] || 'info',
         });
-
-        // Auto-ocultar después de 5 segundos
-        setTimeout(() => {
-          this.newNotificationToast.set(null);
-        }, 5000);
       }
     } catch (error) {
       this.logger.error('[Navbar] Error showing notification toast:', error);
     }
-  }
-
-  /**
-   * Cierra el toast de notificación manualmente
-   */
-  closeNotificationToast(): void {
-    this.newNotificationToast.set(null);
   }
 
   /**

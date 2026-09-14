@@ -15,6 +15,8 @@ import { AuthTransitionService } from './services/ui/auth-transition';
 import { NavigationStateService } from './services/ui/navigation-state';
 import { LoggerService } from './services/logger/logger';
 import { FooterComponent } from './shared/footer/footer';
+import { CookieBannerComponent } from './components/legal/cookie-banner/cookie-banner';
+import { ToastContainerComponent } from './shared/components/toast-container/toast-container';
 import { TranslateModule } from '@ngx-translate/core';
 /**
  * Componente raíz de la aplicación
@@ -27,7 +29,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, TranslateModule],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, FooterComponent, CookieBannerComponent, ToastContainerComponent, TranslateModule],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })

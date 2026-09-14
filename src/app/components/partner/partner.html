@@ -47,14 +47,22 @@
     <div class="error" *ngIf="error() as err">
       <strong>{{ 'common.error' | translate }}</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">
-      {{ 'partner.loading' | translate : {} : 'Cargando socios...' }}
-    </div>
 
     <section class="subsection">
       <h3 class="sub-title">{{ 'partner.list' | translate }}</h3>
-      <div class="table-wrap" *ngIf="filteredPartners().length; else emptyState">
-        <table class="table">
+      <div class="table-wrap">
+        <div class="skeleton-list" *ngIf="loading()">
+          <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canEdit() || canDelete()"></div>
+          </div>
+        </div>
+
+        <table class="table" *ngIf="!loading() && filteredPartners().length; else emptyState">
           <colgroup>
             <col class="u-w-120" />
             <col />
@@ -93,15 +101,15 @@
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <ng-template #emptyState>
-        <div class="empty empty-state">
-          <h3>{{ fTextApplied() ? 'Sin resultados' : ('partner.emptyTitle' | translate : {} : 'No hay socios') }}</h3>
-          <p class="muted">{{ fTextApplied() ? 'Probá ajustar el filtro' : ('partner.emptyHint' | translate : {} : 'Creá
-            un socio con el panel de abajo.') }}</p>
-        </div>
-      </ng-template>
+        <ng-template #emptyState>
+          <div class="empty empty-state" *ngIf="!loading()">
+            <h3>{{ fTextApplied() ? 'Sin resultados' : ('partner.emptyTitle' | translate : {} : 'No hay socios') }}</h3>
+            <p class="muted">{{ fTextApplied() ? 'Probá ajustar el filtro' : ('partner.emptyHint' | translate : {} : 'Creá
+              un socio con el panel de abajo.') }}</p>
+          </div>
+        </ng-template>
+      </div>
     </section>
   </div>
 

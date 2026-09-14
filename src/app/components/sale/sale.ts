@@ -8,7 +8,7 @@ import {
 import { SaleService } from '../../services/sale/sale';
 import { ProductService } from '../../services/product/product';
 import { ClientService } from '../../services/client/client';
-import { StatsService, SalesStats } from '../../services/stats/stats';
+import { SalesStats } from '../../services/stats/stats';
 import { AuthService } from '../../services/auth/auth';
 import { Role } from '../../models/user/user.model';
 
@@ -87,7 +87,6 @@ export class SaleComponent implements OnInit {
   private prodSrv = inject(ProductService);
   private cliSrv = inject(ClientService);
   private t = inject(TranslateService);
-  private statsSrv = inject(StatsService);
   private authService = inject(AuthService);
 
   // --- Estado base ---

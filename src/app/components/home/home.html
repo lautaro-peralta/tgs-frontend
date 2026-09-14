@@ -1,7 +1,7 @@
 <div class="home">
   <!-- Efecto de partículas cayendo -->
   <div class="falling-particles" aria-hidden="true">
-    <div class="particle" *ngFor="let p of [].constructor(30); let i = index" [style.--delay]="i * 0.3 + 's'"></div>
+    <div class="particle" *ngFor="let p of particles; let i = index" [style.--delay]="i * 0.3 + 's'"></div>
   </div>
 
   <div class="layout" [class.logged-in]="isLoggedIn() && !showAuthPanel">

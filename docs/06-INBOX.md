@@ -98,7 +98,7 @@ activeSection = signal<'notifications' | 'role-requests' | 'user-verification'>(
 3. Abre el modal de revisión (RoleRequestReviewModal) para ver el detalle
 4. Aprueba o rechaza con comentarios opcionales
 5. RoleRequestService.reviewRequest(id, { action, comments })
-   → PATCH /api/role-requests/:id/review
+   → PUT /api/role-requests/:id/review
 6. El backend actualiza el rol del usuario (si fue aprobado)
    y genera una notificación automática
 7. El usuario ve el resultado en su próxima visita al Inbox
@@ -154,11 +154,14 @@ Administrador selecciona un usuario → UserVerificationReviewModal
         ↓
 Aprueba o rechaza con comentarios
         ↓
-UserVerificationService.reviewVerification(userId, { action, comments })
-→ PATCH /api/users/:id/verify
+UserVerificationService.approveVerification(email) / .rejectVerification(email, { comments })
+→ POST /api/user-verification/admin/approve/:email
+→ POST /api/user-verification/admin/reject/:email
         ↓
 Backend actualiza isVerified y emite notificación al usuario
 ```
+
+> **Nota:** el módulo de verificación de usuario vive bajo `/api/user-verification` (identificado por `email`, no por `:id`), no bajo `/api/users`. Ver también [tgs-backend/docs/08-USER-VERIFICATION-AND-BRIBES.md](../../tgs-backend/docs/08-USER-VERIFICATION-AND-BRIBES.md) para el detalle completo de endpoints (incluye además `POST /request`, `POST /resend`, `GET /status/:email`, `GET /admin/all` y `DELETE /admin/cancel/:email`).
 
 ---
 
@@ -195,6 +198,16 @@ interface Notification {
 ```
 
 La cantidad de notificaciones no leídas se muestra en un badge en la navbar. El `NotificationService` expone endpoints para listar notificaciones y marcarlas como leídas.
+
+### Polling y Toast en NavbarComponent
+
+`NavbarComponent` (`components/navbar/navbar.ts`) hace polling manual cada 30 segundos (`startNotificationPolling()`, sin WebSocket/SSE) para refrescar el contador de no leídas — se pausa automáticamente cuando la pestaña no está visible (`document.visibilityState`) y se limpia en `ngOnDestroy`. Cuando detecta una notificación nueva, delega la alerta transitoria al `ToastService` (`shared/services/toast.service.ts`, ver [05-SERVICES-AND-MODELS.md](05-SERVICES-AND-MODELS.md)) en vez de manejar su propio signal/timeout como antes — esto resolvió un bug real donde una segunda notificación llegando dentro de la ventana de 5s de la primera podía ocultarla antes de tiempo. El toast se renderiza vía `<app-toast-container>` (montado una sola vez en `app.html`) con `role="status"`/`aria-live="polite"` (o `"alert"`/`"assertive"` para tipos de error) para accesibilidad.
+
+Existe infraestructura pub/sub en `tgs-backend/src/shared/services/redis.service.ts` (`.publish()`/`.subscribe()`) que hoy no tiene ningún caller — reemplazar el polling por esa vía es una mejora futura posible, no algo implementado actualmente.
+
+### Agrupado por Fecha en el Inbox
+
+`NotificationsInboxComponent` (`features/inbox/components/notifications/notifications-inbox.ts`) agrupa el listado en 4 buckets por fecha relativa — Hoy / Ayer / Esta semana / Más antiguas (`groupByDate()`, claves de traducción bajo `notifications.groups.*`) — calculados por diferencia de día calendario (no de horas) contra la fecha actual, en vez de mostrar una lista plana.
 
 ---
 

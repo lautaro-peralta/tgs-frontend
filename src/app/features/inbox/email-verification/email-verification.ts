@@ -178,7 +178,7 @@ import { logger } from '../../../core/logger';
       font-size: 1.5rem;
       font-weight: 800;
       color: var(--text-strong);
-      font-family: 'Google Sans Code', sans-serif;
+      font-family: var(--font-heading);
       letter-spacing: 0.2px;
     }
 
@@ -237,7 +237,7 @@ import { logger } from '../../../core/logger';
     /* ===== BUTTON ===== */
     .btn {
       display: inline-flex;
-      font-family: 'Google Sans Code';
+      font-family: var(--font-body);
       align-items: center;
       justify-content: center;
       gap: 8px;

@@ -67,9 +67,8 @@
   </div>
 
   <!-- Estado de carga -->
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner"></div>
-    <p>{{ 'notifications.loading' | translate : {} : 'Cargando notificaciones...' }}</p>
+  <div *ngIf="loading" class="cards-container skeleton-loading" aria-hidden="true">
+    <div class="skeleton-card" *ngFor="let card of [1,2,3,4]" style="--skeleton-h: 96px"></div>
   </div>
 
   <!-- Estado de error -->
@@ -102,14 +101,17 @@
       </p>
     </div>
 
-    <!-- Tarjetas de notificaciones -->
-    <div class="cards-container">
-      <app-notification-card
-        *ngFor="let notification of filteredNotifications; trackBy: trackByNotificationId"
-        [notification]="notification"
-        (markAsRead)="onMarkAsRead(notification)"
-        (delete)="onDeleteNotification(notification)">
-      </app-notification-card>
+    <!-- Tarjetas de notificaciones, agrupadas por fecha relativa -->
+    <div class="notifications-groups" *ngFor="let group of groupedNotifications">
+      <h3 class="group-heading">{{ group.labelKey | translate }}</h3>
+      <div class="cards-container">
+        <app-notification-card
+          *ngFor="let notification of group.notifications; trackBy: trackByNotificationId"
+          [notification]="notification"
+          (markAsRead)="onMarkAsRead(notification)"
+          (delete)="onDeleteNotification(notification)">
+        </app-notification-card>
+      </div>
     </div>
   </div>
 </div>

@@ -303,7 +303,7 @@
     "closingSession": "Cerrando sesión…",
     "login": {
       "title": "Iniciar sesión",
-      "submit": "Entrar",
+      "submit": "Iniciar sesión",
       "forgot_password": "¿Olvidaste tu contraseña?"
     },
     "register": {
@@ -1579,6 +1579,12 @@
     "actions": {
       "markAllRead": "Marcar todas como leídas"
     },
+    "groups": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "thisWeek": "Esta semana",
+      "older": "Más antiguas"
+    },
     "empty": {
       "title": "No hay notificaciones",
       "descAll": "Cuando recibas notificaciones, aparecerán aquí",
@@ -2130,25 +2136,31 @@
     "lastUpdatedDate": "Noviembre 2025",
     "questions": "¿Tenés dudas sobre estos términos?",
     "contactUs": "Contactanos",
+    "cookieBanner": {
+      "message": "En Shelby Company Limited no hacen falta acuerdos clandestinos para saber que necesitas: no vendemos sobornos a redes de publicidad ni le rendimos cuentas a rastreadores de terceros. Este sitio guarda en tu propio navegador solo lo estrictamente necesario para que el negocio funcione -- tu sesion, tu idioma, tu carrito -- nada mas, y nada de eso sale de aca. By order of the Peaky Blinders: acepta, rechaza, o lee el trato completo en nuestros Terminos y Condiciones.",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "moreInfo": "Más información"
+    },
     "terms": {
       "title": "Términos y Condiciones",
       "sections": {
         "acceptance": {
           "title": "1. Aceptación de los Términos",
           "content": [
-            "Al acceder y utilizar GarrSYS, usted acepta estar sujeto a estos Términos y Condiciones. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar nuestro sistema.",
+            "Al acceder y utilizar GarrSYS, aceptás estar sujeto a estos Términos y Condiciones. Si no estás de acuerdo con alguna parte de estos términos, no debés utilizar nuestro sistema.",
             "GarrSYS es una plataforma de gestión empresarial diseñada para facilitar la administración de productos, ventas, socios comerciales y operaciones relacionadas."
           ]
         },
         "usage": {
           "title": "2. Uso del Sistema",
           "content": [
-            "El sistema GarrSYS está destinado exclusivamente para uso interno de la organización y sus miembros autorizados. Usted se compromete a:"
+            "El sistema GarrSYS está destinado exclusivamente para uso interno de la organización y sus miembros autorizados. Te comprometés a:"
           ],
           "list": [
             "Utilizar el sistema de manera responsable y conforme a la ley",
-            "Mantener la confidencialidad de sus credenciales de acceso",
-            "No intentar acceder a áreas del sistema para las que no tiene autorización",
+            "Mantener la confidencialidad de tus credenciales de acceso",
+            "No intentar acceder a áreas del sistema para las que no tenés autorización",
             "No compartir información sensible fuera de la plataforma",
             "Reportar cualquier actividad sospechosa o vulnerabilidad de seguridad"
           ]
@@ -2169,7 +2181,7 @@
         "responsibilities": {
           "title": "4. Responsabilidades del Usuario",
           "content": [
-            "Como usuario de GarrSYS, usted es responsable de todas las actividades realizadas bajo su cuenta. Debe notificar inmediatamente cualquier uso no autorizado de su cuenta.",
+            "Como usuario de GarrSYS, sos responsable de todas las actividades realizadas bajo tu cuenta. Debés notificar inmediatamente cualquier uso no autorizado de tu cuenta.",
             "La información ingresada al sistema debe ser precisa y actualizada. Los datos incorrectos pueden afectar la operación del negocio."
           ]
         },
@@ -2213,7 +2225,7 @@
           ]
         },
         "usage": {
-          "title": "2. Cómo Utilizamos su Información",
+          "title": "2. Cómo Utilizamos tu Información",
           "content": [
             "La información recopilada se utiliza exclusivamente para los siguientes propósitos:"
           ],
@@ -2229,7 +2241,7 @@
         "protection": {
           "title": "3. Protección de Datos",
           "content": [
-            "Implementamos medidas de seguridad técnicas y organizativas para proteger su información:"
+            "Implementamos medidas de seguridad técnicas y organizativas para proteger tu información:"
           ],
           "list": [
             "Encriptación de contraseñas mediante Argon2",
@@ -2242,7 +2254,7 @@
         "sharing": {
           "title": "4. Compartir Información",
           "content": [
-            "No vendemos, alquilamos ni compartimos su información personal con terceros, excepto en los siguientes casos:"
+            "No vendemos, alquilamos ni compartimos tu información personal con terceros, excepto en los siguientes casos:"
           ],
           "list": [
             "Cuando sea necesario para cumplir con obligaciones legales",
@@ -2254,33 +2266,33 @@
         "retention": {
           "title": "5. Retención de Datos",
           "content": [
-            "Conservamos su información personal durante el tiempo necesario para cumplir con los propósitos descritos en esta política, incluyendo requisitos legales, contables o de auditoría.",
+            "Conservamos tu información personal durante el tiempo necesario para cumplir con los propósitos descritos en esta política, incluyendo requisitos legales, contables o de auditoría.",
             "Los datos de transacciones comerciales se mantienen de acuerdo con las regulaciones fiscales y contables aplicables."
           ]
         },
         "rights": {
-          "title": "6. Sus Derechos",
+          "title": "6. Tus Derechos",
           "content": [
-            "Como usuario de GarrSYS, usted tiene los siguientes derechos sobre sus datos personales:"
+            "Como usuario de GarrSYS, tenés los siguientes derechos sobre tus datos personales:"
           ],
           "list": [
-            "Acceder a la información que tenemos sobre usted",
+            "Acceder a la información que tenemos sobre vos",
             "Solicitar la corrección de datos inexactos",
-            "Solicitar la eliminación de su cuenta y datos asociados",
-            "Exportar sus datos en un formato estructurado",
+            "Solicitar la eliminación de tu cuenta y datos asociados",
+            "Exportar tus datos en un formato estructurado",
             "Retirar el consentimiento para el procesamiento de datos"
           ]
         },
         "cookies": {
           "title": "7. Cookies y Tecnologías Similares",
           "content": [
-            "GarrSYS utiliza localStorage y sessionStorage para mantener su sesión activa y mejorar la experiencia de usuario. Para más detalles, consulte nuestra Política de Cookies."
+            "GarrSYS utiliza localStorage y sessionStorage para mantener tu sesión activa y mejorar la experiencia de usuario. Para más detalles, consultá nuestra Política de Cookies."
           ]
         },
         "changes": {
           "title": "8. Cambios a esta Política",
           "content": [
-            "Podemos actualizar esta Política de Privacidad periódicamente. Le notificaremos sobre cambios significativos a través del sistema.",
+            "Podemos actualizar esta Política de Privacidad periódicamente. Te notificaremos sobre cambios significativos a través del sistema.",
             "La fecha de última actualización se muestra en la parte superior de este documento."
           ]
         }
@@ -2292,7 +2304,7 @@
         "what": {
           "title": "1. ¿Qué son las Cookies y Tecnologías de Almacenamiento?",
           "content": [
-            "Las cookies son pequeños archivos de texto que se almacenan en su navegador cuando visita un sitio web. GarrSYS utiliza tecnologías de almacenamiento web modernas para mejorar su experiencia.",
+            "Las cookies son pequeños archivos de texto que se almacenan en tu navegador cuando visitás un sitio web. GarrSYS utiliza tecnologías de almacenamiento web modernas para mejorar tu experiencia.",
             "Utilizamos principalmente localStorage y sessionStorage en lugar de cookies tradicionales para gestionar la sesión y preferencias del usuario."
           ]
         },
@@ -2303,7 +2315,7 @@
           ],
           "list": [
             "localStorage: Para almacenar tokens de autenticación y preferencias persistentes",
-            "sessionStorage: Para datos temporales durante su sesión",
+            "sessionStorage: Para datos temporales durante tu sesión",
             "IndexedDB: Para almacenamiento local de datos de la aplicación (si aplica)"
           ]
         },
@@ -2313,8 +2325,8 @@
             "Utilizamos estas tecnologías para los siguientes propósitos esenciales:"
           ],
           "list": [
-            "Mantener su sesión activa mientras navega por el sistema",
-            "Recordar sus preferencias de idioma (español/inglés)",
+            "Mantener tu sesión activa mientras navegás por el sistema",
+            "Recordar tus preferencias de idioma (español/inglés)",
             "Almacenar tokens JWT para autenticación segura",
             "Guardar configuraciones de interfaz de usuario",
             "Mejorar el rendimiento mediante caché de datos"
@@ -2324,18 +2336,18 @@
           "title": "4. Tipos de Almacenamiento que Usamos",
           "list": [
             "Estrictamente Necesario: Tokens de autenticación (accessToken, refreshToken) - Estos son esenciales para el funcionamiento del sistema",
-            "Funcional: Preferencias de idioma y configuración de usuario - Mejoran su experiencia en el sistema",
+            "Funcional: Preferencias de idioma y configuración de usuario - Mejoran tu experiencia en el sistema",
             "De Rendimiento: Caché de datos para reducir llamadas al servidor - Optimizan la velocidad del sistema"
           ]
         },
         "management": {
           "title": "5. Gestión de Datos Almacenados",
           "content": [
-            "Usted tiene control total sobre los datos almacenados en su navegador:"
+            "Tenés control total sobre los datos almacenados en tu navegador:"
           ],
           "list": [
-            "Puede cerrar sesión en cualquier momento para eliminar tokens de autenticación",
-            "Puede limpiar el localStorage manualmente desde las herramientas de desarrollo del navegador",
+            "Podés cerrar sesión en cualquier momento para eliminar tokens de autenticación",
+            "Podés limpiar el localStorage manualmente desde las herramientas de desarrollo del navegador",
             "Los tokens de sesión expiran automáticamente después de un período de inactividad",
             "Al cerrar el navegador, los datos en sessionStorage se eliminan automáticamente"
           ]
@@ -2356,17 +2368,17 @@
           "title": "7. Cookies de Terceros",
           "content": [
             "GarrSYS no utiliza cookies de terceros para publicidad o seguimiento. Sin embargo, si integramos servicios externos en el futuro (como análisis o mapas), estos podrían establecer sus propias cookies.",
-            "Le notificaremos cualquier cambio en el uso de cookies de terceros."
+            "Te notificaremos cualquier cambio en el uso de cookies de terceros."
           ]
         },
         "disable": {
           "title": "8. Cómo Deshabilitar el Almacenamiento",
           "content": [
-            "Si desea deshabilitar el almacenamiento local, puede hacerlo desde la configuración de su navegador. Sin embargo, tenga en cuenta que esto afectará significativamente la funcionalidad del sistema:"
+            "Si querés deshabilitar el almacenamiento local, podés hacerlo desde la configuración de tu navegador. Sin embargo, tené en cuenta que esto afectará significativamente la funcionalidad del sistema:"
           ],
           "list": [
-            "No podrá iniciar sesión ni mantener su sesión activa",
-            "Sus preferencias de idioma no se guardarán",
+            "No vas a poder iniciar sesión ni mantener tu sesión activa",
+            "Tus preferencias de idioma no se guardarán",
             "La experiencia de usuario será degradada"
           ]
         },

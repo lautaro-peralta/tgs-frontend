@@ -141,12 +141,11 @@ Los siguientes servicios implementan operaciones CRUD estándar sobre sus respec
 
 ---
 
-### StatsService
+### SalesStats (interfaz, no servicio)
 
-**Archivo**: `src/app/services/stats/stats.ts`  
-**Base URL**: `/api/stats`
+**Archivo**: `src/app/services/stats/stats.ts`
 
-Provee los datos para los gráficos del panel de administración. Actualmente opera con `USE_MOCK_DATA = true`, retornando datos de muestra en lugar de consultar la API real.
+`stats.ts` ya no expone un `StatsService`: una auditoría de calidad confirmó que sus métodos (`getSalesChartData`, `getTopProductsChartData`, `getDistributorsChartData`) no tenían ningún llamador real en la app y se eliminaron como código muerto. Lo único que sobrevive en el archivo es la interfaz `SalesStats`, consumida directamente por `SaleComponent` para tipar su propio cálculo local de estadísticas (no hay una llamada a `/api/stats`):
 
 ```typescript
 interface SalesStats {
@@ -172,6 +171,7 @@ interface SalesStats {
 | `I18nService`                  | `services/i18n/i18n.ts`                             | Wrapper de `TranslateService` con persistencia en `localStorage`               |
 | `AuthTransitionService`        | `services/ui/auth-transition.ts`                    | Coordinación de estados de transición en login/logout mediante Angular Signals |
 | `EmailVerificationSyncService` | `services/email-verification-sync.service.ts`       | Sincronización del estado de verificación entre pestañas del navegador         |
+| `ToastService`                 | `shared/services/toast.service.ts`                  | Cola de toasts transitorios (`show()`), con timer propio por toast. Se renderiza globalmente vía `<app-toast-container>` (montado en `app.html`), con `role="status"`/`role="alert"` y `aria-live` para accesibilidad. `NavbarComponent` lo consume para las notificaciones de "nueva notificación" en vez de manejar su propio signal/timeout como antes. |
 
 ---
 

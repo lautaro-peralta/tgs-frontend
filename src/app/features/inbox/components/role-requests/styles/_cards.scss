@@ -428,7 +428,7 @@
   font-size: 1.125rem;
   font-weight: 700;
   color: $text-strong;
-  font-family: 'Google Sans Code', monospace;
+  font-family: var(--font-mono);
 }
 
 .role-title-small {
@@ -501,7 +501,7 @@
     font-size: 1.125rem;
     font-weight: 700;
     color: $text-strong;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
     letter-spacing: 0.3px;
   }
 }

@@ -43,7 +43,7 @@ $spacing-xl: 32px;
     font-size: 2rem;
     font-weight: 700;
     color: $text-strong;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   .user-info {
@@ -151,7 +151,7 @@ $spacing-xl: 32px;
     color: $text-muted;
     cursor: pointer;
     transition: all 0.2s ease;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
     position: relative;
     white-space: nowrap;
 
@@ -243,7 +243,7 @@ $spacing-xl: 32px;
       font-size: 1.5rem;
       font-weight: 700;
       color: $text-strong;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-mono);
     }
 
     .section-description {
@@ -327,7 +327,7 @@ $spacing-xl: 32px;
     margin: 0 0 $spacing-md;
     color: $text-strong;
     font-size: 1.5rem;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   p {
@@ -364,7 +364,7 @@ $spacing-xl: 32px;
     font-size: 1.75rem;
     font-weight: 700;
     color: $text-strong;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   p {
@@ -388,7 +388,7 @@ $spacing-xl: 32px;
     text-decoration: none;
     border-radius: 10px;
     font-weight: 600;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
     transition: all 0.2s;
 
     &:hover {
@@ -724,7 +724,7 @@ $spacing-xl: 32px;
     font-size: 1.75rem;
     font-weight: 800;
     color: #fca5a5;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   p {
@@ -747,7 +747,7 @@ $spacing-xl: 32px;
     color: $primary-color;
     border-radius: 10px;
     font-weight: 700;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
     transition: all 0.2s;
     cursor: pointer;
     text-decoration: none;
@@ -777,7 +777,7 @@ $spacing-xl: 32px;
     font-size: 1.5rem;
     font-weight: 700;
     color: $text-strong;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   .section-description {

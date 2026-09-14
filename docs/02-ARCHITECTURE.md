@@ -95,9 +95,7 @@ src/
 │   │   └── ui/                    # AuthTransitionService (animaciones GSAP)
 │   │
 │   ├── shared/                    # Componentes y utilidades reutilizables
-│   │   ├── footer/                # Footer global
-│   │   └── ui/
-│   │       └── glass-panel/       # GlassPanelComponent (efecto glassmorphism)
+│   │   └── footer/                # Footer global
 │   │
 │   └── styles/
 │       └── _responsive.scss       # Breakpoints y mixins de responsive design
@@ -161,8 +159,11 @@ export const appConfig: ApplicationConfig = {
     // HttpClient con interceptor funcional de autenticación
     provideHttpClient(withInterceptors([authInterceptor])),
 
-    // ECharts registrado con solo los módulos necesarios (tree-shaking)
-    provideEchartsCore({ echarts }),
+    // ECharts cargado de forma diferida (lazy): el factory async solo se
+    // ejecuta cuando se monta el primer <div echarts>, en vez de viajar en
+    // el bundle inicial aunque los gráficos solo aparecen en 3 rutas lazy
+    // (autoridad, revisiones mensuales y ventas)
+    provideEchartsCore({ echarts: loadEcharts }),
 
     // ngx-translate con español como idioma por defecto
     importProvidersFrom(
@@ -175,7 +176,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-El registro selectivo de módulos de ECharts (`LineChart`, `BarChart`, `PieChart`, etc.) evita incluir la librería completa en el bundle, reduciendo significativamente el tamaño del artefacto final.
+El registro selectivo de módulos de ECharts (`LineChart`, `BarChart`, `PieChart`, etc.) evita incluir la librería completa en el bundle, reduciendo significativamente el tamaño del artefacto final. La función `loadEcharts()` (definida junto a `appConfig` en `app.config.ts`) hace los `import()` dinámicos de `echarts/core`, `echarts/charts`, `echarts/components` y `echarts/renderers` recién cuando `ngx-echarts` los pide, en vez de cargarlos eager al arrancar la app.
 
 ---
 

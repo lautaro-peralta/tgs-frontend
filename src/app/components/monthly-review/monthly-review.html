@@ -66,6 +66,21 @@
         <!-- GRÁFICOS -->
         <section>
           <!-- 📊 NUEVO: Gráfico de Impacto de Decisiones (DESTACADO) -->
+          <!-- Skeleton mientras decisionsImpactChartOptions() todavía es null -->
+          <div class="chart-card chart-card--highlight-blue" *ngIf="!decisionsImpactChartOptions()" aria-hidden="true">
+            <div class="row-between row-between--top">
+              <div>
+                <h4 class="chart-card__title">
+                  📊 {{ 'monthlyReview.charts.decisionsImpact' | translate : {} : 'Impacto de Decisiones en Ventas' }}
+                </h4>
+                <p class="hint-muted">
+                  {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
+                </p>
+              </div>
+            </div>
+            <div class="skeleton-chart" style="--skeleton-h: 420px"></div>
+          </div>
+
           <div class="chart-card chart-card--highlight-blue" *ngIf="showDecisionsChart() && decisionsImpactChartOptions()">
             <!-- Botón expandir -->
             <button class="chart-expand chart-expand--blue" type="button" (click)="expandChart('decisions')"
@@ -98,6 +113,21 @@
           </div>
 
           <!-- 🔮 NUEVO: Gráfico de Predicción de Ventas (DESTACADO) -->
+          <!-- Skeleton mientras salesPredictionChartOptions() todavía es null -->
+          <div class="chart-card chart-card--highlight-sky" *ngIf="showDecisionsChart() && !salesPredictionChartOptions()" aria-hidden="true">
+            <div class="row-between row-between--top">
+              <div>
+                <h4 class="chart-card__title">
+                  🔮 {{ 'monthlyReview.charts.salesPrediction' | translate : {} : 'Predicción de Ventas Futuras' }}
+                </h4>
+                <p class="hint-muted">
+                  {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
+                </p>
+              </div>
+            </div>
+            <div class="skeleton-chart" style="--skeleton-h: 420px"></div>
+          </div>
+
           <div class="chart-card chart-card--highlight-sky" *ngIf="showDecisionsChart() && salesPredictionChartOptions()">
             <!-- Botón expandir -->
             <button class="chart-expand chart-expand--sky" type="button" (click)="expandChart('prediction')"
@@ -220,10 +250,6 @@
         <div class="error" *ngIf="error() as err">
           <strong>{{ 'common.error' | translate : {} : 'Error' }}</strong>: {{ err }}
         </div>
-        <div class="muted" *ngIf="loading()">
-          {{ 'monthlyReview.loading' | translate : {} : 'Cargando...' }}
-        </div>
-
         <!-- LISTADO DE REVISIONES -->
         <section>
           <h3 class="section-heading"
@@ -231,8 +257,20 @@
             📋 {{ 'monthlyReview.list' | translate : {} : 'Listado de Revisiones' }}
           </h3>
 
-          <div class="table-wrap" *ngIf="filtered().length; else emptyState">
-            <table class="table">
+          <div class="table-wrap">
+            <div class="skeleton-list" *ngIf="loading()">
+              <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
+                <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+                <div class="skeleton-cell"></div>
+                <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
+                <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
+                <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+              </div>
+            </div>
+
+            <table class="table" *ngIf="!loading() && filtered().length; else emptyState">
               <thead>
                 <tr>
                   <th class="u-w-50">{{ 'monthlyReview.table.id' | translate : {} : 'ID' }}</th>
@@ -271,7 +309,7 @@
 
           <!-- Empty state -->
           <ng-template #emptyState>
-            <div class="empty-state">
+            <div class="empty-state" *ngIf="!loading()">
               <h3>{{ (fMonthApplied() || fStatusApplied()) ? 'Sin resultados' : 'No hay revisiones' }}</h3>
               <p class="muted">
                 {{ (fMonthApplied() || fStatusApplied())

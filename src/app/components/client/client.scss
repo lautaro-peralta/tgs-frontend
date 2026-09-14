@@ -11,7 +11,7 @@
   display: block;
   padding: 1rem;
   padding-bottom: clamp(3rem, 6vw, 5rem);
-  font-family: 'Google Sans Code', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 /* ===== SPACING UTILITIES ===== */

@@ -40,7 +40,15 @@ La escala tipográfica usa `clamp()` para adaptarse fluidamente al viewport sin 
 | `--h2` | `clamp(22px, 2.4vw, 28px)` | Subtítulos de sección |
 | `--h3` | `clamp(18px, 2vw, 22px)` | Encabezados de componente |
 
-La familia tipográfica base es `'Google Sans Code'` con fallback a la pila del sistema (`system-ui, -apple-system, Segoe UI, Roboto, Arial`).
+El sistema define 3 roles tipográficos, cada uno con su propio token de fuente en `:root` (`src/styles.scss`), cargados vía Google Fonts CSS2 desde `src/index.html`:
+
+| Token | Fuente | Pesos | Uso |
+|-------|--------|-------|-----|
+| `--font-heading` | `'Sora'` (fallback `system-ui, -apple-system, sans-serif`) | 600, 700, 800 | `h1`, `h2`, `h3`, `.display` — geométrica con carácter propio, reemplazó a `'Cormorant Garamond'` (serif vintage) para alinear la marca con una dirección moderna/geométrica |
+| `--font-body` | `'Inter'` (mismo fallback) | 400, 500, 600, 700 | Texto de cuerpo y UI general — reemplazó a `'Google Sans Code'` como fuente de marca |
+| `--font-mono` | `'JetBrains Mono'` (fallback `monospace`) | 400, 500, 700 | IDs, badges de estado, códigos de verificación (`.mono-hint`, `.u-mono`) — rol intencionalmente monoespaciado, no hereda `--font-body` |
+
+`'Google Sans Code'` sigue instalada solo como parte del catálogo histórico del proyecto; ya no se referencia desde ningún selector activo de `src/`.
 
 ### Espaciado
 
@@ -62,58 +70,6 @@ Sistema de escala de 8pt con un slot adicional en 4px para micro-espacios:
 ```
 
 La altura de la navbar se expone como token para que cualquier componente pueda calcular offsets de contenido de forma coherente (ej. `padding-top: var(--nav-h)`).
-
----
-
-## Componente GlassPanel
-
-**Archivo**: `src/app/shared/ui/glass-panel/glass-panel.component.ts`  
-**Selector**: `<app-glass-panel>`
-
-`GlassPanelComponent` encapsula el efecto glassmorphism en un componente standalone reutilizable. Combina `backdrop-filter: blur()` con un fondo semi-transparente para crear superficies translúcidas sobre el fondo oscuro de la aplicación.
-
-### Inputs
-
-| Input | Tipo | Default | Descripción |
-|-------|------|---------|-------------|
-| `blurPx` | `number` | `12` | Intensidad del desenfoque de fondo en píxeles |
-| `alpha` | `number` | `0.12` | Opacidad del fondo (0 = completamente transparente) |
-| `padding` | `string` | `'1rem'` | Padding interno del panel |
-| `radius` | `string` | `'16px'` | Radio de borde del panel |
-
-### Estilos del Componente
-
-Los estilos están definidos inline en el decorador `@Component` usando SCSS. Al ser un componente standalone con encapsulación de vista, Angular los scopes automáticamente para que no afecten al resto del DOM.
-
-```scss
-.glass {
-  border-radius:    var(--glass-radius, 16px);
-  border:           1px solid rgba(255, 255, 255, 0.18);
-  background:       rgba(255, 255, 255, var(--glass-alpha, 0.12));
-  box-shadow:       0 8px 32px rgba(2, 8, 20, 0.18);
-  backdrop-filter:  blur(var(--glass-blur, 12px)) saturate(1.2);
-  -webkit-backdrop-filter: blur(var(--glass-blur, 12px)) saturate(1.2);
-}
-```
-
-El componente incluye un fallback para navegadores sin soporte a `backdrop-filter` (ej. versiones antiguas de Firefox), usando la directiva `@supports` de SCSS/CSS:
-
-```scss
-@supports not (backdrop-filter: blur(4px)) {
-  .glass {
-    background: rgba(245, 245, 245, 0.90);
-    color: #0b1220;
-  }
-}
-```
-
-### Uso
-
-```html
-<app-glass-panel [blurPx]="16" [alpha]="0.15" padding="2rem" radius="20px">
-  <!-- Contenido del panel -->
-</app-glass-panel>
-```
 
 ---
 

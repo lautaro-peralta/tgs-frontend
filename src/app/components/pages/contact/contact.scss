@@ -47,7 +47,7 @@
 .hero__head h1 {
   margin: 0 0 .35rem;
   color: var(--text-strong);
-  font: 900 clamp(1.6rem, 3vw, 2.1rem)/1.05 'Google Sans Code', system-ui, sans-serif;
+  font: 900 clamp(1.6rem, 3vw, 2.1rem)/1.05 var(--font-heading), system-ui, sans-serif;
   letter-spacing: .2px;
 }
 
@@ -133,7 +133,7 @@
 .card-head h2 {
   margin: 0;
   color: var(--text-strong);
-  font: 900 1.05rem/1.2 'Google Sans Code', system-ui, sans-serif;
+  font: 900 1.05rem/1.2 var(--font-heading), system-ui, sans-serif;
   letter-spacing: .2px;
 }
 
@@ -262,7 +262,7 @@
 .sub-head h3 {
   margin: 0;
   color: var(--text-strong);
-  font: 900 1.05rem/1.2 'Google Sans Code', system-ui, sans-serif;
+  font: 900 1.05rem/1.2 var(--font-heading), system-ui, sans-serif;
   letter-spacing: .2px;
 }
 

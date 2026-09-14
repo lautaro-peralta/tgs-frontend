@@ -29,7 +29,7 @@ Accesibles sin autenticación. No tienen guards asociados.
 | `/forgot-password` | `ForgotPasswordComponent` | Recuperar Contraseña |
 | `/reset-password/:token` | `ResetPasswordComponent` | Restablecer Contraseña |
 
-> `/login` y `/register` redirigen a `/` mediante `redirectTo`. El formulario de autenticación está integrado directamente en la landing page.
+> `/login` y `/register` NO redirigen mediante `redirectTo` — montan `HomeComponent` directamente vía `loadComponent()` con `data: { authMode: 'login' | 'register' }`, ya que el panel de autenticación vive integrado en la landing page. Este mecanismo reemplazó un `redirectTo: ''` anterior: con redirect, la URL rebotaba a `/` y tanto `routerLinkActive` como los enlaces del menú móvil dejaban de distinguir el modo (login vs. registro).
 
 ---
 
@@ -184,20 +184,3 @@ El wildcard de fallback siempre va al final:
 ```
 
 ---
-
-## Flag de Bypass para Desarrollo
-
-Los guards incorporan una comprobación especial para facilitar el desarrollo de vistas protegidas sin necesidad de tener el backend activo:
-
-```typescript
-const bypass = localStorage.getItem('authBypass') === 'true';
-return auth.isAuthenticated() || bypass;
-```
-
-Activar desde la consola del navegador:
-
-```javascript
-localStorage.setItem('authBypass', 'true')
-```
-
-Este flag no tiene ningún efecto en producción si no es activado deliberadamente. No representa un vector de seguridad real ya que opera únicamente en el cliente.

@@ -1,0 +1,110 @@
+// ============================================================================
+// SKELETON LOADERS — placeholders de carga (shimmer izquierda→derecha)
+//
+// Usa los tokens de color de la marca (--bg-panel, --border) para que el
+// shimmer se vea coherente con la paleta carbon/latón en vez de un gris
+// genérico. Respeta prefers-reduced-motion (desactiva la animación).
+//
+// Clases disponibles:
+//   .skeleton-line     Bloque de texto. Ancho/alto vía --skeleton-w / --skeleton-h
+//                       (ej.: <div class="skeleton-line" style="--skeleton-w: 60%"></div>).
+//                       Por defecto: alto 1em, ancho 100%.
+//   .skeleton-avatar    Círculo. Tamaño vía --skeleton-size (default 40px).
+//   .skeleton-card      Rectángulo con proporciones de card (radius de marca,
+//                        alto vía --skeleton-h, default 160px; ancho 100%).
+//   .skeleton-chart     Rectángulo grande para placeholder de gráficos ECharts.
+//                        Alto vía --skeleton-h (default 280px); ancho 100%.
+//   .skeleton-table-row Fila de tabla con N celdas .skeleton-cell (display: flex).
+//                        Cada .skeleton-cell es una .skeleton-line que crece
+//                        parejo (flex: 1); pasarle --skeleton-w a una celda
+//                        puntual para que no crezca (ej. columna de acciones).
+//
+// Todas comparten la animación `skeleton-shimmer`, que corre de IZQUIERDA A
+// DERECHA sobre un gradiente con los tokens --bg-panel / --border.
+// ============================================================================
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@mixin skeleton-shimmer-bg {
+  background: linear-gradient(90deg,
+      var(--bg-panel) 25%,
+      rgba(255, 255, 255, .06) 50%,
+      var(--bg-panel) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  border: 1px solid var(--border);
+}
+
+.skeleton-line {
+  --skeleton-w: 100%;
+  --skeleton-h: 1em;
+  display: block;
+  width: var(--skeleton-w);
+  height: var(--skeleton-h);
+  border-radius: 4px;
+  @include skeleton-shimmer-bg;
+}
+
+.skeleton-avatar {
+  --skeleton-size: 40px;
+  display: inline-block;
+  width: var(--skeleton-size);
+  height: var(--skeleton-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+  @include skeleton-shimmer-bg;
+}
+
+.skeleton-card {
+  --skeleton-h: 160px;
+  width: 100%;
+  height: var(--skeleton-h);
+  border-radius: var(--radius, 14px);
+  @include skeleton-shimmer-bg;
+}
+
+.skeleton-chart {
+  --skeleton-h: 280px;
+  width: 100%;
+  height: var(--skeleton-h);
+  border-radius: var(--radius, 14px);
+  @include skeleton-shimmer-bg;
+}
+
+.skeleton-table-row {
+  display: flex;
+  gap: var(--sp-3, 12px);
+  padding-block: var(--sp-2, 8px);
+  width: 100%;
+}
+
+.skeleton-cell {
+  --skeleton-w: 100%;
+  --skeleton-h: 1em;
+  flex: 1 1 0%;
+  width: var(--skeleton-w);
+  height: var(--skeleton-h);
+  min-width: 0;
+  border-radius: 4px;
+  @include skeleton-shimmer-bg;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .skeleton-line,
+  .skeleton-table-row,
+  .skeleton-cell,
+  .skeleton-card,
+  .skeleton-avatar,
+  .skeleton-chart {
+    animation: none;
+  }
+}

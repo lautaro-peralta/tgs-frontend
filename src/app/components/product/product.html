@@ -21,12 +21,6 @@
     <div class="error" *ngIf="error() as err">
       <strong>{{ 'common.error' | translate: {} : 'Error' }}</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">
-      {{ 'product.loading' | translate : {} : 'Cargando productos...' }}
-    </div>
-
-
-
     <!-- Estadísticas -->
     <div *ngIf="!loading() && products().length > 0" class="filters panel-accent">
       <span class="muted">
@@ -76,80 +70,97 @@
     <section class="subsection">
       <h3 class="sub-title">{{ 'product.list' | translate }}</h3>
 
-      <div class="table-wrap" *ngIf="filteredList().length; else emptyState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="u-w-80">{{ 'product.table.id' | translate }}</th>
-              <th>{{ 'product.fields.description' | translate }}</th>
-              <th>{{ 'product.fields.detail' | translate }}</th>
-              <th class="u-w-120">{{ 'product.fields.imageUrl' | translate }}</th>
-              <th class="u-w-140">{{ 'product.fields.price' | translate }}</th>
-              <th class="u-w-120">{{ 'product.fields.stock' | translate }}</th>
-              <th class="u-w-120">{{ 'product.fields.illegal' | translate }}</th>
-              <!-- ✅ NUEVA COLUMNA: Distribuidor (visible para admin y socio) -->
-              <th class="u-w-180" *ngIf="isAdmin() || isPartner()">{{ 'product.distributors' | translate }}</th>
-              <th *ngIf="canEdit() || canDelete()" class="right u-w-140">{{ 'product.table.actions' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of filteredList()">
-              <td [attr.data-label]="'product.table.id' | translate">#{{ p.id }}</td>
-              <td [attr.data-label]="'product.fields.description' | translate">{{ p.description }}</td>
-              <td [attr.data-label]="'product.fields.detail' | translate">{{ p.detail || '—' }}</td>
-              <td [attr.data-label]="'product.fields.imageUrl' | translate">
-                <img class="thumb" *ngIf="p.imageUrl" [src]="p.imageUrl!" alt="" />
-                <span *ngIf="!p.imageUrl" class="muted">—</span>
-              </td>
-              <td [attr.data-label]="'product.fields.price' | translate">{{ p.price | currency:'':'symbol':'1.0-2' }}</td>
-              <td [attr.data-label]="'product.fields.stock' | translate">
-                <span class="badge" [class.badge-warn]="p.stock === 0">{{ p.stock }}</span>
-              </td>
-              <td [attr.data-label]="'product.fields.illegal' | translate">
-                <span class="badge" [class.badge-danger]="p.isIllegal" [class.badge-ok]="!p.isIllegal">
-                  {{ p.isIllegal ? ('product.badges.yes' | translate) : ('product.badges.no' | translate) }}
-                </span>
-              </td>
-              <!-- ✅ NUEVA CELDA: Mostrar distribuidores (admins y socios) -->
-              <td *ngIf="isAdmin() || isPartner()" data-label="Distribuidor(es)">
-                <span class="truncate u-maxw-160" [title]="getDistributorNames(p)">
-                  {{ getDistributorNames(p) }}
-                </span>
-              </td>
-              <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'product.table.actions' | translate">
-                <button class="btn ghost btn--icon" type="button" (click)="edit(p)" *ngIf="canEdit()"
-                  [attr.title]="'common.edit' | translate">
-                  ✏️
-                </button>
-
-                <button class="btn danger btn--icon" type="button" (click)="delete(p.id)" [disabled]="loading()" *ngIf="canDelete()"
-                  [attr.title]="'common.delete' | translate">
-                  🗑️
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Skeleton mientras carga -->
+      <div class="table-wrap" *ngIf="loading()">
+        <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 18%" *ngIf="isAdmin() || isPartner()"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 12%" *ngIf="canEdit() || canDelete()"></div>
+        </div>
       </div>
 
-      <!-- Empty state -->
-      <ng-template #emptyState>
-        <div class="empty">
-          <h3>
-            {{ (fTextApplied() || fStockApplied() !== 'all')
-            ? ('product.noResults.title' | translate)
-            : ('product.empty.title' | translate) }}
-          </h3>
-          <p>
-            {{ (fTextApplied() || fStockApplied() !== 'all')
-            ? ('product.noResults.desc' | translate)
-            : ('product.empty.desc' | translate) }}
-          </p>
-          <!-- ✅ NUEVO: Mensaje especial para distribuidores sin productos -->
-          <p class="u-mt-md" *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0">
-            💡 <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
+      <ng-container *ngIf="!loading()">
+        <div class="table-wrap" *ngIf="filteredList().length; else emptyState">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="u-w-80">{{ 'product.table.id' | translate }}</th>
+                <th>{{ 'product.fields.description' | translate }}</th>
+                <th>{{ 'product.fields.detail' | translate }}</th>
+                <th class="u-w-120">{{ 'product.fields.imageUrl' | translate }}</th>
+                <th class="u-w-140">{{ 'product.fields.price' | translate }}</th>
+                <th class="u-w-120">{{ 'product.fields.stock' | translate }}</th>
+                <th class="u-w-120">{{ 'product.fields.illegal' | translate }}</th>
+                <!-- ✅ NUEVA COLUMNA: Distribuidor (visible para admin y socio) -->
+                <th class="u-w-180" *ngIf="isAdmin() || isPartner()">{{ 'product.distributors' | translate }}</th>
+                <th *ngIf="canEdit() || canDelete()" class="right u-w-140">{{ 'product.table.actions' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of filteredList()">
+                <td [attr.data-label]="'product.table.id' | translate">#{{ p.id }}</td>
+                <td [attr.data-label]="'product.fields.description' | translate">{{ p.description }}</td>
+                <td [attr.data-label]="'product.fields.detail' | translate">{{ p.detail || '—' }}</td>
+                <td [attr.data-label]="'product.fields.imageUrl' | translate">
+                  <img class="thumb" *ngIf="p.imageUrl" [src]="p.imageUrl!" alt="" />
+                  <span *ngIf="!p.imageUrl" class="muted">—</span>
+                </td>
+                <td [attr.data-label]="'product.fields.price' | translate">{{ p.price | currency:'':'symbol':'1.0-2' }}</td>
+                <td [attr.data-label]="'product.fields.stock' | translate">
+                  <span class="badge" [class.badge-warn]="p.stock === 0">{{ p.stock }}</span>
+                </td>
+                <td [attr.data-label]="'product.fields.illegal' | translate">
+                  <span class="badge" [class.badge-danger]="p.isIllegal" [class.badge-ok]="!p.isIllegal">
+                    {{ p.isIllegal ? ('product.badges.yes' | translate) : ('product.badges.no' | translate) }}
+                  </span>
+                </td>
+                <!-- ✅ NUEVA CELDA: Mostrar distribuidores (admins y socios) -->
+                <td *ngIf="isAdmin() || isPartner()" data-label="Distribuidor(es)">
+                  <span class="truncate u-maxw-160" [title]="getDistributorNames(p)">
+                    {{ getDistributorNames(p) }}
+                  </span>
+                </td>
+                <td *ngIf="canEdit() || canDelete()" class="right" [attr.data-label]="'product.table.actions' | translate">
+                  <button class="btn ghost btn--icon" type="button" (click)="edit(p)" *ngIf="canEdit()"
+                    [attr.title]="'common.edit' | translate">
+                    ✏️
+                  </button>
+
+                  <button class="btn danger btn--icon" type="button" (click)="delete(p.id)" [disabled]="loading()" *ngIf="canDelete()"
+                    [attr.title]="'common.delete' | translate">
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </ng-template>
+
+        <!-- Empty state -->
+        <ng-template #emptyState>
+          <div class="empty">
+            <h3>
+              {{ (fTextApplied() || fStockApplied() !== 'all')
+              ? ('product.noResults.title' | translate)
+              : ('product.empty.title' | translate) }}
+            </h3>
+            <p>
+              {{ (fTextApplied() || fStockApplied() !== 'all')
+              ? ('product.noResults.desc' | translate)
+              : ('product.empty.desc' | translate) }}
+            </p>
+            <!-- ✅ NUEVO: Mensaje especial para distribuidores sin productos -->
+            <p class="u-mt-md" *ngIf="isDistributor() && !fTextApplied() && totalProducts() === 0">
+              💡 <strong>{{ 'product.councilLabel' | translate }}</strong>{{ 'product.firstProductHint' | translate }}</p>
+          </div>
+        </ng-template>
+      </ng-container>
     </section>
   </div>
 

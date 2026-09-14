@@ -1,0 +1,106 @@
+// Breakpoints alineados con $breakpoints en src/app/styles/_responsive.scss
+// (sm: 640px, md: 768px). Se usan @media directas -- igual que
+// components/legal/legal-page.scss -- para no arrastrar al bundle de este
+// componente las clases utilitarias globales que trae ese partial.
+
+.cookie-banner {
+  position: fixed;
+  left: var(--sp-4);
+  right: var(--sp-4);
+  bottom: var(--sp-4);
+  z-index: var(--z-toast);
+
+  max-width: 720px;
+  margin-inline: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, 0)), var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--sp-4) var(--sp-5);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.cookie-banner__message {
+  margin: 0;
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.cookie-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-shrink: 0;
+
+  @media (max-width: 639px) {
+    justify-content: stretch;
+
+    .cookie-banner__btn,
+    .cookie-banner__link {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+}
+
+.cookie-banner__link {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cookie-banner__link:hover {
+  text-decoration: underline;
+}
+
+.cookie-banner__btn {
+  // Touch target táctil (paridad con @mixin touch-target de _responsive.scss)
+  min-height: 44px;
+  min-width: 44px;
+  padding: .75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: calc(var(--radius) - 6px);
+  cursor: pointer;
+  transition: filter .2s ease, transform .2s ease;
+  white-space: nowrap;
+}
+
+.cookie-banner__btn:hover {
+  transform: translateY(-1px);
+}
+
+.cookie-banner__btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.cookie-banner__btn--ghost:hover {
+  border-color: var(--accent);
+}
+
+.cookie-banner__btn--accent {
+  background: linear-gradient(180deg, var(--accent), var(--accent-700));
+  color: var(--bg);
+  border: 1px solid var(--accent-700);
+}
+
+.cookie-banner__btn--accent:hover {
+  filter: brightness(1.08);
+}

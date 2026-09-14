@@ -44,7 +44,7 @@ $spacing-xl: 32px;
         font-size: 1.5rem;
         font-weight: 800;
         color: $text-strong;
-        font-family: 'Google Sans Code', ui-monospace, monospace;
+        font-family: var(--font-mono);
         letter-spacing: 0.2px;
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
       }
@@ -222,6 +222,21 @@ $spacing-xl: 32px;
       display: flex;
       flex-direction: column;
       gap: $spacing-md;
+    }
+
+    .notifications-groups {
+      & + .notifications-groups {
+        margin-top: $spacing-lg;
+      }
+    }
+
+    .group-heading {
+      margin: 0 0 $spacing-sm;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: $text-muted;
     }
   }
 }
@@ -624,7 +639,7 @@ $spacing-xl: 32px;
   display: inline-flex;
   align-items: center;
   gap: $spacing-xs;
-  font-family: 'Google Sans Code', 'Montserrat', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 0.2px;
 
   .icon {

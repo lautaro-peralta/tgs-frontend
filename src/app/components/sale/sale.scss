@@ -133,7 +133,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -167,7 +167,7 @@
   font-size: var(--h3);
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -241,7 +241,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* Responsive */
@@ -354,7 +354,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -388,7 +388,7 @@
   font-size: var(--h3);
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -462,7 +462,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* Responsive */
@@ -577,7 +577,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -611,7 +611,7 @@
   font-size: var(--h3);
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -685,7 +685,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* Responsive */
@@ -814,7 +814,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -848,7 +848,7 @@
   font-size: var(--h3);
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -922,7 +922,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* Responsive */
@@ -1057,7 +1057,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -1091,7 +1091,7 @@
   font-size: 14px;
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -1165,7 +1165,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* Responsive */
@@ -1342,7 +1342,7 @@
   /* ✅ Valor más compacto */
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-body);
   line-height: 1;
 }
 
@@ -1380,7 +1380,7 @@
   /* ✅ Título más pequeño */
   font-weight: 700;
   color: var(--text-strong);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -1454,7 +1454,7 @@
   margin-top: var(--sp-3);
   padding-bottom: var(--sp-2);
   border-bottom: 1px solid var(--border);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
 }
 
 /* ✅ MEJORAS PARA LA TABLA DE VENTAS */

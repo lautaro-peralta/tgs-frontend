@@ -8,6 +8,12 @@ import { AuthService } from '../../../../services/auth/auth';
 import { logger } from '../../../../core/logger';
 import { ConfirmService } from '../../../../shared/confirm/confirm.service';
 
+export interface NotificationGroup {
+  key: 'today' | 'yesterday' | 'thisWeek' | 'older';
+  labelKey: string;
+  notifications: Notification[];
+}
+
 @Component({
   selector: 'app-notifications-inbox',
   standalone: true,
@@ -23,6 +29,7 @@ export class NotificationsInboxComponent implements OnInit {
 
   notifications: Notification[] = [];
   filteredNotifications: Notification[] = [];
+  groupedNotifications: NotificationGroup[] = [];
   loading: boolean = true;
   error: string | null = null;
 
@@ -80,6 +87,54 @@ export class NotificationsInboxComponent implements OnInit {
       default:
         this.filteredNotifications = this.notifications;
     }
+
+    this.groupedNotifications = this.groupByDate(this.filteredNotifications);
+  }
+
+  /**
+   * Agrupa notificaciones por fecha relativa (Hoy / Ayer / Esta semana / Más antiguas).
+   * Criterio de corte por día calendario, en línea con el formatDate de notification-card.ts.
+   */
+  private groupByDate(notifications: Notification[]): NotificationGroup[] {
+    const now = new Date();
+    const buckets: Record<NotificationGroup['key'], Notification[]> = {
+      today: [],
+      yesterday: [],
+      thisWeek: [],
+      older: []
+    };
+
+    notifications.forEach(notification => {
+      const date = new Date(notification.createdAt);
+      const dayDiff = this.getCalendarDayDiff(date, now);
+
+      if (dayDiff <= 0) {
+        buckets.today.push(notification);
+      } else if (dayDiff === 1) {
+        buckets.yesterday.push(notification);
+      } else if (dayDiff < 7) {
+        buckets.thisWeek.push(notification);
+      } else {
+        buckets.older.push(notification);
+      }
+    });
+
+    const groups: NotificationGroup[] = [
+      { key: 'today', labelKey: 'notifications.groups.today', notifications: buckets.today },
+      { key: 'yesterday', labelKey: 'notifications.groups.yesterday', notifications: buckets.yesterday },
+      { key: 'thisWeek', labelKey: 'notifications.groups.thisWeek', notifications: buckets.thisWeek },
+      { key: 'older', labelKey: 'notifications.groups.older', notifications: buckets.older }
+    ];
+    return groups.filter(group => group.notifications.length > 0);
+  }
+
+  /**
+   * Diferencia en días calendario (no horas) entre `now` y `date`.
+   */
+  private getCalendarDayDiff(date: Date, now: Date): number {
+    const startOfDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const startOfNow = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.round((startOfNow.getTime() - startOfDate.getTime()) / 86400000);
   }
 
   setFilter(filter: 'all' | 'unread' | 'read'): void {

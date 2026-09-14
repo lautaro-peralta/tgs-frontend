@@ -22,7 +22,7 @@
       font-size: 1.5rem;
       font-weight: 800;
       color: $text-strong;
-      font-family: 'Google Sans Code', ui-monospace, monospace;
+      font-family: var(--font-mono);
       letter-spacing: 0.2px;
       text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
     }
@@ -142,7 +142,7 @@
       color: $text-strong;
       font-weight: 700;
       font-size: 1.25rem;
-      font-family: 'Google Sans Code', ui-monospace, monospace;
+      font-family: var(--font-mono);
     }
 
     p {
@@ -211,7 +211,7 @@
     font-size: 1.5rem;
     font-weight: 800;
     color: #fca5a5;
-    font-family: 'Google Sans Code', monospace;
+    font-family: var(--font-mono);
   }
 
   p {
@@ -294,7 +294,7 @@
       font-size: 1.1rem;
       font-weight: 800;
       color: $text-strong;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-mono);
       letter-spacing: 0.3px;
     }
   }
@@ -710,7 +710,7 @@
       font-weight: 800;
       color: $text-strong;
       margin-bottom: 4px;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-mono);
       letter-spacing: 0.3px;
     }
 

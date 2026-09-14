@@ -6,6 +6,8 @@
 @use 'styles/crud';
 // Clases que reemplazan a los estilos en línea de las plantillas.
 @use 'styles/utilities';
+// Placeholders de carga (shimmer) reusables: .skeleton-line/-card/-avatar/-chart/-table-row.
+@use 'app/styles/skeleton';
 
 /* ========== Reset suave ========== */
 *,
@@ -36,7 +38,7 @@ html {
 
 body {
   margin: 0;
-  font-family: 'Google Sans Code', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
   background: var(--app-bg);
   color: #fefefe;
   /*color: var(--text);*/
@@ -90,6 +92,11 @@ body {
   --border: rgba(255, 245, 225, .12);
   --shadow: 0 18px 40px rgba(0, 0, 0, .45);
   --radius: 14px;
+
+  /* Tipografía de marca: Sora (heading) + Inter (body) + JetBrains Mono (mono). */
+  --font-heading: 'Sora', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   --h1: clamp(28px, 3.2vw, 40px);
   --h2: clamp(22px, 2.4vw, 28px);
@@ -159,7 +166,7 @@ h1,
 h2,
 h3,
 .display {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--font-heading);
   letter-spacing: .5px;
   color: var(--text);
   margin: 0 0 .5em;

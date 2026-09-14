@@ -70,8 +70,18 @@
       </div>
     </div>
 
-    <!-- Loading state -->
-    <div *ngIf="loading()" class="loading">{{ 'clients.loading' | translate }}</div>
+    <!-- Skeleton mientras carga -->
+    <div class="table-wrap" *ngIf="loading()">
+      <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+        <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 22%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 12%" *ngIf="isAdmin()"></div>
+      </div>
+    </div>
 
     <!-- Table -->
     <div class="table-wrap" *ngIf="!loading()">

@@ -31,7 +31,6 @@
     <div class="error" *ngIf="error() as err">
       <strong>{{ 'common.error' | translate }}:</strong> {{ err }}
     </div>
-    <div class="muted" *ngIf="loading()">{{ 'distributors.loading' | translate }}</div>
 
     <section class="filters">
       <label class="label u-grow">
@@ -53,8 +52,20 @@
     <section class="subsection">
       <h3 class="sub-title">{{ 'distributors.list' | translate }}</h3>
 
-      <div class="table-wrap" *ngIf="filtered().length; else empty">
-        <table class="table">
+      <div class="table-wrap">
+        <div class="skeleton-list" *ngIf="loading()">
+          <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+            <div class="skeleton-cell" style="--skeleton-w: 10%" *ngIf="canEdit() || canDelete()"></div>
+          </div>
+        </div>
+
+        <table class="table" *ngIf="!loading() && filtered().length; else empty">
           <colgroup>
             <col class="u-w-120" /> <!-- DNI -->
             <col class="u-w-180" /> <!-- Name -->
@@ -97,14 +108,14 @@
             </tr>
           </tbody>
         </table>
-      </div>
 
-      <ng-template #empty>
-        <div class="empty">
-          <h3>{{ fTextApplied() ? 'Sin resultados' : ('distributors.empty.title' | translate) }}</h3>
-          <p>{{ fTextApplied() ? 'Probá ajustar el filtro' : ('distributors.empty.desc' | translate) }}</p>
-        </div>
-      </ng-template>
+        <ng-template #empty>
+          <div class="empty" *ngIf="!loading()">
+            <h3>{{ fTextApplied() ? 'Sin resultados' : ('distributors.empty.title' | translate) }}</h3>
+            <p>{{ fTextApplied() ? 'Probá ajustar el filtro' : ('distributors.empty.desc' | translate) }}</p>
+          </div>
+        </ng-template>
+      </div>
     </section>
   </div>
 

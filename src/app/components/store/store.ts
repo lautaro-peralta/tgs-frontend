@@ -51,6 +51,9 @@ export class StoreComponent implements OnInit {
   error = signal<string | null>(null);
   products = signal<ProductDTO[]>([]);
 
+  /** Placeholders del skeleton mientras loading() es true (mismo shape que store-card). */
+  readonly skeletonPlaceholders = Array.from({ length: 8 });
+
   // ✅ NUEVO: Transformar productos en ofertas (marketplace)
   offers = computed(() => {
     const allProducts = this.products();

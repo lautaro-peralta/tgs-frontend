@@ -52,7 +52,18 @@
     </div>
 
     <div class="table-wrap">
-      <table class="table" *ngIf="filteredDecisions().length; else emptyState">
+      <div class="skeleton-list" *ngIf="loading()">
+        <div class="skeleton-table-row" *ngFor="let i of [0,1,2,3,4]">
+          <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+          <div class="skeleton-cell"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canEdit() || canDelete()"></div>
+        </div>
+      </div>
+
+      <table class="table" *ngIf="!loading() && filteredDecisions().length; else emptyState">
         <colgroup>
           <col class="u-w-90" />
           <col class="u-w-220" />
@@ -97,7 +108,7 @@
       </table>
 
       <ng-template #emptyState>
-        <div class="empty-state">
+        <div class="empty-state" *ngIf="!loading()">
           <h3>{{ (fTextApplied() || topicFilterApplied()) ? 'Sin resultados para el filtro aplicado' :
             ('decisions.empty' | translate) }}</h3>
           <p class="muted">

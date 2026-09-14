@@ -37,55 +37,67 @@
 
     <!-- MENSAJES -->
     <div class="error" *ngIf="error() as err"><strong>{{ 'common.error' | translate }}</strong>: {{ err }}</div>
-    <div class="muted" *ngIf="loading()">{{ 'admin.messages.loading' | translate }}</div>
 
     <!-- LISTADO -->
     <section class="subsection">
       <h3 class="sub-title">{{ 'admin.list' | translate }}</h3>
 
-      <div class="table-wrap" *ngIf="filtered().length; else emptyState">
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="u-w-120 u-minw-120">{{ 'admin.fields.dni' | translate }}</th>
-              <th class="u-wpct-25 u-minw-150">{{ 'admin.fields.name' | translate }}</th>
-              <th class="u-wpct-30 u-minw-180">{{ 'admin.fields.email' | translate }}</th>
-              <th class="u-wpct-15 u-minw-140">{{ 'admin.fields.phone' | translate }}</th>
-              <th class="right u-w-120 u-minw-120">{{ 'common.actions' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let it of filtered(); trackBy: trackByDni">
-              <td class="mono u-nowrap" [attr.data-label]="'admin.fields.dni' | translate">{{ it.dni }}</td>
-              <td class="cell-truncate u-maxw-200" [attr.data-label]="'admin.fields.name' | translate">{{ it.name }}</td>
-              <td class="cell-truncate u-maxw-250" [attr.data-label]="'admin.fields.email' | translate">{{ it.email }}</td>
-              <td class="cell-truncate u-maxw-160" [attr.data-label]="'admin.fields.phone' | translate">{{ it.phone || '—' }}</td>
-              <td class="right u-nowrap" [attr.data-label]="'common.actions' | translate">
-                <div>
-                  <button class="btn ghost btn--icon u-mr-sm" type="button" (click)="edit(it)"
-                    [title]="'common.edit' | translate">
-                    ✏️
-                  </button>
-                  <button class="btn danger btn--icon" type="button" (click)="delete(it)"
-                    [title]="'common.delete' | translate">
-                    🗑️
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Skeleton mientras carga -->
+      <div class="table-wrap" *ngIf="loading()">
+        <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+          <div class="skeleton-cell" style="--skeleton-w: 20%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 25%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 30%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+          <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+        </div>
       </div>
 
-      <!-- Empty state -->
-      <ng-template #emptyState>
-        <div class="empty empty-state">
-          <h3>{{ fTextApplied() ? ('distributors.noResults.title' | translate) : ('admin.emptyTitle' | translate) }}
-          </h3>
-          <p class="muted">{{ fTextApplied() ? ('distributors.noResults.desc' | translate) : ('admin.emptyHint' |
-            translate) }}</p>
+      <ng-container *ngIf="!loading()">
+        <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="u-w-120 u-minw-120">{{ 'admin.fields.dni' | translate }}</th>
+                <th class="u-wpct-25 u-minw-150">{{ 'admin.fields.name' | translate }}</th>
+                <th class="u-wpct-30 u-minw-180">{{ 'admin.fields.email' | translate }}</th>
+                <th class="u-wpct-15 u-minw-140">{{ 'admin.fields.phone' | translate }}</th>
+                <th class="right u-w-120 u-minw-120">{{ 'common.actions' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let it of filtered(); trackBy: trackByDni">
+                <td class="mono u-nowrap" [attr.data-label]="'admin.fields.dni' | translate">{{ it.dni }}</td>
+                <td class="cell-truncate u-maxw-200" [attr.data-label]="'admin.fields.name' | translate">{{ it.name }}</td>
+                <td class="cell-truncate u-maxw-250" [attr.data-label]="'admin.fields.email' | translate">{{ it.email }}</td>
+                <td class="cell-truncate u-maxw-160" [attr.data-label]="'admin.fields.phone' | translate">{{ it.phone || '—' }}</td>
+                <td class="right u-nowrap" [attr.data-label]="'common.actions' | translate">
+                  <div>
+                    <button class="btn ghost btn--icon u-mr-sm" type="button" (click)="edit(it)"
+                      [title]="'common.edit' | translate">
+                      ✏️
+                    </button>
+                    <button class="btn danger btn--icon" type="button" (click)="delete(it)"
+                      [title]="'common.delete' | translate">
+                      🗑️
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </ng-template>
+
+        <!-- Empty state -->
+        <ng-template #emptyState>
+          <div class="empty empty-state">
+            <h3>{{ fTextApplied() ? ('distributors.noResults.title' | translate) : ('admin.emptyTitle' | translate) }}
+            </h3>
+            <p class="muted">{{ fTextApplied() ? ('distributors.noResults.desc' | translate) : ('admin.emptyHint' |
+              translate) }}</p>
+          </div>
+        </ng-template>
+      </ng-container>
     </section>
   </div>
 

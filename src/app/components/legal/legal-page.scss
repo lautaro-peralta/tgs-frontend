@@ -37,7 +37,7 @@
   font-weight: 700;
   color: var(--text-strong);
   margin: 0 0 var(--sp-3);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   letter-spacing: 0.5px;
 }
 
@@ -74,7 +74,7 @@
   font-weight: 700;
   color: var(--text-strong);
   margin: 0 0 var(--sp-4);
-  font-family: 'Google Sans Code';
+  font-family: var(--font-heading);
   padding-bottom: var(--sp-3);
   border-bottom: 1px solid var(--border);
 }

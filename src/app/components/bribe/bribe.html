@@ -108,8 +108,18 @@
     <!-- Error message -->
     <div *ngIf="error()" class="error">{{ error() }}</div>
 
-    <!-- Loading state -->
-    <div *ngIf="loading()" class="loading">{{ 'bribes.loading' | translate }}</div>
+    <!-- Skeleton mientras carga -->
+    <div class="table-wrap" *ngIf="loading()">
+      <div class="skeleton-table-row" *ngFor="let i of [1,2,3,4,5]">
+        <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 15%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 22%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 10%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 12%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 18%"></div>
+        <div class="skeleton-cell" style="--skeleton-w: 15%" *ngIf="canPay() || canDelete()"></div>
+      </div>
+    </div>
 
   <!-- Table -->
   <div class="table-wrap" *ngIf="!loading()">
@@ -221,7 +231,7 @@
       color: #b8e6d3;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-family: 'Google Sans Code', monospace;
+      font-family: var(--font-mono);
     }
 
     .paid-status:hover {
