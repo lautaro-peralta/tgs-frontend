@@ -5,7 +5,7 @@
  * respetando la estética existente. Incluye animaciones de placeholders y
  * soporte para las tarjetas de introducción (introItems + flip con teclado).
  */
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, computed, effect, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -26,7 +26,6 @@ type IntroItem = { titleKey: string; detailKey: string };
   imports: [CommonModule, ReactiveFormsModule, TranslateModule, RouterLink],
   templateUrl: './home.html',
   styleUrls: ['./home.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);

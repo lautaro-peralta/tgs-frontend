@@ -133,7 +133,7 @@ La aplicación se organiza en capas con responsabilidades bien definidas:
 
 | Capa              | Responsabilidad                                                                  | Patrón                        |
 | ----------------- | -------------------------------------------------------------------------------- | ----------------------------- |
-| **Componentes**   | Presentación, manejo de eventos, estado local de UI                              | Standalone, OnPush            |
+| **Componentes**   | Presentación, manejo de eventos, estado local de UI                              | Standalone; `OnPush` donde el estado async ya está migrado a Signals (ej. `NavbarComponent`) — `HomeComponent` usa la estrategia `Default` a propósito, ya que su animación de placeholders (tipeo/borrado letra por letra) y el flujo de login/registro mutan propiedades planas dentro de `setTimeout`/`async`, y `OnPush` deja de re-renderizarlas |
 | **Servicios**     | Comunicación con la API REST, transformación de datos, estado global             | `providedIn: 'root'`, Signals |
 | **Guards**        | Protección de rutas según estado de autenticación y roles                        | `CanActivateFn` funcional     |
 | **Interceptores** | Comportamiento transversal a todas las peticiones HTTP                           | `HttpInterceptorFn` funcional |
