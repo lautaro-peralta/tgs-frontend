@@ -152,6 +152,7 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--sp-3);
+    flex-wrap: wrap;
     padding: 0 0 var(--sp-4);
     margin: 0 0 var(--sp-4);
     border-bottom: 1px solid var(--border);
@@ -774,6 +775,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--sp-3);
     padding: var(--sp-6);
     border-bottom: 1px solid var(--border);
   }

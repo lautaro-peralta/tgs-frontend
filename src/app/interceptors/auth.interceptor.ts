@@ -182,6 +182,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next): Observable<HttpEv
 
             // Limpiar sesión y redirigir al login
             logger.debug('[AuthInterceptor] Logging out and redirecting to home');
+            authService.notifySessionExpired();
             authService.logout().subscribe({
               error: () => {
                 // Asegurar redirección incluso si el logout falla

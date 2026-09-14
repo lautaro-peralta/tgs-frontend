@@ -256,7 +256,7 @@ export class AuthorityComponent implements OnInit {
           name: this.t.instant('authorities.stats.authoritiesLabel'),
           type: 'pie',
           radius: isMobile ? ['40%', '65%'] : ['45%', '75%'],
-          center: isMobile ? ['50%', '42%'] : ['65%', '50%'],
+          center: isMobile ? ['50%', '42%'] : ['55%', '50%'],
           avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 12,
@@ -266,22 +266,10 @@ export class AuthorityComponent implements OnInit {
             shadowColor: 'rgba(0, 0, 0, 0.3)'
           },
           label: {
-            show: !isMobile, // Ocultar labels en móvil para evitar sobreposición
-            position: 'outside',
-            formatter: '{d}%',
-            color: '#e5e7eb',
-            fontSize: 13,
-            fontWeight: 700,
-            distanceToLabelLine: 5
+            show: false,
           },
           labelLine: {
-            show: !isMobile,
-            length: 15,
-            length2: 10,
-            smooth: true,
-            lineStyle: {
-              width: 2
-            }
+            show: false
           },
           emphasis: {
             scale: true,

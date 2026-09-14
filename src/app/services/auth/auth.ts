@@ -15,6 +15,7 @@ import { Observable, BehaviorSubject, throwError, of, timer } from 'rxjs';
 import { tap, catchError, map, take, timeout } from 'rxjs/operators';
 import { Role, User } from '../../models/user/user.model';
 import { LoggerService } from '../logger/logger';
+import { ToastService } from '../../shared/services/toast.service';
 
 const API_URL = '';
 
@@ -56,6 +57,10 @@ export class AuthService {
   
   /** Timer para auto-refresh del token */
   private _refreshTimer?: any;
+  /** Timer para aviso de fin de sesión */
+  private _warningTimer?: any;
+  /** ID del toast de aviso activo */
+  private _warningToastId: number | null = null;
 
   // ============================================================================
   // SEÑALES Y ESTADO REACTIVO
@@ -121,6 +126,8 @@ export class AuthService {
   // BehaviorSubject para compatibilidad con código legacy
   private userSubject = new BehaviorSubject<User | null>(null);
   public user$ = this.userSubject.asObservable();
+  
+  private toast = inject(ToastService);
 
   // ============================================================================
   // CONSTRUCTOR
@@ -263,6 +270,7 @@ export class AuthService {
       map(response => response.data),
       tap(user => {
         this.setUser(user);
+        this.dismissSessionWarning();
         this.scheduleTokenRefresh();
       }),
       catchError(err => {
@@ -272,6 +280,16 @@ export class AuthService {
         return throwError(() => err);
       })
     );
+  }
+
+  notifySessionExpired(): void {
+    this.dismissSessionWarning();
+    this.toast.show({
+      type: 'error',
+      title: 'Sesión terminada',
+      message: 'Tu sesión ha expirado por seguridad. Por favor, iniciá sesión nuevamente.',
+      duration: 5000
+    });
   }
 
   /**
@@ -481,15 +499,39 @@ export class AuthService {
         }
       });
     });
+
+    // Programar advertencia de expiración a los 13 minutos (1 min antes del refresh programado)
+    const warningTime = 13 * 60 * 1000;
+    this._warningTimer = timer(warningTime).pipe(take(1)).subscribe(() => {
+      // Toast tipo warning sin expiración automática
+      this._warningToastId = this.toast.show({
+        type: 'warning',
+        title: 'Tu sesión está por expirar',
+        message: 'Tu sesión terminará de forma segura por inactividad pronto.',
+        duration: 0 
+      });
+    });
   }
 
   /**
-   * Cancela el timer de refresh automático
+   * Cancela el timer de refresh automático y cualquier toast de aviso
    */
   private cancelTokenRefresh(): void {
     if (this._refreshTimer) {
       this._refreshTimer.unsubscribe();
       this._refreshTimer = undefined;
+    }
+    if (this._warningTimer) {
+      this._warningTimer.unsubscribe();
+      this._warningTimer = undefined;
+    }
+    this.dismissSessionWarning();
+  }
+
+  private dismissSessionWarning(): void {
+    if (this._warningToastId !== null) {
+      this.toast.dismiss(this._warningToastId);
+      this._warningToastId = null;
     }
   }
 

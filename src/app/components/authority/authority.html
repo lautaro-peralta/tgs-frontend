@@ -355,7 +355,9 @@
                 <button class="input-action-btn" type="button"
                   (click)="togglePasswordVisibility()"
                   [title]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'">
-                  {{ showPassword() ? '👁️' : '👁️‍🗨️' }}
+                  <span class="material-symbols-outlined icon-sm">
+                    {{ showPassword() ? 'visibility_off' : 'visibility' }}
+                  </span>
                 </button>
               </div>
               <small class="hint" *ngIf="form.controls.password.invalid && form.controls.password.touched">

@@ -81,6 +81,7 @@
 .actions-row {
   display: flex;
   gap: var(--sp-2);
+  align-items: flex-end;
   flex-wrap: wrap;
 }
 
