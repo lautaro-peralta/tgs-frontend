@@ -2107,7 +2107,7 @@
     "questions": "Have questions about these terms?",
     "contactUs": "Contact us",
     "cookieBanner": {
-      "message": "At Shelby Company Limited, we don't need clandestine agreements to know what you're after -- we don't sell bribes to ad networks, and we don't answer to third-party trackers. This site keeps only what's strictly necessary in your own browser to run the business -- your session, your language, your cart -- nothing more, and none of it leaves this room. By order of the Peaky Blinders: accept, decline, or read the full terms in our Terms & Conditions.",
+      "message": "By order of the Peaky Blinders: this site uses only strictly necessary cookies to run the business (session, language, cart). Accept, decline or read the full terms.",
       "accept": "Accept",
       "decline": "Decline",
       "moreInfo": "More information"
