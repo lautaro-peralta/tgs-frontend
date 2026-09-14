@@ -221,7 +221,7 @@
   list-style: none;
   border-radius: .95rem;
   border: 1px solid rgba(255, 255, 255, .25);
-  background: rgba(30, 41, 59, 0.55);
+  background: rgba(15, 23, 42, 0.82);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   box-shadow: 0 16px 36px rgba(0, 0, 0, .35);
@@ -391,7 +391,7 @@
   list-style: none;
   border-radius: .9rem;
   border: 1px solid rgba(255, 255, 255, .25);
-  background: rgba(30, 41, 59, 0.55);
+  background: rgba(15, 23, 42, 0.82);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
   box-shadow: 0 14px 30px rgba(0, 0, 0, .32);
@@ -501,23 +501,7 @@
   font-weight: 800;
 }
 
-/* ====== Material Symbols ====== */
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 1.25rem;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-}
+
 
 /* ====== Botón Inbox Simplificado (enlace directo) ====== */
 .inbox-link {
