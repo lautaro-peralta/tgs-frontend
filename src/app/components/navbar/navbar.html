@@ -105,6 +105,17 @@
         <ul class="dropdown" role="menu" [attr.aria-label]="'nav.management' | translate">
           <!-- ADMIN - Acceso completo -->
           <ng-container *ngIf="isAdmin(); else notAdminBlock">
+            <!-- Admin Panel -->
+            <li class="dropdown__item" role="none">
+              <a role="menuitem" routerLink="/admin" routerLinkActive="active" class="admin-link">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                {{ 'mgmt.admin' | translate }}
+                <span class="underline"></span>
+              </a>
+            </li>
+
+            <li class="dropdown__divider" role="separator"></li>
+
             <li class="dropdown__item" role="none">
               <a role="menuitem" routerLink="/producto" routerLinkActive="active">
                 {{ 'mgmt.product' | translate }} <span class="underline"></span>
@@ -181,16 +192,6 @@
               </ul>
             </li>
 
-            <li class="dropdown__divider" role="separator"></li>
-
-            <!-- Admin Panel -->
-            <li class="dropdown__item" role="none">
-              <a role="menuitem" routerLink="/admin" routerLinkActive="active" class="admin-link">
-                <span class="material-symbols-outlined">admin_panel_settings</span>
-                {{ 'mgmt.admin' | translate }}
-                <span class="underline"></span>
-              </a>
-            </li>
           </ng-container>
 
           <!-- PARTNER / DISTRIBUTOR -->
@@ -467,6 +468,10 @@
 
       <!-- ADMIN -->
       <ng-container *ngIf="isAdmin()">
+        <a routerLink="/admin" routerLinkActive="active" class="mobile-menu__link mobile-menu__link--highlight" (click)="closeMobileMenu()">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+          <span>{{ 'mgmt.admin' | translate }}</span>
+        </a>
         <a routerLink="/producto" routerLinkActive="active" class="mobile-menu__link" (click)="closeMobileMenu()">
           <span class="material-symbols-outlined">inventory_2</span>
           <span>{{ 'mgmt.product' | translate }}</span>
@@ -519,10 +524,6 @@
           </a>
         </div>
 
-        <a routerLink="/admin" routerLinkActive="active" class="mobile-menu__link mobile-menu__link--highlight" (click)="closeMobileMenu()">
-          <span class="material-symbols-outlined">admin_panel_settings</span>
-          <span>{{ 'mgmt.admin' | translate }}</span>
-        </a>
       </ng-container>
 
       <!-- PARTNER -->
