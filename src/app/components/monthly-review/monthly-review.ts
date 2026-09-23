@@ -82,6 +82,12 @@ export class MonthlyReviewComponent implements OnInit {
   // Para mostrar el gráfico de decisiones SIEMPRE (con mock si es necesario)
   showDecisionsChart = computed(() => !this.loading());
 
+  // ✅ Indica si el gráfico está mostrando datos de ejemplo en vez de datos reales,
+  // para poder avisarlo en la UI incluso cuando SÍ hay algunas ventas cargadas
+  // pero no las suficientes (menos de 3 / 4 meses agrupados).
+  usingMockDecisions = signal(false);
+  usingMockPrediction = signal(false);
+
   // Control de gráfico expandido
   expandedChart = signal<'decisions' | 'prediction' | null>(null);
 
@@ -545,21 +551,26 @@ export class MonthlyReviewComponent implements OnInit {
     ];
 
     let salesByMonth: { month: string; amount: number }[];
+    let usingMock = false;
 
     // Si no hay datos reales O hay menos de 3 meses de datos, usar MOCK
     if (!salesData || salesData.length === 0) {
       logger.debug('📊 Usando datos MOCK (no hay ventas)');
       salesByMonth = mockData;
+      usingMock = true;
     } else {
       const realData = this.groupSalesByMonthForChart(salesData);
       if (realData.length < 3) {
         logger.debug('📊 Usando datos MOCK (menos de 3 meses de datos reales)');
         salesByMonth = mockData;
+        usingMock = true;
       } else {
         logger.debug('📊 Usando datos reales:', realData.length, 'meses');
         salesByMonth = realData;
       }
     }
+
+    this.usingMockDecisions.set(usingMock);
 
     // Mock de decisiones - En producción, estas vendrían del backend
     const decisions = [
@@ -798,21 +809,26 @@ export class MonthlyReviewComponent implements OnInit {
     ];
 
     let historicalData: { month: string; amount: number }[];
+    let usingMock = false;
 
     // Usar datos mock si no hay datos reales o hay menos de 4 meses
     if (!salesData || salesData.length === 0) {
       logger.debug('📊 Usando datos MOCK para predicción (no hay ventas)');
       historicalData = mockData;
+      usingMock = true;
     } else {
       const realData = this.groupSalesByMonthForChart(salesData);
       if (realData.length < 4) {
         logger.debug('📊 Usando datos MOCK para predicción (menos de 4 meses de datos)');
         historicalData = mockData;
+        usingMock = true;
       } else {
         logger.debug('📊 Usando datos reales para predicción:', realData.length, 'meses');
         historicalData = realData;
       }
     }
+
+    this.usingMockPrediction.set(usingMock);
 
     // ==================== MÉTODOS CIENTÍFICOS DE PREDICCIÓN ====================
 
@@ -831,7 +847,10 @@ export class MonthlyReviewComponent implements OnInit {
     const b = (sumY - m * sumX) / n;
 
     // 2️⃣ COEFICIENTE DE DETERMINACIÓN (R²)
+    const meanX = sumX / n;
     const meanY = sumY / n;
+    // Suma de desvíos al cuadrado de x respecto a su media: Σ(x−x̄)² = Σx² − (Σx)²/n
+    const sxx = sumX2 - (sumX * sumX) / n;
     const ssTotal = y.reduce((sum, yi) => sum + Math.pow(yi - meanY, 2), 0);
     const ssResidual = y.reduce((sum, yi, i) => sum + Math.pow(yi - (m * x[i] + b), 2), 0);
     const r2 = 1 - (ssResidual / ssTotal);
@@ -848,7 +867,9 @@ export class MonthlyReviewComponent implements OnInit {
 
     // 4️⃣ DESVIACIÓN ESTÁNDAR - para intervalos de confianza
     const stdDev = Math.sqrt(ssResidual / (n - 2));
-    const confidenceLevel = 1.96; // 95% de confianza
+    // Con muestras chicas (pocos meses) el estadístico correcto es t de Student
+    // con n-2 grados de libertad, no z=1.96 (que solo vale para n grande).
+    const tValue = this.getTValue95(n - 2);
 
     // 5️⃣ CRECIMIENTO PROMEDIO (para método alternativo)
     const growthRates: number[] = [];
@@ -881,10 +902,15 @@ export class MonthlyReviewComponent implements OnInit {
       let finalPrediction = 0.7 * linearPrediction + 0.3 * exponentialPrediction;
       finalPrediction = Math.max(0, finalPrediction);
 
-      // Intervalos de confianza (95%)
-      const margin = confidenceLevel * stdDev * Math.sqrt(1 + 1/n + Math.pow(n + i - 1 - meanY, 2) / sumX2);
-      const upperBound = Math.max(0, finalPrediction + margin);
-      const lowerBound = Math.max(0, finalPrediction - margin);
+      // Intervalo de predicción (95%) para el valor x0 = n + i - 1:
+      // margen = t(n-2) · s · √(1 + 1/n + (x0 − x̄)² / Σ(x−x̄)²)
+      // Se calcula sobre la regresión lineal, así que se centra en esa
+      // predicción (linearPrediction) y no en la combinada con el
+      // componente exponencial, que no tiene una distribución muestral
+      // conocida para derivar un intervalo.
+      const margin = tValue * stdDev * Math.sqrt(1 + 1 / n + Math.pow((n + i - 1) - meanX, 2) / sxx);
+      const upperBound = Math.max(0, linearPrediction + margin);
+      const lowerBound = Math.max(0, linearPrediction - margin);
 
       const nextMonth = new Date(lastDate.getFullYear(), lastDate.getMonth() + i, 1);
 
@@ -1346,13 +1372,43 @@ export class MonthlyReviewComponent implements OnInit {
     logger.debug(`   📐 Regresión Lineal: y = ${m.toFixed(3)}x + ${b.toFixed(2)}`);
     logger.debug(`   📈 R² (Bondad de ajuste): ${r2Percentage}%`);
     logger.debug(`   📉 Tasa de crecimiento promedio: ${(avgGrowthRate * 100).toFixed(2)}%`);
-    logger.debug(`   🎯 Desviación estándar: ${stdDev.toFixed(2)}`);
+    logger.debug(`   🎯 Desviación estándar: ${stdDev.toFixed(2)} | t(${n - 2}) = ${tValue.toFixed(3)}`);
     logger.debug(`   📋 Datos históricos:`, historicalAmounts);
     logger.debug(`   📋 Predicciones:`, predictedAmounts);
     logger.debug(`   📋 Límites superiores:`, upperBounds);
     logger.debug(`   📋 Límites inferiores:`, lowerBounds);
 
     this.salesPredictionChartOptions.set(predictionChart);
+  }
+
+  // Valor crítico de la t de Student (dos colas, 95% de confianza) según los
+  // grados de libertad. Con pocas observaciones (pocos meses) la t se aleja
+  // bastante de 1.96 y usar z en su lugar subestima el margen de error.
+  private getTValue95(df: number): number {
+    const tTable: Record<number, number> = {
+      1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571,
+      6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228,
+      11: 2.201, 12: 2.179, 13: 2.160, 14: 2.145, 15: 2.131,
+      16: 2.120, 17: 2.110, 18: 2.101, 19: 2.093, 20: 2.086,
+      21: 2.080, 22: 2.074, 23: 2.069, 24: 2.064, 25: 2.060,
+      26: 2.056, 27: 2.052, 28: 2.048, 29: 2.045, 30: 2.042,
+      40: 2.021, 60: 2.000, 120: 1.980,
+    };
+
+    const df0 = Math.max(1, Math.floor(df));
+    if (tTable[df0] !== undefined) return tTable[df0];
+    if (df0 > 120) return 1.960; // converge a la normal para muestras grandes
+
+    const knownDf = Object.keys(tTable).map(Number).sort((a, b) => a - b);
+    for (let i = 0; i < knownDf.length - 1; i++) {
+      const lower = knownDf[i];
+      const upper = knownDf[i + 1];
+      if (df0 > lower && df0 < upper) {
+        const ratio = (df0 - lower) / (upper - lower);
+        return tTable[lower] + ratio * (tTable[upper] - tTable[lower]);
+      }
+    }
+    return 1.960;
   }
 
   // Helper para obtener la fecha del último mes en el historial
