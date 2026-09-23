@@ -98,13 +98,13 @@
                   {{ 'monthlyReview.charts.decisionsImpactDesc' | translate : {} : 'Evolución de ventas y decisiones estratégicas a lo largo del tiempo' }}
                 </p>
               </div>
-              <span class="chart-badge chart-badge--warn chart-badge--sm" *ngIf="!sales() || sales().length === 0">
+              <span class="chart-badge chart-badge--warn chart-badge--sm" *ngIf="usingMockDecisions()">
                 {{ 'monthlyReview.sampleData' | translate }}
               </span>
             </div>
             <div class="chart-box chart-box--tall" echarts [options]="decisionsImpactChartOptions()!" [theme]="'dark'">
             </div>
-            <div class="chart-note chart-note--tight chart-note--blue-strong" *ngIf="!sales() || sales().length === 0">
+            <div class="chart-note chart-note--tight chart-note--blue-strong" *ngIf="usingMockDecisions()">
               <p class="chart-note__text">
                 <span class="material-symbols-outlined icon-sm">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.decisionsImpactNote' | translate : {} : 'Este gráfico muestra datos de ejemplo.' }}
@@ -145,13 +145,13 @@
                   {{ 'monthlyReview.charts.salesPredictionDesc' | translate : {} : 'Proyección de ventas para los próximos 6 meses usando regresión lineal' }}
                 </p>
               </div>
-              <span class="chart-badge chart-badge--purple chart-badge--sm" *ngIf="!sales() || sales().length === 0">
+              <span class="chart-badge chart-badge--purple chart-badge--sm" *ngIf="usingMockPrediction()">
                 {{ 'monthlyReview.sampleDataAlt' | translate }}
               </span>
             </div>
             <div class="chart-box chart-box--tall" echarts [options]="salesPredictionChartOptions()!" [theme]="'dark'">
             </div>
-            <div class="chart-note chart-note--tight chart-note--sky-strong" *ngIf="!sales() || sales().length === 0">
+            <div class="chart-note chart-note--tight chart-note--sky-strong" *ngIf="usingMockPrediction()">
               <p class="chart-note__text">
                 <span class="material-symbols-outlined icon-sm">lightbulb</span> <strong>{{ 'monthlyReview.charts.noteLabel' | translate : {} : 'Nota:' }}</strong>
                 {{ 'monthlyReview.charts.salesPredictionNote' | translate : {} : 'Este gráfico muestra una proyección basada en regresión lineal.' }}
